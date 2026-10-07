@@ -1,0 +1,1629 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/queries/partners/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/partners/index.ts",
+      "summary": "Provides the consolidated database query surface for partners operations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:isPartnerCodeTakenError",
+      "type": "function",
+      "name": "isPartnerCodeTakenError",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        44,
+        56
+      ],
+      "summary": "Evaluates is partner code taken error for index records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:listBusinessPartners",
+      "type": "function",
+      "name": "listBusinessPartners",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        58,
+        60
+      ],
+      "summary": "Retrieves business partners data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getBusinessPartnerById",
+      "type": "function",
+      "name": "getBusinessPartnerById",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        62,
+        68
+      ],
+      "summary": "Retrieves business partner by id data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getBusinessPartnerByCode",
+      "type": "function",
+      "name": "getBusinessPartnerByCode",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        70,
+        79
+      ],
+      "summary": "Retrieves business partner by code data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:lockBusinessPartnerById",
+      "type": "function",
+      "name": "lockBusinessPartnerById",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        82,
+        92
+      ],
+      "summary": "Implements the lock business partner by id database operation for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:insertBusinessPartner",
+      "type": "function",
+      "name": "insertBusinessPartner",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        94,
+        100
+      ],
+      "summary": "Creates or records business partner data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:updateBusinessPartner",
+      "type": "function",
+      "name": "updateBusinessPartner",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        102,
+        113
+      ],
+      "summary": "Updates business partner state for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:setBusinessPartnerStatus",
+      "type": "function",
+      "name": "setBusinessPartnerStatus",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        115,
+        126
+      ],
+      "summary": "Updates business partner status state for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:hasActivePartnerAdministrator",
+      "type": "function",
+      "name": "hasActivePartnerAdministrator",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        129,
+        141
+      ],
+      "summary": "Evaluates has active partner administrator for index records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:insertPartnerAccessHistory",
+      "type": "function",
+      "name": "insertPartnerAccessHistory",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        143,
+        148
+      ],
+      "summary": "Creates or records partner access history data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getPartnerInvitationById",
+      "type": "function",
+      "name": "getPartnerInvitationById",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        156,
+        165
+      ],
+      "summary": "Retrieves partner invitation by id data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:listPendingPartnerInvitations",
+      "type": "function",
+      "name": "listPendingPartnerInvitations",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        167,
+        181
+      ],
+      "summary": "Retrieves pending partner invitations data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getPendingPartnerInvitationByEmail",
+      "type": "function",
+      "name": "getPendingPartnerInvitationByEmail",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        183,
+        199
+      ],
+      "summary": "Retrieves pending partner invitation by email data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:insertPartnerInvitation",
+      "type": "function",
+      "name": "insertPartnerInvitation",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        201,
+        207
+      ],
+      "summary": "Creates or records partner invitation data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:setPartnerInvitationStatus",
+      "type": "function",
+      "name": "setPartnerInvitationStatus",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        209,
+        220
+      ],
+      "summary": "Updates partner invitation status state for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:setPartnerInvitationExpiry",
+      "type": "function",
+      "name": "setPartnerInvitationExpiry",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        222,
+        233
+      ],
+      "summary": "Updates partner invitation expiry state for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:insertPartnerInvitationToken",
+      "type": "function",
+      "name": "insertPartnerInvitationToken",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        235,
+        241
+      ],
+      "summary": "Creates or records partner invitation token data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getPartnerInvitationByTokenDigest",
+      "type": "function",
+      "name": "getPartnerInvitationByTokenDigest",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        244,
+        254
+      ],
+      "summary": "Retrieves partner invitation by token digest data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getCurrentPartnerMembership",
+      "type": "function",
+      "name": "getCurrentPartnerMembership",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        264,
+        280
+      ],
+      "summary": "Retrieves current partner membership data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:insertPartnerMembership",
+      "type": "function",
+      "name": "insertPartnerMembership",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        282,
+        288
+      ],
+      "summary": "Creates or records partner membership data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:verifyUserEmailIfUnset",
+      "type": "function",
+      "name": "verifyUserEmailIfUnset",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        290,
+        299
+      ],
+      "summary": "Evaluates verify user email if unset for index records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getPartnerUserById",
+      "type": "function",
+      "name": "getPartnerUserById",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        301,
+        317
+      ],
+      "summary": "Retrieves partner user by id data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:listActivePartnerMembershipsForUser",
+      "type": "function",
+      "name": "listActivePartnerMembershipsForUser",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        325,
+        335
+      ],
+      "summary": "Retrieves active partner memberships for user data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getCurrentPartnerMembershipByEmail",
+      "type": "function",
+      "name": "getCurrentPartnerMembershipByEmail",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        342,
+        359
+      ],
+      "summary": "Retrieves current partner membership by email data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getPartnerMembershipById",
+      "type": "function",
+      "name": "getPartnerMembershipById",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        361,
+        370
+      ],
+      "summary": "Retrieves partner membership by id data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:listCurrentPartnerMembers",
+      "type": "function",
+      "name": "listCurrentPartnerMembers",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        379,
+        395
+      ],
+      "summary": "Retrieves current partner members data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:countOtherActivePartnerAdministrators",
+      "type": "function",
+      "name": "countOtherActivePartnerAdministrators",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        398,
+        414
+      ],
+      "summary": "Retrieves other active partner administrators data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:updatePartnerMembership",
+      "type": "function",
+      "name": "updatePartnerMembership",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        419,
+        435
+      ],
+      "summary": "Updates partner membership state for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partners/index.ts:getActiveMembershipRoles",
+      "type": "function",
+      "name": "getActiveMembershipRoles",
+      "filePath": "src/queries/partners/index.ts",
+      "lineRange": [
+        438,
+        454
+      ],
+      "summary": "Retrieves active membership roles data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/bulk-activate-products.ts",
+      "type": "file",
+      "name": "bulk-activate-products.ts",
+      "filePath": "src/queries/products/bulk-activate-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk activate products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/bulk-activate-products.ts:bulkActivateProducts",
+      "type": "function",
+      "name": "bulkActivateProducts",
+      "filePath": "src/queries/products/bulk-activate-products.ts",
+      "lineRange": [
+        5,
+        7
+      ],
+      "summary": "Implements the bulk activate products database operation for bulk activate products records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/bulk-deactivate-products.ts",
+      "type": "file",
+      "name": "bulk-deactivate-products.ts",
+      "filePath": "src/queries/products/bulk-deactivate-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk deactivate products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/bulk-deactivate-products.ts:bulkDeactivateProducts",
+      "type": "function",
+      "name": "bulkDeactivateProducts",
+      "filePath": "src/queries/products/bulk-deactivate-products.ts",
+      "lineRange": [
+        5,
+        7
+      ],
+      "summary": "Implements the bulk deactivate products database operation for bulk deactivate products records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/bulk-delete-products.ts",
+      "type": "file",
+      "name": "bulk-delete-products.ts",
+      "filePath": "src/queries/products/bulk-delete-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk delete products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/bulk-delete-products.ts:bulkDeleteProducts",
+      "type": "function",
+      "name": "bulkDeleteProducts",
+      "filePath": "src/queries/products/bulk-delete-products.ts",
+      "lineRange": [
+        5,
+        7
+      ],
+      "summary": "Implements the bulk delete products database operation for bulk delete products records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/check-product-slug-available.ts",
+      "type": "file",
+      "name": "check-product-slug-available.ts",
+      "filePath": "src/queries/products/check-product-slug-available.ts",
+      "summary": "Implements database queries and transactional operations for check product slug available.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/check-product-slug-available.ts:checkProductSlugAvailable",
+      "type": "function",
+      "name": "checkProductSlugAvailable",
+      "filePath": "src/queries/products/check-product-slug-available.ts",
+      "lineRange": [
+        5,
+        16
+      ],
+      "summary": "Evaluates check product slug available for check product slug available records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "type": "file",
+      "name": "check-product-variant-sku-available.ts",
+      "filePath": "src/queries/products/check-product-variant-sku-available.ts",
+      "summary": "Implements database queries and transactional operations for check product variant sku available.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/check-product-variant-sku-available.ts:checkProductVariantSkuAvailable",
+      "type": "function",
+      "name": "checkProductVariantSkuAvailable",
+      "filePath": "src/queries/products/check-product-variant-sku-available.ts",
+      "lineRange": [
+        5,
+        20
+      ],
+      "summary": "Evaluates check product variant sku available for check product variant sku available records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/create-product-with-variants.ts",
+      "type": "file",
+      "name": "create-product-with-variants.ts",
+      "filePath": "src/queries/products/create-product-with-variants.ts",
+      "summary": "Implements database queries and transactional operations for create product with variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/create-product-with-variants.ts:createProductWithVariantsInDb",
+      "type": "function",
+      "name": "createProductWithVariantsInDb",
+      "filePath": "src/queries/products/create-product-with-variants.ts",
+      "lineRange": [
+        28,
+        67
+      ],
+      "summary": "Creates or records product with variants in db data for create product with variants records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/deactivate-product-variant.ts",
+      "type": "file",
+      "name": "deactivate-product-variant.ts",
+      "filePath": "src/queries/products/deactivate-product-variant.ts",
+      "summary": "Implements database queries and transactional operations for deactivate product variant.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/deactivate-product-variant.ts:deactivateProductVariant",
+      "type": "function",
+      "name": "deactivateProductVariant",
+      "filePath": "src/queries/products/deactivate-product-variant.ts",
+      "lineRange": [
+        5,
+        10
+      ],
+      "summary": "Implements the deactivate product variant database operation for deactivate product variant records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/duplicate-product.ts",
+      "type": "file",
+      "name": "duplicate-product.ts",
+      "filePath": "src/queries/products/duplicate-product.ts",
+      "summary": "Implements database queries and transactional operations for duplicate product.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/duplicate-product.ts:duplicateProductWithVariants",
+      "type": "function",
+      "name": "duplicateProductWithVariants",
+      "filePath": "src/queries/products/duplicate-product.ts",
+      "lineRange": [
+        5,
+        75
+      ],
+      "summary": "Implements the duplicate product with variants database operation for duplicate product records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "type": "file",
+      "name": "get-admin-product-for-edit.ts",
+      "filePath": "src/queries/products/get-admin-product-for-edit.ts",
+      "summary": "Implements database queries and transactional operations for get admin product for edit.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/get-admin-product-for-edit.ts:getAdminProductForEditRaw",
+      "type": "function",
+      "name": "getAdminProductForEditRaw",
+      "filePath": "src/queries/products/get-admin-product-for-edit.ts",
+      "lineRange": [
+        5,
+        29
+      ],
+      "summary": "Retrieves admin product for edit raw data for get admin product for edit records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/get-admin-products-list.ts",
+      "type": "file",
+      "name": "get-admin-products-list.ts",
+      "filePath": "src/queries/products/get-admin-products-list.ts",
+      "summary": "Implements database queries and transactional operations for get admin products list.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/get-admin-products-list.ts:getAdminProductsListRaw",
+      "type": "function",
+      "name": "getAdminProductsListRaw",
+      "filePath": "src/queries/products/get-admin-products-list.ts",
+      "lineRange": [
+        6,
+        184
+      ],
+      "summary": "Retrieves admin products list raw data for get admin products list records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/get-product-variant-attributes.ts",
+      "type": "file",
+      "name": "get-product-variant-attributes.ts",
+      "filePath": "src/queries/products/get-product-variant-attributes.ts",
+      "summary": "Implements database queries and transactional operations for get product variant attributes.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/get-product-variant-attributes.ts:getProductVariantAttributes",
+      "type": "function",
+      "name": "getProductVariantAttributes",
+      "filePath": "src/queries/products/get-product-variant-attributes.ts",
+      "lineRange": [
+        11,
+        24
+      ],
+      "summary": "Retrieves product variant attributes data for get product variant attributes records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:isPartnerCodeTakenError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:isPartnerCodeTakenError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listBusinessPartners",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listBusinessPartners",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getBusinessPartnerById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getBusinessPartnerById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getBusinessPartnerByCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getBusinessPartnerByCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:lockBusinessPartnerById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:lockBusinessPartnerById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertBusinessPartner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertBusinessPartner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:updateBusinessPartner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:updateBusinessPartner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setBusinessPartnerStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setBusinessPartnerStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:hasActivePartnerAdministrator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:hasActivePartnerAdministrator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerAccessHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerAccessHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerInvitationById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerInvitationById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listPendingPartnerInvitations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listPendingPartnerInvitations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPendingPartnerInvitationByEmail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPendingPartnerInvitationByEmail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerInvitation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerInvitation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setPartnerInvitationStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setPartnerInvitationStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setPartnerInvitationExpiry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:setPartnerInvitationExpiry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerInvitationToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerInvitationToken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerInvitationByTokenDigest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerInvitationByTokenDigest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getCurrentPartnerMembership",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getCurrentPartnerMembership",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerMembership",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:insertPartnerMembership",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:verifyUserEmailIfUnset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:verifyUserEmailIfUnset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerUserById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerUserById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listActivePartnerMembershipsForUser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listActivePartnerMembershipsForUser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getCurrentPartnerMembershipByEmail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getCurrentPartnerMembershipByEmail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerMembershipById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getPartnerMembershipById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listCurrentPartnerMembers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:listCurrentPartnerMembers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:countOtherActivePartnerAdministrators",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:countOtherActivePartnerAdministrators",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:updatePartnerMembership",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:updatePartnerMembership",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getActiveMembershipRoles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "function:src/queries/partners/index.ts:getActiveMembershipRoles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "function:src/queries/products/bulk-activate-products.ts:bulkActivateProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "function:src/queries/products/bulk-activate-products.ts:bulkActivateProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "function:src/queries/products/bulk-deactivate-products.ts:bulkDeactivateProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "function:src/queries/products/bulk-deactivate-products.ts:bulkDeactivateProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "function:src/queries/products/bulk-delete-products.ts:bulkDeleteProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "function:src/queries/products/bulk-delete-products.ts:bulkDeleteProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "function:src/queries/products/check-product-slug-available.ts:checkProductSlugAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "function:src/queries/products/check-product-slug-available.ts:checkProductSlugAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "function:src/queries/products/check-product-variant-sku-available.ts:checkProductVariantSkuAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "function:src/queries/products/check-product-variant-sku-available.ts:checkProductVariantSkuAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "function:src/queries/products/create-product-with-variants.ts:createProductWithVariantsInDb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "function:src/queries/products/create-product-with-variants.ts:createProductWithVariantsInDb",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "function:src/queries/products/deactivate-product-variant.ts:deactivateProductVariant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "function:src/queries/products/deactivate-product-variant.ts:deactivateProductVariant",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "function:src/queries/products/duplicate-product.ts:duplicateProductWithVariants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "function:src/queries/products/duplicate-product.ts:duplicateProductWithVariants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "function:src/queries/products/get-admin-product-for-edit.ts:getAdminProductForEditRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "function:src/queries/products/get-admin-product-for-edit.ts:getAdminProductForEditRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "function:src/queries/products/get-admin-products-list.ts:getAdminProductsListRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "function:src/queries/products/get-admin-products-list.ts:getAdminProductsListRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "function:src/queries/products/get-product-variant-attributes.ts:getProductVariantAttributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "function:src/queries/products/get-product-variant-attributes.ts:getProductVariantAttributes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/queries/products/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

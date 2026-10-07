@@ -1,0 +1,4772 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 174,
+  "totalBatches": 13,
+  "exportsByPath": {
+    "drizzle.config.ts": [],
+    "eslint.config.js": [],
+    "migrate.ts": [],
+    "seed.test.ts": [],
+    "seed.ts": [],
+    "seeds/catalog.ts": [
+      "seedCatalog"
+    ],
+    "seeds/helpers/constants.ts": [
+      "TABLE_IMPORT_ORDER"
+    ],
+    "seeds/helpers/index.test.ts": [],
+    "seeds/helpers/index.ts": [
+      "synchronizeSeedSequences",
+      "hashPassword",
+      "ensureParents",
+      "prepareSeedData",
+      "truncateTables"
+    ],
+    "seeds/identity.ts": [
+      "seedIdentity"
+    ],
+    "seeds/index.ts": [],
+    "seeds/inventory.ts": [
+      "seedInventory"
+    ],
+    "seeds/sales.ts": [
+      "seedSales"
+    ],
+    "seeds/system.ts": [
+      "seedSystem"
+    ],
+    "src/__tests__/permission-codes.test.ts": [],
+    "src/connection.ts": [
+      "connection",
+      "db"
+    ],
+    "src/index.ts": [],
+    "src/queries/administration/audit-logs.ts": [
+      "getAll",
+      "getByEntity",
+      "getRecent",
+      "countLogs",
+      "create"
+    ],
+    "src/queries/catalog/admin-categories.ts": [
+      "getCategoryById",
+      "getAllCategories",
+      "getCategoryBySlug",
+      "getCategoryRoots",
+      "getCategoryChildren",
+      "getCategoryDescendants",
+      "getCategoryByPath",
+      "countCategories",
+      "getCategoryProductCount",
+      "createCategory",
+      "updateCategory",
+      "reorderCategories",
+      "deleteCategory"
+    ],
+    "src/queries/catalog/admin-collections.ts": [
+      "getCollectionsAll",
+      "getCollectionByIdWithTags",
+      "getCollectionBySlug",
+      "createCollection",
+      "updateCollection",
+      "deleteCollection",
+      "setCollectionTags",
+      "updateCollectionSortOrders"
+    ],
+    "src/queries/catalog/admin-search-analytics.ts": [
+      "getMetrics",
+      "getTopSearches",
+      "getZeroResultSearches",
+      "getLowCTRSearches",
+      "getLanguageBreakdown"
+    ],
+    "src/queries/catalog/admin-tags.ts": [
+      "checkTagSlugAvailableRaw",
+      "getTagProductCountRaw",
+      "getAllTags",
+      "getTagById",
+      "listDistinctTagGroups",
+      "createTag",
+      "updateTag",
+      "deleteTag",
+      "bulkDeleteTags",
+      "bulkUpdateTagStatus"
+    ],
+    "src/queries/catalog/brands.ts": [
+      "getAll",
+      "getById",
+      "getBySlug",
+      "create",
+      "update",
+      "deleteById",
+      "count",
+      "countProductsByBrandId"
+    ],
+    "src/queries/catalog/categories.ts": [
+      "getById",
+      "getAll",
+      "getBySlug",
+      "getByPath",
+      "getTree",
+      "getRoots",
+      "getChildren",
+      "getProductCounts",
+      "getDescendants",
+      "create",
+      "update",
+      "reorder",
+      "deleteById",
+      "getCount",
+      "getProductCount"
+    ],
+    "src/queries/catalog/collections.ts": [
+      "getAllCollections",
+      "getCollectionById",
+      "getCollectionBySlug",
+      "getCollectionWithTags",
+      "getCollectionBySlugWithTags",
+      "createCollection",
+      "updateCollection",
+      "deleteCollection",
+      "setCollectionTags",
+      "getCollectionTagIds"
+    ],
+    "src/queries/catalog/counts.ts": [
+      "getProductCountRaw",
+      "getCategoryCountRaw",
+      "getBrandCountRaw"
+    ],
+    "src/queries/catalog/distribution.ts": [
+      "CategoryDistributionRawSchema",
+      "getCategoryDistributionRaw"
+    ],
+    "src/queries/catalog/health.ts": [
+      "CatalogHealthRawSchema",
+      "getCatalogHealthRaw"
+    ],
+    "src/queries/catalog/index.ts": [
+      "checkTagSlugAvailableRaw",
+      "getTagProductCountRaw",
+      "getAllTags",
+      "getTagById",
+      "createTag",
+      "updateTag",
+      "deleteTag",
+      "bulkDeleteTags",
+      "bulkUpdateTagStatus",
+      "listDistinctTagGroups",
+      "getCollectionsAll",
+      "getCollectionByIdWithTags",
+      "getCollectionBySlug",
+      "createCollection",
+      "updateCollection",
+      "deleteCollection",
+      "setCollectionTags",
+      "updateCollectionSortOrders",
+      "getAllProducts",
+      "getProductById",
+      "getProductsByIds",
+      "getVariantsByIds",
+      "getFilteredProducts",
+      "countProducts",
+      "ProductRow",
+      "ProductFiltersInput",
+      "executeCatalogScoredSearchRaw",
+      "getCatalogSuggestionsRaw",
+      "logCatalogSearchRaw",
+      "CatalogSearchQueryRawParams",
+      "CatalogSearchScoreRowRaw",
+      "CatalogSearchSuggestionCategoryRaw",
+      "CatalogSearchSuggestionProductRaw",
+      "getProductCountRaw",
+      "getCategoryCountRaw",
+      "getBrandCountRaw",
+      "getCatalogHealthRaw",
+      "CatalogHealthRaw",
+      "getCategoryDistributionRaw",
+      "CategoryDistributionRaw",
+      "getTopProductsRaw",
+      "TopProductRaw",
+      "getCategoryById",
+      "getAllCategories",
+      "getCategoryBySlug",
+      "getCategoryRoots",
+      "getCategoryChildren",
+      "getCategoryDescendants",
+      "getCategoryByPath",
+      "countCategories",
+      "getCategoryProductCount",
+      "createCategory",
+      "updateCategory",
+      "reorderCategories",
+      "deleteCategory",
+      "DbCategory",
+      "getBalance",
+      "getAllBalances",
+      "adjustStock",
+      "reserveStock",
+      "releaseReservation",
+      "getLowStock",
+      "InventoryBalanceRow",
+      "StockMovementRow",
+      "WarehouseRow",
+      "InventoryBalanceResult",
+      "StockMovementInput",
+      "getAllBrands",
+      "getBrandById",
+      "getBrandBySlug",
+      "createBrand",
+      "updateBrand",
+      "deleteBrand",
+      "countBrands",
+      "countProductsByBrandId",
+      "BrandRow",
+      "BrandWithProductCount",
+      "BrandCreateInput",
+      "BrandUpdateInput"
+    ],
+    "src/queries/catalog/inventory.ts": [
+      "getBalance",
+      "getAllBalances",
+      "adjustStock",
+      "reserveStock",
+      "releaseReservation",
+      "getLowStock"
+    ],
+    "src/queries/catalog/products.ts": [
+      "getById",
+      "getBySlug",
+      "getAll",
+      "getFeatured",
+      "search",
+      "getByCategory",
+      "getByBrand",
+      "getFiltered",
+      "getByIds",
+      "countProducts",
+      "getLowStockProducts",
+      "checkSlugAvailable",
+      "getVariantsByProductIds",
+      "getVariantsByIds",
+      "getProductTags",
+      "getProductsByTag",
+      "getProductAttributes",
+      "getByIdWithBrand",
+      "getByIdWithBrandAndCategory",
+      "getAllWithBrandAndCategory",
+      "create",
+      "update",
+      "deleteProduct"
+    ],
+    "src/queries/catalog/search.ts": [
+      "logCatalogSearchRaw",
+      "executeCatalogScoredSearchRaw",
+      "getCatalogSuggestionsRaw"
+    ],
+    "src/queries/catalog/tags.ts": [
+      "getAllTags",
+      "getTagsByGroup",
+      "getTagById",
+      "createTag",
+      "updateTag",
+      "deleteTag",
+      "getTagsForProduct",
+      "setProductTags",
+      "getProductIdsByTag"
+    ],
+    "src/queries/catalog/top-products.ts": [
+      "TopProductRawSchema",
+      "getTopProductsRaw"
+    ],
+    "src/queries/identity/admin-roles.ts": [
+      "listRoleIdsRaw",
+      "getAdminRolesSnapshotRaw",
+      "listPermissionItemsRaw"
+    ],
+    "src/queries/identity/admin-users.ts": [
+      "listAdminUserIdsRaw",
+      "getAdminUsersSnapshotRaw"
+    ],
+    "src/queries/identity/authorization-version.ts": [
+      "advanceAuthorizationVersion"
+    ],
+    "src/queries/identity/create-admin-user.ts": [
+      "createAdminUserRaw"
+    ],
+    "src/queries/identity/create-role.ts": [
+      "createRoleRaw"
+    ],
+    "src/queries/identity/deactivate-admin-user.ts": [
+      "deactivateAdminUserRaw"
+    ],
+    "src/queries/identity/delete-role.ts": [
+      "deleteRoleRaw"
+    ],
+    "src/queries/identity/get-role-user-count.ts": [
+      "getRoleUserCountRaw"
+    ],
+    "src/queries/identity/index.ts": [
+      "getAdminUsersSnapshotRaw",
+      "listAdminUserIdsRaw",
+      "getAdminRolesSnapshotRaw",
+      "listPermissionItemsRaw",
+      "listRoleIdsRaw",
+      "createAdminUserRaw",
+      "updateAdminUserRaw",
+      "deactivateAdminUserRaw",
+      "setAdminPermissionOverridesRaw",
+      "createRoleRaw",
+      "updateRolePermissionsRaw",
+      "getRoleUserCountRaw",
+      "deleteRoleRaw",
+      "AdminUserPermissionOverrideRowRaw",
+      "AdminUserRoleRowRaw",
+      "AdminUserRowRaw",
+      "AdminUsersSnapshotRaw",
+      "AdminRolePermissionRowRaw",
+      "AdminRoleRowRaw",
+      "AdminRolesSnapshotRaw",
+      "AdminRoleUserCountRowRaw",
+      "PermissionItemRaw",
+      "CreateAdminUserRawInput",
+      "UpdateAdminUserRawInput",
+      "PermissionOverrideMutationRawInput"
+    ],
+    "src/queries/identity/set-admin-permission-overrides.ts": [
+      "setAdminPermissionOverridesRaw"
+    ],
+    "src/queries/identity/update-admin-user.ts": [
+      "updateAdminUserRaw"
+    ],
+    "src/queries/identity/update-role-permissions.ts": [
+      "updateRolePermissionsRaw"
+    ],
+    "src/queries/identity/users.ts": [
+      "getById",
+      "getByEmail",
+      "getByEmailWithPassword",
+      "findPasswordCredentials",
+      "getAuthorizationContext",
+      "create",
+      "update",
+      "upsertPasswordCredentials"
+    ],
+    "src/queries/index.ts": [
+      "OrderRow",
+      "OrderItemRow",
+      "withTransaction",
+      "DbTransaction"
+    ],
+    "src/queries/inventory/index.ts": [
+      "getLowStockCountRaw",
+      "reserveOrderStock",
+      "consumeOrderStock",
+      "releaseOrderStock",
+      "InsufficientStockError",
+      "StockReservationStateError",
+      "ReservationLine",
+      "ReservedStock",
+      "StockShortfall"
+    ],
+    "src/queries/inventory/low-stock.ts": [
+      "getLowStockCountRaw"
+    ],
+    "src/queries/inventory/stock-reservations.ts": [
+      "InsufficientStockError",
+      "StockReservationStateError",
+      "reserveOrderStock",
+      "consumeOrderStock",
+      "releaseOrderStock"
+    ],
+    "src/queries/notifications/notifications.ts": [
+      "create",
+      "markRead",
+      "markAllRead",
+      "getUnread",
+      "getAll",
+      "getUnreadCount"
+    ],
+    "src/queries/partner-sales/index.ts": [
+      "listAttributedOrders",
+      "getAttributedOrderTotals",
+      "getFirstAttributedOrderMonth",
+      "listAttributedSalesRows"
+    ],
+    "src/queries/partners/index.ts": [
+      "isPartnerCodeTakenError",
+      "listBusinessPartners",
+      "getBusinessPartnerById",
+      "getBusinessPartnerByCode",
+      "lockBusinessPartnerById",
+      "insertBusinessPartner",
+      "updateBusinessPartner",
+      "setBusinessPartnerStatus",
+      "hasActivePartnerAdministrator",
+      "insertPartnerAccessHistory",
+      "getPartnerInvitationById",
+      "listPendingPartnerInvitations",
+      "getPendingPartnerInvitationByEmail",
+      "insertPartnerInvitation",
+      "setPartnerInvitationStatus",
+      "setPartnerInvitationExpiry",
+      "insertPartnerInvitationToken",
+      "getPartnerInvitationByTokenDigest",
+      "getCurrentPartnerMembership",
+      "insertPartnerMembership",
+      "verifyUserEmailIfUnset",
+      "getPartnerUserById",
+      "listActivePartnerMembershipsForUser",
+      "getCurrentPartnerMembershipByEmail",
+      "getPartnerMembershipById",
+      "listCurrentPartnerMembers",
+      "countOtherActivePartnerAdministrators",
+      "updatePartnerMembership",
+      "getActiveMembershipRoles"
+    ],
+    "src/queries/products/bulk-activate-products.ts": [
+      "bulkActivateProducts"
+    ],
+    "src/queries/products/bulk-deactivate-products.ts": [
+      "bulkDeactivateProducts"
+    ],
+    "src/queries/products/bulk-delete-products.ts": [
+      "bulkDeleteProducts"
+    ],
+    "src/queries/products/check-product-slug-available.ts": [
+      "checkProductSlugAvailable"
+    ],
+    "src/queries/products/check-product-variant-sku-available.ts": [
+      "checkProductVariantSkuAvailable"
+    ],
+    "src/queries/products/create-product-with-variants.ts": [
+      "createProductWithVariantsInDb"
+    ],
+    "src/queries/products/deactivate-product-variant.ts": [
+      "deactivateProductVariant"
+    ],
+    "src/queries/products/duplicate-product.ts": [
+      "duplicateProductWithVariants"
+    ],
+    "src/queries/products/get-admin-product-for-edit.ts": [
+      "getAdminProductForEditRaw"
+    ],
+    "src/queries/products/get-admin-products-list.ts": [
+      "getAdminProductsListRaw"
+    ],
+    "src/queries/products/get-product-variant-attributes.ts": [
+      "getProductVariantAttributes"
+    ],
+    "src/queries/products/index.ts": [
+      "getAdminProductsListRaw",
+      "getAdminProductForEditRaw",
+      "createProductWithVariantsInDb",
+      "bulkActivateProducts",
+      "bulkDeactivateProducts",
+      "bulkDeleteProducts",
+      "duplicateProductWithVariants",
+      "getProductVariantAttributes",
+      "insertProductVariantInTx",
+      "insertGeneratedProductVariants",
+      "updateProductWithVariantsInDb",
+      "updateProductVariantKey",
+      "checkProductVariantSkuAvailable",
+      "checkProductSlugAvailable",
+      "deactivateProductVariant",
+      "upsertProductVariantImages",
+      "AdminProductListQueryFilters",
+      "AdminProductListQueryResult",
+      "AdminProductListRowRaw",
+      "InsertProductVariantAttributeInput",
+      "InsertProductVariantImageInput",
+      "InsertProductVariantInput"
+    ],
+    "src/queries/products/insert-generated-product-variants.ts": [
+      "insertGeneratedProductVariants"
+    ],
+    "src/queries/products/insert-product-variant-in-tx.ts": [
+      "insertProductVariantInTx"
+    ],
+    "src/queries/products/types.ts": [],
+    "src/queries/products/update-product-variant-key.ts": [
+      "updateProductVariantKey"
+    ],
+    "src/queries/products/update-product-with-variants.ts": [
+      "updateProductWithVariantsInDb"
+    ],
+    "src/queries/products/upsert-product-variant-images.ts": [
+      "upsertProductVariantImages"
+    ],
+    "src/queries/review/reviews.ts": [
+      "getByProductId",
+      "getByProductIdPaginated",
+      "getSummaryByProductId",
+      "getById",
+      "getByUserId",
+      "hasUserReviewed",
+      "create",
+      "markHelpful",
+      "recalculateProductAggregates"
+    ],
+    "src/queries/sales/__tests__/orders.test.ts": [],
+    "src/queries/sales/checkout-idempotency.ts": [
+      "IDEMPOTENCY_RETENTION_HOURS",
+      "isScopeKeyConflict",
+      "findByScopeAndKey",
+      "ScopeKeyConflictError",
+      "claimKey",
+      "recordSuccess",
+      "purgeExpired"
+    ],
+    "src/queries/sales/guest-access.ts": [
+      "GUEST_ACCESS_TTL_MINUTES",
+      "GUEST_ACCESS_MAX_ATTEMPTS",
+      "GUEST_ACCESS_MAX_REQUESTS_PER_HOUR",
+      "findGuestOrder",
+      "findOrderIdByReference",
+      "createRequest",
+      "findLiveRequest",
+      "addCodeHash",
+      "attemptVerification"
+    ],
+    "src/queries/sales/index.ts": [
+      "getTotalOrderStatsRaw",
+      "getOrderStatsRaw",
+      "OrderStats",
+      "getRevenueByPeriodRaw",
+      "RevenuePeriodRaw",
+      "hasPurchasedProduct"
+    ],
+    "src/queries/sales/order-stats.ts": [
+      "OrderStatsSchema",
+      "getTotalOrderStatsRaw",
+      "getOrderStatsRaw"
+    ],
+    "src/queries/sales/orders.ts": [
+      "generateOrderReference",
+      "assertMutableOrderColumns",
+      "getById",
+      "getByUserId",
+      "hasPurchasedProduct",
+      "getFiltered",
+      "getRecent",
+      "count",
+      "isOrderReferenceConflict",
+      "create",
+      "updateOrder",
+      "getOrdersCountByStatus",
+      "getTotalRevenue",
+      "getRevenueByPeriod"
+    ],
+    "src/queries/sales/revenue.ts": [
+      "RevenuePeriodRawSchema",
+      "getRevenueByPeriodRaw"
+    ],
+    "src/queries/school-directory/index.ts": [
+      "searchPartnerSchools",
+      "getPartnerSchoolFilterOptions",
+      "getPartnerSchoolByCode"
+    ],
+    "src/queries/school-supply-lists/index.ts": [
+      "findVariantCandidates",
+      "listAttributeValuesForCategory"
+    ],
+    "src/queries/school-supply-lists/lifecycle.ts": [
+      "SupplyListItemInput",
+      "lockSupplyListPartner",
+      "listSupplyListsForPartner",
+      "getSupplyList",
+      "lockSupplyList",
+      "getSupplyListItems",
+      "getPublishedSupplyListInSlot",
+      "insertSupplyListDraft",
+      "updateSupplyListDraft",
+      "insertSupplyListItem",
+      "updateSupplyListItem",
+      "deleteSupplyListItem",
+      "getSupplyListDefaults",
+      "snapshotSupplyListItem",
+      "publishSupplyList",
+      "archiveSupplyList",
+      "isSupplyListSlotTakenError"
+    ],
+    "src/queries/school-supply-lists/list-offers.ts": [
+      "getListOffer",
+      "upsertListOffer",
+      "deleteListOffer",
+      "copyListOffer"
+    ],
+    "src/queries/school-supply-lists/public-read.ts": [
+      "getPublicSupplyListByCode",
+      "getAvailableQuantities",
+      "getVariantDisplayDetails"
+    ],
+    "src/queries/system/outbox.ts": [
+      "OUTBOX_LEASE_SECONDS",
+      "OUTBOX_MAX_ATTEMPTS",
+      "OUTBOX_DELIVERED_RETENTION_DAYS",
+      "backoffSeconds",
+      "enqueue",
+      "claimNext",
+      "markDelivered",
+      "markExpired",
+      "markFailed",
+      "purgeDelivered",
+      "countByStatus",
+      "getById",
+      "listExhausted",
+      "requeueExhausted"
+    ],
+    "src/queries/transaction.ts": [
+      "withTransaction"
+    ],
+    "src/schema/catalog/brands.ts": [
+      "brands",
+      "brandsRelations"
+    ],
+    "src/schema/catalog/categories.ts": [
+      "categories",
+      "categoriesRelations"
+    ],
+    "src/schema/catalog/collections.ts": [
+      "collections",
+      "collectionTags",
+      "collectionsRelations",
+      "collectionTagsRelations"
+    ],
+    "src/schema/catalog/index.ts": [],
+    "src/schema/catalog/product-attributes.ts": [
+      "attributes",
+      "productAttributes",
+      "attributesRelations",
+      "productAttributesRelations"
+    ],
+    "src/schema/catalog/product-variants.ts": [
+      "productVariants",
+      "variantImages",
+      "variantAttributes",
+      "productVariantsRelations",
+      "variantImagesRelations",
+      "variantAttributesRelations"
+    ],
+    "src/schema/catalog/products.ts": [
+      "products",
+      "productsRelations"
+    ],
+    "src/schema/catalog/tags.ts": [
+      "tags",
+      "productTags",
+      "tagsRelations",
+      "productTagsRelations"
+    ],
+    "src/schema/catalog/types.ts": [],
+    "src/schema/enums.ts": [
+      "portalRoleEnum",
+      "actorTypeEnum",
+      "orderStatusEnum",
+      "paymentStatusEnum",
+      "paymentMethodEnum"
+    ],
+    "src/schema/identity/addresses.ts": [
+      "addresses",
+      "addressesRelations"
+    ],
+    "src/schema/identity/identity-access.ts": [
+      "authAccounts",
+      "passwordCredentials",
+      "organizations",
+      "roles",
+      "permissions",
+      "rolePermissions",
+      "userRoles",
+      "userPermissions",
+      "organizationMemberships",
+      "paymentMethods",
+      "guestPrincipals",
+      "authAccountsRelations",
+      "passwordCredentialsRelations",
+      "userRolesRelations",
+      "userPermissionsRelations",
+      "rolePermissionsRelations",
+      "organizationMembershipsRelations",
+      "paymentMethodsRelations"
+    ],
+    "src/schema/identity/index.ts": [],
+    "src/schema/identity/partners.ts": [
+      "PARTNER_STATUSES",
+      "PARTNER_ACTOR_KINDS",
+      "PARTNER_ACCESS_ACTIONS",
+      "businessPartners",
+      "partnerAccessHistory",
+      "PARTNER_ROLES",
+      "PARTNER_ADMINISTRATOR",
+      "PARTNER_INVITATION_STATUSES",
+      "partnerInvitations",
+      "partnerInvitationTokens",
+      "PARTNER_MEMBERSHIP_STATUSES",
+      "partnerMemberships"
+    ],
+    "src/schema/identity/users.ts": [
+      "users",
+      "usersRelations"
+    ],
+    "src/schema/index.ts": [],
+    "src/schema/inventory/index.ts": [],
+    "src/schema/inventory/inventory.ts": [
+      "warehouses",
+      "inventoryBalances",
+      "stockMovements",
+      "stockReservations",
+      "warehousesRelations",
+      "inventoryBalancesRelations",
+      "stockReservationsRelations",
+      "stockMovementsRelations"
+    ],
+    "src/schema/sales/checkout-idempotency.ts": [
+      "checkoutIdempotency",
+      "checkoutIdempotencyRelations"
+    ],
+    "src/schema/sales/discount-rules.ts": [
+      "discountRules"
+    ],
+    "src/schema/sales/guest-access.ts": [
+      "guestAccessRequests",
+      "guestAccessCodes",
+      "guestAccessRequestsRelations",
+      "guestAccessCodesRelations"
+    ],
+    "src/schema/sales/index.ts": [],
+    "src/schema/sales/list-offers.ts": [
+      "listOffers"
+    ],
+    "src/schema/sales/orders.ts": [
+      "CROCKFORD_BASE32",
+      "generateOrderReference",
+      "orders",
+      "orderItems",
+      "ordersRelations",
+      "orderItemsRelations"
+    ],
+    "src/schema/sales/reviews.ts": [
+      "reviews",
+      "reviewHelpfulVotes",
+      "reviewsRelations",
+      "reviewHelpfulVotesRelations"
+    ],
+    "src/schema/schemas.ts": [
+      "identitySchema",
+      "catalogSchema",
+      "salesSchema",
+      "inventorySchema",
+      "schoolEngineSchema",
+      "systemSchema"
+    ],
+    "src/schema/school-engine/index.ts": [],
+    "src/schema/school-engine/school-supply-lists.ts": [
+      "SUPPLY_LIST_STATUSES",
+      "partnerSchoolProfiles",
+      "schoolSupplyLists",
+      "schoolSupplyListItems"
+    ],
+    "src/schema/system/audit-log.ts": [
+      "auditLog",
+      "auditLogRelations"
+    ],
+    "src/schema/system/index.ts": [],
+    "src/schema/system/notifications.ts": [
+      "notifications",
+      "notificationsRelations"
+    ],
+    "src/schema/system/outbox.ts": [
+      "OUTBOX_STATUSES",
+      "outbox"
+    ],
+    "src/schema/system/search-logs.ts": [
+      "searchLogs",
+      "searchLogsRelations"
+    ],
+    "src/schema/system/server-logs.ts": [
+      "serverLogs"
+    ],
+    "src/types/catalog/IProduct.interface.ts": [],
+    "src/types/common.ts": [
+      "SUPPORTED_LOCALES",
+      "DEFAULT_LOCALE",
+      "LocaleSchema",
+      "TranslationMapSchema",
+      "CurrencyCodeSchema",
+      "DEFAULT_CURRENCY",
+      "MoneyAmountSchema",
+      "MoneySchema",
+      "IdSchema",
+      "SkuSchema",
+      "SkuRequiredSchema",
+      "EmailSchema",
+      "SlugSchema",
+      "QuantitySchema",
+      "RatingSchema",
+      "MediaVariantKeySchema",
+      "MediaAssetSchema",
+      "ResponsiveMediaSetSchema"
+    ],
+    "src/types/identity.ts": [
+      "ActorTypeSchema",
+      "PortalRoleSchema",
+      "PERMISSION_CODES",
+      "ADMIN_ROLE_IDS",
+      "RoleIdSchema",
+      "PermissionIdSchema",
+      "PermissionCodeSchema",
+      "RoleScopeSchema",
+      "OrganizationIdSchema",
+      "GuestPrincipalIdSchema",
+      "UserVOSchema",
+      "createUserVO",
+      "SessionPayloadSchema",
+      "staffRole",
+      "customerRole",
+      "systemAdmin",
+      "adminSession",
+      "hasPermission",
+      "hasAnyPermission",
+      "hasAllPermissions",
+      "AuthProviderSchema",
+      "PaymentProviderSchema",
+      "LinkedAuthAccountSchema",
+      "RoleGrantSchema",
+      "OrganizationMembershipStatusSchema",
+      "OrganizationMembershipSchema",
+      "SavedPaymentMethodSchema"
+    ],
+    "src/types/index.ts": [],
+    "src/types/pricing.ts": [
+      "PersistedPricingSchema",
+      "DiscountTypeSchema",
+      "DiscountRuleSchema",
+      "AppliedDiscountSchema",
+      "ResolvedPricingSchema"
+    ],
+    "src/types/sales.ts": [
+      "OrderStatusSchema",
+      "PaymentStatusSchema",
+      "PaymentMethodSchema",
+      "ShippingAddressSchema",
+      "VariantSnapshotSchema"
+    ],
+    "src/types/school-supply-lists.ts": [
+      "SupplyListIdSchema",
+      "CreateSupplyListDraftSchema",
+      "UpdateSupplyListDraftSchema",
+      "SupplyListItemSchema",
+      "ListOfferSchema"
+    ],
+    "vitest.config.ts": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": "src/schema/catalog/brands.ts",
+          "language": "typescript",
+          "sizeLines": 30,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/categories.ts",
+          "language": "typescript",
+          "sizeLines": 59,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/collections.ts",
+          "language": "typescript",
+          "sizeLines": 78,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/product-attributes.ts",
+          "language": "typescript",
+          "sizeLines": 83,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/product-variants.ts",
+          "language": "typescript",
+          "sizeLines": 195,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/products.ts",
+          "language": "typescript",
+          "sizeLines": 79,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/tags.ts",
+          "language": "typescript",
+          "sizeLines": 60,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/types.ts",
+          "language": "typescript",
+          "sizeLines": 33,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/enums.ts",
+          "language": "typescript",
+          "sizeLines": 32,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/identity/addresses.ts",
+          "language": "typescript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/identity/identity-access.ts",
+          "language": "typescript",
+          "sizeLines": 337,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/identity/partners.ts",
+          "language": "typescript",
+          "sizeLines": 216,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/identity/users.ts",
+          "language": "typescript",
+          "sizeLines": 61,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/inventory/inventory.ts",
+          "language": "typescript",
+          "sizeLines": 226,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/checkout-idempotency.ts",
+          "language": "typescript",
+          "sizeLines": 30,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/discount-rules.ts",
+          "language": "typescript",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/guest-access.ts",
+          "language": "typescript",
+          "sizeLines": 60,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/list-offers.ts",
+          "language": "typescript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/orders.ts",
+          "language": "typescript",
+          "sizeLines": 211,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/reviews.ts",
+          "language": "typescript",
+          "sizeLines": 84,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/schemas.ts",
+          "language": "typescript",
+          "sizeLines": 15,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/school-engine/school-supply-lists.ts",
+          "language": "typescript",
+          "sizeLines": 115,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/audit-log.ts",
+          "language": "typescript",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/notifications.ts",
+          "language": "typescript",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/outbox.ts",
+          "language": "typescript",
+          "sizeLines": 48,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/search-logs.ts",
+          "language": "typescript",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/server-logs.ts",
+          "language": "typescript",
+          "sizeLines": 38,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/sales.ts",
+          "language": "typescript",
+          "sizeLines": 74,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/schema/catalog/brands.ts": [
+          "src/schema/catalog/products.ts",
+          "src/schema/catalog/types.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/categories.ts": [
+          "src/schema/catalog/products.ts",
+          "src/schema/catalog/types.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/collections.ts": [
+          "src/schema/catalog/tags.ts",
+          "src/schema/catalog/types.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/product-attributes.ts": [
+          "src/schema/catalog/products.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/product-variants.ts": [
+          "src/schema/catalog/product-attributes.ts",
+          "src/schema/catalog/products.ts",
+          "src/schema/catalog/types.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/products.ts": [
+          "src/schema/catalog/brands.ts",
+          "src/schema/catalog/categories.ts",
+          "src/schema/catalog/product-attributes.ts",
+          "src/schema/catalog/product-variants.ts",
+          "src/schema/catalog/tags.ts",
+          "src/schema/schemas.ts",
+          "src/types/index.ts"
+        ],
+        "src/schema/catalog/tags.ts": [
+          "src/schema/catalog/products.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/catalog/types.ts": [],
+        "src/schema/enums.ts": [
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/identity/addresses.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/identity/identity-access.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts",
+          "src/types/index.ts"
+        ],
+        "src/schema/identity/partners.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/identity/users.ts": [
+          "src/schema/enums.ts",
+          "src/schema/identity/addresses.ts",
+          "src/schema/sales/orders.ts",
+          "src/schema/sales/reviews.ts",
+          "src/schema/schemas.ts",
+          "src/schema/system/audit-log.ts"
+        ],
+        "src/schema/inventory/inventory.ts": [
+          "src/schema/catalog/product-variants.ts",
+          "src/schema/identity/users.ts",
+          "src/schema/sales/orders.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/sales/checkout-idempotency.ts": [
+          "src/schema/sales/orders.ts",
+          "src/schema/schemas.ts",
+          "src/types/sales.ts"
+        ],
+        "src/schema/sales/discount-rules.ts": [
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/sales/guest-access.ts": [
+          "src/schema/sales/orders.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/sales/list-offers.ts": [
+          "src/schema/schemas.ts",
+          "src/schema/school-engine/school-supply-lists.ts"
+        ],
+        "src/schema/sales/orders.ts": [
+          "src/schema/catalog/product-variants.ts",
+          "src/schema/catalog/products.ts",
+          "src/schema/enums.ts",
+          "src/schema/identity/partners.ts",
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts",
+          "src/schema/school-engine/school-supply-lists.ts",
+          "src/types/index.ts"
+        ],
+        "src/schema/sales/reviews.ts": [
+          "src/schema/catalog/products.ts",
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/schemas.ts": [],
+        "src/schema/school-engine/school-supply-lists.ts": [
+          "src/schema/catalog/product-variants.ts",
+          "src/schema/catalog/types.ts",
+          "src/schema/identity/partners.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/system/audit-log.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/system/notifications.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/system/outbox.ts": [
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/system/search-logs.ts": [
+          "src/schema/identity/users.ts",
+          "src/schema/schemas.ts"
+        ],
+        "src/schema/system/server-logs.ts": [
+          "src/schema/schemas.ts"
+        ],
+        "src/types/sales.ts": [
+          "src/schema/enums.ts"
+        ]
+      },
+      "neighborMap": {
+        "src/schema/catalog/products.ts": [
+          {
+            "path": "src/types/index.ts",
+            "batchIndex": 6,
+            "symbols": []
+          }
+        ],
+        "src/schema/enums.ts": [
+          {
+            "path": "src/types/identity.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "ActorTypeSchema",
+              "PortalRoleSchema",
+              "PERMISSION_CODES",
+              "ADMIN_ROLE_IDS",
+              "RoleIdSchema",
+              "PermissionIdSchema",
+              "PermissionCodeSchema",
+              "RoleScopeSchema",
+              "OrganizationIdSchema",
+              "GuestPrincipalIdSchema",
+              "UserVOSchema",
+              "createUserVO",
+              "SessionPayloadSchema",
+              "staffRole",
+              "customerRole",
+              "systemAdmin",
+              "adminSession",
+              "hasPermission",
+              "hasAnyPermission",
+              "hasAllPermissions",
+              "AuthProviderSchema",
+              "PaymentProviderSchema",
+              "LinkedAuthAccountSchema",
+              "RoleGrantSchema",
+              "OrganizationMembershipStatusSchema",
+              "OrganizationMembershipSchema",
+              "SavedPaymentMethodSchema"
+            ]
+          }
+        ],
+        "src/schema/identity/identity-access.ts": [
+          {
+            "path": "src/types/index.ts",
+            "batchIndex": 6,
+            "symbols": []
+          }
+        ],
+        "src/schema/sales/orders.ts": [
+          {
+            "path": "src/types/index.ts",
+            "batchIndex": 6,
+            "symbols": []
+          }
+        ],
+        "src/types/sales.ts": [
+          {
+            "path": "src/queries/sales/checkout-idempotency.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "IDEMPOTENCY_RETENTION_HOURS",
+              "isScopeKeyConflict",
+              "findByScopeAndKey",
+              "ScopeKeyConflictError",
+              "claimKey",
+              "recordSuccess",
+              "purgeExpired"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "src/connection.ts",
+          "language": "typescript",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/administration/audit-logs.ts",
+          "language": "typescript",
+          "sizeLines": 181,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/admin-search-analytics.ts",
+          "language": "typescript",
+          "sizeLines": 199,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/brands.ts",
+          "language": "typescript",
+          "sizeLines": 119,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/categories.ts",
+          "language": "typescript",
+          "sizeLines": 260,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/collections.ts",
+          "language": "typescript",
+          "sizeLines": 152,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/inventory.ts",
+          "language": "typescript",
+          "sizeLines": 247,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/search.ts",
+          "language": "typescript",
+          "sizeLines": 165,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/tags.ts",
+          "language": "typescript",
+          "sizeLines": 106,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/admin-roles.ts",
+          "language": "typescript",
+          "sizeLines": 100,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/admin-users.ts",
+          "language": "typescript",
+          "sizeLines": 87,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/authorization-version.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/create-admin-user.ts",
+          "language": "typescript",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/create-role.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/deactivate-admin-user.ts",
+          "language": "typescript",
+          "sizeLines": 12,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/delete-role.ts",
+          "language": "typescript",
+          "sizeLines": 8,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/get-role-user-count.ts",
+          "language": "typescript",
+          "sizeLines": 13,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/set-admin-permission-overrides.ts",
+          "language": "typescript",
+          "sizeLines": 33,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/update-admin-user.ts",
+          "language": "typescript",
+          "sizeLines": 56,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/update-role-permissions.ts",
+          "language": "typescript",
+          "sizeLines": 38,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/inventory/stock-reservations.ts",
+          "language": "typescript",
+          "sizeLines": 247,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/notifications/notifications.ts",
+          "language": "typescript",
+          "sizeLines": 105,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/partner-sales/index.ts",
+          "language": "typescript",
+          "sizeLines": 226,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/connection.ts": [
+          "src/schema/index.ts"
+        ],
+        "src/queries/administration/audit-logs.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/admin-search-analytics.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/brands.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/categories.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/collections.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/inventory.ts": [
+          "src/connection.ts",
+          "src/queries/transaction.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/search.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/catalog/tags.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/admin-roles.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/admin-users.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/authorization-version.ts": [
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/create-admin-user.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/create-role.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/deactivate-admin-user.ts": [
+          "src/connection.ts",
+          "src/queries/identity/authorization-version.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/delete-role.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/get-role-user-count.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/set-admin-permission-overrides.ts": [
+          "src/connection.ts",
+          "src/queries/identity/authorization-version.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/update-admin-user.ts": [
+          "src/connection.ts",
+          "src/queries/identity/authorization-version.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/identity/update-role-permissions.ts": [
+          "src/connection.ts",
+          "src/queries/identity/authorization-version.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/inventory/stock-reservations.ts": [
+          "src/queries/transaction.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/notifications/notifications.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/partner-sales/index.ts": [
+          "src/schema/index.ts"
+        ]
+      },
+      "neighborMap": {
+        "src/connection.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          },
+          {
+            "path": "seeds/helpers/index.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "synchronizeSeedSequences",
+              "hashPassword",
+              "ensureParents",
+              "prepareSeedData",
+              "truncateTables"
+            ]
+          },
+          {
+            "path": "src/queries/transaction.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "withTransaction"
+            ]
+          },
+          {
+            "path": "src/queries/products/insert-product-variant-in-tx.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "insertProductVariantInTx"
+            ]
+          },
+          {
+            "path": "src/queries/sales/orders.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "generateOrderReference",
+              "assertMutableOrderColumns",
+              "getById",
+              "getByUserId",
+              "hasPurchasedProduct",
+              "getFiltered",
+              "getRecent",
+              "count",
+              "isOrderReferenceConflict",
+              "create",
+              "updateOrder",
+              "getOrdersCountByStatus",
+              "getTotalRevenue",
+              "getRevenueByPeriod"
+            ]
+          },
+          {
+            "path": "src/queries/identity/users.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getById",
+              "getByEmail",
+              "getByEmailWithPassword",
+              "findPasswordCredentials",
+              "getAuthorizationContext",
+              "create",
+              "update",
+              "upsertPasswordCredentials"
+            ]
+          },
+          {
+            "path": "src/queries/sales/checkout-idempotency.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "IDEMPOTENCY_RETENTION_HOURS",
+              "isScopeKeyConflict",
+              "findByScopeAndKey",
+              "ScopeKeyConflictError",
+              "claimKey",
+              "recordSuccess",
+              "purgeExpired"
+            ]
+          },
+          {
+            "path": "seed.ts",
+            "batchIndex": 5,
+            "symbols": []
+          },
+          {
+            "path": "src/queries/catalog/admin-categories.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "getCategoryById",
+              "getAllCategories",
+              "getCategoryBySlug",
+              "getCategoryRoots",
+              "getCategoryChildren",
+              "getCategoryDescendants",
+              "getCategoryByPath",
+              "countCategories",
+              "getCategoryProductCount",
+              "createCategory",
+              "updateCategory",
+              "reorderCategories",
+              "deleteCategory"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-collections.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "getCollectionsAll",
+              "getCollectionByIdWithTags",
+              "getCollectionBySlug",
+              "createCollection",
+              "updateCollection",
+              "deleteCollection",
+              "setCollectionTags",
+              "updateCollectionSortOrders"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-tags.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "checkTagSlugAvailableRaw",
+              "getTagProductCountRaw",
+              "getAllTags",
+              "getTagById",
+              "listDistinctTagGroups",
+              "createTag",
+              "updateTag",
+              "deleteTag",
+              "bulkDeleteTags",
+              "bulkUpdateTagStatus"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/products.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getById",
+              "getBySlug",
+              "getAll",
+              "getFeatured",
+              "search",
+              "getByCategory",
+              "getByBrand",
+              "getFiltered",
+              "getByIds",
+              "countProducts",
+              "getLowStockProducts",
+              "checkSlugAvailable",
+              "getVariantsByProductIds",
+              "getVariantsByIds",
+              "getProductTags",
+              "getProductsByTag",
+              "getProductAttributes",
+              "getByIdWithBrand",
+              "getByIdWithBrandAndCategory",
+              "getAllWithBrandAndCategory",
+              "create",
+              "update",
+              "deleteProduct"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/top-products.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "TopProductRawSchema",
+              "getTopProductsRaw"
+            ]
+          },
+          {
+            "path": "src/queries/inventory/low-stock.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "getLowStockCountRaw"
+            ]
+          },
+          {
+            "path": "src/queries/products/create-product-with-variants.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "createProductWithVariantsInDb"
+            ]
+          },
+          {
+            "path": "src/queries/products/get-admin-products-list.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "getAdminProductsListRaw"
+            ]
+          },
+          {
+            "path": "src/queries/products/update-product-with-variants.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "updateProductWithVariantsInDb"
+            ]
+          },
+          {
+            "path": "src/queries/products/upsert-product-variant-images.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "upsertProductVariantImages"
+            ]
+          },
+          {
+            "path": "src/queries/review/reviews.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getByProductId",
+              "getByProductIdPaginated",
+              "getSummaryByProductId",
+              "getById",
+              "getByUserId",
+              "hasUserReviewed",
+              "create",
+              "markHelpful",
+              "recalculateProductAggregates"
+            ]
+          },
+          {
+            "path": "src/queries/sales/guest-access.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "GUEST_ACCESS_TTL_MINUTES",
+              "GUEST_ACCESS_MAX_ATTEMPTS",
+              "GUEST_ACCESS_MAX_REQUESTS_PER_HOUR",
+              "findGuestOrder",
+              "findOrderIdByReference",
+              "createRequest",
+              "findLiveRequest",
+              "addCodeHash",
+              "attemptVerification"
+            ]
+          },
+          {
+            "path": "src/queries/system/outbox.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "OUTBOX_LEASE_SECONDS",
+              "OUTBOX_MAX_ATTEMPTS",
+              "OUTBOX_DELIVERED_RETENTION_DAYS",
+              "backoffSeconds",
+              "enqueue",
+              "claimNext",
+              "markDelivered",
+              "markExpired",
+              "markFailed",
+              "purgeDelivered",
+              "countByStatus",
+              "getById",
+              "listExhausted",
+              "requeueExhausted"
+            ]
+          },
+          {
+            "path": "migrate.ts",
+            "batchIndex": 13,
+            "symbols": []
+          },
+          {
+            "path": "src/queries/catalog/counts.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "getProductCountRaw",
+              "getCategoryCountRaw",
+              "getBrandCountRaw"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/distribution.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "CategoryDistributionRawSchema",
+              "getCategoryDistributionRaw"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/health.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "CatalogHealthRawSchema",
+              "getCatalogHealthRaw"
+            ]
+          },
+          {
+            "path": "src/queries/products/bulk-activate-products.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "bulkActivateProducts"
+            ]
+          },
+          {
+            "path": "src/queries/products/bulk-deactivate-products.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "bulkDeactivateProducts"
+            ]
+          },
+          {
+            "path": "src/queries/products/bulk-delete-products.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "bulkDeleteProducts"
+            ]
+          },
+          {
+            "path": "src/queries/products/check-product-slug-available.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "checkProductSlugAvailable"
+            ]
+          },
+          {
+            "path": "src/queries/products/check-product-variant-sku-available.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "checkProductVariantSkuAvailable"
+            ]
+          },
+          {
+            "path": "src/queries/products/deactivate-product-variant.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "deactivateProductVariant"
+            ]
+          },
+          {
+            "path": "src/queries/products/duplicate-product.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "duplicateProductWithVariants"
+            ]
+          },
+          {
+            "path": "src/queries/products/get-admin-product-for-edit.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "getAdminProductForEditRaw"
+            ]
+          },
+          {
+            "path": "src/queries/products/get-product-variant-attributes.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "getProductVariantAttributes"
+            ]
+          },
+          {
+            "path": "src/queries/products/insert-generated-product-variants.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "insertGeneratedProductVariants"
+            ]
+          },
+          {
+            "path": "src/queries/products/update-product-variant-key.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "updateProductVariantKey"
+            ]
+          },
+          {
+            "path": "src/queries/sales/order-stats.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "OrderStatsSchema",
+              "getTotalOrderStatsRaw",
+              "getOrderStatsRaw"
+            ]
+          },
+          {
+            "path": "src/queries/sales/revenue.ts",
+            "batchIndex": 4,
+            "symbols": [
+              "RevenuePeriodRawSchema",
+              "getRevenueByPeriodRaw"
+            ]
+          }
+        ],
+        "src/queries/administration/audit-logs.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/admin-search-analytics.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/brands.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/categories.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/collections.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/inventory.ts": [
+          {
+            "path": "src/queries/transaction.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "withTransaction"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/search.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/tags.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/admin-roles.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/admin-users.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/authorization-version.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          },
+          {
+            "path": "src/queries/identity/users.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getById",
+              "getByEmail",
+              "getByEmailWithPassword",
+              "findPasswordCredentials",
+              "getAuthorizationContext",
+              "create",
+              "update",
+              "upsertPasswordCredentials"
+            ]
+          }
+        ],
+        "src/queries/identity/create-admin-user.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/create-role.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/deactivate-admin-user.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/delete-role.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/get-role-user-count.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/set-admin-permission-overrides.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/update-admin-user.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/update-role-permissions.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/inventory/stock-reservations.ts": [
+          {
+            "path": "src/queries/transaction.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "withTransaction"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/notifications/notifications.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/partner-sales/index.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "src/queries/partners/index.ts",
+          "language": "typescript",
+          "sizeLines": 454,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/bulk-activate-products.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/bulk-deactivate-products.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/bulk-delete-products.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/check-product-slug-available.ts",
+          "language": "typescript",
+          "sizeLines": 16,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/check-product-variant-sku-available.ts",
+          "language": "typescript",
+          "sizeLines": 20,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/create-product-with-variants.ts",
+          "language": "typescript",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/deactivate-product-variant.ts",
+          "language": "typescript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/duplicate-product.ts",
+          "language": "typescript",
+          "sizeLines": 75,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/get-admin-product-for-edit.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/get-admin-products-list.ts",
+          "language": "typescript",
+          "sizeLines": 184,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/get-product-variant-attributes.ts",
+          "language": "typescript",
+          "sizeLines": 24,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/insert-generated-product-variants.ts",
+          "language": "typescript",
+          "sizeLines": 72,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/insert-product-variant-in-tx.ts",
+          "language": "typescript",
+          "sizeLines": 100,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/types.ts",
+          "language": "typescript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/update-product-variant-key.ts",
+          "language": "typescript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/update-product-with-variants.ts",
+          "language": "typescript",
+          "sizeLines": 129,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/upsert-product-variant-images.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/checkout-idempotency.ts",
+          "language": "typescript",
+          "sizeLines": 133,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/guest-access.ts",
+          "language": "typescript",
+          "sizeLines": 161,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/system/outbox.ts",
+          "language": "typescript",
+          "sizeLines": 181,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/transaction.ts",
+          "language": "typescript",
+          "sizeLines": 20,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/index.ts",
+          "language": "typescript",
+          "sizeLines": 9,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/queries/partners/index.ts": [
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/bulk-activate-products.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/bulk-deactivate-products.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/bulk-delete-products.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/check-product-slug-available.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/check-product-variant-sku-available.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/create-product-with-variants.ts": [
+          "src/connection.ts",
+          "src/queries/products/insert-product-variant-in-tx.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/deactivate-product-variant.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/duplicate-product.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/get-admin-product-for-edit.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/get-admin-products-list.ts": [
+          "src/connection.ts",
+          "src/queries/products/types.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/get-product-variant-attributes.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/insert-generated-product-variants.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/insert-product-variant-in-tx.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/types.ts": [],
+        "src/queries/products/update-product-variant-key.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/update-product-with-variants.ts": [
+          "src/connection.ts",
+          "src/queries/products/insert-product-variant-in-tx.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/products/upsert-product-variant-images.ts": [
+          "src/connection.ts",
+          "src/queries/products/insert-product-variant-in-tx.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/sales/checkout-idempotency.ts": [
+          "src/connection.ts",
+          "src/queries/transaction.ts",
+          "src/schema/index.ts",
+          "src/types/sales.ts"
+        ],
+        "src/queries/sales/guest-access.ts": [
+          "src/connection.ts",
+          "src/queries/transaction.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/system/outbox.ts": [
+          "src/connection.ts",
+          "src/queries/transaction.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/transaction.ts": [
+          "src/connection.ts"
+        ],
+        "src/schema/index.ts": []
+      },
+      "neighborMap": {
+        "src/queries/products/bulk-activate-products.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/bulk-deactivate-products.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/bulk-delete-products.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/check-product-slug-available.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/check-product-variant-sku-available.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/create-product-with-variants.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/deactivate-product-variant.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/duplicate-product.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/get-admin-product-for-edit.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/get-admin-products-list.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/get-product-variant-attributes.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/insert-generated-product-variants.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/insert-product-variant-in-tx.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/update-product-variant-key.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/update-product-with-variants.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/products/upsert-product-variant-images.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/sales/checkout-idempotency.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/types/sales.ts",
+            "batchIndex": 1,
+            "symbols": [
+              "OrderStatusSchema",
+              "PaymentStatusSchema",
+              "PaymentMethodSchema",
+              "ShippingAddressSchema",
+              "VariantSnapshotSchema"
+            ]
+          }
+        ],
+        "src/queries/sales/guest-access.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/system/outbox.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/transaction.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/inventory.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getBalance",
+              "getAllBalances",
+              "adjustStock",
+              "reserveStock",
+              "releaseReservation",
+              "getLowStock"
+            ]
+          },
+          {
+            "path": "src/queries/inventory/stock-reservations.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "InsufficientStockError",
+              "StockReservationStateError",
+              "reserveOrderStock",
+              "consumeOrderStock",
+              "releaseOrderStock"
+            ]
+          },
+          {
+            "path": "src/queries/sales/orders.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "generateOrderReference",
+              "assertMutableOrderColumns",
+              "getById",
+              "getByUserId",
+              "hasPurchasedProduct",
+              "getFiltered",
+              "getRecent",
+              "count",
+              "isOrderReferenceConflict",
+              "create",
+              "updateOrder",
+              "getOrdersCountByStatus",
+              "getTotalRevenue",
+              "getRevenueByPeriod"
+            ]
+          }
+        ],
+        "src/schema/index.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          },
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          },
+          {
+            "path": "seeds/sales.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSales"
+            ]
+          },
+          {
+            "path": "src/queries/identity/authorization-version.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "advanceAuthorizationVersion"
+            ]
+          },
+          {
+            "path": "seeds/inventory.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedInventory"
+            ]
+          },
+          {
+            "path": "src/queries/sales/orders.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "generateOrderReference",
+              "assertMutableOrderColumns",
+              "getById",
+              "getByUserId",
+              "hasPurchasedProduct",
+              "getFiltered",
+              "getRecent",
+              "count",
+              "isOrderReferenceConflict",
+              "create",
+              "updateOrder",
+              "getOrdersCountByStatus",
+              "getTotalRevenue",
+              "getRevenueByPeriod"
+            ]
+          },
+          {
+            "path": "src/queries/school-supply-lists/index.ts",
+            "batchIndex": 8,
+            "symbols": [
+              "findVariantCandidates",
+              "listAttributeValuesForCategory"
+            ]
+          },
+          {
+            "path": "seeds/system.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSystem"
+            ]
+          },
+          {
+            "path": "src/queries/identity/users.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getById",
+              "getByEmail",
+              "getByEmailWithPassword",
+              "findPasswordCredentials",
+              "getAuthorizationContext",
+              "create",
+              "update",
+              "upsertPasswordCredentials"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-categories.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "getCategoryById",
+              "getAllCategories",
+              "getCategoryBySlug",
+              "getCategoryRoots",
+              "getCategoryChildren",
+              "getCategoryDescendants",
+              "getCategoryByPath",
+              "countCategories",
+              "getCategoryProductCount",
+              "createCategory",
+              "updateCategory",
+              "reorderCategories",
+              "deleteCategory"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-collections.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "getCollectionsAll",
+              "getCollectionByIdWithTags",
+              "getCollectionBySlug",
+              "createCollection",
+              "updateCollection",
+              "deleteCollection",
+              "setCollectionTags",
+              "updateCollectionSortOrders"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-tags.ts",
+            "batchIndex": 7,
+            "symbols": [
+              "checkTagSlugAvailableRaw",
+              "getTagProductCountRaw",
+              "getAllTags",
+              "getTagById",
+              "listDistinctTagGroups",
+              "createTag",
+              "updateTag",
+              "deleteTag",
+              "bulkDeleteTags",
+              "bulkUpdateTagStatus"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/inventory.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getBalance",
+              "getAllBalances",
+              "adjustStock",
+              "reserveStock",
+              "releaseReservation",
+              "getLowStock"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/products.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getById",
+              "getBySlug",
+              "getAll",
+              "getFeatured",
+              "search",
+              "getByCategory",
+              "getByBrand",
+              "getFiltered",
+              "getByIds",
+              "countProducts",
+              "getLowStockProducts",
+              "checkSlugAvailable",
+              "getVariantsByProductIds",
+              "getVariantsByIds",
+              "getProductTags",
+              "getProductsByTag",
+              "getProductAttributes",
+              "getByIdWithBrand",
+              "getByIdWithBrandAndCategory",
+              "getAllWithBrandAndCategory",
+              "create",
+              "update",
+              "deleteProduct"
+            ]
+          },
+          {
+            "path": "src/queries/identity/deactivate-admin-user.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "deactivateAdminUserRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/set-admin-permission-overrides.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "setAdminPermissionOverridesRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/update-admin-user.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "updateAdminUserRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/update-role-permissions.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "updateRolePermissionsRaw"
+            ]
+          },
+          {
+            "path": "src/queries/review/reviews.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "getByProductId",
+              "getByProductIdPaginated",
+              "getSummaryByProductId",
+              "getById",
+              "getByUserId",
+              "hasUserReviewed",
+              "create",
+              "markHelpful",
+              "recalculateProductAggregates"
+            ]
+          },
+          {
+            "path": "src/queries/school-supply-lists/lifecycle.ts",
+            "batchIndex": 8,
+            "symbols": [
+              "SupplyListItemInput",
+              "lockSupplyListPartner",
+              "listSupplyListsForPartner",
+              "getSupplyList",
+              "lockSupplyList",
+              "getSupplyListItems",
+              "getPublishedSupplyListInSlot",
+              "insertSupplyListDraft",
+              "updateSupplyListDraft",
+              "insertSupplyListItem",
+              "updateSupplyListItem",
+              "deleteSupplyListItem",
+              "getSupplyListDefaults",
+              "snapshotSupplyListItem",
+              "publishSupplyList",
+              "archiveSupplyList",
+              "isSupplyListSlotTakenError"
+            ]
+          },
+          {
+            "path": "src/queries/administration/audit-logs.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getAll",
+              "getByEntity",
+              "getRecent",
+              "countLogs",
+              "create"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/admin-search-analytics.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getMetrics",
+              "getTopSearches",
+              "getZeroResultSearches",
+              "getLowCTRSearches",
+              "getLanguageBreakdown"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/brands.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getAll",
+              "getById",
+              "getBySlug",
+              "create",
+              "update",
+              "deleteById",
+              "count",
+              "countProductsByBrandId"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/categories.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getById",
+              "getAll",
+              "getBySlug",
+              "getByPath",
+              "getTree",
+              "getRoots",
+              "getChildren",
+              "getProductCounts",
+              "getDescendants",
+              "create",
+              "update",
+              "reorder",
+              "deleteById",
+              "getCount",
+              "getProductCount"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/collections.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getAllCollections",
+              "getCollectionById",
+              "getCollectionBySlug",
+              "getCollectionWithTags",
+              "getCollectionBySlugWithTags",
+              "createCollection",
+              "updateCollection",
+              "deleteCollection",
+              "setCollectionTags",
+              "getCollectionTagIds"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/search.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "logCatalogSearchRaw",
+              "executeCatalogScoredSearchRaw",
+              "getCatalogSuggestionsRaw"
+            ]
+          },
+          {
+            "path": "src/queries/catalog/tags.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getAllTags",
+              "getTagsByGroup",
+              "getTagById",
+              "createTag",
+              "updateTag",
+              "deleteTag",
+              "getTagsForProduct",
+              "setProductTags",
+              "getProductIdsByTag"
+            ]
+          },
+          {
+            "path": "src/queries/identity/admin-roles.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "listRoleIdsRaw",
+              "getAdminRolesSnapshotRaw",
+              "listPermissionItemsRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/admin-users.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "listAdminUserIdsRaw",
+              "getAdminUsersSnapshotRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/create-admin-user.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "createAdminUserRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/create-role.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "createRoleRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/delete-role.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "deleteRoleRaw"
+            ]
+          },
+          {
+            "path": "src/queries/identity/get-role-user-count.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "getRoleUserCountRaw"
+            ]
+          },
+          {
+            "path": "src/queries/inventory/stock-reservations.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "InsufficientStockError",
+              "StockReservationStateError",
+              "reserveOrderStock",
+              "consumeOrderStock",
+              "releaseOrderStock"
+            ]
+          },
+          {
+            "path": "src/queries/notifications/notifications.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "create",
+              "markRead",
+              "markAllRead",
+              "getUnread",
+              "getAll",
+              "getUnreadCount"
+            ]
+          },
+          {
+            "path": "src/queries/school-directory/index.ts",
+            "batchIndex": 8,
+            "symbols": [
+              "searchPartnerSchools",
+              "getPartnerSchoolFilterOptions",
+              "getPartnerSchoolByCode"
+            ]
+          },
+          {
+            "path": "src/queries/school-supply-lists/list-offers.ts",
+            "batchIndex": 8,
+            "symbols": [
+              "getListOffer",
+              "upsertListOffer",
+              "deleteListOffer",
+              "copyListOffer"
+            ]
+          },
+          {
+            "path": "src/queries/school-supply-lists/public-read.ts",
+            "batchIndex": 8,
+            "symbols": [
+              "getPublicSupplyListByCode",
+              "getAvailableQuantities",
+              "getVariantDisplayDetails"
+            ]
+          },
+          {
+            "path": "src/queries/partner-sales/index.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "listAttributedOrders",
+              "getAttributedOrderTotals",
+              "getFirstAttributedOrderMonth",
+              "listAttributedSalesRows"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "src/queries/catalog/counts.ts",
+          "language": "typescript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/distribution.ts",
+          "language": "typescript",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/health.ts",
+          "language": "typescript",
+          "sizeLines": 91,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/top-products.ts",
+          "language": "typescript",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/inventory/low-stock.ts",
+          "language": "typescript",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/order-stats.ts",
+          "language": "typescript",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/revenue.ts",
+          "language": "typescript",
+          "sizeLines": 44,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/index.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/inventory/index.ts",
+          "language": "typescript",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/sales/index.ts",
+          "language": "typescript",
+          "sizeLines": 6,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/queries/catalog/counts.ts": [
+          "src/connection.ts",
+          "src/schema/catalog/index.ts"
+        ],
+        "src/queries/catalog/distribution.ts": [
+          "src/connection.ts",
+          "src/schema/catalog/index.ts"
+        ],
+        "src/queries/catalog/health.ts": [
+          "src/connection.ts",
+          "src/schema/catalog/index.ts"
+        ],
+        "src/queries/catalog/top-products.ts": [
+          "src/connection.ts",
+          "src/schema/catalog/index.ts",
+          "src/schema/sales/index.ts"
+        ],
+        "src/queries/inventory/low-stock.ts": [
+          "src/connection.ts",
+          "src/schema/catalog/index.ts",
+          "src/schema/inventory/index.ts"
+        ],
+        "src/queries/sales/order-stats.ts": [
+          "src/connection.ts",
+          "src/schema/sales/index.ts"
+        ],
+        "src/queries/sales/revenue.ts": [
+          "src/connection.ts",
+          "src/schema/sales/index.ts"
+        ],
+        "src/schema/catalog/index.ts": [],
+        "src/schema/inventory/index.ts": [],
+        "src/schema/sales/index.ts": []
+      },
+      "neighborMap": {
+        "src/queries/catalog/counts.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/catalog/distribution.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/catalog/health.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/catalog/top-products.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/inventory/low-stock.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/sales/order-stats.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "src/queries/sales/revenue.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "seed.ts",
+          "language": "typescript",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/catalog.ts",
+          "language": "typescript",
+          "sizeLines": 133,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/helpers/index.test.ts",
+          "language": "typescript",
+          "sizeLines": 135,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/helpers/index.ts",
+          "language": "typescript",
+          "sizeLines": 157,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/index.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/inventory.ts",
+          "language": "typescript",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/sales.ts",
+          "language": "typescript",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/system.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "seed.ts": [
+          "seeds/helpers/index.ts",
+          "seeds/index.ts",
+          "src/connection.ts"
+        ],
+        "seeds/catalog.ts": [
+          "seeds/data/attributes.json",
+          "seeds/data/brands.json",
+          "seeds/data/categories.json",
+          "seeds/data/collection_tags.json",
+          "seeds/data/collections.json",
+          "seeds/data/product_attributes.json",
+          "seeds/data/product_tags.json",
+          "seeds/data/product_variants.json",
+          "seeds/data/products.json",
+          "seeds/data/review_helpful_votes.json",
+          "seeds/data/reviews.json",
+          "seeds/data/tags.json",
+          "seeds/data/variant_attributes.json",
+          "seeds/data/variant_images.json",
+          "seeds/helpers/index.ts",
+          "src/schema/index.ts"
+        ],
+        "seeds/helpers/index.test.ts": [
+          "seeds/helpers/index.ts"
+        ],
+        "seeds/helpers/index.ts": [
+          "src/connection.ts"
+        ],
+        "seeds/index.ts": [],
+        "seeds/inventory.ts": [
+          "seeds/data/inventory_balances.json",
+          "seeds/data/stock_movements.json",
+          "seeds/data/warehouses.json",
+          "seeds/helpers/index.ts",
+          "src/schema/index.ts"
+        ],
+        "seeds/sales.ts": [
+          "seeds/data/addresses.json",
+          "seeds/data/discount_rules.json",
+          "seeds/data/order_items.json",
+          "seeds/data/orders.json",
+          "seeds/helpers/index.ts",
+          "src/schema/index.ts"
+        ],
+        "seeds/system.ts": [
+          "seeds/data/audit_log.json",
+          "seeds/data/search_logs.json",
+          "seeds/helpers/index.ts",
+          "src/schema/index.ts"
+        ]
+      },
+      "neighborMap": {
+        "seed.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ],
+        "seeds/catalog.ts": [
+          {
+            "path": "seeds/data/attributes.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/brands.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/categories.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/collection_tags.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/collections.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/product_attributes.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/product_tags.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/product_variants.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/products.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/review_helpful_votes.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/reviews.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/tags.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/variant_attributes.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/variant_images.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "seeds/helpers/index.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/inventory.ts": [
+          {
+            "path": "seeds/data/inventory_balances.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/stock_movements.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/warehouses.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "seeds/sales.ts": [
+          {
+            "path": "seeds/data/addresses.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/discount_rules.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/order_items.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/orders.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "seeds/system.ts": [
+          {
+            "path": "seeds/data/audit_log.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/search_logs.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": "seeds/identity.ts",
+          "language": "typescript",
+          "sizeLines": 244,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/products.ts",
+          "language": "typescript",
+          "sizeLines": 399,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/users.ts",
+          "language": "typescript",
+          "sizeLines": 284,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/review/reviews.ts",
+          "language": "typescript",
+          "sizeLines": 243,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/__tests__/orders.test.ts",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/orders.ts",
+          "language": "typescript",
+          "sizeLines": 508,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/index.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "seeds/identity.ts": [
+          "seeds/data/auth_accounts.json",
+          "seeds/data/guest_principals.json",
+          "seeds/data/organization_memberships.json",
+          "seeds/data/organizations.json",
+          "seeds/data/payment_methods.json",
+          "seeds/data/permissions.json",
+          "seeds/data/role_permissions.json",
+          "seeds/data/roles.json",
+          "seeds/data/user_permissions.json",
+          "seeds/data/user_roles.json",
+          "seeds/data/users.json",
+          "seeds/helpers/index.ts",
+          "src/schema/index.ts",
+          "src/types/index.ts"
+        ],
+        "src/queries/catalog/products.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts",
+          "src/types/index.ts"
+        ],
+        "src/queries/identity/users.ts": [
+          "src/connection.ts",
+          "src/queries/identity/authorization-version.ts",
+          "src/schema/index.ts",
+          "src/types/index.ts"
+        ],
+        "src/queries/review/reviews.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts",
+          "src/types/index.ts"
+        ],
+        "src/queries/sales/__tests__/orders.test.ts": [
+          "src/queries/sales/orders.ts"
+        ],
+        "src/queries/sales/orders.ts": [
+          "src/connection.ts",
+          "src/queries/transaction.ts",
+          "src/schema/index.ts",
+          "src/types/index.ts"
+        ],
+        "src/types/index.ts": []
+      },
+      "neighborMap": {
+        "seeds/identity.ts": [
+          {
+            "path": "seeds/data/auth_accounts.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/guest_principals.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/organization_memberships.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/organizations.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/payment_methods.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/permissions.json",
+            "batchIndex": 11,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/role_permissions.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/roles.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/user_permissions.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/user_roles.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/data/users.json",
+            "batchIndex": 12,
+            "symbols": []
+          },
+          {
+            "path": "seeds/helpers/index.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "synchronizeSeedSequences",
+              "hashPassword",
+              "ensureParents",
+              "prepareSeedData",
+              "truncateTables"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/products.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/identity/users.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/queries/identity/authorization-version.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "advanceAuthorizationVersion"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/review/reviews.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/sales/orders.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/queries/transaction.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "withTransaction"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/types/index.ts": [
+          {
+            "path": "src/schema/catalog/products.ts",
+            "batchIndex": 1,
+            "symbols": [
+              "products",
+              "productsRelations"
+            ]
+          },
+          {
+            "path": "src/schema/identity/identity-access.ts",
+            "batchIndex": 1,
+            "symbols": [
+              "authAccounts",
+              "passwordCredentials",
+              "organizations",
+              "roles",
+              "permissions",
+              "rolePermissions",
+              "userRoles",
+              "userPermissions",
+              "organizationMemberships",
+              "paymentMethods",
+              "guestPrincipals",
+              "authAccountsRelations",
+              "passwordCredentialsRelations",
+              "userRolesRelations",
+              "userPermissionsRelations",
+              "rolePermissionsRelations",
+              "organizationMembershipsRelations",
+              "paymentMethodsRelations"
+            ]
+          },
+          {
+            "path": "src/schema/sales/orders.ts",
+            "batchIndex": 1,
+            "symbols": [
+              "CROCKFORD_BASE32",
+              "generateOrderReference",
+              "orders",
+              "orderItems",
+              "ordersRelations",
+              "orderItemsRelations"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "src/__tests__/permission-codes.test.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/admin-categories.ts",
+          "language": "typescript",
+          "sizeLines": 245,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/admin-collections.ts",
+          "language": "typescript",
+          "sizeLines": 131,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/admin-tags.ts",
+          "language": "typescript",
+          "sizeLines": 102,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/common.ts",
+          "language": "typescript",
+          "sizeLines": 107,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/identity.ts",
+          "language": "typescript",
+          "sizeLines": 257,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/pricing.ts",
+          "language": "typescript",
+          "sizeLines": 55,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/__tests__/permission-codes.test.ts": [
+          "seeds/data/permissions.json",
+          "src/types/identity.ts"
+        ],
+        "src/queries/catalog/admin-categories.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts",
+          "src/types/common.ts"
+        ],
+        "src/queries/catalog/admin-collections.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts",
+          "src/types/common.ts"
+        ],
+        "src/queries/catalog/admin-tags.ts": [
+          "src/connection.ts",
+          "src/schema/index.ts",
+          "src/types/common.ts"
+        ],
+        "src/types/common.ts": [],
+        "src/types/identity.ts": [
+          "src/schema/enums.ts",
+          "src/types/common.ts"
+        ],
+        "src/types/pricing.ts": [
+          "src/types/common.ts"
+        ]
+      },
+      "neighborMap": {
+        "src/__tests__/permission-codes.test.ts": [
+          {
+            "path": "seeds/data/permissions.json",
+            "batchIndex": 11,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/admin-categories.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/admin-collections.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/catalog/admin-tags.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          },
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/types/identity.ts": [
+          {
+            "path": "src/schema/enums.ts",
+            "batchIndex": 1,
+            "symbols": [
+              "portalRoleEnum",
+              "actorTypeEnum",
+              "orderStatusEnum",
+              "paymentStatusEnum",
+              "paymentMethodEnum"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": "src/queries/school-directory/index.ts",
+          "language": "typescript",
+          "sizeLines": 204,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/school-supply-lists/index.ts",
+          "language": "typescript",
+          "sizeLines": 146,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/school-supply-lists/lifecycle.ts",
+          "language": "typescript",
+          "sizeLines": 245,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/school-supply-lists/list-offers.ts",
+          "language": "typescript",
+          "sizeLines": 55,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/school-supply-lists/public-read.ts",
+          "language": "typescript",
+          "sizeLines": 106,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/school-supply-lists.ts",
+          "language": "typescript",
+          "sizeLines": 55,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/queries/school-directory/index.ts": [
+          "src/queries/school-supply-lists/index.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/school-supply-lists/index.ts": [
+          "src/schema/index.ts"
+        ],
+        "src/queries/school-supply-lists/lifecycle.ts": [
+          "src/queries/school-supply-lists/index.ts",
+          "src/schema/index.ts",
+          "src/types/school-supply-lists.ts"
+        ],
+        "src/queries/school-supply-lists/list-offers.ts": [
+          "src/queries/school-supply-lists/index.ts",
+          "src/schema/index.ts"
+        ],
+        "src/queries/school-supply-lists/public-read.ts": [
+          "src/queries/school-supply-lists/index.ts",
+          "src/schema/index.ts"
+        ],
+        "src/types/school-supply-lists.ts": []
+      },
+      "neighborMap": {
+        "src/queries/school-directory/index.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/school-supply-lists/index.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/school-supply-lists/lifecycle.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/school-supply-lists/list-offers.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/queries/school-supply-lists/public-read.ts": [
+          {
+            "path": "src/schema/index.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": "docs/SCHEMA.md",
+          "language": "markdown",
+          "sizeLines": 77,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/SETUP.md",
+          "language": "markdown",
+          "sizeLines": 84,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/TAXONOMY.md",
+          "language": "markdown",
+          "sizeLines": 59,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/SCHEMA.md": [],
+        "docs/SETUP.md": [],
+        "docs/TAXONOMY.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": "init-db.sql",
+          "language": "sql",
+          "sizeLines": 8,
+          "fileCategory": "data"
+        },
+        {
+          "path": "package.json",
+          "language": "json",
+          "sizeLines": 52,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tsconfig.json",
+          "language": "json",
+          "sizeLines": 27,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "init-db.sql": [],
+        "package.json": [],
+        "tsconfig.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "seeds/data/addresses.json",
+          "language": "json",
+          "sizeLines": 17,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/alternatives.json",
+          "language": "json",
+          "sizeLines": 0,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/attributes.json",
+          "language": "json",
+          "sizeLines": 53,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/audit_log.json",
+          "language": "json",
+          "sizeLines": 15,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/auth_accounts.json",
+          "language": "json",
+          "sizeLines": 9,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/brands.json",
+          "language": "json",
+          "sizeLines": 151,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/categories.json",
+          "language": "json",
+          "sizeLines": 1265,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/collection_tags.json",
+          "language": "json",
+          "sizeLines": 17,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/collections.json",
+          "language": "json",
+          "sizeLines": 35,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/discount_rules.json",
+          "language": "json",
+          "sizeLines": 17,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/guest_principals.json",
+          "language": "json",
+          "sizeLines": 7,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/inventory_balances.json",
+          "language": "json",
+          "sizeLines": 1833,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/list_items.json",
+          "language": "json",
+          "sizeLines": 0,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/order_items.json",
+          "language": "json",
+          "sizeLines": 14,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/orders.json",
+          "language": "json",
+          "sizeLines": 13,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/organization_memberships.json",
+          "language": "json",
+          "sizeLines": 9,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/organizations.json",
+          "language": "json",
+          "sizeLines": 9,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/password_credentials.json",
+          "language": "json",
+          "sizeLines": 57,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/payment_methods.json",
+          "language": "json",
+          "sizeLines": 11,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/permissions.json",
+          "language": "json",
+          "sizeLines": 177,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "seeds/data/addresses.json": [],
+        "seeds/data/alternatives.json": [],
+        "seeds/data/attributes.json": [],
+        "seeds/data/audit_log.json": [],
+        "seeds/data/auth_accounts.json": [],
+        "seeds/data/brands.json": [],
+        "seeds/data/categories.json": [],
+        "seeds/data/collection_tags.json": [],
+        "seeds/data/collections.json": [],
+        "seeds/data/discount_rules.json": [],
+        "seeds/data/guest_principals.json": [],
+        "seeds/data/inventory_balances.json": [],
+        "seeds/data/list_items.json": [],
+        "seeds/data/order_items.json": [],
+        "seeds/data/orders.json": [],
+        "seeds/data/organization_memberships.json": [],
+        "seeds/data/organizations.json": [],
+        "seeds/data/password_credentials.json": [],
+        "seeds/data/payment_methods.json": [],
+        "seeds/data/permissions.json": []
+      },
+      "neighborMap": {
+        "seeds/data/addresses.json": [
+          {
+            "path": "seeds/sales.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSales"
+            ]
+          }
+        ],
+        "seeds/data/attributes.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/audit_log.json": [
+          {
+            "path": "seeds/system.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSystem"
+            ]
+          }
+        ],
+        "seeds/data/auth_accounts.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/brands.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/categories.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/collection_tags.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/collections.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/discount_rules.json": [
+          {
+            "path": "seeds/sales.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSales"
+            ]
+          }
+        ],
+        "seeds/data/guest_principals.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/inventory_balances.json": [
+          {
+            "path": "seeds/inventory.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedInventory"
+            ]
+          }
+        ],
+        "seeds/data/order_items.json": [
+          {
+            "path": "seeds/sales.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSales"
+            ]
+          }
+        ],
+        "seeds/data/orders.json": [
+          {
+            "path": "seeds/sales.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSales"
+            ]
+          }
+        ],
+        "seeds/data/organization_memberships.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/organizations.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/payment_methods.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/permissions.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          },
+          {
+            "path": "src/__tests__/permission-codes.test.ts",
+            "batchIndex": 7,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "seeds/data/product_attributes.json",
+          "language": "json",
+          "sizeLines": 46,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/product_images.json",
+          "language": "json",
+          "sizeLines": 0,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/product_tags.json",
+          "language": "json",
+          "sizeLines": 949,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/product_variants.json",
+          "language": "json",
+          "sizeLines": 4810,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/products.json",
+          "language": "json",
+          "sizeLines": 5268,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/review_helpful_votes.json",
+          "language": "json",
+          "sizeLines": 0,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/reviews.json",
+          "language": "json",
+          "sizeLines": 12,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/role_permissions.json",
+          "language": "json",
+          "sizeLines": 362,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/roles.json",
+          "language": "json",
+          "sizeLines": 57,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/search_logs.json",
+          "language": "json",
+          "sizeLines": 11,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/stock_movements.json",
+          "language": "json",
+          "sizeLines": 13,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/tags.json",
+          "language": "json",
+          "sizeLines": 97,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/user_permissions.json",
+          "language": "json",
+          "sizeLines": 9,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/user_roles.json",
+          "language": "json",
+          "sizeLines": 65,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/users.json",
+          "language": "json",
+          "sizeLines": 105,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/variant_attributes.json",
+          "language": "json",
+          "sizeLines": 6,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/variant_images.json",
+          "language": "json",
+          "sizeLines": 9,
+          "fileCategory": "config"
+        },
+        {
+          "path": "seeds/data/warehouses.json",
+          "language": "json",
+          "sizeLines": 8,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "seeds/data/product_attributes.json": [],
+        "seeds/data/product_images.json": [],
+        "seeds/data/product_tags.json": [],
+        "seeds/data/product_variants.json": [],
+        "seeds/data/products.json": [],
+        "seeds/data/review_helpful_votes.json": [],
+        "seeds/data/reviews.json": [],
+        "seeds/data/role_permissions.json": [],
+        "seeds/data/roles.json": [],
+        "seeds/data/search_logs.json": [],
+        "seeds/data/stock_movements.json": [],
+        "seeds/data/tags.json": [],
+        "seeds/data/user_permissions.json": [],
+        "seeds/data/user_roles.json": [],
+        "seeds/data/users.json": [],
+        "seeds/data/variant_attributes.json": [],
+        "seeds/data/variant_images.json": [],
+        "seeds/data/warehouses.json": []
+      },
+      "neighborMap": {
+        "seeds/data/product_attributes.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/product_tags.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/product_variants.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/products.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/review_helpful_votes.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/reviews.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/role_permissions.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/roles.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/search_logs.json": [
+          {
+            "path": "seeds/system.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedSystem"
+            ]
+          }
+        ],
+        "seeds/data/stock_movements.json": [
+          {
+            "path": "seeds/inventory.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedInventory"
+            ]
+          }
+        ],
+        "seeds/data/tags.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/user_permissions.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/user_roles.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/users.json": [
+          {
+            "path": "seeds/identity.ts",
+            "batchIndex": 6,
+            "symbols": [
+              "seedIdentity"
+            ]
+          }
+        ],
+        "seeds/data/variant_attributes.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/variant_images.json": [
+          {
+            "path": "seeds/catalog.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedCatalog"
+            ]
+          }
+        ],
+        "seeds/data/warehouses.json": [
+          {
+            "path": "seeds/inventory.ts",
+            "batchIndex": 5,
+            "symbols": [
+              "seedInventory"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "drizzle.config.ts",
+          "language": "typescript",
+          "sizeLines": 22,
+          "fileCategory": "code"
+        },
+        {
+          "path": "eslint.config.js",
+          "language": "javascript",
+          "sizeLines": 2,
+          "fileCategory": "code"
+        },
+        {
+          "path": "migrate.ts",
+          "language": "typescript",
+          "sizeLines": 12,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seed.test.ts",
+          "language": "typescript",
+          "sizeLines": 81,
+          "fileCategory": "code"
+        },
+        {
+          "path": "seeds/helpers/constants.ts",
+          "language": "typescript",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/index.ts",
+          "language": "typescript",
+          "sizeLines": 12,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/catalog/index.ts",
+          "language": "typescript",
+          "sizeLines": 108,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/identity/index.ts",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/index.ts",
+          "language": "typescript",
+          "sizeLines": 25,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/inventory/index.ts",
+          "language": "typescript",
+          "sizeLines": 9,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/products/index.ts",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/queries/sales/index.ts",
+          "language": "typescript",
+          "sizeLines": 9,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/catalog/README.md",
+          "language": "markdown",
+          "sizeLines": 316,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "src/schema/identity/index.ts",
+          "language": "typescript",
+          "sizeLines": 3,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/school-engine/index.ts",
+          "language": "typescript",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/schema/system/index.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types/catalog/IProduct.interface.ts",
+          "language": "typescript",
+          "sizeLines": 45,
+          "fileCategory": "code"
+        },
+        {
+          "path": "vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 13,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "drizzle.config.ts": [],
+        "eslint.config.js": [],
+        "migrate.ts": [
+          "drizzle.config.ts",
+          "src/connection.ts"
+        ],
+        "seed.test.ts": [],
+        "seeds/helpers/constants.ts": [],
+        "src/index.ts": [],
+        "src/queries/catalog/index.ts": [],
+        "src/queries/identity/index.ts": [],
+        "src/queries/index.ts": [],
+        "src/queries/inventory/index.ts": [],
+        "src/queries/products/index.ts": [],
+        "src/queries/sales/index.ts": [],
+        "src/schema/catalog/README.md": [],
+        "src/schema/identity/index.ts": [],
+        "src/schema/school-engine/index.ts": [],
+        "src/schema/system/index.ts": [],
+        "src/types/catalog/IProduct.interface.ts": [],
+        "vitest.config.ts": []
+      },
+      "neighborMap": {
+        "migrate.ts": [
+          {
+            "path": "src/connection.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "connection",
+              "db"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

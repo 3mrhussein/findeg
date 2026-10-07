@@ -1,0 +1,303 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "src/schema/catalog/brands.ts",
+      "language": "typescript",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/categories.ts",
+      "language": "typescript",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/collections.ts",
+      "language": "typescript",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/product-attributes.ts",
+      "language": "typescript",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/product-variants.ts",
+      "language": "typescript",
+      "sizeLines": 195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/products.ts",
+      "language": "typescript",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/tags.ts",
+      "language": "typescript",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/types.ts",
+      "language": "typescript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/enums.ts",
+      "language": "typescript",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/identity/addresses.ts",
+      "language": "typescript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/identity/identity-access.ts",
+      "language": "typescript",
+      "sizeLines": 337,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/identity/partners.ts",
+      "language": "typescript",
+      "sizeLines": 216,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/identity/users.ts",
+      "language": "typescript",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/inventory/inventory.ts",
+      "language": "typescript",
+      "sizeLines": 226,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/checkout-idempotency.ts",
+      "language": "typescript",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/discount-rules.ts",
+      "language": "typescript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/guest-access.ts",
+      "language": "typescript",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/list-offers.ts",
+      "language": "typescript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/orders.ts",
+      "language": "typescript",
+      "sizeLines": 211,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/reviews.ts",
+      "language": "typescript",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/schemas.ts",
+      "language": "typescript",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/school-engine/school-supply-lists.ts",
+      "language": "typescript",
+      "sizeLines": 115,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/audit-log.ts",
+      "language": "typescript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/notifications.ts",
+      "language": "typescript",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/outbox.ts",
+      "language": "typescript",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/search-logs.ts",
+      "language": "typescript",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/server-logs.ts",
+      "language": "typescript",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types/sales.ts",
+      "language": "typescript",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/schema/catalog/brands.ts": [
+      "src/schema/catalog/products.ts",
+      "src/schema/catalog/types.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/categories.ts": [
+      "src/schema/catalog/products.ts",
+      "src/schema/catalog/types.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/collections.ts": [
+      "src/schema/catalog/tags.ts",
+      "src/schema/catalog/types.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/product-attributes.ts": [
+      "src/schema/catalog/products.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/product-variants.ts": [
+      "src/schema/catalog/product-attributes.ts",
+      "src/schema/catalog/products.ts",
+      "src/schema/catalog/types.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/products.ts": [
+      "src/schema/catalog/brands.ts",
+      "src/schema/catalog/categories.ts",
+      "src/schema/catalog/product-attributes.ts",
+      "src/schema/catalog/product-variants.ts",
+      "src/schema/catalog/tags.ts",
+      "src/schema/schemas.ts",
+      "src/types/index.ts"
+    ],
+    "src/schema/catalog/tags.ts": [
+      "src/schema/catalog/products.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/catalog/types.ts": [],
+    "src/schema/enums.ts": [
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/identity/addresses.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/identity/identity-access.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts",
+      "src/types/index.ts"
+    ],
+    "src/schema/identity/partners.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/identity/users.ts": [
+      "src/schema/enums.ts",
+      "src/schema/identity/addresses.ts",
+      "src/schema/sales/orders.ts",
+      "src/schema/sales/reviews.ts",
+      "src/schema/schemas.ts",
+      "src/schema/system/audit-log.ts"
+    ],
+    "src/schema/inventory/inventory.ts": [
+      "src/schema/catalog/product-variants.ts",
+      "src/schema/identity/users.ts",
+      "src/schema/sales/orders.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/sales/checkout-idempotency.ts": [
+      "src/schema/sales/orders.ts",
+      "src/schema/schemas.ts",
+      "src/types/sales.ts"
+    ],
+    "src/schema/sales/discount-rules.ts": [
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/sales/guest-access.ts": [
+      "src/schema/sales/orders.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/sales/list-offers.ts": [
+      "src/schema/schemas.ts",
+      "src/schema/school-engine/school-supply-lists.ts"
+    ],
+    "src/schema/sales/orders.ts": [
+      "src/schema/catalog/product-variants.ts",
+      "src/schema/catalog/products.ts",
+      "src/schema/enums.ts",
+      "src/schema/identity/partners.ts",
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts",
+      "src/schema/school-engine/school-supply-lists.ts",
+      "src/types/index.ts"
+    ],
+    "src/schema/sales/reviews.ts": [
+      "src/schema/catalog/products.ts",
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/schemas.ts": [],
+    "src/schema/school-engine/school-supply-lists.ts": [
+      "src/schema/catalog/product-variants.ts",
+      "src/schema/catalog/types.ts",
+      "src/schema/identity/partners.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/system/audit-log.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/system/notifications.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/system/outbox.ts": [
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/system/search-logs.ts": [
+      "src/schema/identity/users.ts",
+      "src/schema/schemas.ts"
+    ],
+    "src/schema/system/server-logs.ts": [
+      "src/schema/schemas.ts"
+    ],
+    "src/types/sales.ts": [
+      "src/schema/enums.ts"
+    ]
+  }
+}

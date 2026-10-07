@@ -1,0 +1,578 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/queries/catalog/counts.ts",
+      "type": "file",
+      "name": "counts.ts",
+      "filePath": "src/queries/catalog/counts.ts",
+      "summary": "Implements database queries and transactional operations for counts.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/counts.ts:getProductCountRaw",
+      "type": "function",
+      "name": "getProductCountRaw",
+      "filePath": "src/queries/catalog/counts.ts",
+      "lineRange": [
+        10,
+        15
+      ],
+      "summary": "Retrieves product count raw data for counts records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/counts.ts:getCategoryCountRaw",
+      "type": "function",
+      "name": "getCategoryCountRaw",
+      "filePath": "src/queries/catalog/counts.ts",
+      "lineRange": [
+        17,
+        22
+      ],
+      "summary": "Retrieves category count raw data for counts records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/counts.ts:getBrandCountRaw",
+      "type": "function",
+      "name": "getBrandCountRaw",
+      "filePath": "src/queries/catalog/counts.ts",
+      "lineRange": [
+        24,
+        27
+      ],
+      "summary": "Retrieves brand count raw data for counts records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/distribution.ts",
+      "type": "file",
+      "name": "distribution.ts",
+      "filePath": "src/queries/catalog/distribution.ts",
+      "summary": "Implements database queries and transactional operations for distribution.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/distribution.ts:getCategoryDistributionRaw",
+      "type": "function",
+      "name": "getCategoryDistributionRaw",
+      "filePath": "src/queries/catalog/distribution.ts",
+      "lineRange": [
+        25,
+        42
+      ],
+      "summary": "Retrieves category distribution raw data for distribution records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/health.ts",
+      "type": "file",
+      "name": "health.ts",
+      "filePath": "src/queries/catalog/health.ts",
+      "summary": "Implements database queries and transactional operations for health.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/health.ts:getCatalogHealthRaw",
+      "type": "function",
+      "name": "getCatalogHealthRaw",
+      "filePath": "src/queries/catalog/health.ts",
+      "lineRange": [
+        27,
+        91
+      ],
+      "summary": "Retrieves catalog health raw data for health records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/top-products.ts",
+      "type": "file",
+      "name": "top-products.ts",
+      "filePath": "src/queries/catalog/top-products.ts",
+      "summary": "Implements database queries and transactional operations for top products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/top-products.ts:getTopProductsRaw",
+      "type": "function",
+      "name": "getTopProductsRaw",
+      "filePath": "src/queries/catalog/top-products.ts",
+      "lineRange": [
+        27,
+        42
+      ],
+      "summary": "Retrieves top products raw data for top products records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/low-stock.ts",
+      "type": "file",
+      "name": "low-stock.ts",
+      "filePath": "src/queries/inventory/low-stock.ts",
+      "summary": "Implements database queries and transactional operations for low stock.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/inventory/low-stock.ts:getLowStockCountRaw",
+      "type": "function",
+      "name": "getLowStockCountRaw",
+      "filePath": "src/queries/inventory/low-stock.ts",
+      "lineRange": [
+        9,
+        19
+      ],
+      "summary": "Retrieves low stock count raw data for low stock records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/order-stats.ts",
+      "type": "file",
+      "name": "order-stats.ts",
+      "filePath": "src/queries/sales/order-stats.ts",
+      "summary": "Implements database queries and transactional operations for order stats.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/order-stats.ts:getTotalOrderStatsRaw",
+      "type": "function",
+      "name": "getTotalOrderStatsRaw",
+      "filePath": "src/queries/sales/order-stats.ts",
+      "lineRange": [
+        20,
+        32
+      ],
+      "summary": "Retrieves total order stats raw data for order stats records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/order-stats.ts:getOrderStatsRaw",
+      "type": "function",
+      "name": "getOrderStatsRaw",
+      "filePath": "src/queries/sales/order-stats.ts",
+      "lineRange": [
+        37,
+        50
+      ],
+      "summary": "Retrieves order stats raw data for order stats records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/revenue.ts",
+      "type": "file",
+      "name": "revenue.ts",
+      "filePath": "src/queries/sales/revenue.ts",
+      "summary": "Implements database queries and transactional operations for revenue.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/revenue.ts:getRevenueByPeriodRaw",
+      "type": "function",
+      "name": "getRevenueByPeriodRaw",
+      "filePath": "src/queries/sales/revenue.ts",
+      "lineRange": [
+        22,
+        44
+      ],
+      "summary": "Retrieves revenue by period raw data for revenue records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/catalog/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/catalog/index.ts",
+      "summary": "Barrel entry point that re-exports the catalog schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/inventory/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/inventory/index.ts",
+      "summary": "Barrel entry point that re-exports the inventory schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/sales/index.ts",
+      "summary": "Barrel entry point that re-exports the sales schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getProductCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getProductCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getCategoryCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getCategoryCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getBrandCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "function:src/queries/catalog/counts.ts:getBrandCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "function:src/queries/catalog/distribution.ts:getCategoryDistributionRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "function:src/queries/catalog/distribution.ts:getCategoryDistributionRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "function:src/queries/catalog/health.ts:getCatalogHealthRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "function:src/queries/catalog/health.ts:getCatalogHealthRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "function:src/queries/catalog/top-products.ts:getTopProductsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "function:src/queries/catalog/top-products.ts:getTopProductsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "function:src/queries/inventory/low-stock.ts:getLowStockCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "function:src/queries/inventory/low-stock.ts:getLowStockCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "function:src/queries/sales/order-stats.ts:getTotalOrderStatsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "function:src/queries/sales/order-stats.ts:getTotalOrderStatsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "function:src/queries/sales/order-stats.ts:getOrderStatsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "function:src/queries/sales/order-stats.ts:getOrderStatsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "function:src/queries/sales/revenue.ts:getRevenueByPeriodRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "function:src/queries/sales/revenue.ts:getRevenueByPeriodRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/inventory/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

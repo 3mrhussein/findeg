@@ -1,0 +1,107 @@
+[
+  {
+    "order": 1,
+    "title": "Public Package Surface",
+    "description": "Start at the package entry point to see the deliberately narrow public API: consumers receive schemas and types without automatically importing a live database connection. This boundary explains how @findeg/db can support client-safe type usage while keeping runtime infrastructure explicit.",
+    "nodeIds": [
+      "file:src/index.ts"
+    ],
+    "languageLesson": "TypeScript barrel files can re-export a curated public API, hiding internal modules and preventing infrastructure code from entering consumers unintentionally."
+  },
+  {
+    "order": 2,
+    "title": "Connection and Drizzle",
+    "description": "With the public boundary established, inspect how runtime callers obtain the PostgreSQL connection and Drizzle client. The adjacent Drizzle Kit configuration connects schema declarations to migration generation and uses environment-backed connection settings.",
+    "nodeIds": [
+      "file:src/connection.ts",
+      "file:drizzle.config.ts"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Shared Data Contracts",
+    "description": "Next, learn the contracts shared across schema and query code. The type barrel gathers the package's validation modules, while common and identity definitions establish reusable Zod schemas, inferred types, permission constants, and authorization predicates.",
+    "nodeIds": [
+      "file:src/types/index.ts",
+      "file:src/types/common.ts",
+      "file:src/types/identity.ts"
+    ],
+    "languageLesson": "Zod schemas provide runtime validation while TypeScript's inferred types reuse the same declaration as a compile-time contract, reducing drift between validation and static types."
+  },
+  {
+    "order": 4,
+    "title": "Schema Map",
+    "description": "Building on those contracts, the schema barrel is the central dependency for most database operations, and the validation-schema collection protects database-facing values and API payloads. Read the schema reference alongside them to understand the global entity relationships and the feature-specific table groups before diving into individual domains.",
+    "nodeIds": [
+      "file:src/schema/index.ts",
+      "file:src/schema/schemas.ts",
+      "document:docs/SCHEMA.md"
+    ]
+  },
+  {
+    "order": 5,
+    "title": "Core Domain Tables",
+    "description": "The catalog, identity, and sales tables turn the shared contracts into persistent structures. Products and variants form a tightly connected catalog cluster, users anchor identity relationships, and orders connect customer activity to the commercial workflow through constraints, indexes, and relations.",
+    "nodeIds": [
+      "file:src/schema/catalog/products.ts",
+      "file:src/schema/catalog/product-variants.ts",
+      "file:src/schema/identity/users.ts",
+      "file:src/schema/sales/orders.ts"
+    ],
+    "languageLesson": "Drizzle schema declarations express PostgreSQL tables and relations in TypeScript; constraints and indexes remain database guarantees even when application-level validation also exists."
+  },
+  {
+    "order": 6,
+    "title": "Catalog Query Surface",
+    "description": "Once the data model is familiar, follow the catalog query barrel into the product operations that sit above it. This layer combines reads, filtering, taxonomy lookups, enriched views, and mutations, showing how the package translates domain requests into Drizzle queries.",
+    "nodeIds": [
+      "file:src/queries/catalog/index.ts",
+      "file:src/queries/catalog/products.ts",
+      "file:src/queries/transaction.ts"
+    ]
+  },
+  {
+    "order": 7,
+    "title": "Transactional Workflows",
+    "description": "The sales, inventory, and outbox modules demonstrate why transaction boundaries matter beyond ordinary CRUD. Order mutations coordinate with stock reservations, while the outbox records delivery work so system side effects can be retried and observed independently.",
+    "nodeIds": [
+      "file:src/queries/sales/orders.ts",
+      "file:src/queries/inventory/stock-reservations.ts",
+      "file:src/queries/system/outbox.ts"
+    ]
+  },
+  {
+    "order": 8,
+    "title": "Seeds and Fixtures",
+    "description": "After understanding runtime operations, trace how development and test databases receive deterministic content. The seed runner coordinates the workflow, catalog seeding inserts representative records, shared helpers validate and prepare data, and the product fixture supplies localized catalog examples.",
+    "nodeIds": [
+      "file:seed.ts",
+      "file:seeds/catalog.ts",
+      "file:seeds/helpers/index.ts",
+      "config:seeds/data/products.json"
+    ],
+    "languageLesson": "JSON fixtures keep declarative sample data separate from TypeScript orchestration, while validation at the loading boundary catches malformed records before insertion."
+  },
+  {
+    "order": 9,
+    "title": "Database Operations",
+    "description": "Now connect the code to its operational lifecycle. The package manifest exposes database commands, the initializer enables the required PostgreSQL extension, and the migration runner applies pending Drizzle changes only behind an explicit safety flag.",
+    "nodeIds": [
+      "config:package.json",
+      "file:init-db.sql",
+      "file:migrate.ts",
+      "config:tsconfig.json"
+    ],
+    "languageLesson": "Database initialization establishes prerequisites for a fresh instance, while ordered migrations evolve an existing schema; separating the two keeps repeat deployments predictable."
+  },
+  {
+    "order": 10,
+    "title": "Operator Documentation",
+    "description": "Finish with the documentation that explains how the pieces are used and maintained. The setup guide covers Docker-backed startup and troubleshooting, while the taxonomy and catalog references explain how tags, collections, attributes, products, and cross-schema relationships fit together.",
+    "nodeIds": [
+      "document:docs/SETUP.md",
+      "document:docs/TAXONOMY.md",
+      "document:src/schema/catalog/README.md"
+    ]
+  }
+]

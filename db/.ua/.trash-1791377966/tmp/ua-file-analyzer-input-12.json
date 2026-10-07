@@ -1,0 +1,133 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "seeds/data/product_attributes.json",
+      "language": "json",
+      "sizeLines": 46,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/product_images.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/product_tags.json",
+      "language": "json",
+      "sizeLines": 949,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/product_variants.json",
+      "language": "json",
+      "sizeLines": 4810,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/products.json",
+      "language": "json",
+      "sizeLines": 5268,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/review_helpful_votes.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/reviews.json",
+      "language": "json",
+      "sizeLines": 12,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/role_permissions.json",
+      "language": "json",
+      "sizeLines": 362,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/roles.json",
+      "language": "json",
+      "sizeLines": 57,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/search_logs.json",
+      "language": "json",
+      "sizeLines": 11,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/stock_movements.json",
+      "language": "json",
+      "sizeLines": 13,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/tags.json",
+      "language": "json",
+      "sizeLines": 97,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/user_permissions.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/user_roles.json",
+      "language": "json",
+      "sizeLines": 65,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/users.json",
+      "language": "json",
+      "sizeLines": 105,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/variant_attributes.json",
+      "language": "json",
+      "sizeLines": 6,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/variant_images.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/warehouses.json",
+      "language": "json",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "seeds/data/product_attributes.json": [],
+    "seeds/data/product_images.json": [],
+    "seeds/data/product_tags.json": [],
+    "seeds/data/product_variants.json": [],
+    "seeds/data/products.json": [],
+    "seeds/data/review_helpful_votes.json": [],
+    "seeds/data/reviews.json": [],
+    "seeds/data/role_permissions.json": [],
+    "seeds/data/roles.json": [],
+    "seeds/data/search_logs.json": [],
+    "seeds/data/stock_movements.json": [],
+    "seeds/data/tags.json": [],
+    "seeds/data/user_permissions.json": [],
+    "seeds/data/user_roles.json": [],
+    "seeds/data/users.json": [],
+    "seeds/data/variant_attributes.json": [],
+    "seeds/data/variant_images.json": [],
+    "seeds/data/warehouses.json": []
+  }
+}

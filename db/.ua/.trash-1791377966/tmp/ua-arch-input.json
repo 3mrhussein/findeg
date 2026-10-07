@@ -1,0 +1,6379 @@
+{
+  "fileNodes": [
+    {
+      "id": "file:src/schema/catalog/brands.ts",
+      "type": "file",
+      "name": "brands.ts",
+      "filePath": "src/schema/catalog/brands.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for brands data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/catalog/categories.ts",
+      "type": "file",
+      "name": "categories.ts",
+      "filePath": "src/schema/catalog/categories.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for categories data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/collections.ts",
+      "type": "file",
+      "name": "collections.ts",
+      "filePath": "src/schema/catalog/collections.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for collections data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/product-attributes.ts",
+      "type": "file",
+      "name": "product-attributes.ts",
+      "filePath": "src/schema/catalog/product-attributes.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product attributes data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/product-variants.ts",
+      "type": "file",
+      "name": "product-variants.ts",
+      "filePath": "src/schema/catalog/product-variants.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product variants data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/products.ts",
+      "type": "file",
+      "name": "products.ts",
+      "filePath": "src/schema/catalog/products.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for products data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/tags.ts",
+      "type": "file",
+      "name": "tags.ts",
+      "filePath": "src/schema/catalog/tags.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for tags data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/schema/catalog/types.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for types data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/enums.ts",
+      "type": "file",
+      "name": "enums.ts",
+      "filePath": "src/schema/enums.ts",
+      "summary": "Defines shared PostgreSQL enum declarations used by tables across the database schema.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/identity/addresses.ts",
+      "type": "file",
+      "name": "addresses.ts",
+      "filePath": "src/schema/identity/addresses.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for addresses data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/identity/identity-access.ts",
+      "type": "file",
+      "name": "identity-access.ts",
+      "filePath": "src/schema/identity/identity-access.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for identity access data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/partners.ts",
+      "type": "file",
+      "name": "partners.ts",
+      "filePath": "src/schema/identity/partners.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for partners data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/users.ts",
+      "type": "file",
+      "name": "users.ts",
+      "filePath": "src/schema/identity/users.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for users data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/inventory/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "src/schema/inventory/inventory.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for inventory data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/sales/checkout-idempotency.ts",
+      "type": "file",
+      "name": "checkout-idempotency.ts",
+      "filePath": "src/schema/sales/checkout-idempotency.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for checkout idempotency data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/discount-rules.ts",
+      "type": "file",
+      "name": "discount-rules.ts",
+      "filePath": "src/schema/sales/discount-rules.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for discount rules data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/guest-access.ts",
+      "type": "file",
+      "name": "guest-access.ts",
+      "filePath": "src/schema/sales/guest-access.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for guest access data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/sales/list-offers.ts",
+      "type": "file",
+      "name": "list-offers.ts",
+      "filePath": "src/schema/sales/list-offers.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for list offers data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "src/schema/sales/orders.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for orders data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/sales/reviews.ts",
+      "type": "file",
+      "name": "reviews.ts",
+      "filePath": "src/schema/sales/reviews.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for reviews data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/schemas.ts",
+      "type": "file",
+      "name": "schemas.ts",
+      "filePath": "src/schema/schemas.ts",
+      "summary": "Collects runtime validation schemas used to validate database-facing values and API payloads.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "file",
+      "name": "school-supply-lists.ts",
+      "filePath": "src/schema/school-engine/school-supply-lists.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for school supply lists data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/system/audit-log.ts",
+      "type": "file",
+      "name": "audit-log.ts",
+      "filePath": "src/schema/system/audit-log.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for audit log data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/notifications.ts",
+      "type": "file",
+      "name": "notifications.ts",
+      "filePath": "src/schema/system/notifications.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for notifications data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/outbox.ts",
+      "type": "file",
+      "name": "outbox.ts",
+      "filePath": "src/schema/system/outbox.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for outbox data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/search-logs.ts",
+      "type": "file",
+      "name": "search-logs.ts",
+      "filePath": "src/schema/system/search-logs.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for search logs data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/server-logs.ts",
+      "type": "file",
+      "name": "server-logs.ts",
+      "filePath": "src/schema/system/server-logs.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for server logs data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/sales.ts",
+      "type": "file",
+      "name": "sales.ts",
+      "filePath": "src/types/sales.ts",
+      "summary": "Defines shared TypeScript types for sales, order, checkout, and payment data exchanged across the database layer.",
+      "tags": [
+        "type-definition",
+        "database",
+        "sales"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/connection.ts",
+      "type": "file",
+      "name": "connection.ts",
+      "filePath": "src/connection.ts",
+      "summary": "Initializes and exports the PostgreSQL connection and Drizzle database client used by the package.",
+      "tags": [
+        "database",
+        "configuration",
+        "connection",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/administration/audit-logs.ts",
+      "type": "file",
+      "name": "audit-logs.ts",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "summary": "Implements database queries and transactional operations for audit logs.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-search-analytics.ts",
+      "type": "file",
+      "name": "admin-search-analytics.ts",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "summary": "Implements database queries and transactional operations for admin search analytics.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/brands.ts",
+      "type": "file",
+      "name": "brands.ts",
+      "filePath": "src/queries/catalog/brands.ts",
+      "summary": "Implements database queries and transactional operations for brands.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/categories.ts",
+      "type": "file",
+      "name": "categories.ts",
+      "filePath": "src/queries/catalog/categories.ts",
+      "summary": "Implements database queries and transactional operations for categories.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/catalog/collections.ts",
+      "type": "file",
+      "name": "collections.ts",
+      "filePath": "src/queries/catalog/collections.ts",
+      "summary": "Implements database queries and transactional operations for collections.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "summary": "Implements database queries and transactional operations for inventory.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/catalog/search.ts",
+      "type": "file",
+      "name": "search.ts",
+      "filePath": "src/queries/catalog/search.ts",
+      "summary": "Implements database queries and transactional operations for search.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/tags.ts",
+      "type": "file",
+      "name": "tags.ts",
+      "filePath": "src/queries/catalog/tags.ts",
+      "summary": "Implements database queries and transactional operations for tags.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/identity/admin-roles.ts",
+      "type": "file",
+      "name": "admin-roles.ts",
+      "filePath": "src/queries/identity/admin-roles.ts",
+      "summary": "Implements database queries and transactional operations for admin roles.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/identity/admin-users.ts",
+      "type": "file",
+      "name": "admin-users.ts",
+      "filePath": "src/queries/identity/admin-users.ts",
+      "summary": "Implements database queries and transactional operations for admin users.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/identity/authorization-version.ts",
+      "type": "file",
+      "name": "authorization-version.ts",
+      "filePath": "src/queries/identity/authorization-version.ts",
+      "summary": "Implements database queries and transactional operations for authorization version.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/create-admin-user.ts",
+      "type": "file",
+      "name": "create-admin-user.ts",
+      "filePath": "src/queries/identity/create-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for create admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/create-role.ts",
+      "type": "file",
+      "name": "create-role.ts",
+      "filePath": "src/queries/identity/create-role.ts",
+      "summary": "Implements database queries and transactional operations for create role.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/deactivate-admin-user.ts",
+      "type": "file",
+      "name": "deactivate-admin-user.ts",
+      "filePath": "src/queries/identity/deactivate-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for deactivate admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/delete-role.ts",
+      "type": "file",
+      "name": "delete-role.ts",
+      "filePath": "src/queries/identity/delete-role.ts",
+      "summary": "Implements database queries and transactional operations for delete role.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/get-role-user-count.ts",
+      "type": "file",
+      "name": "get-role-user-count.ts",
+      "filePath": "src/queries/identity/get-role-user-count.ts",
+      "summary": "Implements database queries and transactional operations for get role user count.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "type": "file",
+      "name": "set-admin-permission-overrides.ts",
+      "filePath": "src/queries/identity/set-admin-permission-overrides.ts",
+      "summary": "Implements database queries and transactional operations for set admin permission overrides.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/update-admin-user.ts",
+      "type": "file",
+      "name": "update-admin-user.ts",
+      "filePath": "src/queries/identity/update-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for update admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/update-role-permissions.ts",
+      "type": "file",
+      "name": "update-role-permissions.ts",
+      "filePath": "src/queries/identity/update-role-permissions.ts",
+      "summary": "Implements database queries and transactional operations for update role permissions.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/stock-reservations.ts",
+      "type": "file",
+      "name": "stock-reservations.ts",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "summary": "Implements database queries and transactional operations for stock reservations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/notifications/notifications.ts",
+      "type": "file",
+      "name": "notifications.ts",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "summary": "Implements database queries and transactional operations for notifications.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/partner-sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "summary": "Provides the consolidated database query surface for partner-sales operations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/partners/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/partners/index.ts",
+      "summary": "Provides the consolidated database query surface for partners operations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/products/bulk-activate-products.ts",
+      "type": "file",
+      "name": "bulk-activate-products.ts",
+      "filePath": "src/queries/products/bulk-activate-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk activate products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/bulk-deactivate-products.ts",
+      "type": "file",
+      "name": "bulk-deactivate-products.ts",
+      "filePath": "src/queries/products/bulk-deactivate-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk deactivate products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/bulk-delete-products.ts",
+      "type": "file",
+      "name": "bulk-delete-products.ts",
+      "filePath": "src/queries/products/bulk-delete-products.ts",
+      "summary": "Implements database queries and transactional operations for bulk delete products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/check-product-slug-available.ts",
+      "type": "file",
+      "name": "check-product-slug-available.ts",
+      "filePath": "src/queries/products/check-product-slug-available.ts",
+      "summary": "Implements database queries and transactional operations for check product slug available.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "type": "file",
+      "name": "check-product-variant-sku-available.ts",
+      "filePath": "src/queries/products/check-product-variant-sku-available.ts",
+      "summary": "Implements database queries and transactional operations for check product variant sku available.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/create-product-with-variants.ts",
+      "type": "file",
+      "name": "create-product-with-variants.ts",
+      "filePath": "src/queries/products/create-product-with-variants.ts",
+      "summary": "Implements database queries and transactional operations for create product with variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/deactivate-product-variant.ts",
+      "type": "file",
+      "name": "deactivate-product-variant.ts",
+      "filePath": "src/queries/products/deactivate-product-variant.ts",
+      "summary": "Implements database queries and transactional operations for deactivate product variant.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/duplicate-product.ts",
+      "type": "file",
+      "name": "duplicate-product.ts",
+      "filePath": "src/queries/products/duplicate-product.ts",
+      "summary": "Implements database queries and transactional operations for duplicate product.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "type": "file",
+      "name": "get-admin-product-for-edit.ts",
+      "filePath": "src/queries/products/get-admin-product-for-edit.ts",
+      "summary": "Implements database queries and transactional operations for get admin product for edit.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/get-admin-products-list.ts",
+      "type": "file",
+      "name": "get-admin-products-list.ts",
+      "filePath": "src/queries/products/get-admin-products-list.ts",
+      "summary": "Implements database queries and transactional operations for get admin products list.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/get-product-variant-attributes.ts",
+      "type": "file",
+      "name": "get-product-variant-attributes.ts",
+      "filePath": "src/queries/products/get-product-variant-attributes.ts",
+      "summary": "Implements database queries and transactional operations for get product variant attributes.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/insert-generated-product-variants.ts",
+      "type": "file",
+      "name": "insert-generated-product-variants.ts",
+      "filePath": "src/queries/products/insert-generated-product-variants.ts",
+      "summary": "Implements database queries and transactional operations for insert generated product variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "file",
+      "name": "insert-product-variant-in-tx.ts",
+      "filePath": "src/queries/products/insert-product-variant-in-tx.ts",
+      "summary": "Implements database queries and transactional operations for insert product variant in tx.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/queries/products/types.ts",
+      "summary": "Implements database queries and transactional operations for types.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/update-product-variant-key.ts",
+      "type": "file",
+      "name": "update-product-variant-key.ts",
+      "filePath": "src/queries/products/update-product-variant-key.ts",
+      "summary": "Implements database queries and transactional operations for update product variant key.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/update-product-with-variants.ts",
+      "type": "file",
+      "name": "update-product-with-variants.ts",
+      "filePath": "src/queries/products/update-product-with-variants.ts",
+      "summary": "Implements database queries and transactional operations for update product with variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/upsert-product-variant-images.ts",
+      "type": "file",
+      "name": "upsert-product-variant-images.ts",
+      "filePath": "src/queries/products/upsert-product-variant-images.ts",
+      "summary": "Implements database queries and transactional operations for upsert product variant images.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/checkout-idempotency.ts",
+      "type": "file",
+      "name": "checkout-idempotency.ts",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "summary": "Implements database queries and transactional operations for checkout idempotency.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/sales/guest-access.ts",
+      "type": "file",
+      "name": "guest-access.ts",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "summary": "Implements database queries and transactional operations for guest access.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/system/outbox.ts",
+      "type": "file",
+      "name": "outbox.ts",
+      "filePath": "src/queries/system/outbox.ts",
+      "summary": "Implements database queries and transactional operations for outbox.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/transaction.ts",
+      "type": "file",
+      "name": "transaction.ts",
+      "filePath": "src/queries/transaction.ts",
+      "summary": "Implements database queries and transactional operations for transaction.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/index.ts",
+      "summary": "Barrel entry point that re-exports the index.ts schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/counts.ts",
+      "type": "file",
+      "name": "counts.ts",
+      "filePath": "src/queries/catalog/counts.ts",
+      "summary": "Implements database queries and transactional operations for counts.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/distribution.ts",
+      "type": "file",
+      "name": "distribution.ts",
+      "filePath": "src/queries/catalog/distribution.ts",
+      "summary": "Implements database queries and transactional operations for distribution.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/health.ts",
+      "type": "file",
+      "name": "health.ts",
+      "filePath": "src/queries/catalog/health.ts",
+      "summary": "Implements database queries and transactional operations for health.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/top-products.ts",
+      "type": "file",
+      "name": "top-products.ts",
+      "filePath": "src/queries/catalog/top-products.ts",
+      "summary": "Implements database queries and transactional operations for top products.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/low-stock.ts",
+      "type": "file",
+      "name": "low-stock.ts",
+      "filePath": "src/queries/inventory/low-stock.ts",
+      "summary": "Implements database queries and transactional operations for low stock.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/order-stats.ts",
+      "type": "file",
+      "name": "order-stats.ts",
+      "filePath": "src/queries/sales/order-stats.ts",
+      "summary": "Implements database queries and transactional operations for order stats.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/revenue.ts",
+      "type": "file",
+      "name": "revenue.ts",
+      "filePath": "src/queries/sales/revenue.ts",
+      "summary": "Implements database queries and transactional operations for revenue.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/catalog/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/catalog/index.ts",
+      "summary": "Barrel entry point that re-exports the catalog schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/inventory/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/inventory/index.ts",
+      "summary": "Barrel entry point that re-exports the inventory schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/sales/index.ts",
+      "summary": "Barrel entry point that re-exports the sales schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seed.ts",
+      "type": "file",
+      "name": "seed.ts",
+      "filePath": "seed.ts",
+      "summary": "Runs the database seeding workflow, coordinating cleanup, fixture insertion, and sequence synchronization.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development",
+        "tested"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/catalog.ts",
+      "type": "file",
+      "name": "catalog.ts",
+      "filePath": "seeds/catalog.ts",
+      "summary": "Populates deterministic catalog fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/index.test.ts",
+      "type": "file",
+      "name": "index.test.ts",
+      "filePath": "seeds/helpers/index.test.ts",
+      "summary": "Tests seed helper behavior for validated fixture preparation, parent resolution, password hashing, truncation, and sequence synchronization.",
+      "tags": [
+        "test",
+        "database",
+        "seed-data",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "seeds/helpers/index.ts",
+      "summary": "Provides reusable database seed helpers for validation, parent lookup, password hashing, table cleanup, and PostgreSQL sequence synchronization.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "seeds/index.ts",
+      "summary": "Barrel entry point that re-exports the database seed modules.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "seeds/inventory.ts",
+      "summary": "Populates deterministic inventory fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/sales.ts",
+      "type": "file",
+      "name": "sales.ts",
+      "filePath": "seeds/sales.ts",
+      "summary": "Populates deterministic sales fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/system.ts",
+      "type": "file",
+      "name": "system.ts",
+      "filePath": "seeds/system.ts",
+      "summary": "Populates deterministic system fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/identity.ts",
+      "type": "file",
+      "name": "identity.ts",
+      "filePath": "seeds/identity.ts",
+      "summary": "Seeds permissions, roles, organizations, users, credentials, authorization grants, memberships, and payment methods while validating fixtures and resolving parent rows.",
+      "tags": [
+        "database",
+        "seed-data",
+        "identity",
+        "authorization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/catalog/products.ts",
+      "type": "file",
+      "name": "products.ts",
+      "filePath": "src/queries/catalog/products.ts",
+      "summary": "Provides catalog product reads, search and filtering, variant and taxonomy lookups, enriched views, and product mutations through Drizzle queries.",
+      "tags": [
+        "database",
+        "catalog",
+        "query-layer",
+        "data-access"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/identity/users.ts",
+      "type": "file",
+      "name": "users.ts",
+      "filePath": "src/queries/identity/users.ts",
+      "summary": "Implements user, credential, and authorization-context queries plus transactional user and password-credential mutations.",
+      "tags": [
+        "database",
+        "identity",
+        "authentication",
+        "data-access"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/review/reviews.ts",
+      "type": "file",
+      "name": "reviews.ts",
+      "filePath": "src/queries/review/reviews.ts",
+      "summary": "Implements product-review retrieval, pagination, aggregate summaries, creation, helpful-vote updates, and product rating recalculation.",
+      "tags": [
+        "database",
+        "reviews",
+        "query-layer",
+        "aggregation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "file",
+      "name": "orders.test.ts",
+      "filePath": "src/queries/sales/__tests__/orders.test.ts",
+      "summary": "Verifies order mutation guards reject immutable payment and reward accounting fields.",
+      "tags": [
+        "test",
+        "orders",
+        "validation",
+        "regression"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "src/queries/sales/orders.ts",
+      "summary": "Provides order retrieval, filtering, purchase checks, transactional creation and updates, reference-conflict handling, and revenue analytics.",
+      "tags": [
+        "database",
+        "orders",
+        "transactions",
+        "analytics",
+        "tested"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/types/index.ts",
+      "summary": "Barrel entry point that re-exports the database package type and validation modules.",
+      "tags": [
+        "barrel",
+        "type-definition",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/__tests__/permission-codes.test.ts",
+      "type": "file",
+      "name": "permission-codes.test.ts",
+      "filePath": "src/__tests__/permission-codes.test.ts",
+      "summary": "Checks that seeded permission codes remain synchronized with the canonical identity permission-code definitions.",
+      "tags": [
+        "test",
+        "permissions",
+        "seed-data",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-categories.ts",
+      "type": "file",
+      "name": "admin-categories.ts",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "summary": "Provides administrative category hierarchy reads and category create, update, reorder, and delete operations.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "hierarchy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-collections.ts",
+      "type": "file",
+      "name": "admin-collections.ts",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "summary": "Provides administrative collection reads and mutations, including tag assignment and display-order updates.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "collections"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-tags.ts",
+      "type": "file",
+      "name": "admin-tags.ts",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "summary": "Provides administrative tag listing, lookup, slug validation, counts, CRUD, and bulk status operations.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "taxonomy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/types/common.ts",
+      "type": "file",
+      "name": "common.ts",
+      "filePath": "src/types/common.ts",
+      "summary": "Defines shared Zod schemas and inferred types for locales, money, identifiers, slugs, quantities, ratings, and media assets.",
+      "tags": [
+        "type-definition",
+        "validation",
+        "zod",
+        "shared-types"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/types/identity.ts",
+      "type": "file",
+      "name": "identity.ts",
+      "filePath": "src/types/identity.ts",
+      "summary": "Defines identity and session schemas, canonical permission and role constants, user value-object construction, and authorization predicates.",
+      "tags": [
+        "type-definition",
+        "identity",
+        "authorization",
+        "validation",
+        "tested"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/types/pricing.ts",
+      "type": "file",
+      "name": "pricing.ts",
+      "filePath": "src/types/pricing.ts",
+      "summary": "Defines Zod schemas for persisted prices, discount rules, applied discounts, and resolved pricing results.",
+      "tags": [
+        "type-definition",
+        "pricing",
+        "validation",
+        "zod"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/school-directory/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/school-directory/index.ts",
+      "summary": "Implements partner-school directory filtering, search, facet options, and detailed lookup by school code.",
+      "tags": [
+        "database",
+        "school-directory",
+        "search",
+        "data-access"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/school-supply-lists/index.ts",
+      "summary": "Finds product variant candidates for supply-list items and derives category attribute values for matching workflows.",
+      "tags": [
+        "database",
+        "school-supply-lists",
+        "product-matching",
+        "data-access"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "type": "file",
+      "name": "lifecycle.ts",
+      "filePath": "src/queries/school-supply-lists/lifecycle.ts",
+      "summary": "Implements transactional school-supply-list lifecycle operations, including locking, drafts, items, snapshots, publication, archival, and conflict detection.",
+      "tags": [
+        "database",
+        "school-supply-lists",
+        "transactions",
+        "lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/list-offers.ts",
+      "type": "file",
+      "name": "list-offers.ts",
+      "filePath": "src/queries/school-supply-lists/list-offers.ts",
+      "summary": "Reads, upserts, deletes, and copies commercial offer terms associated with school supply lists.",
+      "tags": [
+        "database",
+        "school-supply-lists",
+        "offers",
+        "transactions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/public-read.ts",
+      "type": "file",
+      "name": "public-read.ts",
+      "filePath": "src/queries/school-supply-lists/public-read.ts",
+      "summary": "Builds public supply-list views and resolves inventory availability and product-variant display details.",
+      "tags": [
+        "database",
+        "school-supply-lists",
+        "public-read",
+        "inventory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/types/school-supply-lists.ts",
+      "type": "file",
+      "name": "school-supply-lists.ts",
+      "filePath": "src/types/school-supply-lists.ts",
+      "summary": "Defines identifiers and Zod validation schemas for supply-list drafts, items, and list offers.",
+      "tags": [
+        "type-definition",
+        "school-supply-lists",
+        "validation",
+        "zod"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/SCHEMA.md",
+      "type": "document",
+      "name": "SCHEMA.md",
+      "filePath": "docs/SCHEMA.md",
+      "summary": "Database schema reference covering the global entity relationship model, feature-specific tables, complex types, and migration commands.",
+      "tags": [
+        "documentation",
+        "database",
+        "schema-reference",
+        "er-diagram"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/SETUP.md",
+      "type": "document",
+      "name": "SETUP.md",
+      "filePath": "docs/SETUP.md",
+      "summary": "Docker-based database setup guide covering startup scripts, connection details, troubleshooting, and direct PostgreSQL access.",
+      "tags": [
+        "documentation",
+        "database",
+        "docker",
+        "setup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/TAXONOMY.md",
+      "type": "document",
+      "name": "TAXONOMY.md",
+      "filePath": "docs/TAXONOMY.md",
+      "summary": "Explains the hybrid catalog taxonomy across tags, collections, attributes, and smart supply-list matching.",
+      "tags": [
+        "documentation",
+        "catalog",
+        "taxonomy",
+        "product-matching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:init-db.sql",
+      "type": "file",
+      "name": "init-db.sql",
+      "filePath": "init-db.sql",
+      "summary": "Initializes a fresh PostgreSQL database by enabling the uuid-ossp extension before Drizzle migrations create tables.",
+      "tags": [
+        "database",
+        "initialization",
+        "postgresql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Defines the @findeg/db package exports, database lifecycle scripts, and runtime and development dependencies.",
+      "tags": [
+        "configuration",
+        "package-manifest",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "Configures no-emit TypeScript checking and @findeg/db path aliases while excluding migrations and tests.",
+      "tags": [
+        "configuration",
+        "typescript",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/addresses.json",
+      "type": "config",
+      "name": "addresses.json",
+      "filePath": "seeds/data/addresses.json",
+      "summary": "Address fixtures for customer and order-delivery scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/alternatives.json",
+      "type": "config",
+      "name": "alternatives.json",
+      "filePath": "seeds/data/alternatives.json",
+      "summary": "Placeholder fixture set for product alternatives; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/attributes.json",
+      "type": "config",
+      "name": "attributes.json",
+      "filePath": "seeds/data/attributes.json",
+      "summary": "Catalog attribute-definition fixtures used to describe product characteristics.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/audit_log.json",
+      "type": "config",
+      "name": "audit_log.json",
+      "filePath": "seeds/data/audit_log.json",
+      "summary": "Audit-event fixtures for system activity and administrative history.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/auth_accounts.json",
+      "type": "config",
+      "name": "auth_accounts.json",
+      "filePath": "seeds/data/auth_accounts.json",
+      "summary": "Authentication-account fixtures linking identities to login providers.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/brands.json",
+      "type": "config",
+      "name": "brands.json",
+      "filePath": "seeds/data/brands.json",
+      "summary": "Brand fixtures covering the catalog manufacturers represented in seeded products.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/categories.json",
+      "type": "config",
+      "name": "categories.json",
+      "filePath": "seeds/data/categories.json",
+      "summary": "Hierarchical catalog category fixtures used to organize the seeded assortment.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/collection_tags.json",
+      "type": "config",
+      "name": "collection_tags.json",
+      "filePath": "seeds/data/collection_tags.json",
+      "summary": "Join fixtures associating curated collections with catalog tags.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/collections.json",
+      "type": "config",
+      "name": "collections.json",
+      "filePath": "seeds/data/collections.json",
+      "summary": "Curated catalog collection fixtures and their presentation metadata.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/discount_rules.json",
+      "type": "config",
+      "name": "discount_rules.json",
+      "filePath": "seeds/data/discount_rules.json",
+      "summary": "Sales discount-rule fixtures used by pricing and checkout scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/guest_principals.json",
+      "type": "config",
+      "name": "guest_principals.json",
+      "filePath": "seeds/data/guest_principals.json",
+      "summary": "Guest identity fixtures supporting unauthenticated checkout flows.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/inventory_balances.json",
+      "type": "config",
+      "name": "inventory_balances.json",
+      "filePath": "seeds/data/inventory_balances.json",
+      "summary": "Warehouse-level inventory balance fixtures for seeded product variants.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/list_items.json",
+      "type": "config",
+      "name": "list_items.json",
+      "filePath": "seeds/data/list_items.json",
+      "summary": "Placeholder fixture set for list items; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/order_items.json",
+      "type": "config",
+      "name": "order_items.json",
+      "filePath": "seeds/data/order_items.json",
+      "summary": "Order-line fixtures connecting seeded orders to purchased variants.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/orders.json",
+      "type": "config",
+      "name": "orders.json",
+      "filePath": "seeds/data/orders.json",
+      "summary": "Sales order fixtures for checkout and fulfillment scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/organization_memberships.json",
+      "type": "config",
+      "name": "organization_memberships.json",
+      "filePath": "seeds/data/organization_memberships.json",
+      "summary": "Membership fixtures linking users to organizations and roles.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/organizations.json",
+      "type": "config",
+      "name": "organizations.json",
+      "filePath": "seeds/data/organizations.json",
+      "summary": "Organization fixtures for tenant and membership scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/password_credentials.json",
+      "type": "config",
+      "name": "password_credentials.json",
+      "filePath": "seeds/data/password_credentials.json",
+      "summary": "Password credential fixtures for seeded local authentication accounts.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/payment_methods.json",
+      "type": "config",
+      "name": "payment_methods.json",
+      "filePath": "seeds/data/payment_methods.json",
+      "summary": "Payment-method fixtures attached to seeded identities.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/permissions.json",
+      "type": "config",
+      "name": "permissions.json",
+      "filePath": "seeds/data/permissions.json",
+      "summary": "Canonical permission-code fixtures used by role-based access control.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/product_attributes.json",
+      "type": "config",
+      "name": "product_attributes.json",
+      "filePath": "seeds/data/product_attributes.json",
+      "summary": "Product-level attribute value fixtures for catalog filtering and display.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/product_images.json",
+      "type": "config",
+      "name": "product_images.json",
+      "filePath": "seeds/data/product_images.json",
+      "summary": "Placeholder fixture set for product images; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/product_tags.json",
+      "type": "config",
+      "name": "product_tags.json",
+      "filePath": "seeds/data/product_tags.json",
+      "summary": "Join fixtures assigning search and merchandising tags to products.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/product_variants.json",
+      "type": "config",
+      "name": "product_variants.json",
+      "filePath": "seeds/data/product_variants.json",
+      "summary": "SKU-level variant fixtures containing purchasable catalog combinations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/products.json",
+      "type": "config",
+      "name": "products.json",
+      "filePath": "seeds/data/products.json",
+      "summary": "Core product fixtures containing the seeded catalog assortment and localized content.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/review_helpful_votes.json",
+      "type": "config",
+      "name": "review_helpful_votes.json",
+      "filePath": "seeds/data/review_helpful_votes.json",
+      "summary": "Placeholder fixture set for review helpfulness votes; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/reviews.json",
+      "type": "config",
+      "name": "reviews.json",
+      "filePath": "seeds/data/reviews.json",
+      "summary": "Product review fixtures for rating and feedback scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/role_permissions.json",
+      "type": "config",
+      "name": "role_permissions.json",
+      "filePath": "seeds/data/role_permissions.json",
+      "summary": "Role-to-permission assignment fixtures defining baseline authorization policy.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/roles.json",
+      "type": "config",
+      "name": "roles.json",
+      "filePath": "seeds/data/roles.json",
+      "summary": "Role fixtures used by identity and authorization scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/search_logs.json",
+      "type": "config",
+      "name": "search_logs.json",
+      "filePath": "seeds/data/search_logs.json",
+      "summary": "Search-event fixtures for analytics and system-observability scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/stock_movements.json",
+      "type": "config",
+      "name": "stock_movements.json",
+      "filePath": "seeds/data/stock_movements.json",
+      "summary": "Inventory movement fixtures recording seeded stock changes.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/tags.json",
+      "type": "config",
+      "name": "tags.json",
+      "filePath": "seeds/data/tags.json",
+      "summary": "Catalog tag fixtures used for discovery, grouping, and merchandising.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/user_permissions.json",
+      "type": "config",
+      "name": "user_permissions.json",
+      "filePath": "seeds/data/user_permissions.json",
+      "summary": "Per-user permission override fixtures.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/user_roles.json",
+      "type": "config",
+      "name": "user_roles.json",
+      "filePath": "seeds/data/user_roles.json",
+      "summary": "User-to-role assignment fixtures for seeded authorization states.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/users.json",
+      "type": "config",
+      "name": "users.json",
+      "filePath": "seeds/data/users.json",
+      "summary": "User identity fixtures covering administrative and customer accounts.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/variant_attributes.json",
+      "type": "config",
+      "name": "variant_attributes.json",
+      "filePath": "seeds/data/variant_attributes.json",
+      "summary": "Variant-level attribute fixtures describing SKU combinations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/variant_images.json",
+      "type": "config",
+      "name": "variant_images.json",
+      "filePath": "seeds/data/variant_images.json",
+      "summary": "Variant image fixtures associating media with specific SKUs.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/warehouses.json",
+      "type": "config",
+      "name": "warehouses.json",
+      "filePath": "seeds/data/warehouses.json",
+      "summary": "Warehouse fixtures used as inventory storage locations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:drizzle.config.ts",
+      "type": "file",
+      "name": "drizzle.config.ts",
+      "filePath": "drizzle.config.ts",
+      "summary": "Configures Drizzle Kit for the project PostgreSQL schemas, migration output directory, and environment-backed connection URL.",
+      "tags": [
+        "configuration",
+        "drizzle",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:eslint.config.js",
+      "type": "file",
+      "name": "eslint.config.js",
+      "filePath": "eslint.config.js",
+      "summary": "Re-exports the shared database ESLint preset for this package.",
+      "tags": [
+        "configuration",
+        "eslint",
+        "barrel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:migrate.ts",
+      "type": "file",
+      "name": "migrate.ts",
+      "filePath": "migrate.ts",
+      "summary": "Runs pending Drizzle migrations only when the explicit migration safety flag is enabled, then closes the database connection.",
+      "tags": [
+        "entry-point",
+        "migration",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seed.test.ts",
+      "type": "file",
+      "name": "seed.test.ts",
+      "filePath": "seed.test.ts",
+      "summary": "Verifies the seed command executes every domain stage in order, reports failures, and always closes the database connection.",
+      "tags": [
+        "test",
+        "database",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "seeds/helpers/constants.ts",
+      "summary": "Defines the dependency-safe table import order used by seed helpers.",
+      "tags": [
+        "configuration",
+        "seeding",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/index.ts",
+      "summary": "Public package entry point that exposes only schemas and types, keeping runtime database connections out of client-safe imports.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/catalog/index.ts",
+      "summary": "Catalog query barrel exposing product, category, brand, collection, tag, search, analytics, and inventory operations.",
+      "tags": [
+        "barrel",
+        "database",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/identity/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/identity/index.ts",
+      "summary": "Identity query barrel exposing admin-user, role, and permission-management operations and their input/result types.",
+      "tags": [
+        "barrel",
+        "database",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/index.ts",
+      "summary": "Top-level query barrel organizing domain primitives, feature-specific operations, transaction helpers, and namespaced query groups.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/inventory/index.ts",
+      "summary": "Inventory query barrel for low-stock reporting and transactional stock reservation lifecycle operations.",
+      "tags": [
+        "barrel",
+        "database",
+        "inventory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/products/index.ts",
+      "summary": "Administrative product query barrel covering listing, creation, duplication, bulk actions, variants, images, and availability checks.",
+      "tags": [
+        "barrel",
+        "database",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/sales/index.ts",
+      "summary": "Sales query barrel exposing order statistics, revenue reporting, purchase checks, checkout idempotency, and guest access.",
+      "tags": [
+        "barrel",
+        "database",
+        "sales"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/schema/catalog/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/schema/catalog/README.md",
+      "summary": "Documents the catalog schema architecture, entity relationships, twelve core tables, cross-schema references, and data flow.",
+      "tags": [
+        "documentation",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/identity/index.ts",
+      "summary": "Identity schema barrel exporting access-control, user, and partner table definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/school-engine/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/school-engine/index.ts",
+      "summary": "School-engine schema barrel exporting school supply list definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "school-engine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/system/index.ts",
+      "summary": "System schema barrel exporting audit, logging, notification, search-log, and outbox definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/catalog/IProduct.interface.ts",
+      "type": "file",
+      "name": "IProduct.interface.ts",
+      "filePath": "src/types/catalog/IProduct.interface.ts",
+      "summary": "Defines the legacy product contract with localized content, media variants, catalog relations, and rating metadata.",
+      "tags": [
+        "type-definition",
+        "catalog",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:vitest.config.ts",
+      "type": "file",
+      "name": "vitest.config.ts",
+      "filePath": "vitest.config.ts",
+      "summary": "Configures Vitest for Node-based database tests with isolated local PostgreSQL environment values.",
+      "tags": [
+        "configuration",
+        "test",
+        "vitest"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "importEdges": [
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/brands.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/categories.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/enums.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/identity/addresses.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/reviews.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/system/audit-log.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/discount-rules.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/outbox.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/server-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/sales.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/connection.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/authorization-version.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/queries/products/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/transaction.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/inventory/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.test.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/__tests__/orders.test.ts",
+      "target": "file:src/queries/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "file:src/types/identity.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/pricing.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-directory/index.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-directory/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/types/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/list-offers.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/list-offers.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/public-read.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/public-read.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:migrate.ts",
+      "target": "file:drizzle.config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:migrate.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/brands.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/categories.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/collection_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/collections.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_variants.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/products.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/review_helpful_votes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/reviews.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/variant_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/variant_images.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/auth_accounts.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/guest_principals.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/organization_memberships.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/organizations.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/payment_methods.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/role_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/user_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/user_roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/users.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/inventory_balances.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/stock_movements.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/warehouses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/addresses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/discount_rules.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/order_items.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/orders.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "config:seeds/data/audit_log.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "config:seeds/data/search_logs.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "config:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    }
+  ],
+  "allEdges": [
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/brands.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/categories.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/enums.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/identity/addresses.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/reviews.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/system/audit-log.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/discount-rules.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/outbox.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/server-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/sales.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/connection.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/authorization-version.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/partners/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-activate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-deactivate-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/bulk-delete-products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-slug-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/check-product-variant-sku-available.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/create-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/deactivate-product-variant.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/duplicate-product.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-product-for-edit.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/queries/products/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-admin-products-list.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/get-product-variant-attributes.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/transaction.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/counts.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/distribution.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/health.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/top-products.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/catalog/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/low-stock.ts",
+      "target": "file:src/schema/inventory/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/order-stats.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/revenue.ts",
+      "target": "file:src/schema/sales/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.test.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/__tests__/orders.test.ts",
+      "target": "file:src/queries/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "file:src/types/identity.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/__tests__/permission-codes.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/pricing.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-directory/index.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-directory/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "target": "file:src/types/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/list-offers.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/list-offers.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/public-read.ts",
+      "target": "file:src/queries/school-supply-lists/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/school-supply-lists/public-read.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:migrate.ts",
+      "target": "file:drizzle.config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:migrate.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "file:seeds/helpers/index.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Path-based pairing (deterministic)"
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seed.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Path-based pairing (deterministic)"
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/brands.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/categories.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/collection_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/collections.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/product_variants.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/products.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/review_helpful_votes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/reviews.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/variant_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "config:seeds/data/variant_images.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/auth_accounts.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/guest_principals.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/organization_memberships.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/organizations.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/payment_methods.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/role_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/user_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/user_roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "config:seeds/data/users.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/inventory_balances.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/stock_movements.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "config:seeds/data/warehouses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/addresses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/discount_rules.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/order_items.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "config:seeds/data/orders.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "config:seeds/data/audit_log.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "config:seeds/data/search_logs.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "config:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    }
+  ]
+}

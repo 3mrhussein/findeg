@@ -1,0 +1,202 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "docs/SCHEMA.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 77,
+      "nonEmptyLines": 51,
+      "sections": [
+        {
+          "heading": "FindEg Database Schema Reference",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "🗺️ Global ER Diagram",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "📦 Feature-Specific Tables & Complex Types",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "1. Catalog",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "2. Identity",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "3. Orders & Cart",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "4. School",
+          "level": 3,
+          "line": 51
+        },
+        {
+          "heading": "🛠️ Management & Migrations",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Essential Commands",
+          "level": 3,
+          "line": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/SETUP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 84,
+      "nonEmptyLines": 59,
+      "sections": [
+        {
+          "heading": "Docker Database Setup",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Quick Start",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Available Scripts",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "Database Connection Details",
+          "level": 2,
+          "line": 48
+        },
+        {
+          "heading": "Troubleshooting",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "Port 5432 already in use",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "Container won't start",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "View container status",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "Access database directly",
+          "level": 3,
+          "line": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/TAXONOMY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 59,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "Hybrid Taxonomy Guide",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Querying by Tags",
+          "level": 3,
+          "line": 15
+        },
+        {
+          "heading": "Collections",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Features",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "Attribute System",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Schema",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "Key Attributes",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "Smart List Matching",
+          "level": 2,
+          "line": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

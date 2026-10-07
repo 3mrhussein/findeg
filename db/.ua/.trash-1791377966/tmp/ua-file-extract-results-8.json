@@ -1,0 +1,1865 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 6,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 6,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/queries/school-directory/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 204,
+      "nonEmptyLines": 189,
+      "functions": [
+        {
+          "name": "escapeLike",
+          "startLine": 72,
+          "endLine": 74,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "directoryFilter",
+          "startLine": 76,
+          "endLine": 101,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "searchPartnerSchools",
+          "startLine": 104,
+          "endLine": 129,
+          "params": [
+            "executor",
+            "{ limit, offset, ...filter }"
+          ]
+        },
+        {
+          "name": "getPartnerSchoolFilterOptions",
+          "startLine": 132,
+          "endLine": 149,
+          "params": [
+            "executor"
+          ]
+        },
+        {
+          "name": "getPartnerSchoolByCode",
+          "startLine": 152,
+          "endLine": 204,
+          "params": [
+            "executor",
+            "code"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "searchPartnerSchools",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerSchoolFilterOptions",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerSchoolByCode",
+          "line": 152,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "escapeLike",
+          "callee": "value.replace",
+          "lineNumber": 73
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "escapeLike",
+          "lineNumber": 79
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "conditions.push",
+          "lineNumber": 80
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "or",
+          "lineNumber": 81
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "ilike",
+          "lineNumber": 81
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "ilike",
+          "lineNumber": 81
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "conditions.push",
+          "lineNumber": 85
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "eq",
+          "lineNumber": 85
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "conditions.push",
+          "lineNumber": 87
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "eq",
+          "lineNumber": 87
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "conditions.push",
+          "lineNumber": 89
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "eq",
+          "lineNumber": 89
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "conditions.push",
+          "lineNumber": 92
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "exists",
+          "lineNumber": 93
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "sql",
+          "lineNumber": 94
+        },
+        {
+          "caller": "directoryFilter",
+          "callee": "and",
+          "lineNumber": 100
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "directoryFilter",
+          "lineNumber": 108
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where(where)\n    .orderBy(asc(businessPartners.nameEn), asc(businessPartners.id))\n    .limit(limit)\n    .offset",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where(where)\n    .orderBy(asc(businessPartners.nameEn), asc(businessPartners.id))\n    .limit",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where(where)\n    .orderBy",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from(businessPartners)\n    .innerJoin",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ ...schoolColumns, publishedListCount })\n    .from",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select",
+          "lineNumber": 109
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "eq",
+          "lineNumber": 114
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "asc",
+          "lineNumber": 117
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "asc",
+          "lineNumber": 117
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ total: sql<number>`count(*)`.mapWith(Number) })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where",
+          "lineNumber": 120
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ total: sql<number>`count(*)`.mapWith(Number) })\n    .from(businessPartners)\n    .innerJoin",
+          "lineNumber": 120
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select({ total: sql<number>`count(*)`.mapWith(Number) })\n    .from",
+          "lineNumber": 120
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "executor\n    .select",
+          "lineNumber": 120
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "`count(*)`.mapWith",
+          "lineNumber": 121
+        },
+        {
+          "caller": "searchPartnerSchools",
+          "callee": "eq",
+          "lineNumber": 125
+        },
+        {
+          "caller": "distinct",
+          "callee": "executor\n      .selectDistinct({ value: column })\n      .from(partnerSchoolProfiles)\n      .where(sql`${column} is not null`)\n      .orderBy",
+          "lineNumber": 136
+        },
+        {
+          "caller": "distinct",
+          "callee": "executor\n      .selectDistinct({ value: column })\n      .from(partnerSchoolProfiles)\n      .where",
+          "lineNumber": 136
+        },
+        {
+          "caller": "distinct",
+          "callee": "executor\n      .selectDistinct({ value: column })\n      .from",
+          "lineNumber": 136
+        },
+        {
+          "caller": "distinct",
+          "callee": "executor\n      .selectDistinct",
+          "lineNumber": 136
+        },
+        {
+          "caller": "distinct",
+          "callee": "sql",
+          "lineNumber": 139
+        },
+        {
+          "caller": "distinct",
+          "callee": "asc",
+          "lineNumber": 140
+        },
+        {
+          "caller": "distinct",
+          "callee": "rows.flatMap",
+          "lineNumber": 141
+        },
+        {
+          "caller": "getPartnerSchoolFilterOptions",
+          "callee": "Promise.all",
+          "lineNumber": 143
+        },
+        {
+          "caller": "getPartnerSchoolFilterOptions",
+          "callee": "distinct",
+          "lineNumber": 144
+        },
+        {
+          "caller": "getPartnerSchoolFilterOptions",
+          "callee": "distinct",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getPartnerSchoolFilterOptions",
+          "callee": "distinct",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({ id: businessPartners.id, ...schoolColumns })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where(eq(businessPartners.code, code))\n    .limit",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({ id: businessPartners.id, ...schoolColumns })\n    .from(businessPartners)\n    .innerJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),\n    )\n    .where",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({ id: businessPartners.id, ...schoolColumns })\n    .from(businessPartners)\n    .innerJoin",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({ id: businessPartners.id, ...schoolColumns })\n    .from",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "eq",
+          "lineNumber": 161
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "eq",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({\n      grade: schoolSupplyLists.grade,\n      academicYear: schoolSupplyLists.academicYear,\n      localizedTitle: schoolSupplyLists.localizedTitle,\n      localizedDescription: schoolSupplyLists.localizedDescription,\n      heroImageUrl: schoolSupplyLists.heroImageUrl,\n      publicCode: schoolSupplyLists.publicCode,\n    })\n    .from(schoolSupplyLists)\n    .where(\n      and(\n        eq(schoolSupplyLists.businessPartnerId, school.id),\n        eq(schoolSupplyLists.status, 'published'),\n      ),\n    )\n    .orderBy",
+          "lineNumber": 167
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({\n      grade: schoolSupplyLists.grade,\n      academicYear: schoolSupplyLists.academicYear,\n      localizedTitle: schoolSupplyLists.localizedTitle,\n      localizedDescription: schoolSupplyLists.localizedDescription,\n      heroImageUrl: schoolSupplyLists.heroImageUrl,\n      publicCode: schoolSupplyLists.publicCode,\n    })\n    .from(schoolSupplyLists)\n    .where",
+          "lineNumber": 167
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select({\n      grade: schoolSupplyLists.grade,\n      academicYear: schoolSupplyLists.academicYear,\n      localizedTitle: schoolSupplyLists.localizedTitle,\n      localizedDescription: schoolSupplyLists.localizedDescription,\n      heroImageUrl: schoolSupplyLists.heroImageUrl,\n      publicCode: schoolSupplyLists.publicCode,\n    })\n    .from",
+          "lineNumber": 167
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "executor\n    .select",
+          "lineNumber": 167
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "and",
+          "lineNumber": 178
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "eq",
+          "lineNumber": 179
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "eq",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "desc",
+          "lineNumber": 184
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "asc",
+          "lineNumber": 185
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "asc",
+          "lineNumber": 186
+        },
+        {
+          "caller": "getPartnerSchoolByCode",
+          "callee": "rows.flatMap",
+          "lineNumber": 199
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/school-supply-lists/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 146,
+      "nonEmptyLines": 132,
+      "functions": [
+        {
+          "name": "findVariantCandidates",
+          "startLine": 43,
+          "endLine": 88,
+          "params": [
+            "executor",
+            "filter"
+          ]
+        },
+        {
+          "name": "listAttributeValuesForCategory",
+          "startLine": 101,
+          "endLine": 141,
+          "params": [
+            "executor",
+            "categoryId"
+          ]
+        },
+        {
+          "name": "toStringArray",
+          "startLine": 144,
+          "endLine": 146,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "findVariantCandidates",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "listAttributeValuesForCategory",
+          "line": 101,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin(variantAttributes, eq(variantAttributes.variantId, productVariants.id))\n    .leftJoin(attributes, eq(attributes.id, variantAttributes.attributeId))\n    .where(\n      and(\n        eq(productVariants.isActive, true),\n        eq(products.isActive, true),\n        filter.categoryId === undefined ? undefined : eq(products.categoryId, filter.categoryId),\n        filter.variantIds ? inArray(productVariants.id, filter.variantIds) : undefined,\n      ),\n    )\n    .orderBy",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin(variantAttributes, eq(variantAttributes.variantId, productVariants.id))\n    .leftJoin(attributes, eq(attributes.id, variantAttributes.attributeId))\n    .where",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin(variantAttributes, eq(variantAttributes.variantId, productVariants.id))\n    .leftJoin",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      categoryId: products.categoryId,\n      attributeKey: attributes.key,\n      value: variantAttributes.valueText,\n    })\n    .from",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "executor\n    .select",
+          "lineNumber": 49
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 57
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 58
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 59
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "and",
+          "lineNumber": 61
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 62
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 63
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "eq",
+          "lineNumber": 64
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "inArray",
+          "lineNumber": 65
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "asc",
+          "lineNumber": 68
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "byVariant.get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "byVariant.set",
+          "lineNumber": 77
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "candidate.entries.push",
+          "lineNumber": 80
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "[...byVariant.entries()].map",
+          "lineNumber": 83
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "byVariant.entries",
+          "lineNumber": 83
+        },
+        {
+          "caller": "findVariantCandidates",
+          "callee": "Object.fromEntries",
+          "lineNumber": 86
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct({\n      attributeKey: attributes.key,\n      enumValues: attributes.enumValues,\n      value: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin(attributes, eq(attributes.id, variantAttributes.attributeId))\n    .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .where",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct({\n      attributeKey: attributes.key,\n      enumValues: attributes.enumValues,\n      value: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin(attributes, eq(attributes.id, variantAttributes.attributeId))\n    .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))\n    .innerJoin",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct({\n      attributeKey: attributes.key,\n      enumValues: attributes.enumValues,\n      value: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin(attributes, eq(attributes.id, variantAttributes.attributeId))\n    .innerJoin",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct({\n      attributeKey: attributes.key,\n      enumValues: attributes.enumValues,\n      value: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct({\n      attributeKey: attributes.key,\n      enumValues: attributes.enumValues,\n      value: variantAttributes.valueText,\n    })\n    .from",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "executor\n    .selectDistinct",
+          "lineNumber": 105
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 112
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 113
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 114
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "and",
+          "lineNumber": 116
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 117
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 118
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 119
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "eq",
+          "lineNumber": 120
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "byKey.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "toStringArray",
+          "lineNumber": 128
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "byKey.set",
+          "lineNumber": 129
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "entry.used.add",
+          "lineNumber": 131
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "[...byKey.entries()]\n    .map(([attributeKey, { enumValues, used }]) => ({\n      attributeKey,\n      values: [...new Set(enumValues ?? used)].sort(),\n    }))\n    .filter((entry) => entry.values.length > 0)\n    .sort",
+          "lineNumber": 134
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "[...byKey.entries()]\n    .map(([attributeKey, { enumValues, used }]) => ({\n      attributeKey,\n      values: [...new Set(enumValues ?? used)].sort(),\n    }))\n    .filter",
+          "lineNumber": 134
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "[...byKey.entries()]\n    .map",
+          "lineNumber": 134
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "byKey.entries",
+          "lineNumber": 134
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "[...new Set(enumValues ?? used)].sort",
+          "lineNumber": 137
+        },
+        {
+          "caller": "listAttributeValuesForCategory",
+          "callee": "a.attributeKey.localeCompare",
+          "lineNumber": 140
+        },
+        {
+          "caller": "toStringArray",
+          "callee": "Array.isArray",
+          "lineNumber": 145
+        },
+        {
+          "caller": "toStringArray",
+          "callee": "value.filter",
+          "lineNumber": 145
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/school-supply-lists/lifecycle.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 245,
+      "nonEmptyLines": 228,
+      "functions": [
+        {
+          "name": "lockSupplyListPartner",
+          "startLine": 28,
+          "endLine": 40,
+          "params": [
+            "tx",
+            "id"
+          ]
+        },
+        {
+          "name": "listSupplyListsForPartner",
+          "startLine": 42,
+          "endLine": 55,
+          "params": [
+            "executor",
+            "businessPartnerId"
+          ]
+        },
+        {
+          "name": "getSupplyList",
+          "startLine": 57,
+          "endLine": 60,
+          "params": [
+            "executor",
+            "id"
+          ]
+        },
+        {
+          "name": "lockSupplyList",
+          "startLine": 62,
+          "endLine": 69,
+          "params": [
+            "tx",
+            "id"
+          ]
+        },
+        {
+          "name": "getSupplyListItems",
+          "startLine": 71,
+          "endLine": 77,
+          "params": [
+            "executor",
+            "listId"
+          ]
+        },
+        {
+          "name": "getPublishedSupplyListInSlot",
+          "startLine": 79,
+          "endLine": 95,
+          "params": [
+            "tx",
+            "list"
+          ]
+        },
+        {
+          "name": "insertSupplyListDraft",
+          "startLine": 97,
+          "endLine": 107,
+          "params": [
+            "tx",
+            "input",
+            "sourceListId"
+          ]
+        },
+        {
+          "name": "updateSupplyListDraft",
+          "startLine": 109,
+          "endLine": 120,
+          "params": [
+            "tx",
+            "id",
+            "patch"
+          ]
+        },
+        {
+          "name": "insertSupplyListItem",
+          "startLine": 122,
+          "endLine": 132,
+          "params": [
+            "tx",
+            "listId",
+            "input"
+          ]
+        },
+        {
+          "name": "updateSupplyListItem",
+          "startLine": 134,
+          "endLine": 146,
+          "params": [
+            "tx",
+            "listId",
+            "id",
+            "patch"
+          ]
+        },
+        {
+          "name": "deleteSupplyListItem",
+          "startLine": 148,
+          "endLine": 158,
+          "params": [
+            "tx",
+            "listId",
+            "id"
+          ]
+        },
+        {
+          "name": "getSupplyListDefaults",
+          "startLine": 161,
+          "endLine": 176,
+          "params": [
+            "tx",
+            "variantIds"
+          ]
+        },
+        {
+          "name": "snapshotSupplyListItem",
+          "startLine": 178,
+          "endLine": 190,
+          "params": [
+            "tx",
+            "id",
+            "snapshot"
+          ]
+        },
+        {
+          "name": "publishSupplyList",
+          "startLine": 192,
+          "endLine": 211,
+          "params": [
+            "tx",
+            "id",
+            "publicCode",
+            "publishedAt",
+            "replacesListId"
+          ]
+        },
+        {
+          "name": "archiveSupplyList",
+          "startLine": 213,
+          "endLine": 230,
+          "params": [
+            "tx",
+            "id",
+            "archivedAt",
+            "replacedById"
+          ]
+        },
+        {
+          "name": "isSupplyListSlotTakenError",
+          "startLine": 233,
+          "endLine": 245,
+          "params": [
+            "error"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SupplyListItemInput",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "lockSupplyListPartner",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "listSupplyListsForPartner",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "getSupplyList",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "lockSupplyList",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "getSupplyListItems",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "getPublishedSupplyListInSlot",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "insertSupplyListDraft",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "updateSupplyListDraft",
+          "line": 109,
+          "isDefault": false
+        },
+        {
+          "name": "insertSupplyListItem",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "updateSupplyListItem",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "deleteSupplyListItem",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "getSupplyListDefaults",
+          "line": 161,
+          "isDefault": false
+        },
+        {
+          "name": "snapshotSupplyListItem",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "publishSupplyList",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "archiveSupplyList",
+          "line": 213,
+          "isDefault": false
+        },
+        {
+          "name": "isSupplyListSlotTakenError",
+          "line": 233,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select()\n    .from(businessPartners)\n    .where(eq(businessPartners.id, id))\n    .for",
+          "lineNumber": 29
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select()\n    .from(businessPartners)\n    .where",
+          "lineNumber": 29
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select()\n    .from",
+          "lineNumber": 29
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select",
+          "lineNumber": 29
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "eq",
+          "lineNumber": 32
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select()\n    .from(partnerSchoolProfiles)\n    .where",
+          "lineNumber": 35
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select()\n    .from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "tx\n    .select",
+          "lineNumber": 35
+        },
+        {
+          "caller": "lockSupplyListPartner",
+          "callee": "eq",
+          "lineNumber": 38
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyLists)\n    .where(eq(schoolSupplyLists.businessPartnerId, businessPartnerId))\n    .orderBy",
+          "lineNumber": 46
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyLists)\n    .where",
+          "lineNumber": 46
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 46
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "executor\n    .select",
+          "lineNumber": 46
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "eq",
+          "lineNumber": 49
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "asc",
+          "lineNumber": 51
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "asc",
+          "lineNumber": 52
+        },
+        {
+          "caller": "listSupplyListsForPartner",
+          "callee": "asc",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getSupplyList",
+          "callee": "executor.select().from(schoolSupplyLists).where",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getSupplyList",
+          "callee": "executor.select().from",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getSupplyList",
+          "callee": "executor.select",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getSupplyList",
+          "callee": "eq",
+          "lineNumber": 58
+        },
+        {
+          "caller": "lockSupplyList",
+          "callee": "tx\n    .select()\n    .from(schoolSupplyLists)\n    .where(eq(schoolSupplyLists.id, id))\n    .for",
+          "lineNumber": 63
+        },
+        {
+          "caller": "lockSupplyList",
+          "callee": "tx\n    .select()\n    .from(schoolSupplyLists)\n    .where",
+          "lineNumber": 63
+        },
+        {
+          "caller": "lockSupplyList",
+          "callee": "tx\n    .select()\n    .from",
+          "lineNumber": 63
+        },
+        {
+          "caller": "lockSupplyList",
+          "callee": "tx\n    .select",
+          "lineNumber": 63
+        },
+        {
+          "caller": "lockSupplyList",
+          "callee": "eq",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyListItems)\n    .where(eq(schoolSupplyListItems.listId, listId))\n    .orderBy",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyListItems)\n    .where",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "executor\n    .select",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "eq",
+          "lineNumber": 75
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "asc",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getSupplyListItems",
+          "callee": "asc",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "tx\n    .select()\n    .from(schoolSupplyLists)\n    .where",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "tx\n    .select()\n    .from",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "tx\n    .select",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "and",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "eq",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "eq",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "eq",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getPublishedSupplyListInSlot",
+          "callee": "eq",
+          "lineNumber": 91
+        },
+        {
+          "caller": "insertSupplyListDraft",
+          "callee": "tx\n    .insert(schoolSupplyLists)\n    .values({ ...input, sourceListId })\n    .returning",
+          "lineNumber": 102
+        },
+        {
+          "caller": "insertSupplyListDraft",
+          "callee": "tx\n    .insert(schoolSupplyLists)\n    .values",
+          "lineNumber": 102
+        },
+        {
+          "caller": "insertSupplyListDraft",
+          "callee": "tx\n    .insert",
+          "lineNumber": 102
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({ ...patch, updatedAt: new Date() })\n    .where(and(eq(schoolSupplyLists.id, id), eq(schoolSupplyLists.status, 'draft')))\n    .returning",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({ ...patch, updatedAt: new Date() })\n    .where",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "tx\n    .update",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "and",
+          "lineNumber": 117
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "eq",
+          "lineNumber": 117
+        },
+        {
+          "caller": "updateSupplyListDraft",
+          "callee": "eq",
+          "lineNumber": 117
+        },
+        {
+          "caller": "insertSupplyListItem",
+          "callee": "tx\n    .insert(schoolSupplyListItems)\n    .values({ ...input, listId })\n    .returning",
+          "lineNumber": 127
+        },
+        {
+          "caller": "insertSupplyListItem",
+          "callee": "tx\n    .insert(schoolSupplyListItems)\n    .values",
+          "lineNumber": 127
+        },
+        {
+          "caller": "insertSupplyListItem",
+          "callee": "tx\n    .insert",
+          "lineNumber": 127
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "tx\n    .update(schoolSupplyListItems)\n    .set({ ...patch, updatedAt: new Date() })\n    .where(and(eq(schoolSupplyListItems.id, id), eq(schoolSupplyListItems.listId, listId)))\n    .returning",
+          "lineNumber": 140
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "tx\n    .update(schoolSupplyListItems)\n    .set({ ...patch, updatedAt: new Date() })\n    .where",
+          "lineNumber": 140
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "tx\n    .update(schoolSupplyListItems)\n    .set",
+          "lineNumber": 140
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "tx\n    .update",
+          "lineNumber": 140
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "and",
+          "lineNumber": 143
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "eq",
+          "lineNumber": 143
+        },
+        {
+          "caller": "updateSupplyListItem",
+          "callee": "eq",
+          "lineNumber": 143
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "tx\n    .delete(schoolSupplyListItems)\n    .where(and(eq(schoolSupplyListItems.id, id), eq(schoolSupplyListItems.listId, listId)))\n    .returning",
+          "lineNumber": 153
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "tx\n    .delete(schoolSupplyListItems)\n    .where",
+          "lineNumber": 153
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "tx\n    .delete",
+          "lineNumber": 153
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "and",
+          "lineNumber": 155
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "eq",
+          "lineNumber": 155
+        },
+        {
+          "caller": "deleteSupplyListItem",
+          "callee": "eq",
+          "lineNumber": 155
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      localizedName: products.localizedName,\n      variantActive: productVariants.isActive,\n      productActive: products.isActive,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .where(inArray(productVariants.id, variantIds))\n    .orderBy(asc(productVariants.id))\n    .for",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      localizedName: products.localizedName,\n      variantActive: productVariants.isActive,\n      productActive: products.isActive,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .where(inArray(productVariants.id, variantIds))\n    .orderBy",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      localizedName: products.localizedName,\n      variantActive: productVariants.isActive,\n      productActive: products.isActive,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .where",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      localizedName: products.localizedName,\n      variantActive: productVariants.isActive,\n      productActive: products.isActive,\n    })\n    .from(productVariants)\n    .innerJoin",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      localizedName: products.localizedName,\n      variantActive: productVariants.isActive,\n      productActive: products.isActive,\n    })\n    .from",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "tx\n    .select",
+          "lineNumber": 163
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "eq",
+          "lineNumber": 172
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "inArray",
+          "lineNumber": 173
+        },
+        {
+          "caller": "getSupplyListDefaults",
+          "callee": "asc",
+          "lineNumber": 174
+        },
+        {
+          "caller": "snapshotSupplyListItem",
+          "callee": "tx\n    .update(schoolSupplyListItems)\n    .set({ ...snapshot, updatedAt: new Date() })\n    .where",
+          "lineNumber": 186
+        },
+        {
+          "caller": "snapshotSupplyListItem",
+          "callee": "tx\n    .update(schoolSupplyListItems)\n    .set",
+          "lineNumber": 186
+        },
+        {
+          "caller": "snapshotSupplyListItem",
+          "callee": "tx\n    .update",
+          "lineNumber": 186
+        },
+        {
+          "caller": "snapshotSupplyListItem",
+          "callee": "eq",
+          "lineNumber": 189
+        },
+        {
+          "caller": "publishSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({\n      status: 'published',\n      publicCode,\n      publishedAt,\n      replacesListId,\n      updatedAt: publishedAt,\n    })\n    .where(eq(schoolSupplyLists.id, id))\n    .returning",
+          "lineNumber": 199
+        },
+        {
+          "caller": "publishSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({\n      status: 'published',\n      publicCode,\n      publishedAt,\n      replacesListId,\n      updatedAt: publishedAt,\n    })\n    .where",
+          "lineNumber": 199
+        },
+        {
+          "caller": "publishSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set",
+          "lineNumber": 199
+        },
+        {
+          "caller": "publishSupplyList",
+          "callee": "tx\n    .update",
+          "lineNumber": 199
+        },
+        {
+          "caller": "publishSupplyList",
+          "callee": "eq",
+          "lineNumber": 208
+        },
+        {
+          "caller": "archiveSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({\n      status: 'archived',\n      archivedAt,\n      replacedById,\n      updatedAt: archivedAt,\n    })\n    .where(eq(schoolSupplyLists.id, id))\n    .returning",
+          "lineNumber": 219
+        },
+        {
+          "caller": "archiveSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set({\n      status: 'archived',\n      archivedAt,\n      replacedById,\n      updatedAt: archivedAt,\n    })\n    .where",
+          "lineNumber": 219
+        },
+        {
+          "caller": "archiveSupplyList",
+          "callee": "tx\n    .update(schoolSupplyLists)\n    .set",
+          "lineNumber": 219
+        },
+        {
+          "caller": "archiveSupplyList",
+          "callee": "tx\n    .update",
+          "lineNumber": 219
+        },
+        {
+          "caller": "archiveSupplyList",
+          "callee": "eq",
+          "lineNumber": 227
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 17,
+        "functionCount": 16,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/school-supply-lists/list-offers.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 50,
+      "functions": [
+        {
+          "name": "getListOffer",
+          "startLine": 12,
+          "endLine": 20,
+          "params": [
+            "executor",
+            "listId",
+            "{ lock }"
+          ]
+        },
+        {
+          "name": "upsertListOffer",
+          "startLine": 22,
+          "endLine": 34,
+          "params": [
+            "tx",
+            "listId",
+            "terms",
+            "now"
+          ]
+        },
+        {
+          "name": "deleteListOffer",
+          "startLine": 36,
+          "endLine": 38,
+          "params": [
+            "tx",
+            "listId"
+          ]
+        },
+        {
+          "name": "copyListOffer",
+          "startLine": 41,
+          "endLine": 55,
+          "params": [
+            "tx",
+            "fromListId",
+            "toListId",
+            "now"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getListOffer",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "upsertListOffer",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "deleteListOffer",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "copyListOffer",
+          "line": 41,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getListOffer",
+          "callee": "executor.select().from(listOffers).where",
+          "lineNumber": 17
+        },
+        {
+          "caller": "getListOffer",
+          "callee": "executor.select().from",
+          "lineNumber": 17
+        },
+        {
+          "caller": "getListOffer",
+          "callee": "executor.select",
+          "lineNumber": 17
+        },
+        {
+          "caller": "getListOffer",
+          "callee": "eq",
+          "lineNumber": 17
+        },
+        {
+          "caller": "getListOffer",
+          "callee": "query.for",
+          "lineNumber": 18
+        },
+        {
+          "caller": "upsertListOffer",
+          "callee": "tx\n    .insert(listOffers)\n    .values({ listId, ...terms, updatedAt: now })\n    .onConflictDoUpdate({ target: listOffers.listId, set: { ...terms, updatedAt: now } })\n    .returning",
+          "lineNumber": 28
+        },
+        {
+          "caller": "upsertListOffer",
+          "callee": "tx\n    .insert(listOffers)\n    .values({ listId, ...terms, updatedAt: now })\n    .onConflictDoUpdate",
+          "lineNumber": 28
+        },
+        {
+          "caller": "upsertListOffer",
+          "callee": "tx\n    .insert(listOffers)\n    .values",
+          "lineNumber": 28
+        },
+        {
+          "caller": "upsertListOffer",
+          "callee": "tx\n    .insert",
+          "lineNumber": 28
+        },
+        {
+          "caller": "deleteListOffer",
+          "callee": "tx.delete(listOffers).where",
+          "lineNumber": 37
+        },
+        {
+          "caller": "deleteListOffer",
+          "callee": "tx.delete",
+          "lineNumber": 37
+        },
+        {
+          "caller": "deleteListOffer",
+          "callee": "eq",
+          "lineNumber": 37
+        },
+        {
+          "caller": "copyListOffer",
+          "callee": "getListOffer",
+          "lineNumber": 47
+        },
+        {
+          "caller": "copyListOffer",
+          "callee": "upsertListOffer",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/school-supply-lists/public-read.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 102,
+      "functions": [
+        {
+          "name": "getPublicSupplyListByCode",
+          "startLine": 16,
+          "endLine": 61,
+          "params": [
+            "executor",
+            "publicCode"
+          ]
+        },
+        {
+          "name": "getAvailableQuantities",
+          "startLine": 67,
+          "endLine": 85,
+          "params": [
+            "executor",
+            "variantIds"
+          ]
+        },
+        {
+          "name": "getVariantDisplayDetails",
+          "startLine": 88,
+          "endLine": 106,
+          "params": [
+            "executor",
+            "variantIds"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getPublicSupplyListByCode",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "getAvailableQuantities",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "getVariantDisplayDetails",
+          "line": 88,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select({\n      list: schoolSupplyLists,\n      school: {\n        id: businessPartners.id,\n        nameEn: businessPartners.nameEn,\n        nameAr: businessPartners.nameAr,\n        logoUrl: partnerSchoolProfiles.logoUrl,\n      },\n    })\n    .from(schoolSupplyLists)\n    .innerJoin(businessPartners, eq(businessPartners.id, schoolSupplyLists.businessPartnerId))\n    .leftJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, schoolSupplyLists.businessPartnerId),\n    )\n    .where(\n      and(\n        eq(schoolSupplyLists.publicCode, publicCode),\n        inArray(schoolSupplyLists.status, ['published', 'archived']),\n      ),\n    )\n    .limit",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select({\n      list: schoolSupplyLists,\n      school: {\n        id: businessPartners.id,\n        nameEn: businessPartners.nameEn,\n        nameAr: businessPartners.nameAr,\n        logoUrl: partnerSchoolProfiles.logoUrl,\n      },\n    })\n    .from(schoolSupplyLists)\n    .innerJoin(businessPartners, eq(businessPartners.id, schoolSupplyLists.businessPartnerId))\n    .leftJoin(\n      partnerSchoolProfiles,\n      eq(partnerSchoolProfiles.businessPartnerId, schoolSupplyLists.businessPartnerId),\n    )\n    .where",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select({\n      list: schoolSupplyLists,\n      school: {\n        id: businessPartners.id,\n        nameEn: businessPartners.nameEn,\n        nameAr: businessPartners.nameAr,\n        logoUrl: partnerSchoolProfiles.logoUrl,\n      },\n    })\n    .from(schoolSupplyLists)\n    .innerJoin(businessPartners, eq(businessPartners.id, schoolSupplyLists.businessPartnerId))\n    .leftJoin",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select({\n      list: schoolSupplyLists,\n      school: {\n        id: businessPartners.id,\n        nameEn: businessPartners.nameEn,\n        nameAr: businessPartners.nameAr,\n        logoUrl: partnerSchoolProfiles.logoUrl,\n      },\n    })\n    .from(schoolSupplyLists)\n    .innerJoin",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select({\n      list: schoolSupplyLists,\n      school: {\n        id: businessPartners.id,\n        nameEn: businessPartners.nameEn,\n        nameAr: businessPartners.nameAr,\n        logoUrl: partnerSchoolProfiles.logoUrl,\n      },\n    })\n    .from",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "eq",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "eq",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "and",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "eq",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "inArray",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n      .select({ publicCode: replacement.publicCode })\n      .from(replacement)\n      .where",
+          "lineNumber": 49
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n      .select({ publicCode: replacement.publicCode })\n      .from",
+          "lineNumber": 49
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n      .select",
+          "lineNumber": 49
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "eq",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyListItems)\n    .where(eq(schoolSupplyListItems.listId, row.list.id))\n    .orderBy",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select()\n    .from(schoolSupplyListItems)\n    .where",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "executor\n    .select",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "eq",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "asc",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getPublicSupplyListByCode",
+          "callee": "asc",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "executor\n    .select({\n      variantId: inventoryBalances.variantId,\n      available:\n        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(\n          Number,\n        ),\n    })\n    .from(inventoryBalances)\n    .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))\n    .where(and(inArray(inventoryBalances.variantId, variantIds), eq(warehouses.isActive, true)))\n    .groupBy",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "executor\n    .select({\n      variantId: inventoryBalances.variantId,\n      available:\n        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(\n          Number,\n        ),\n    })\n    .from(inventoryBalances)\n    .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))\n    .where",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "executor\n    .select({\n      variantId: inventoryBalances.variantId,\n      available:\n        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(\n          Number,\n        ),\n    })\n    .from(inventoryBalances)\n    .innerJoin",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "executor\n    .select({\n      variantId: inventoryBalances.variantId,\n      available:\n        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(\n          Number,\n        ),\n    })\n    .from",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "executor\n    .select",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "eq",
+          "lineNumber": 81
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "and",
+          "lineNumber": 82
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "inArray",
+          "lineNumber": 82
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "eq",
+          "lineNumber": 82
+        },
+        {
+          "caller": "getAvailableQuantities",
+          "callee": "rows.map",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      price: productVariants.basePrice,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      brandName: brands.localizedName,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .where",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      price: productVariants.basePrice,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      brandName: brands.localizedName,\n    })\n    .from(productVariants)\n    .innerJoin(products, eq(products.id, productVariants.productId))\n    .leftJoin",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      price: productVariants.basePrice,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      brandName: brands.localizedName,\n    })\n    .from(productVariants)\n    .innerJoin",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "executor\n    .select({\n      variantId: productVariants.id,\n      sku: productVariants.sku,\n      price: productVariants.basePrice,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      brandName: brands.localizedName,\n    })\n    .from",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "executor\n    .select",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "eq",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "getVariantDisplayDetails",
+          "callee": "inArray",
+          "lineNumber": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/school-supply-lists.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 50,
+      "exports": [
+        {
+          "name": "SupplyListIdSchema",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "CreateSupplyListDraftSchema",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "UpdateSupplyListDraftSchema",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "SupplyListItemSchema",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "ListOfferSchema",
+          "line": 47,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

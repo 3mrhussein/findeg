@@ -1,0 +1,359 @@
+{
+  "nodes": [
+    {
+      "id": "config:seeds/data/product_attributes.json",
+      "type": "config",
+      "name": "product_attributes.json",
+      "filePath": "seeds/data/product_attributes.json",
+      "summary": "Product-level attribute value fixtures for catalog filtering and display.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/product_images.json",
+      "type": "config",
+      "name": "product_images.json",
+      "filePath": "seeds/data/product_images.json",
+      "summary": "Placeholder fixture set for product images; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/product_tags.json",
+      "type": "config",
+      "name": "product_tags.json",
+      "filePath": "seeds/data/product_tags.json",
+      "summary": "Join fixtures assigning search and merchandising tags to products.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/product_variants.json",
+      "type": "config",
+      "name": "product_variants.json",
+      "filePath": "seeds/data/product_variants.json",
+      "summary": "SKU-level variant fixtures containing purchasable catalog combinations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/products.json",
+      "type": "config",
+      "name": "products.json",
+      "filePath": "seeds/data/products.json",
+      "summary": "Core product fixtures containing the seeded catalog assortment and localized content.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/review_helpful_votes.json",
+      "type": "config",
+      "name": "review_helpful_votes.json",
+      "filePath": "seeds/data/review_helpful_votes.json",
+      "summary": "Placeholder fixture set for review helpfulness votes; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/reviews.json",
+      "type": "config",
+      "name": "reviews.json",
+      "filePath": "seeds/data/reviews.json",
+      "summary": "Product review fixtures for rating and feedback scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/role_permissions.json",
+      "type": "config",
+      "name": "role_permissions.json",
+      "filePath": "seeds/data/role_permissions.json",
+      "summary": "Role-to-permission assignment fixtures defining baseline authorization policy.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/roles.json",
+      "type": "config",
+      "name": "roles.json",
+      "filePath": "seeds/data/roles.json",
+      "summary": "Role fixtures used by identity and authorization scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/search_logs.json",
+      "type": "config",
+      "name": "search_logs.json",
+      "filePath": "seeds/data/search_logs.json",
+      "summary": "Search-event fixtures for analytics and system-observability scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/stock_movements.json",
+      "type": "config",
+      "name": "stock_movements.json",
+      "filePath": "seeds/data/stock_movements.json",
+      "summary": "Inventory movement fixtures recording seeded stock changes.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/tags.json",
+      "type": "config",
+      "name": "tags.json",
+      "filePath": "seeds/data/tags.json",
+      "summary": "Catalog tag fixtures used for discovery, grouping, and merchandising.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/user_permissions.json",
+      "type": "config",
+      "name": "user_permissions.json",
+      "filePath": "seeds/data/user_permissions.json",
+      "summary": "Per-user permission override fixtures.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/user_roles.json",
+      "type": "config",
+      "name": "user_roles.json",
+      "filePath": "seeds/data/user_roles.json",
+      "summary": "User-to-role assignment fixtures for seeded authorization states.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/users.json",
+      "type": "config",
+      "name": "users.json",
+      "filePath": "seeds/data/users.json",
+      "summary": "User identity fixtures covering administrative and customer accounts.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/variant_attributes.json",
+      "type": "config",
+      "name": "variant_attributes.json",
+      "filePath": "seeds/data/variant_attributes.json",
+      "summary": "Variant-level attribute fixtures describing SKU combinations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/variant_images.json",
+      "type": "config",
+      "name": "variant_images.json",
+      "filePath": "seeds/data/variant_images.json",
+      "summary": "Variant image fixtures associating media with specific SKUs.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/warehouses.json",
+      "type": "config",
+      "name": "warehouses.json",
+      "filePath": "seeds/data/warehouses.json",
+      "summary": "Warehouse fixtures used as inventory storage locations.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:seeds/data/product_attributes.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/product_tags.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/product_variants.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/products.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/review_helpful_votes.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/reviews.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/role_permissions.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/roles.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/search_logs.json",
+      "target": "function:seeds/system.ts:seedSystem",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/stock_movements.json",
+      "target": "function:seeds/inventory.ts:seedInventory",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/tags.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/user_permissions.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/user_roles.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/users.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/variant_attributes.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/variant_images.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/warehouses.json",
+      "target": "function:seeds/inventory.ts:seedInventory",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

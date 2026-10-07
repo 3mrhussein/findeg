@@ -1,0 +1,147 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "seeds/data/addresses.json",
+      "language": "json",
+      "sizeLines": 17,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/alternatives.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/attributes.json",
+      "language": "json",
+      "sizeLines": 53,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/audit_log.json",
+      "language": "json",
+      "sizeLines": 15,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/auth_accounts.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/brands.json",
+      "language": "json",
+      "sizeLines": 151,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/categories.json",
+      "language": "json",
+      "sizeLines": 1265,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/collection_tags.json",
+      "language": "json",
+      "sizeLines": 17,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/collections.json",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/discount_rules.json",
+      "language": "json",
+      "sizeLines": 17,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/guest_principals.json",
+      "language": "json",
+      "sizeLines": 7,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/inventory_balances.json",
+      "language": "json",
+      "sizeLines": 1833,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/list_items.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/order_items.json",
+      "language": "json",
+      "sizeLines": 14,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/orders.json",
+      "language": "json",
+      "sizeLines": 13,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/organization_memberships.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/organizations.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/password_credentials.json",
+      "language": "json",
+      "sizeLines": 57,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/payment_methods.json",
+      "language": "json",
+      "sizeLines": 11,
+      "fileCategory": "config"
+    },
+    {
+      "path": "seeds/data/permissions.json",
+      "language": "json",
+      "sizeLines": 177,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "seeds/data/addresses.json": [],
+    "seeds/data/alternatives.json": [],
+    "seeds/data/attributes.json": [],
+    "seeds/data/audit_log.json": [],
+    "seeds/data/auth_accounts.json": [],
+    "seeds/data/brands.json": [],
+    "seeds/data/categories.json": [],
+    "seeds/data/collection_tags.json": [],
+    "seeds/data/collections.json": [],
+    "seeds/data/discount_rules.json": [],
+    "seeds/data/guest_principals.json": [],
+    "seeds/data/inventory_balances.json": [],
+    "seeds/data/list_items.json": [],
+    "seeds/data/order_items.json": [],
+    "seeds/data/orders.json": [],
+    "seeds/data/organization_memberships.json": [],
+    "seeds/data/organizations.json": [],
+    "seeds/data/password_credentials.json": [],
+    "seeds/data/payment_methods.json": [],
+    "seeds/data/permissions.json": []
+  }
+}

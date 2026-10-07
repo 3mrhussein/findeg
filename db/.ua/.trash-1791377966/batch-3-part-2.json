@@ -1,0 +1,1248 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/queries/products/insert-generated-product-variants.ts",
+      "type": "file",
+      "name": "insert-generated-product-variants.ts",
+      "filePath": "src/queries/products/insert-generated-product-variants.ts",
+      "summary": "Implements database queries and transactional operations for insert generated product variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/insert-generated-product-variants.ts:insertGeneratedProductVariants",
+      "type": "function",
+      "name": "insertGeneratedProductVariants",
+      "filePath": "src/queries/products/insert-generated-product-variants.ts",
+      "lineRange": [
+        25,
+        72
+      ],
+      "summary": "Creates or records generated product variants data for insert generated product variants records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "file",
+      "name": "insert-product-variant-in-tx.ts",
+      "filePath": "src/queries/products/insert-product-variant-in-tx.ts",
+      "summary": "Implements database queries and transactional operations for insert product variant in tx.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/insert-product-variant-in-tx.ts:insertProductVariantInTx",
+      "type": "function",
+      "name": "insertProductVariantInTx",
+      "filePath": "src/queries/products/insert-product-variant-in-tx.ts",
+      "lineRange": [
+        39,
+        100
+      ],
+      "summary": "Creates or records product variant in tx data for insert product variant in tx records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/queries/products/types.ts",
+      "summary": "Implements database queries and transactional operations for types.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/update-product-variant-key.ts",
+      "type": "file",
+      "name": "update-product-variant-key.ts",
+      "filePath": "src/queries/products/update-product-variant-key.ts",
+      "summary": "Implements database queries and transactional operations for update product variant key.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/update-product-variant-key.ts:updateProductVariantKey",
+      "type": "function",
+      "name": "updateProductVariantKey",
+      "filePath": "src/queries/products/update-product-variant-key.ts",
+      "lineRange": [
+        5,
+        10
+      ],
+      "summary": "Updates product variant key state for update product variant key records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/update-product-with-variants.ts",
+      "type": "file",
+      "name": "update-product-with-variants.ts",
+      "filePath": "src/queries/products/update-product-with-variants.ts",
+      "summary": "Implements database queries and transactional operations for update product with variants.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/products/update-product-with-variants.ts:updateProductWithVariantsInDb",
+      "type": "function",
+      "name": "updateProductWithVariantsInDb",
+      "filePath": "src/queries/products/update-product-with-variants.ts",
+      "lineRange": [
+        52,
+        129
+      ],
+      "summary": "Updates product with variants in db state for update product with variants records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/products/upsert-product-variant-images.ts",
+      "type": "file",
+      "name": "upsert-product-variant-images.ts",
+      "filePath": "src/queries/products/upsert-product-variant-images.ts",
+      "summary": "Implements database queries and transactional operations for upsert product variant images.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/products/upsert-product-variant-images.ts:upsertProductVariantImages",
+      "type": "function",
+      "name": "upsertProductVariantImages",
+      "filePath": "src/queries/products/upsert-product-variant-images.ts",
+      "lineRange": [
+        6,
+        23
+      ],
+      "summary": "Implements the upsert product variant images database operation for upsert product variant images records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/checkout-idempotency.ts",
+      "type": "file",
+      "name": "checkout-idempotency.ts",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "summary": "Implements database queries and transactional operations for checkout idempotency.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/checkout-idempotency.ts:isScopeKeyConflict",
+      "type": "function",
+      "name": "isScopeKeyConflict",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        18,
+        32
+      ],
+      "summary": "Evaluates is scope key conflict for checkout idempotency records and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/checkout-idempotency.ts:findByScopeAndKey",
+      "type": "function",
+      "name": "findByScopeAndKey",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        34,
+        51
+      ],
+      "summary": "Retrieves by scope and key data for checkout idempotency records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/checkout-idempotency.ts:claimKey",
+      "type": "function",
+      "name": "claimKey",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        70,
+        101
+      ],
+      "summary": "Creates or records key data for checkout idempotency records.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/checkout-idempotency.ts:recordSuccess",
+      "type": "function",
+      "name": "recordSuccess",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        103,
+        124
+      ],
+      "summary": "Updates success state for checkout idempotency records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/checkout-idempotency.ts:purgeExpired",
+      "type": "function",
+      "name": "purgeExpired",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        127,
+        133
+      ],
+      "summary": "Removes expired data associated with checkout idempotency records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/queries/sales/checkout-idempotency.ts:ScopeKeyConflictError",
+      "type": "class",
+      "name": "ScopeKeyConflictError",
+      "filePath": "src/queries/sales/checkout-idempotency.ts",
+      "lineRange": [
+        57,
+        62
+      ],
+      "summary": "Represents a typed failure raised while enforcing checkout idempotency records invariants.",
+      "tags": [
+        "error-handling",
+        "database",
+        "domain-invariant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/guest-access.ts",
+      "type": "file",
+      "name": "guest-access.ts",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "summary": "Implements database queries and transactional operations for guest access.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:findGuestOrder",
+      "type": "function",
+      "name": "findGuestOrder",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        28,
+        41
+      ],
+      "summary": "Retrieves guest order data for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:findOrderIdByReference",
+      "type": "function",
+      "name": "findOrderIdByReference",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        43,
+        55
+      ],
+      "summary": "Retrieves order id by reference data for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:createRequest",
+      "type": "function",
+      "name": "createRequest",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        62,
+        87
+      ],
+      "summary": "Creates or records request data for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:findLiveRequest",
+      "type": "function",
+      "name": "findLiveRequest",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        93,
+        109
+      ],
+      "summary": "Retrieves live request data for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:addCodeHash",
+      "type": "function",
+      "name": "addCodeHash",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        112,
+        114
+      ],
+      "summary": "Implements the add code hash database operation for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/guest-access.ts:attemptVerification",
+      "type": "function",
+      "name": "attemptVerification",
+      "filePath": "src/queries/sales/guest-access.ts",
+      "lineRange": [
+        122,
+        161
+      ],
+      "summary": "Implements the attempt verification database operation for guest access records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/system/outbox.ts",
+      "type": "file",
+      "name": "outbox.ts",
+      "filePath": "src/queries/system/outbox.ts",
+      "summary": "Implements database queries and transactional operations for outbox.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:backoffSeconds",
+      "type": "function",
+      "name": "backoffSeconds",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        21,
+        24
+      ],
+      "summary": "Implements the backoff seconds database operation for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:enqueue",
+      "type": "function",
+      "name": "enqueue",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        27,
+        34
+      ],
+      "summary": "Creates or records  data for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:claimNext",
+      "type": "function",
+      "name": "claimNext",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        45,
+        74
+      ],
+      "summary": "Creates or records next data for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:markDelivered",
+      "type": "function",
+      "name": "markDelivered",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        80,
+        87
+      ],
+      "summary": "Updates delivered state for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:markExpired",
+      "type": "function",
+      "name": "markExpired",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        90,
+        97
+      ],
+      "summary": "Updates expired state for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:markFailed",
+      "type": "function",
+      "name": "markFailed",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        103,
+        124
+      ],
+      "summary": "Updates failed state for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:purgeDelivered",
+      "type": "function",
+      "name": "purgeDelivered",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        127,
+        141
+      ],
+      "summary": "Removes delivered data associated with outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:countByStatus",
+      "type": "function",
+      "name": "countByStatus",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        143,
+        154
+      ],
+      "summary": "Retrieves by status data for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        156,
+        161
+      ],
+      "summary": "Retrieves by id data for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:listExhausted",
+      "type": "function",
+      "name": "listExhausted",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        164,
+        171
+      ],
+      "summary": "Retrieves exhausted data for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/system/outbox.ts:requeueExhausted",
+      "type": "function",
+      "name": "requeueExhausted",
+      "filePath": "src/queries/system/outbox.ts",
+      "lineRange": [
+        174,
+        181
+      ],
+      "summary": "Updates exhausted state for outbox records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/transaction.ts",
+      "type": "file",
+      "name": "transaction.ts",
+      "filePath": "src/queries/transaction.ts",
+      "summary": "Implements database queries and transactional operations for transaction.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/transaction.ts:withTransaction",
+      "type": "function",
+      "name": "withTransaction",
+      "filePath": "src/queries/transaction.ts",
+      "lineRange": [
+        15,
+        20
+      ],
+      "summary": "Implements the with transaction database operation for transaction records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/index.ts",
+      "summary": "Barrel entry point that re-exports the index.ts schema modules.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "function:src/queries/products/insert-generated-product-variants.ts:insertGeneratedProductVariants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "function:src/queries/products/insert-generated-product-variants.ts:insertGeneratedProductVariants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "function:src/queries/products/insert-product-variant-in-tx.ts:insertProductVariantInTx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "function:src/queries/products/insert-product-variant-in-tx.ts:insertProductVariantInTx",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "function:src/queries/products/update-product-variant-key.ts:updateProductVariantKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "function:src/queries/products/update-product-variant-key.ts:updateProductVariantKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "function:src/queries/products/update-product-with-variants.ts:updateProductWithVariantsInDb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "function:src/queries/products/update-product-with-variants.ts:updateProductWithVariantsInDb",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "function:src/queries/products/upsert-product-variant-images.ts:upsertProductVariantImages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "function:src/queries/products/upsert-product-variant-images.ts:upsertProductVariantImages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:isScopeKeyConflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:isScopeKeyConflict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:findByScopeAndKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:findByScopeAndKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:claimKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:claimKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:recordSuccess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:recordSuccess",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:purgeExpired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "function:src/queries/sales/checkout-idempotency.ts:purgeExpired",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "class:src/queries/sales/checkout-idempotency.ts:ScopeKeyConflictError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "class:src/queries/sales/checkout-idempotency.ts:ScopeKeyConflictError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findGuestOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findGuestOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findOrderIdByReference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findOrderIdByReference",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:createRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:createRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findLiveRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:findLiveRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:addCodeHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:addCodeHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:attemptVerification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "function:src/queries/sales/guest-access.ts:attemptVerification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:backoffSeconds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:backoffSeconds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:enqueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:enqueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:claimNext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:claimNext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markDelivered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markDelivered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markExpired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markExpired",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markFailed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:markFailed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:purgeDelivered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:purgeDelivered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:countByStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:countByStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:listExhausted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:listExhausted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:requeueExhausted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "function:src/queries/system/outbox.ts:requeueExhausted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/transaction.ts",
+      "target": "function:src/queries/transaction.ts:withTransaction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/transaction.ts",
+      "target": "function:src/queries/transaction.ts:withTransaction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-generated-product-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-variant-key.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/update-product-with-variants.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/queries/products/insert-product-variant-in-tx.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/products/upsert-product-variant-images.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/guest-access.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/system/outbox.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/transaction.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

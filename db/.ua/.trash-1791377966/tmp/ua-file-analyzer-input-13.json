@@ -1,0 +1,136 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "drizzle.config.ts",
+      "language": "typescript",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "eslint.config.js",
+      "language": "javascript",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "migrate.ts",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seed.test.ts",
+      "language": "typescript",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/helpers/constants.ts",
+      "language": "typescript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/index.ts",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/index.ts",
+      "language": "typescript",
+      "sizeLines": 108,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/index.ts",
+      "language": "typescript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/index.ts",
+      "language": "typescript",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/inventory/index.ts",
+      "language": "typescript",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/index.ts",
+      "language": "typescript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/sales/index.ts",
+      "language": "typescript",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/README.md",
+      "language": "markdown",
+      "sizeLines": 316,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/schema/identity/index.ts",
+      "language": "typescript",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/school-engine/index.ts",
+      "language": "typescript",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/system/index.ts",
+      "language": "typescript",
+      "sizeLines": 5,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types/catalog/IProduct.interface.ts",
+      "language": "typescript",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vitest.config.ts",
+      "language": "typescript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "drizzle.config.ts": [],
+    "eslint.config.js": [],
+    "migrate.ts": [
+      "drizzle.config.ts",
+      "src/connection.ts"
+    ],
+    "seed.test.ts": [],
+    "seeds/helpers/constants.ts": [],
+    "src/index.ts": [],
+    "src/queries/catalog/index.ts": [],
+    "src/queries/identity/index.ts": [],
+    "src/queries/index.ts": [],
+    "src/queries/inventory/index.ts": [],
+    "src/queries/products/index.ts": [],
+    "src/queries/sales/index.ts": [],
+    "src/schema/catalog/README.md": [],
+    "src/schema/identity/index.ts": [],
+    "src/schema/school-engine/index.ts": [],
+    "src/schema/system/index.ts": [],
+    "src/types/catalog/IProduct.interface.ts": [],
+    "vitest.config.ts": []
+  }
+}

@@ -1,0 +1,4189 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 23,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 23,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/queries/partners/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 454,
+      "nonEmptyLines": 413,
+      "functions": [
+        {
+          "name": "isPartnerCodeTakenError",
+          "startLine": 44,
+          "endLine": 56,
+          "params": [
+            "error"
+          ]
+        },
+        {
+          "name": "listBusinessPartners",
+          "startLine": 58,
+          "endLine": 60,
+          "params": [
+            "executor"
+          ]
+        },
+        {
+          "name": "getBusinessPartnerById",
+          "startLine": 62,
+          "endLine": 68,
+          "params": [
+            "executor",
+            "id"
+          ]
+        },
+        {
+          "name": "getBusinessPartnerByCode",
+          "startLine": 70,
+          "endLine": 79,
+          "params": [
+            "executor",
+            "code"
+          ]
+        },
+        {
+          "name": "lockBusinessPartnerById",
+          "startLine": 82,
+          "endLine": 92,
+          "params": [
+            "executor",
+            "id"
+          ]
+        },
+        {
+          "name": "insertBusinessPartner",
+          "startLine": 94,
+          "endLine": 100,
+          "params": [
+            "executor",
+            "values"
+          ]
+        },
+        {
+          "name": "updateBusinessPartner",
+          "startLine": 102,
+          "endLine": 113,
+          "params": [
+            "executor",
+            "id",
+            "patch"
+          ]
+        },
+        {
+          "name": "setBusinessPartnerStatus",
+          "startLine": 115,
+          "endLine": 126,
+          "params": [
+            "executor",
+            "id",
+            "status"
+          ]
+        },
+        {
+          "name": "hasActivePartnerAdministrator",
+          "startLine": 129,
+          "endLine": 141,
+          "params": [
+            "executor",
+            "businessPartnerId"
+          ]
+        },
+        {
+          "name": "insertPartnerAccessHistory",
+          "startLine": 143,
+          "endLine": 148,
+          "params": [
+            "executor",
+            "row"
+          ]
+        },
+        {
+          "name": "getPartnerInvitationById",
+          "startLine": 156,
+          "endLine": 165,
+          "params": [
+            "executor",
+            "id"
+          ]
+        },
+        {
+          "name": "listPendingPartnerInvitations",
+          "startLine": 167,
+          "endLine": 181,
+          "params": [
+            "executor",
+            "businessPartnerId"
+          ]
+        },
+        {
+          "name": "getPendingPartnerInvitationByEmail",
+          "startLine": 183,
+          "endLine": 199,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "email"
+          ]
+        },
+        {
+          "name": "insertPartnerInvitation",
+          "startLine": 201,
+          "endLine": 207,
+          "params": [
+            "executor",
+            "values"
+          ]
+        },
+        {
+          "name": "setPartnerInvitationStatus",
+          "startLine": 209,
+          "endLine": 220,
+          "params": [
+            "executor",
+            "id",
+            "status"
+          ]
+        },
+        {
+          "name": "setPartnerInvitationExpiry",
+          "startLine": 222,
+          "endLine": 233,
+          "params": [
+            "executor",
+            "id",
+            "expiresAt"
+          ]
+        },
+        {
+          "name": "insertPartnerInvitationToken",
+          "startLine": 235,
+          "endLine": 241,
+          "params": [
+            "executor",
+            "invitationId",
+            "tokenDigest"
+          ]
+        },
+        {
+          "name": "getPartnerInvitationByTokenDigest",
+          "startLine": 244,
+          "endLine": 254,
+          "params": [
+            "executor",
+            "tokenDigest"
+          ]
+        },
+        {
+          "name": "getCurrentPartnerMembership",
+          "startLine": 264,
+          "endLine": 280,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "userId"
+          ]
+        },
+        {
+          "name": "insertPartnerMembership",
+          "startLine": 282,
+          "endLine": 288,
+          "params": [
+            "executor",
+            "values"
+          ]
+        },
+        {
+          "name": "verifyUserEmailIfUnset",
+          "startLine": 290,
+          "endLine": 299,
+          "params": [
+            "executor",
+            "userId",
+            "verifiedAt"
+          ]
+        },
+        {
+          "name": "getPartnerUserById",
+          "startLine": 301,
+          "endLine": 317,
+          "params": [
+            "executor",
+            "userId"
+          ]
+        },
+        {
+          "name": "listActivePartnerMembershipsForUser",
+          "startLine": 325,
+          "endLine": 335,
+          "params": [
+            "executor",
+            "userId"
+          ]
+        },
+        {
+          "name": "getCurrentPartnerMembershipByEmail",
+          "startLine": 342,
+          "endLine": 359,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "email"
+          ]
+        },
+        {
+          "name": "getPartnerMembershipById",
+          "startLine": 361,
+          "endLine": 370,
+          "params": [
+            "executor",
+            "id"
+          ]
+        },
+        {
+          "name": "listCurrentPartnerMembers",
+          "startLine": 379,
+          "endLine": 395,
+          "params": [
+            "executor",
+            "businessPartnerId"
+          ]
+        },
+        {
+          "name": "countOtherActivePartnerAdministrators",
+          "startLine": 398,
+          "endLine": 414,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "excludingMembershipId"
+          ]
+        },
+        {
+          "name": "updatePartnerMembership",
+          "startLine": 419,
+          "endLine": 435,
+          "params": [
+            "executor",
+            "id",
+            "patch",
+            "updatedAt"
+          ]
+        },
+        {
+          "name": "getActiveMembershipRoles",
+          "startLine": 438,
+          "endLine": 454,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "userId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "isPartnerCodeTakenError",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "listBusinessPartners",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "getBusinessPartnerById",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "getBusinessPartnerByCode",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "lockBusinessPartnerById",
+          "line": 82,
+          "isDefault": false
+        },
+        {
+          "name": "insertBusinessPartner",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "updateBusinessPartner",
+          "line": 102,
+          "isDefault": false
+        },
+        {
+          "name": "setBusinessPartnerStatus",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "hasActivePartnerAdministrator",
+          "line": 129,
+          "isDefault": false
+        },
+        {
+          "name": "insertPartnerAccessHistory",
+          "line": 143,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerInvitationById",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "listPendingPartnerInvitations",
+          "line": 167,
+          "isDefault": false
+        },
+        {
+          "name": "getPendingPartnerInvitationByEmail",
+          "line": 183,
+          "isDefault": false
+        },
+        {
+          "name": "insertPartnerInvitation",
+          "line": 201,
+          "isDefault": false
+        },
+        {
+          "name": "setPartnerInvitationStatus",
+          "line": 209,
+          "isDefault": false
+        },
+        {
+          "name": "setPartnerInvitationExpiry",
+          "line": 222,
+          "isDefault": false
+        },
+        {
+          "name": "insertPartnerInvitationToken",
+          "line": 235,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerInvitationByTokenDigest",
+          "line": 244,
+          "isDefault": false
+        },
+        {
+          "name": "getCurrentPartnerMembership",
+          "line": 264,
+          "isDefault": false
+        },
+        {
+          "name": "insertPartnerMembership",
+          "line": 282,
+          "isDefault": false
+        },
+        {
+          "name": "verifyUserEmailIfUnset",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerUserById",
+          "line": 301,
+          "isDefault": false
+        },
+        {
+          "name": "listActivePartnerMembershipsForUser",
+          "line": 325,
+          "isDefault": false
+        },
+        {
+          "name": "getCurrentPartnerMembershipByEmail",
+          "line": 342,
+          "isDefault": false
+        },
+        {
+          "name": "getPartnerMembershipById",
+          "line": 361,
+          "isDefault": false
+        },
+        {
+          "name": "listCurrentPartnerMembers",
+          "line": 379,
+          "isDefault": false
+        },
+        {
+          "name": "countOtherActivePartnerAdministrators",
+          "line": 398,
+          "isDefault": false
+        },
+        {
+          "name": "updatePartnerMembership",
+          "line": 419,
+          "isDefault": false
+        },
+        {
+          "name": "getActiveMembershipRoles",
+          "line": 438,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "listBusinessPartners",
+          "callee": "executor.select().from(businessPartners).orderBy",
+          "lineNumber": 59
+        },
+        {
+          "caller": "listBusinessPartners",
+          "callee": "executor.select().from",
+          "lineNumber": 59
+        },
+        {
+          "caller": "listBusinessPartners",
+          "callee": "executor.select",
+          "lineNumber": 59
+        },
+        {
+          "caller": "listBusinessPartners",
+          "callee": "asc",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getBusinessPartnerById",
+          "callee": "executor.select().from(businessPartners).where",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getBusinessPartnerById",
+          "callee": "executor.select().from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getBusinessPartnerById",
+          "callee": "executor.select",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getBusinessPartnerById",
+          "callee": "eq",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getBusinessPartnerByCode",
+          "callee": "executor\n    .select()\n    .from(businessPartners)\n    .where",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getBusinessPartnerByCode",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getBusinessPartnerByCode",
+          "callee": "executor\n    .select",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getBusinessPartnerByCode",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "lockBusinessPartnerById",
+          "callee": "executor\n    .select()\n    .from(businessPartners)\n    .where(eq(businessPartners.id, id))\n    .for",
+          "lineNumber": 86
+        },
+        {
+          "caller": "lockBusinessPartnerById",
+          "callee": "executor\n    .select()\n    .from(businessPartners)\n    .where",
+          "lineNumber": 86
+        },
+        {
+          "caller": "lockBusinessPartnerById",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 86
+        },
+        {
+          "caller": "lockBusinessPartnerById",
+          "callee": "executor\n    .select",
+          "lineNumber": 86
+        },
+        {
+          "caller": "lockBusinessPartnerById",
+          "callee": "eq",
+          "lineNumber": 89
+        },
+        {
+          "caller": "insertBusinessPartner",
+          "callee": "executor.insert(businessPartners).values(values).returning",
+          "lineNumber": 98
+        },
+        {
+          "caller": "insertBusinessPartner",
+          "callee": "executor.insert(businessPartners).values",
+          "lineNumber": 98
+        },
+        {
+          "caller": "insertBusinessPartner",
+          "callee": "executor.insert",
+          "lineNumber": 98
+        },
+        {
+          "caller": "updateBusinessPartner",
+          "callee": "executor\n    .update(businessPartners)\n    .set({ ...patch, updatedAt: new Date() })\n    .where(eq(businessPartners.id, id))\n    .returning",
+          "lineNumber": 107
+        },
+        {
+          "caller": "updateBusinessPartner",
+          "callee": "executor\n    .update(businessPartners)\n    .set({ ...patch, updatedAt: new Date() })\n    .where",
+          "lineNumber": 107
+        },
+        {
+          "caller": "updateBusinessPartner",
+          "callee": "executor\n    .update(businessPartners)\n    .set",
+          "lineNumber": 107
+        },
+        {
+          "caller": "updateBusinessPartner",
+          "callee": "executor\n    .update",
+          "lineNumber": 107
+        },
+        {
+          "caller": "updateBusinessPartner",
+          "callee": "eq",
+          "lineNumber": 110
+        },
+        {
+          "caller": "setBusinessPartnerStatus",
+          "callee": "executor\n    .update(businessPartners)\n    .set({ status, updatedAt: new Date() })\n    .where(eq(businessPartners.id, id))\n    .returning",
+          "lineNumber": 120
+        },
+        {
+          "caller": "setBusinessPartnerStatus",
+          "callee": "executor\n    .update(businessPartners)\n    .set({ status, updatedAt: new Date() })\n    .where",
+          "lineNumber": 120
+        },
+        {
+          "caller": "setBusinessPartnerStatus",
+          "callee": "executor\n    .update(businessPartners)\n    .set",
+          "lineNumber": 120
+        },
+        {
+          "caller": "setBusinessPartnerStatus",
+          "callee": "executor\n    .update",
+          "lineNumber": 120
+        },
+        {
+          "caller": "setBusinessPartnerStatus",
+          "callee": "eq",
+          "lineNumber": 123
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "executor\n    .select({ id: partnerMemberships.id })\n    .from(partnerMemberships)\n    .where(\n      and(eq(partnerMemberships.businessPartnerId, businessPartnerId), isActiveAdministratorRow),\n    )\n    .limit",
+          "lineNumber": 133
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "executor\n    .select({ id: partnerMemberships.id })\n    .from(partnerMemberships)\n    .where",
+          "lineNumber": 133
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "executor\n    .select({ id: partnerMemberships.id })\n    .from",
+          "lineNumber": 133
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "executor\n    .select",
+          "lineNumber": 133
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "and",
+          "lineNumber": 137
+        },
+        {
+          "caller": "hasActivePartnerAdministrator",
+          "callee": "eq",
+          "lineNumber": 137
+        },
+        {
+          "caller": "insertPartnerAccessHistory",
+          "callee": "executor.insert(partnerAccessHistory).values",
+          "lineNumber": 147
+        },
+        {
+          "caller": "insertPartnerAccessHistory",
+          "callee": "executor.insert",
+          "lineNumber": 147
+        },
+        {
+          "caller": "getPartnerInvitationById",
+          "callee": "executor\n    .select()\n    .from(partnerInvitations)\n    .where",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getPartnerInvitationById",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getPartnerInvitationById",
+          "callee": "executor\n    .select",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getPartnerInvitationById",
+          "callee": "eq",
+          "lineNumber": 163
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "executor\n    .select()\n    .from(partnerInvitations)\n    .where(\n      and(\n        eq(partnerInvitations.businessPartnerId, businessPartnerId),\n        eq(partnerInvitations.status, 'pending'),\n      ),\n    )\n    .orderBy",
+          "lineNumber": 171
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "executor\n    .select()\n    .from(partnerInvitations)\n    .where",
+          "lineNumber": 171
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 171
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "executor\n    .select",
+          "lineNumber": 171
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "and",
+          "lineNumber": 175
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "eq",
+          "lineNumber": 176
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "eq",
+          "lineNumber": 177
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "asc",
+          "lineNumber": 180
+        },
+        {
+          "caller": "listPendingPartnerInvitations",
+          "callee": "asc",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "executor\n    .select()\n    .from(partnerInvitations)\n    .where",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "executor\n    .select",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "and",
+          "lineNumber": 192
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "eq",
+          "lineNumber": 193
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "eq",
+          "lineNumber": 194
+        },
+        {
+          "caller": "getPendingPartnerInvitationByEmail",
+          "callee": "eq",
+          "lineNumber": 195
+        },
+        {
+          "caller": "insertPartnerInvitation",
+          "callee": "executor.insert(partnerInvitations).values(values).returning",
+          "lineNumber": 205
+        },
+        {
+          "caller": "insertPartnerInvitation",
+          "callee": "executor.insert(partnerInvitations).values",
+          "lineNumber": 205
+        },
+        {
+          "caller": "insertPartnerInvitation",
+          "callee": "executor.insert",
+          "lineNumber": 205
+        },
+        {
+          "caller": "setPartnerInvitationStatus",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set({ status })\n    .where(eq(partnerInvitations.id, id))\n    .returning",
+          "lineNumber": 214
+        },
+        {
+          "caller": "setPartnerInvitationStatus",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set({ status })\n    .where",
+          "lineNumber": 214
+        },
+        {
+          "caller": "setPartnerInvitationStatus",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set",
+          "lineNumber": 214
+        },
+        {
+          "caller": "setPartnerInvitationStatus",
+          "callee": "executor\n    .update",
+          "lineNumber": 214
+        },
+        {
+          "caller": "setPartnerInvitationStatus",
+          "callee": "eq",
+          "lineNumber": 217
+        },
+        {
+          "caller": "setPartnerInvitationExpiry",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set({ expiresAt })\n    .where(eq(partnerInvitations.id, id))\n    .returning",
+          "lineNumber": 227
+        },
+        {
+          "caller": "setPartnerInvitationExpiry",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set({ expiresAt })\n    .where",
+          "lineNumber": 227
+        },
+        {
+          "caller": "setPartnerInvitationExpiry",
+          "callee": "executor\n    .update(partnerInvitations)\n    .set",
+          "lineNumber": 227
+        },
+        {
+          "caller": "setPartnerInvitationExpiry",
+          "callee": "executor\n    .update",
+          "lineNumber": 227
+        },
+        {
+          "caller": "setPartnerInvitationExpiry",
+          "callee": "eq",
+          "lineNumber": 230
+        },
+        {
+          "caller": "insertPartnerInvitationToken",
+          "callee": "executor.insert(partnerInvitationTokens).values",
+          "lineNumber": 240
+        },
+        {
+          "caller": "insertPartnerInvitationToken",
+          "callee": "executor.insert",
+          "lineNumber": 240
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "executor\n    .select({ invitation: partnerInvitations })\n    .from(partnerInvitationTokens)\n    .innerJoin(partnerInvitations, eq(partnerInvitations.id, partnerInvitationTokens.invitationId))\n    .where",
+          "lineNumber": 248
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "executor\n    .select({ invitation: partnerInvitations })\n    .from(partnerInvitationTokens)\n    .innerJoin",
+          "lineNumber": 248
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "executor\n    .select({ invitation: partnerInvitations })\n    .from",
+          "lineNumber": 248
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "executor\n    .select",
+          "lineNumber": 248
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "eq",
+          "lineNumber": 251
+        },
+        {
+          "caller": "getPartnerInvitationByTokenDigest",
+          "callee": "eq",
+          "lineNumber": 252
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "executor\n    .select()\n    .from(partnerMemberships)\n    .where",
+          "lineNumber": 269
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 269
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "executor\n    .select",
+          "lineNumber": 269
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "and",
+          "lineNumber": 273
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "eq",
+          "lineNumber": 274
+        },
+        {
+          "caller": "getCurrentPartnerMembership",
+          "callee": "eq",
+          "lineNumber": 275
+        },
+        {
+          "caller": "insertPartnerMembership",
+          "callee": "executor.insert(partnerMemberships).values(values).returning",
+          "lineNumber": 286
+        },
+        {
+          "caller": "insertPartnerMembership",
+          "callee": "executor.insert(partnerMemberships).values",
+          "lineNumber": 286
+        },
+        {
+          "caller": "insertPartnerMembership",
+          "callee": "executor.insert",
+          "lineNumber": 286
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "executor\n    .update(users)\n    .set({ emailVerified: verifiedAt, updatedAt: verifiedAt })\n    .where",
+          "lineNumber": 295
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "executor\n    .update(users)\n    .set",
+          "lineNumber": 295
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "executor\n    .update",
+          "lineNumber": 295
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "and",
+          "lineNumber": 298
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "eq",
+          "lineNumber": 298
+        },
+        {
+          "caller": "verifyUserEmailIfUnset",
+          "callee": "isNull",
+          "lineNumber": 298
+        },
+        {
+          "caller": "getPartnerUserById",
+          "callee": "executor\n    .select({\n      id: users.id,\n      email: users.email,\n      isActive: users.isActive,\n      authorizationVersion: users.authorizationVersion,\n    })\n    .from(users)\n    .where",
+          "lineNumber": 307
+        },
+        {
+          "caller": "getPartnerUserById",
+          "callee": "executor\n    .select({\n      id: users.id,\n      email: users.email,\n      isActive: users.isActive,\n      authorizationVersion: users.authorizationVersion,\n    })\n    .from",
+          "lineNumber": 307
+        },
+        {
+          "caller": "getPartnerUserById",
+          "callee": "executor\n    .select",
+          "lineNumber": 307
+        },
+        {
+          "caller": "getPartnerUserById",
+          "callee": "eq",
+          "lineNumber": 315
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "executor\n    .select({ membership: partnerMemberships, partner: businessPartners })\n    .from(partnerMemberships)\n    .innerJoin(businessPartners, eq(businessPartners.id, partnerMemberships.businessPartnerId))\n    .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))\n    .orderBy",
+          "lineNumber": 329
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "executor\n    .select({ membership: partnerMemberships, partner: businessPartners })\n    .from(partnerMemberships)\n    .innerJoin(businessPartners, eq(businessPartners.id, partnerMemberships.businessPartnerId))\n    .where",
+          "lineNumber": 329
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "executor\n    .select({ membership: partnerMemberships, partner: businessPartners })\n    .from(partnerMemberships)\n    .innerJoin",
+          "lineNumber": 329
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "executor\n    .select({ membership: partnerMemberships, partner: businessPartners })\n    .from",
+          "lineNumber": 329
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "executor\n    .select",
+          "lineNumber": 329
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "eq",
+          "lineNumber": 332
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "and",
+          "lineNumber": 333
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "eq",
+          "lineNumber": 333
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "eq",
+          "lineNumber": 333
+        },
+        {
+          "caller": "listActivePartnerMembershipsForUser",
+          "callee": "asc",
+          "lineNumber": 334
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "executor\n    .select({ membership: partnerMemberships })\n    .from(partnerMemberships)\n    .innerJoin(users, eq(users.id, partnerMemberships.userId))\n    .where",
+          "lineNumber": 347
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "executor\n    .select({ membership: partnerMemberships })\n    .from(partnerMemberships)\n    .innerJoin",
+          "lineNumber": 347
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "executor\n    .select({ membership: partnerMemberships })\n    .from",
+          "lineNumber": 347
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "executor\n    .select",
+          "lineNumber": 347
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "eq",
+          "lineNumber": 350
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "and",
+          "lineNumber": 352
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "eq",
+          "lineNumber": 353
+        },
+        {
+          "caller": "getCurrentPartnerMembershipByEmail",
+          "callee": "sql",
+          "lineNumber": 355
+        },
+        {
+          "caller": "getPartnerMembershipById",
+          "callee": "executor\n    .select()\n    .from(partnerMemberships)\n    .where",
+          "lineNumber": 365
+        },
+        {
+          "caller": "getPartnerMembershipById",
+          "callee": "executor\n    .select()\n    .from",
+          "lineNumber": 365
+        },
+        {
+          "caller": "getPartnerMembershipById",
+          "callee": "executor\n    .select",
+          "lineNumber": 365
+        },
+        {
+          "caller": "getPartnerMembershipById",
+          "callee": "eq",
+          "lineNumber": 368
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "executor\n    .select({ membership: partnerMemberships, user: users })\n    .from(partnerMemberships)\n    .innerJoin(users, eq(users.id, partnerMemberships.userId))\n    .where(and(eq(partnerMemberships.businessPartnerId, businessPartnerId), isCurrentMembership))\n    .orderBy",
+          "lineNumber": 383
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "executor\n    .select({ membership: partnerMemberships, user: users })\n    .from(partnerMemberships)\n    .innerJoin(users, eq(users.id, partnerMemberships.userId))\n    .where",
+          "lineNumber": 383
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "executor\n    .select({ membership: partnerMemberships, user: users })\n    .from(partnerMemberships)\n    .innerJoin",
+          "lineNumber": 383
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "executor\n    .select({ membership: partnerMemberships, user: users })\n    .from",
+          "lineNumber": 383
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "executor\n    .select",
+          "lineNumber": 383
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "eq",
+          "lineNumber": 386
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "and",
+          "lineNumber": 387
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "eq",
+          "lineNumber": 387
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "asc",
+          "lineNumber": 388
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "asc",
+          "lineNumber": 388
+        },
+        {
+          "caller": "listCurrentPartnerMembers",
+          "callee": "rows.map",
+          "lineNumber": 389
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "executor\n    .select({ id: partnerMemberships.id })\n    .from(partnerMemberships)\n    .where",
+          "lineNumber": 403
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "executor\n    .select({ id: partnerMemberships.id })\n    .from",
+          "lineNumber": 403
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "executor\n    .select",
+          "lineNumber": 403
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "and",
+          "lineNumber": 407
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "eq",
+          "lineNumber": 408
+        },
+        {
+          "caller": "countOtherActivePartnerAdministrators",
+          "callee": "ne",
+          "lineNumber": 409
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "executor\n    .update(partnerMemberships)\n    .set({\n      ...patch,\n      authorizationVersion: sql`${partnerMemberships.authorizationVersion} + 1`,\n      updatedAt,\n    })\n    .where(eq(partnerMemberships.id, id))\n    .returning",
+          "lineNumber": 425
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "executor\n    .update(partnerMemberships)\n    .set({\n      ...patch,\n      authorizationVersion: sql`${partnerMemberships.authorizationVersion} + 1`,\n      updatedAt,\n    })\n    .where",
+          "lineNumber": 425
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "executor\n    .update(partnerMemberships)\n    .set",
+          "lineNumber": 425
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "executor\n    .update",
+          "lineNumber": 425
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "sql",
+          "lineNumber": 429
+        },
+        {
+          "caller": "updatePartnerMembership",
+          "callee": "eq",
+          "lineNumber": 432
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "executor\n    .select({ roles: partnerMemberships.roles })\n    .from(partnerMemberships)\n    .where",
+          "lineNumber": 443
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "executor\n    .select({ roles: partnerMemberships.roles })\n    .from",
+          "lineNumber": 443
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "executor\n    .select",
+          "lineNumber": 443
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "and",
+          "lineNumber": 447
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "eq",
+          "lineNumber": 448
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "eq",
+          "lineNumber": 449
+        },
+        {
+          "caller": "getActiveMembershipRoles",
+          "callee": "eq",
+          "lineNumber": 450
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 29,
+        "functionCount": 29,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/bulk-activate-products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "bulkActivateProducts",
+          "startLine": 5,
+          "endLine": 7,
+          "params": [
+            "ids"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "bulkActivateProducts",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "bulkActivateProducts",
+          "callee": "db.update(products).set({ isActive: true }).where",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkActivateProducts",
+          "callee": "db.update(products).set",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkActivateProducts",
+          "callee": "db.update",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkActivateProducts",
+          "callee": "inArray",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/bulk-deactivate-products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "bulkDeactivateProducts",
+          "startLine": 5,
+          "endLine": 7,
+          "params": [
+            "ids"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "bulkDeactivateProducts",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "bulkDeactivateProducts",
+          "callee": "db.update(products).set({ isActive: false }).where",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkDeactivateProducts",
+          "callee": "db.update(products).set",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkDeactivateProducts",
+          "callee": "db.update",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkDeactivateProducts",
+          "callee": "inArray",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/bulk-delete-products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "bulkDeleteProducts",
+          "startLine": 5,
+          "endLine": 7,
+          "params": [
+            "ids"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "bulkDeleteProducts",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "bulkDeleteProducts",
+          "callee": "db.delete(products).where",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkDeleteProducts",
+          "callee": "db.delete",
+          "lineNumber": 6
+        },
+        {
+          "caller": "bulkDeleteProducts",
+          "callee": "inArray",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/check-product-slug-available.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "checkProductSlugAvailable",
+          "startLine": 5,
+          "endLine": 16,
+          "params": [
+            "slug",
+            "excludeProductId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkProductSlugAvailable",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "and",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "eq",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "ne",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "eq",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "db.select({ id: products.id }).from(products).where(condition).limit",
+          "lineNumber": 13
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "db.select({ id: products.id }).from(products).where",
+          "lineNumber": 13
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "db.select({ id: products.id }).from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "checkProductSlugAvailable",
+          "callee": "db.select",
+          "lineNumber": 13
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/check-product-variant-sku-available.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 18,
+      "functions": [
+        {
+          "name": "checkProductVariantSkuAvailable",
+          "startLine": 5,
+          "endLine": 20,
+          "params": [
+            "sku",
+            "excludeVariantId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkProductVariantSkuAvailable",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "db\n    .select({ id: productVariants.id })\n    .from(productVariants)\n    .where(\n      excludeVariantId\n        ? and(eq(productVariants.sku, sku), ne(productVariants.id, excludeVariantId))\n        : eq(productVariants.sku, sku),\n    )\n    .limit",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "db\n    .select({ id: productVariants.id })\n    .from(productVariants)\n    .where",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "db\n    .select({ id: productVariants.id })\n    .from",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "db\n    .select",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "and",
+          "lineNumber": 14
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "eq",
+          "lineNumber": 14
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "ne",
+          "lineNumber": 14
+        },
+        {
+          "caller": "checkProductVariantSkuAvailable",
+          "callee": "eq",
+          "lineNumber": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/create-product-with-variants.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 58,
+      "functions": [
+        {
+          "name": "createProductWithVariantsInDb",
+          "startLine": 28,
+          "endLine": 67,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createProductWithVariantsInDb",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "db.transaction",
+          "lineNumber": 31
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "tx\n      .insert(products)\n      .values({\n        localizedName: input.localizedName,\n        localizedDescription: input.localizedDescription ?? { en: '' },\n        localizedLongDescription: input.localizedLongDescription ?? { en: '' },\n        slug: input.slug ?? null,\n        categoryId: input.categoryId ?? null,\n        brandId: input.brandId ?? null,\n        isActive: input.isActive,\n      })\n      .returning",
+          "lineNumber": 32
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "tx\n      .insert(products)\n      .values",
+          "lineNumber": 32
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "tx\n      .insert",
+          "lineNumber": 32
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "tx.insert(productTags).values",
+          "lineNumber": 48
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "tx.insert",
+          "lineNumber": 48
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "input.tagIds.map",
+          "lineNumber": 48
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "input.variants.map",
+          "lineNumber": 53
+        },
+        {
+          "caller": "createProductWithVariantsInDb",
+          "callee": "insertProductVariantInTx",
+          "lineNumber": 62
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/deactivate-product-variant.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "deactivateProductVariant",
+          "startLine": 5,
+          "endLine": 10,
+          "params": [
+            "variantId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "deactivateProductVariant",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "deactivateProductVariant",
+          "callee": "db\n    .update(productVariants)\n    .set({ isActive: false })\n    .where",
+          "lineNumber": 6
+        },
+        {
+          "caller": "deactivateProductVariant",
+          "callee": "db\n    .update(productVariants)\n    .set",
+          "lineNumber": 6
+        },
+        {
+          "caller": "deactivateProductVariant",
+          "callee": "db\n    .update",
+          "lineNumber": 6
+        },
+        {
+          "caller": "deactivateProductVariant",
+          "callee": "eq",
+          "lineNumber": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/duplicate-product.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 67,
+      "functions": [
+        {
+          "name": "duplicateProductWithVariants",
+          "startLine": 5,
+          "endLine": 75,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "duplicateProductWithVariants",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db.select().from(products).where(eq(products.id, id)).limit",
+          "lineNumber": 6
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 6
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db.select().from",
+          "lineNumber": 6
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db.select",
+          "lineNumber": 6
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "eq",
+          "lineNumber": 6
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db\n    .select()\n    .from(productVariants)\n    .where",
+          "lineNumber": 13
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db\n    .select",
+          "lineNumber": 13
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "eq",
+          "lineNumber": 16
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "db.transaction",
+          "lineNumber": 18
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n      .insert(products)\n      .values({\n        localizedName: {\n          en: `${localizedName.en} (Copy)`,\n          ar: `${localizedName.ar} (نسخة)`,\n        },\n        localizedDescription: product.localizedDescription,\n        localizedLongDescription: product.localizedLongDescription,\n        slug: `${product.slug}-copy`,\n        categoryId: product.categoryId,\n        brandId: product.brandId,\n        isActive: false,\n      })\n      .returning",
+          "lineNumber": 21
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n      .insert(products)\n      .values",
+          "lineNumber": 21
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n      .insert",
+          "lineNumber": 21
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .insert(productVariants)\n        .values({\n          productId: newSpu.id,\n          sku: `${variant.sku}-copy`,\n          variantKey: variant.variantKey,\n          localizedLabel: variant.localizedLabel as Record<string, string>,\n          isDefault: variant.isDefault,\n          mediaSet: variant.mediaSet,\n          isActive: variant.isActive,\n          basePrice: variant.basePrice,\n          strikePrice: variant.strikePrice,\n          costPrice: variant.costPrice,\n          weightGrams: variant.weightGrams,\n          barcode: variant.barcode,\n          sortOrder: variant.sortOrder,\n        })\n        .returning",
+          "lineNumber": 38
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .insert(productVariants)\n        .values",
+          "lineNumber": 38
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .insert",
+          "lineNumber": 38
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .select()\n        .from(variantImages)\n        .where",
+          "lineNumber": 57
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .select()\n        .from",
+          "lineNumber": 57
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx\n        .select",
+          "lineNumber": 57
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "eq",
+          "lineNumber": 60
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx.insert(variantImages).values",
+          "lineNumber": 62
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "tx.insert",
+          "lineNumber": 62
+        },
+        {
+          "caller": "duplicateProductWithVariants",
+          "callee": "images.map",
+          "lineNumber": 63
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/get-admin-product-for-edit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "getAdminProductForEditRaw",
+          "startLine": 5,
+          "endLine": 29,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAdminProductForEditRaw",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAdminProductForEditRaw",
+          "callee": "db.query.products.findFirst",
+          "lineNumber": 6
+        },
+        {
+          "caller": "getAdminProductForEditRaw",
+          "callee": "eq",
+          "lineNumber": 7
+        },
+        {
+          "caller": "getAdminProductForEditRaw",
+          "callee": "asc",
+          "lineNumber": 12
+        },
+        {
+          "caller": "getAdminProductForEditRaw",
+          "callee": "asc",
+          "lineNumber": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/get-admin-products-list.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 184,
+      "nonEmptyLines": 169,
+      "functions": [
+        {
+          "name": "getAdminProductsListRaw",
+          "startLine": 6,
+          "endLine": 184,
+          "params": [
+            "filters"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAdminProductsListRaw",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 13
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 25
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "or",
+          "lineNumber": 54
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "inArray",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "inArray",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "whereClauses.push",
+          "lineNumber": 96
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "and",
+          "lineNumber": 97
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 98
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 99
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "and",
+          "lineNumber": 111
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "desc",
+          "lineNumber": 113
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "dir",
+          "lineNumber": 118
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 118
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "dir",
+          "lineNumber": 121
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 121
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "dir",
+          "lineNumber": 124
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 124
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "dir",
+          "lineNumber": 127
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))\n    .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))\n    .where(where)\n    .orderBy(orderBy)\n    .limit(pageSize)\n    .offset",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))\n    .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))\n    .where(where)\n    .orderBy(orderBy)\n    .limit",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))\n    .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))\n    .where(where)\n    .orderBy",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))\n    .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))\n    .where",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))\n    .leftJoin",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))\n    .leftJoin",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin(brands, eq(products.brandId, brands.id))\n    .leftJoin",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin(categories, eq(products.categoryId, categories.id))\n    .leftJoin",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from(products)\n    .leftJoin",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      localizedName: products.localizedName,\n      categoryId: products.categoryId,\n      categoryName: sql<string>`${categories.localizedName}->>'en'`,\n      brandId: products.brandId,\n      brandName: sql<string | null>`${brands.localizedName}->>'en'`,\n      isActive: products.isActive,\n      updatedAt: products.updatedAt,\n      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,\n      variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,\n      totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,\n      hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,\n      thumbnailUrl: sql<string | null>`img_stats.thumb_url`,\n    })\n    .from",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 149
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 150
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 152
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 152
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 152
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 153
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "eq",
+          "lineNumber": 153
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "sql",
+          "lineNumber": 153
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({ total: count(products.id) })\n    .from(products)\n    .where",
+          "lineNumber": 159
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select({ total: count(products.id) })\n    .from",
+          "lineNumber": 159
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 159
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "count",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "mainRows.map",
+          "lineNumber": 165
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "Number",
+          "lineNumber": 174
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "Number",
+          "lineNumber": 175
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "Number",
+          "lineNumber": 176
+        },
+        {
+          "caller": "getAdminProductsListRaw",
+          "callee": "Number",
+          "lineNumber": 180
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/get-product-variant-attributes.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "getProductVariantAttributes",
+          "startLine": 11,
+          "endLine": 24,
+          "params": [
+            "productId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getProductVariantAttributes",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "db\n    .select({\n      variantId: productVariants.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(variantAttributes, eq(variantAttributes.variantId, productVariants.id))\n    .innerJoin(attributeTable, eq(variantAttributes.attributeId, attributeTable.id))\n    .where",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "db\n    .select({\n      variantId: productVariants.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin(variantAttributes, eq(variantAttributes.variantId, productVariants.id))\n    .innerJoin",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "db\n    .select({\n      variantId: productVariants.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(productVariants)\n    .innerJoin",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "db\n    .select({\n      variantId: productVariants.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "db\n    .select",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "eq",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "eq",
+          "lineNumber": 22
+        },
+        {
+          "caller": "getProductVariantAttributes",
+          "callee": "eq",
+          "lineNumber": 23
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/insert-generated-product-variants.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 72,
+      "nonEmptyLines": 64,
+      "functions": [
+        {
+          "name": "insertGeneratedProductVariants",
+          "startLine": 25,
+          "endLine": 72,
+          "params": [
+            "productId",
+            "variants"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "insertGeneratedProductVariants",
+          "line": 25,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "db.transaction",
+          "lineNumber": 31
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n        .insert(productVariants)\n        .values({\n          productId,\n          sku: variant.sku,\n          variantKey: variant.variantKey,\n          localizedLabel: variant.localizedLabel,\n          sortOrder: variant.sortOrder,\n          isDefault: variant.isDefault,\n          isActive: variant.isActive,\n          basePrice: String(variant.basePrice),\n          strikePrice: variant.strikePrice ? String(variant.strikePrice) : null,\n          costPrice: variant.costPrice ? String(variant.costPrice) : null,\n          weightGrams: variant.weightGrams ?? null,\n          barcode: variant.barcode ?? null,\n        })\n        .returning",
+          "lineNumber": 33
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n        .insert(productVariants)\n        .values",
+          "lineNumber": 33
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n        .insert",
+          "lineNumber": 33
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "String",
+          "lineNumber": 43
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "String",
+          "lineNumber": 44
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "String",
+          "lineNumber": 45
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "newIds.push",
+          "lineNumber": 51
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n          .select({ id: attributeTable.id })\n          .from(attributeTable)\n          .where(eq(attributeTable.key, attribute.attributeKey))\n          .limit",
+          "lineNumber": 54
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n          .select({ id: attributeTable.id })\n          .from(attributeTable)\n          .where",
+          "lineNumber": 54
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n          .select({ id: attributeTable.id })\n          .from",
+          "lineNumber": 54
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx\n          .select",
+          "lineNumber": 54
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "eq",
+          "lineNumber": 57
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx.insert(variantAttributes).values",
+          "lineNumber": 61
+        },
+        {
+          "caller": "insertGeneratedProductVariants",
+          "callee": "tx.insert",
+          "lineNumber": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/insert-product-variant-in-tx.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 100,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "insertProductVariantInTx",
+          "startLine": 39,
+          "endLine": 100,
+          "params": [
+            "tx",
+            "productId",
+            "variant",
+            "displayOrder"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "insertProductVariantInTx",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n    .insert(productVariants)\n    .values({\n      productId,\n      sku: variant.sku.toUpperCase(),\n      variantKey:\n        variant.attributes\n          ?.sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))\n          .map((a) => a.value.toLowerCase())\n          .join('-') || 'default',\n      localizedLabel: variant.localizedLabel ?? { en: '', ar: '' },\n      sortOrder: displayOrder,\n      isDefault: variant.isDefault || false,\n      mediaSet: variant.mediaSet,\n      isActive: variant.isActive ?? true,\n      basePrice: String(variant.basePrice),\n      strikePrice: variant.strikePrice != null ? String(variant.strikePrice) : null,\n      costPrice: variant.costPrice != null ? String(variant.costPrice) : null,\n      weightGrams: variant.weightGrams ?? null,\n      barcode: variant.barcode ?? null,\n    })\n    .returning",
+          "lineNumber": 45
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n    .insert(productVariants)\n    .values",
+          "lineNumber": 45
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n    .insert",
+          "lineNumber": 45
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "variant.sku.toUpperCase",
+          "lineNumber": 49
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "variant.attributes\n          ?.sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))\n          .map((a) => a.value.toLowerCase())\n          .join",
+          "lineNumber": 51
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "variant.attributes\n          ?.sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))\n          .map",
+          "lineNumber": 51
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "variant.attributes\n          ?.sort",
+          "lineNumber": 51
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "a.attributeKey.localeCompare",
+          "lineNumber": 52
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "a.value.toLowerCase",
+          "lineNumber": 53
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "String",
+          "lineNumber": 60
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "String",
+          "lineNumber": 61
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "String",
+          "lineNumber": 62
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx.insert(variantImages).values",
+          "lineNumber": 71
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx.insert",
+          "lineNumber": 71
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "variant.images.map",
+          "lineNumber": 72
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n        .select({ id: attributeTable.id })\n        .from(attributeTable)\n        .where(eq(attributeTable.key, attribute.attributeKey))\n        .limit",
+          "lineNumber": 83
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n        .select({ id: attributeTable.id })\n        .from(attributeTable)\n        .where",
+          "lineNumber": 83
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n        .select({ id: attributeTable.id })\n        .from",
+          "lineNumber": 83
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx\n        .select",
+          "lineNumber": 83
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "eq",
+          "lineNumber": 86
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx.insert(variantAttributes).values",
+          "lineNumber": 90
+        },
+        {
+          "caller": "insertProductVariantInTx",
+          "callee": "tx.insert",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 32,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/update-product-variant-key.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "updateProductVariantKey",
+          "startLine": 5,
+          "endLine": 10,
+          "params": [
+            "variantId",
+            "variantKey"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "updateProductVariantKey",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "updateProductVariantKey",
+          "callee": "db.update(productVariants).set({ variantKey }).where",
+          "lineNumber": 9
+        },
+        {
+          "caller": "updateProductVariantKey",
+          "callee": "db.update(productVariants).set",
+          "lineNumber": 9
+        },
+        {
+          "caller": "updateProductVariantKey",
+          "callee": "db.update",
+          "lineNumber": 9
+        },
+        {
+          "caller": "updateProductVariantKey",
+          "callee": "eq",
+          "lineNumber": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/update-product-with-variants.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 129,
+      "nonEmptyLines": 118,
+      "functions": [
+        {
+          "name": "updateProductWithVariantsInDb",
+          "startLine": 52,
+          "endLine": 129,
+          "params": [
+            "productId",
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "updateProductWithVariantsInDb",
+          "line": 52,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "db.transaction",
+          "lineNumber": 56
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "Object.keys",
+          "lineNumber": 69
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.update(products).set(spuUpdate).where",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.update(products).set",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.update",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "eq",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete(productTags).where",
+          "lineNumber": 74
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete",
+          "lineNumber": 74
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "eq",
+          "lineNumber": 74
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.insert(productTags).values",
+          "lineNumber": 76
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.insert",
+          "lineNumber": 76
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "input.tagIds.map",
+          "lineNumber": 76
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n        .update(productVariants)\n        .set({ isActive: false })\n        .where",
+          "lineNumber": 81
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n        .update(productVariants)\n        .set",
+          "lineNumber": 81
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n        .update",
+          "lineNumber": 81
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "inArray",
+          "lineNumber": 84
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete(productVariants).where",
+          "lineNumber": 88
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete",
+          "lineNumber": 88
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "inArray",
+          "lineNumber": 88
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n          .update(productVariants)\n          .set({\n            sku: variant.sku,\n            localizedLabel: variant.localizedLabel,\n            isActive: variant.isActive,\n            isDefault: variant.isDefault,\n            mediaSet: variant.mediaSet,\n            basePrice: variant.basePrice !== undefined ? String(variant.basePrice) : undefined,\n            strikePrice:\n              variant.strikePrice !== undefined ? String(variant.strikePrice) : undefined,\n            costPrice: variant.costPrice !== undefined ? String(variant.costPrice) : undefined,\n            weightGrams: variant.weightGrams ?? null,\n            barcode: variant.barcode ?? null,\n            sortOrder: variant.sortOrder,\n          })\n          .where",
+          "lineNumber": 93
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n          .update(productVariants)\n          .set",
+          "lineNumber": 93
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx\n          .update",
+          "lineNumber": 93
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "String",
+          "lineNumber": 101
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "String",
+          "lineNumber": 103
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "String",
+          "lineNumber": 104
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "eq",
+          "lineNumber": 109
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete(variantImages).where",
+          "lineNumber": 112
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.delete",
+          "lineNumber": 112
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "eq",
+          "lineNumber": 112
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.insert(variantImages).values",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "tx.insert",
+          "lineNumber": 114
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "variant.images.map",
+          "lineNumber": 115
+        },
+        {
+          "caller": "updateProductWithVariantsInDb",
+          "callee": "insertProductVariantInTx",
+          "lineNumber": 125
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/upsert-product-variant-images.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "upsertProductVariantImages",
+          "startLine": 6,
+          "endLine": 23,
+          "params": [
+            "variantId",
+            "images"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "upsertProductVariantImages",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "db.transaction",
+          "lineNumber": 10
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "tx.delete(variantImages).where",
+          "lineNumber": 11
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "tx.delete",
+          "lineNumber": 11
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "eq",
+          "lineNumber": 11
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "tx.insert(variantImages).values",
+          "lineNumber": 13
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "tx.insert",
+          "lineNumber": 13
+        },
+        {
+          "caller": "upsertProductVariantImages",
+          "callee": "images.map",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/checkout-idempotency.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 133,
+      "nonEmptyLines": 124,
+      "functions": [
+        {
+          "name": "isScopeKeyConflict",
+          "startLine": 18,
+          "endLine": 32,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "findByScopeAndKey",
+          "startLine": 34,
+          "endLine": 51,
+          "params": [
+            "scope",
+            "key"
+          ]
+        },
+        {
+          "name": "claimKey",
+          "startLine": 70,
+          "endLine": 101,
+          "params": [
+            "data",
+            "tx"
+          ]
+        },
+        {
+          "name": "recordSuccess",
+          "startLine": 103,
+          "endLine": 124,
+          "params": [
+            "id",
+            "data",
+            "tx"
+          ]
+        },
+        {
+          "name": "purgeExpired",
+          "startLine": 127,
+          "endLine": 133,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "ScopeKeyConflictError",
+          "startLine": 57,
+          "endLine": 62,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IDEMPOTENCY_RETENTION_HOURS",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "isScopeKeyConflict",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "findByScopeAndKey",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "ScopeKeyConflictError",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "claimKey",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "recordSuccess",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "purgeExpired",
+          "line": 127,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "db\n    .select()\n    .from(checkoutIdempotency)\n    .where(\n      and(\n        eq(checkoutIdempotency.scope, scope),\n        eq(checkoutIdempotency.key, key),\n        sql`${checkoutIdempotency.createdAt} >= ${retentionCutoff}`,\n      ),\n    )\n    .limit",
+          "lineNumber": 38
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "db\n    .select()\n    .from(checkoutIdempotency)\n    .where",
+          "lineNumber": 38
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 38
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "db\n    .select",
+          "lineNumber": 38
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "and",
+          "lineNumber": 42
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "eq",
+          "lineNumber": 43
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "eq",
+          "lineNumber": 44
+        },
+        {
+          "caller": "findByScopeAndKey",
+          "callee": "sql",
+          "lineNumber": 45
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 59
+        },
+        {
+          "caller": "claimKey",
+          "callee": "withTransaction",
+          "lineNumber": 78
+        },
+        {
+          "caller": "claimKey",
+          "callee": "executor\n      .insert(checkoutIdempotency)\n      .values({\n        scope: data.scope,\n        key: data.key,\n        fingerprint: data.fingerprint,\n      })\n      .onConflictDoUpdate({\n        target: [checkoutIdempotency.scope, checkoutIdempotency.key],\n        set: {\n          fingerprint: data.fingerprint,\n          orderId: null,\n          orderReference: null,\n          response: null,\n          createdAt: sql`now()`,\n        },\n        setWhere: sql`${checkoutIdempotency.createdAt} < ${retentionCutoff}`,\n      })\n      .returning",
+          "lineNumber": 79
+        },
+        {
+          "caller": "claimKey",
+          "callee": "executor\n      .insert(checkoutIdempotency)\n      .values({\n        scope: data.scope,\n        key: data.key,\n        fingerprint: data.fingerprint,\n      })\n      .onConflictDoUpdate",
+          "lineNumber": 79
+        },
+        {
+          "caller": "claimKey",
+          "callee": "executor\n      .insert(checkoutIdempotency)\n      .values",
+          "lineNumber": 79
+        },
+        {
+          "caller": "claimKey",
+          "callee": "executor\n      .insert",
+          "lineNumber": 79
+        },
+        {
+          "caller": "claimKey",
+          "callee": "sql",
+          "lineNumber": 93
+        },
+        {
+          "caller": "claimKey",
+          "callee": "sql",
+          "lineNumber": 95
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "withTransaction",
+          "lineNumber": 112
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "executor\n      .update(checkoutIdempotency)\n      .set({\n        orderId: data.orderId,\n        orderReference: data.orderReference,\n        response: data.response,\n      })\n      .where(eq(checkoutIdempotency.id, id))\n      .returning",
+          "lineNumber": 113
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "executor\n      .update(checkoutIdempotency)\n      .set({\n        orderId: data.orderId,\n        orderReference: data.orderReference,\n        response: data.response,\n      })\n      .where",
+          "lineNumber": 113
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "executor\n      .update(checkoutIdempotency)\n      .set",
+          "lineNumber": 113
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "executor\n      .update",
+          "lineNumber": 113
+        },
+        {
+          "caller": "recordSuccess",
+          "callee": "eq",
+          "lineNumber": 120
+        },
+        {
+          "caller": "purgeExpired",
+          "callee": "db\n    .delete(checkoutIdempotency)\n    .where(sql`${checkoutIdempotency.createdAt} < ${retentionCutoff}`)\n    .returning",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeExpired",
+          "callee": "db\n    .delete(checkoutIdempotency)\n    .where",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeExpired",
+          "callee": "db\n    .delete",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeExpired",
+          "callee": "sql",
+          "lineNumber": 130
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 7,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/queries/sales/guest-access.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 147,
+      "functions": [
+        {
+          "name": "findGuestOrder",
+          "startLine": 28,
+          "endLine": 41,
+          "params": [
+            "reference",
+            "email",
+            "tx"
+          ]
+        },
+        {
+          "name": "findOrderIdByReference",
+          "startLine": 43,
+          "endLine": 55,
+          "params": [
+            "reference",
+            "tx"
+          ]
+        },
+        {
+          "name": "createRequest",
+          "startLine": 62,
+          "endLine": 87,
+          "params": [
+            "orderId",
+            "tx"
+          ]
+        },
+        {
+          "name": "findLiveRequest",
+          "startLine": 93,
+          "endLine": 109,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "addCodeHash",
+          "startLine": 112,
+          "endLine": 114,
+          "params": [
+            "requestId",
+            "codeHash"
+          ]
+        },
+        {
+          "name": "attemptVerification",
+          "startLine": 122,
+          "endLine": 161,
+          "params": [
+            "orderId",
+            "matches"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GUEST_ACCESS_TTL_MINUTES",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "GUEST_ACCESS_MAX_ATTEMPTS",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "GUEST_ACCESS_MAX_REQUESTS_PER_HOUR",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "findGuestOrder",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "findOrderIdByReference",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "createRequest",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "findLiveRequest",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "addCodeHash",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "attemptVerification",
+          "line": 122,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "findGuestOrder",
+          "callee": "withTransaction",
+          "lineNumber": 33
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "executor\n      .select({ id: orders.id, orderReference: orders.orderReference })\n      .from(orders)\n      .where(and(eq(orders.orderReference, reference), sql`lower(${orders.guestEmail}) = ${email}`))\n      .limit",
+          "lineNumber": 34
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "executor\n      .select({ id: orders.id, orderReference: orders.orderReference })\n      .from(orders)\n      .where",
+          "lineNumber": 34
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "executor\n      .select({ id: orders.id, orderReference: orders.orderReference })\n      .from",
+          "lineNumber": 34
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "executor\n      .select",
+          "lineNumber": 34
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "and",
+          "lineNumber": 37
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "eq",
+          "lineNumber": 37
+        },
+        {
+          "caller": "findGuestOrder",
+          "callee": "sql",
+          "lineNumber": 37
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "withTransaction",
+          "lineNumber": 47
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "executor\n      .select({ id: orders.id })\n      .from(orders)\n      .where(eq(orders.orderReference, reference))\n      .limit",
+          "lineNumber": 48
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "executor\n      .select({ id: orders.id })\n      .from(orders)\n      .where",
+          "lineNumber": 48
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "executor\n      .select({ id: orders.id })\n      .from",
+          "lineNumber": 48
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "executor\n      .select",
+          "lineNumber": 48
+        },
+        {
+          "caller": "findOrderIdByReference",
+          "callee": "eq",
+          "lineNumber": 51
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx.select({ id: orders.id }).from(orders).where(eq(orders.id, orderId)).for",
+          "lineNumber": 66
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx.select({ id: orders.id }).from(orders).where",
+          "lineNumber": 66
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx.select({ id: orders.id }).from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx.select",
+          "lineNumber": 66
+        },
+        {
+          "caller": "createRequest",
+          "callee": "eq",
+          "lineNumber": 66
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from(guestAccessRequests)\n    .where",
+          "lineNumber": 68
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .select",
+          "lineNumber": 68
+        },
+        {
+          "caller": "createRequest",
+          "callee": "and",
+          "lineNumber": 72
+        },
+        {
+          "caller": "createRequest",
+          "callee": "eq",
+          "lineNumber": 73
+        },
+        {
+          "caller": "createRequest",
+          "callee": "sql",
+          "lineNumber": 74
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .insert(guestAccessRequests)\n    .values({\n      orderId,\n      expiresAt: sql`now() + make_interval(mins => ${GUEST_ACCESS_TTL_MINUTES})`,\n    })\n    .returning",
+          "lineNumber": 79
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .insert(guestAccessRequests)\n    .values",
+          "lineNumber": 79
+        },
+        {
+          "caller": "createRequest",
+          "callee": "tx\n    .insert",
+          "lineNumber": 79
+        },
+        {
+          "caller": "createRequest",
+          "callee": "sql",
+          "lineNumber": 83
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "db\n    .select({\n      request: guestAccessRequests,\n      orderReference: orders.orderReference,\n      guestEmail: orders.guestEmail,\n    })\n    .from(guestAccessRequests)\n    .innerJoin(orders, eq(orders.id, guestAccessRequests.orderId))\n    .where(and(eq(guestAccessRequests.id, id), live))\n    .limit",
+          "lineNumber": 96
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "db\n    .select({\n      request: guestAccessRequests,\n      orderReference: orders.orderReference,\n      guestEmail: orders.guestEmail,\n    })\n    .from(guestAccessRequests)\n    .innerJoin(orders, eq(orders.id, guestAccessRequests.orderId))\n    .where",
+          "lineNumber": 96
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "db\n    .select({\n      request: guestAccessRequests,\n      orderReference: orders.orderReference,\n      guestEmail: orders.guestEmail,\n    })\n    .from(guestAccessRequests)\n    .innerJoin",
+          "lineNumber": 96
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "db\n    .select({\n      request: guestAccessRequests,\n      orderReference: orders.orderReference,\n      guestEmail: orders.guestEmail,\n    })\n    .from",
+          "lineNumber": 96
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "db\n    .select",
+          "lineNumber": 96
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "eq",
+          "lineNumber": 103
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "and",
+          "lineNumber": 104
+        },
+        {
+          "caller": "findLiveRequest",
+          "callee": "eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "addCodeHash",
+          "callee": "db.insert(guestAccessCodes).values({ requestId, codeHash }).onConflictDoNothing",
+          "lineNumber": 113
+        },
+        {
+          "caller": "addCodeHash",
+          "callee": "db.insert(guestAccessCodes).values",
+          "lineNumber": 113
+        },
+        {
+          "caller": "addCodeHash",
+          "callee": "db.insert",
+          "lineNumber": 113
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "db.transaction",
+          "lineNumber": 126
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .select({ id: guestAccessRequests.id })\n      .from(guestAccessRequests)\n      .where(and(eq(guestAccessRequests.orderId, orderId), live))\n      .for",
+          "lineNumber": 127
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .select({ id: guestAccessRequests.id })\n      .from(guestAccessRequests)\n      .where",
+          "lineNumber": 127
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .select({ id: guestAccessRequests.id })\n      .from",
+          "lineNumber": 127
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .select",
+          "lineNumber": 127
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "and",
+          "lineNumber": 130
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "eq",
+          "lineNumber": 130
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .update(guestAccessRequests)\n        .set({ attempts: sql`${guestAccessRequests.attempts} + 1` })\n        .where",
+          "lineNumber": 135
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .update(guestAccessRequests)\n        .set",
+          "lineNumber": 135
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .update",
+          "lineNumber": 135
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "sql",
+          "lineNumber": 137
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "eq",
+          "lineNumber": 138
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .select({ codeHash: guestAccessCodes.codeHash })\n        .from(guestAccessCodes)\n        .where",
+          "lineNumber": 140
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .select({ codeHash: guestAccessCodes.codeHash })\n        .from",
+          "lineNumber": 140
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n        .select",
+          "lineNumber": 140
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "eq",
+          "lineNumber": 143
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "matches",
+          "lineNumber": 146
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "stored.map",
+          "lineNumber": 148
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .update(guestAccessRequests)\n      .set({ consumedAt: sql`now()` })\n      .where",
+          "lineNumber": 155
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .update(guestAccessRequests)\n      .set",
+          "lineNumber": 155
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "tx\n      .update",
+          "lineNumber": 155
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "sql",
+          "lineNumber": 157
+        },
+        {
+          "caller": "attemptVerification",
+          "callee": "eq",
+          "lineNumber": 158
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 9,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/system/outbox.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 181,
+      "nonEmptyLines": 165,
+      "functions": [
+        {
+          "name": "backoffSeconds",
+          "startLine": 21,
+          "endLine": 24,
+          "params": [
+            "attempts"
+          ]
+        },
+        {
+          "name": "enqueue",
+          "startLine": 27,
+          "endLine": 34,
+          "params": [
+            "tx",
+            "id",
+            "kind",
+            "payload"
+          ]
+        },
+        {
+          "name": "claimNext",
+          "startLine": 45,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "leased",
+          "startLine": 76,
+          "endLine": 77,
+          "params": [
+            "id",
+            "leaseToken"
+          ]
+        },
+        {
+          "name": "markDelivered",
+          "startLine": 80,
+          "endLine": 87,
+          "params": [
+            "id",
+            "leaseToken"
+          ]
+        },
+        {
+          "name": "markExpired",
+          "startLine": 90,
+          "endLine": 97,
+          "params": [
+            "id",
+            "leaseToken"
+          ]
+        },
+        {
+          "name": "markFailed",
+          "startLine": 103,
+          "endLine": 124,
+          "params": [
+            "id",
+            "leaseToken",
+            "attempts",
+            "error"
+          ]
+        },
+        {
+          "name": "purgeDelivered",
+          "startLine": 127,
+          "endLine": 141,
+          "params": []
+        },
+        {
+          "name": "countByStatus",
+          "startLine": 143,
+          "endLine": 154,
+          "params": []
+        },
+        {
+          "name": "getById",
+          "startLine": 156,
+          "endLine": 161,
+          "params": [
+            "id",
+            "tx"
+          ]
+        },
+        {
+          "name": "listExhausted",
+          "startLine": 164,
+          "endLine": 171,
+          "params": [
+            "limit"
+          ]
+        },
+        {
+          "name": "requeueExhausted",
+          "startLine": 174,
+          "endLine": 181,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OUTBOX_LEASE_SECONDS",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "OUTBOX_MAX_ATTEMPTS",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "OUTBOX_DELIVERED_RETENTION_DAYS",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "backoffSeconds",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "enqueue",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "claimNext",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "markDelivered",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "markExpired",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "markFailed",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "purgeDelivered",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "countByStatus",
+          "line": 143,
+          "isDefault": false
+        },
+        {
+          "name": "getById",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "listExhausted",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "requeueExhausted",
+          "line": 174,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "backoffSeconds",
+          "callee": "Math.max",
+          "lineNumber": 22
+        },
+        {
+          "caller": "backoffSeconds",
+          "callee": "Math.min",
+          "lineNumber": 23
+        },
+        {
+          "caller": "enqueue",
+          "callee": "tx.insert(outbox).values({ id, kind, payload }).onConflictDoNothing",
+          "lineNumber": 33
+        },
+        {
+          "caller": "enqueue",
+          "callee": "tx.insert(outbox).values",
+          "lineNumber": 33
+        },
+        {
+          "caller": "enqueue",
+          "callee": "tx.insert",
+          "lineNumber": 33
+        },
+        {
+          "caller": "claimNext",
+          "callee": "randomUUID",
+          "lineNumber": 46
+        },
+        {
+          "caller": "claimNext",
+          "callee": "db.transaction",
+          "lineNumber": 47
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select({ id: outbox.id })\n      .from(outbox)\n      .where(\n        or(\n          and(eq(outbox.status, 'pending'), sql`${outbox.nextAttemptAt} <= now()`),\n          and(eq(outbox.status, 'processing'), sql`${outbox.leaseUntil} < now()`),\n        ),\n      )\n      .orderBy(outbox.nextAttemptAt)\n      .limit(1)\n      .for",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select({ id: outbox.id })\n      .from(outbox)\n      .where(\n        or(\n          and(eq(outbox.status, 'pending'), sql`${outbox.nextAttemptAt} <= now()`),\n          and(eq(outbox.status, 'processing'), sql`${outbox.leaseUntil} < now()`),\n        ),\n      )\n      .orderBy(outbox.nextAttemptAt)\n      .limit",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select({ id: outbox.id })\n      .from(outbox)\n      .where(\n        or(\n          and(eq(outbox.status, 'pending'), sql`${outbox.nextAttemptAt} <= now()`),\n          and(eq(outbox.status, 'processing'), sql`${outbox.leaseUntil} < now()`),\n        ),\n      )\n      .orderBy",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select({ id: outbox.id })\n      .from(outbox)\n      .where",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select({ id: outbox.id })\n      .from",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .select",
+          "lineNumber": 48
+        },
+        {
+          "caller": "claimNext",
+          "callee": "or",
+          "lineNumber": 52
+        },
+        {
+          "caller": "claimNext",
+          "callee": "and",
+          "lineNumber": 53
+        },
+        {
+          "caller": "claimNext",
+          "callee": "eq",
+          "lineNumber": 53
+        },
+        {
+          "caller": "claimNext",
+          "callee": "sql",
+          "lineNumber": 53
+        },
+        {
+          "caller": "claimNext",
+          "callee": "and",
+          "lineNumber": 54
+        },
+        {
+          "caller": "claimNext",
+          "callee": "eq",
+          "lineNumber": 54
+        },
+        {
+          "caller": "claimNext",
+          "callee": "sql",
+          "lineNumber": 54
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .update(outbox)\n      .set({\n        status: 'processing',\n        attempts: sql`${outbox.attempts} + 1`,\n        leaseToken,\n        leaseUntil: sql`now() + make_interval(secs => ${OUTBOX_LEASE_SECONDS})`,\n      })\n      .where(eq(outbox.id, due.id))\n      .returning",
+          "lineNumber": 62
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .update(outbox)\n      .set({\n        status: 'processing',\n        attempts: sql`${outbox.attempts} + 1`,\n        leaseToken,\n        leaseUntil: sql`now() + make_interval(secs => ${OUTBOX_LEASE_SECONDS})`,\n      })\n      .where",
+          "lineNumber": 62
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .update(outbox)\n      .set",
+          "lineNumber": 62
+        },
+        {
+          "caller": "claimNext",
+          "callee": "tx\n      .update",
+          "lineNumber": 62
+        },
+        {
+          "caller": "claimNext",
+          "callee": "sql",
+          "lineNumber": 66
+        },
+        {
+          "caller": "claimNext",
+          "callee": "sql",
+          "lineNumber": 68
+        },
+        {
+          "caller": "claimNext",
+          "callee": "eq",
+          "lineNumber": 70
+        },
+        {
+          "caller": "leased",
+          "callee": "and",
+          "lineNumber": 77
+        },
+        {
+          "caller": "leased",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "leased",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "leased",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'delivered', deliveredAt: sql`now()`, leaseToken: null, leaseUntil: null })\n    .where(leased(id, leaseToken))\n    .returning",
+          "lineNumber": 81
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'delivered', deliveredAt: sql`now()`, leaseToken: null, leaseUntil: null })\n    .where",
+          "lineNumber": 81
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "db\n    .update(outbox)\n    .set",
+          "lineNumber": 81
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "db\n    .update",
+          "lineNumber": 81
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "sql",
+          "lineNumber": 83
+        },
+        {
+          "caller": "markDelivered",
+          "callee": "leased",
+          "lineNumber": 84
+        },
+        {
+          "caller": "markExpired",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'expired', leaseToken: null, leaseUntil: null })\n    .where(leased(id, leaseToken))\n    .returning",
+          "lineNumber": 91
+        },
+        {
+          "caller": "markExpired",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'expired', leaseToken: null, leaseUntil: null })\n    .where",
+          "lineNumber": 91
+        },
+        {
+          "caller": "markExpired",
+          "callee": "db\n    .update(outbox)\n    .set",
+          "lineNumber": 91
+        },
+        {
+          "caller": "markExpired",
+          "callee": "db\n    .update",
+          "lineNumber": 91
+        },
+        {
+          "caller": "markExpired",
+          "callee": "leased",
+          "lineNumber": 94
+        },
+        {
+          "caller": "markFailed",
+          "callee": "db\n    .update(outbox)\n    .set({\n      status: exhausted ? 'exhausted' : 'pending',\n      lastError: error.slice(0, 2000),\n      nextAttemptAt: exhausted\n        ? sql`${outbox.nextAttemptAt}`\n        : sql`now() + make_interval(secs => ${backoffSeconds(attempts)})`,\n      leaseToken: null,\n      leaseUntil: null,\n    })\n    .where(leased(id, leaseToken))\n    .returning",
+          "lineNumber": 110
+        },
+        {
+          "caller": "markFailed",
+          "callee": "db\n    .update(outbox)\n    .set({\n      status: exhausted ? 'exhausted' : 'pending',\n      lastError: error.slice(0, 2000),\n      nextAttemptAt: exhausted\n        ? sql`${outbox.nextAttemptAt}`\n        : sql`now() + make_interval(secs => ${backoffSeconds(attempts)})`,\n      leaseToken: null,\n      leaseUntil: null,\n    })\n    .where",
+          "lineNumber": 110
+        },
+        {
+          "caller": "markFailed",
+          "callee": "db\n    .update(outbox)\n    .set",
+          "lineNumber": 110
+        },
+        {
+          "caller": "markFailed",
+          "callee": "db\n    .update",
+          "lineNumber": 110
+        },
+        {
+          "caller": "markFailed",
+          "callee": "error.slice",
+          "lineNumber": 114
+        },
+        {
+          "caller": "markFailed",
+          "callee": "sql",
+          "lineNumber": 116
+        },
+        {
+          "caller": "markFailed",
+          "callee": "sql",
+          "lineNumber": 117
+        },
+        {
+          "caller": "markFailed",
+          "callee": "backoffSeconds",
+          "lineNumber": 117
+        },
+        {
+          "caller": "markFailed",
+          "callee": "leased",
+          "lineNumber": 121
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "db\n    .delete(outbox)\n    .where(\n      and(\n        eq(outbox.status, 'delivered'),\n        lt(\n          outbox.deliveredAt,\n          sql`now() - make_interval(days => ${OUTBOX_DELIVERED_RETENTION_DAYS})`,\n        ),\n      ),\n    )\n    .returning",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "db\n    .delete(outbox)\n    .where",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "db\n    .delete",
+          "lineNumber": 128
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "and",
+          "lineNumber": 131
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "eq",
+          "lineNumber": 132
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "lt",
+          "lineNumber": 133
+        },
+        {
+          "caller": "purgeDelivered",
+          "callee": "sql",
+          "lineNumber": 135
+        },
+        {
+          "caller": "countByStatus",
+          "callee": "db\n    .select({ status: outbox.status, count: sql<number>`cast(count(*) as integer)` })\n    .from(outbox)\n    .groupBy",
+          "lineNumber": 144
+        },
+        {
+          "caller": "countByStatus",
+          "callee": "db\n    .select({ status: outbox.status, count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 144
+        },
+        {
+          "caller": "countByStatus",
+          "callee": "db\n    .select",
+          "lineNumber": 144
+        },
+        {
+          "caller": "countByStatus",
+          "callee": "Object.fromEntries",
+          "lineNumber": 148
+        },
+        {
+          "caller": "countByStatus",
+          "callee": "OUTBOX_STATUSES.map",
+          "lineNumber": 148
+        },
+        {
+          "caller": "getById",
+          "callee": "withTransaction",
+          "lineNumber": 157
+        },
+        {
+          "caller": "getById",
+          "callee": "executor.select().from(outbox).where",
+          "lineNumber": 158
+        },
+        {
+          "caller": "getById",
+          "callee": "executor.select().from",
+          "lineNumber": 158
+        },
+        {
+          "caller": "getById",
+          "callee": "executor.select",
+          "lineNumber": 158
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 158
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "db\n    .select()\n    .from(outbox)\n    .where(eq(outbox.status, 'exhausted'))\n    .orderBy(desc(outbox.createdAt))\n    .limit",
+          "lineNumber": 165
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "db\n    .select()\n    .from(outbox)\n    .where(eq(outbox.status, 'exhausted'))\n    .orderBy",
+          "lineNumber": 165
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "db\n    .select()\n    .from(outbox)\n    .where",
+          "lineNumber": 165
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 165
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "db\n    .select",
+          "lineNumber": 165
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "eq",
+          "lineNumber": 168
+        },
+        {
+          "caller": "listExhausted",
+          "callee": "desc",
+          "lineNumber": 169
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'pending', attempts: 0, nextAttemptAt: sql`now()` })\n    .where(and(eq(outbox.id, id), eq(outbox.status, 'exhausted')))\n    .returning",
+          "lineNumber": 175
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "db\n    .update(outbox)\n    .set({ status: 'pending', attempts: 0, nextAttemptAt: sql`now()` })\n    .where",
+          "lineNumber": 175
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "db\n    .update(outbox)\n    .set",
+          "lineNumber": 175
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "db\n    .update",
+          "lineNumber": 175
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "sql",
+          "lineNumber": 177
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "and",
+          "lineNumber": 178
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "eq",
+          "lineNumber": 178
+        },
+        {
+          "caller": "requeueExhausted",
+          "callee": "eq",
+          "lineNumber": 178
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 14,
+        "functionCount": 12,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/transaction.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 17,
+      "functions": [
+        {
+          "name": "withTransaction",
+          "startLine": 15,
+          "endLine": 20,
+          "params": [
+            "tx",
+            "work"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "withTransaction",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "withTransaction",
+          "callee": "work",
+          "lineNumber": 19
+        },
+        {
+          "caller": "withTransaction",
+          "callee": "db.transaction",
+          "lineNumber": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

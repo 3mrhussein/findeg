@@ -1,0 +1,106 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "seed.ts",
+      "language": "typescript",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/catalog.ts",
+      "language": "typescript",
+      "sizeLines": 133,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/helpers/index.test.ts",
+      "language": "typescript",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/helpers/index.ts",
+      "language": "typescript",
+      "sizeLines": 157,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/index.ts",
+      "language": "typescript",
+      "sizeLines": 5,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/inventory.ts",
+      "language": "typescript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/sales.ts",
+      "language": "typescript",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "seeds/system.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "seed.ts": [
+      "seeds/helpers/index.ts",
+      "seeds/index.ts",
+      "src/connection.ts"
+    ],
+    "seeds/catalog.ts": [
+      "seeds/data/attributes.json",
+      "seeds/data/brands.json",
+      "seeds/data/categories.json",
+      "seeds/data/collection_tags.json",
+      "seeds/data/collections.json",
+      "seeds/data/product_attributes.json",
+      "seeds/data/product_tags.json",
+      "seeds/data/product_variants.json",
+      "seeds/data/products.json",
+      "seeds/data/review_helpful_votes.json",
+      "seeds/data/reviews.json",
+      "seeds/data/tags.json",
+      "seeds/data/variant_attributes.json",
+      "seeds/data/variant_images.json",
+      "seeds/helpers/index.ts",
+      "src/schema/index.ts"
+    ],
+    "seeds/helpers/index.test.ts": [
+      "seeds/helpers/index.ts"
+    ],
+    "seeds/helpers/index.ts": [
+      "src/connection.ts"
+    ],
+    "seeds/index.ts": [],
+    "seeds/inventory.ts": [
+      "seeds/data/inventory_balances.json",
+      "seeds/data/stock_movements.json",
+      "seeds/data/warehouses.json",
+      "seeds/helpers/index.ts",
+      "src/schema/index.ts"
+    ],
+    "seeds/sales.ts": [
+      "seeds/data/addresses.json",
+      "seeds/data/discount_rules.json",
+      "seeds/data/order_items.json",
+      "seeds/data/orders.json",
+      "seeds/helpers/index.ts",
+      "src/schema/index.ts"
+    ],
+    "seeds/system.ts": [
+      "seeds/data/audit_log.json",
+      "seeds/data/search_logs.json",
+      "seeds/helpers/index.ts",
+      "src/schema/index.ts"
+    ]
+  }
+}

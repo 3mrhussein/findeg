@@ -1,0 +1,14 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 0,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "All 478 nodes have valid IDs, supported node types, and normalized complexity values; no systemic correction pattern was reported.",
+    "The 35 initially dangling TypeScript-to-JSON imports were already recovered against the config-prefixed seed-data nodes by deterministic import recovery.",
+    "All 277 relationships represented by the scanner importMap have matching imports edges in the assembled graph, with no dangling endpoints.",
+    "The assembled graph currently contains 931 edges: the reported 896 post-drop/linker edges plus the 35 recovered imports. No evidence-backed changes were required."
+  ]
+}

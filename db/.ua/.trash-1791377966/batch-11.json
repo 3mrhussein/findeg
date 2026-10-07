@@ -1,0 +1,385 @@
+{
+  "nodes": [
+    {
+      "id": "config:seeds/data/addresses.json",
+      "type": "config",
+      "name": "addresses.json",
+      "filePath": "seeds/data/addresses.json",
+      "summary": "Address fixtures for customer and order-delivery scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/alternatives.json",
+      "type": "config",
+      "name": "alternatives.json",
+      "filePath": "seeds/data/alternatives.json",
+      "summary": "Placeholder fixture set for product alternatives; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/attributes.json",
+      "type": "config",
+      "name": "attributes.json",
+      "filePath": "seeds/data/attributes.json",
+      "summary": "Catalog attribute-definition fixtures used to describe product characteristics.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/audit_log.json",
+      "type": "config",
+      "name": "audit_log.json",
+      "filePath": "seeds/data/audit_log.json",
+      "summary": "Audit-event fixtures for system activity and administrative history.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/auth_accounts.json",
+      "type": "config",
+      "name": "auth_accounts.json",
+      "filePath": "seeds/data/auth_accounts.json",
+      "summary": "Authentication-account fixtures linking identities to login providers.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/brands.json",
+      "type": "config",
+      "name": "brands.json",
+      "filePath": "seeds/data/brands.json",
+      "summary": "Brand fixtures covering the catalog manufacturers represented in seeded products.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/categories.json",
+      "type": "config",
+      "name": "categories.json",
+      "filePath": "seeds/data/categories.json",
+      "summary": "Hierarchical catalog category fixtures used to organize the seeded assortment.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/collection_tags.json",
+      "type": "config",
+      "name": "collection_tags.json",
+      "filePath": "seeds/data/collection_tags.json",
+      "summary": "Join fixtures associating curated collections with catalog tags.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/collections.json",
+      "type": "config",
+      "name": "collections.json",
+      "filePath": "seeds/data/collections.json",
+      "summary": "Curated catalog collection fixtures and their presentation metadata.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/discount_rules.json",
+      "type": "config",
+      "name": "discount_rules.json",
+      "filePath": "seeds/data/discount_rules.json",
+      "summary": "Sales discount-rule fixtures used by pricing and checkout scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/guest_principals.json",
+      "type": "config",
+      "name": "guest_principals.json",
+      "filePath": "seeds/data/guest_principals.json",
+      "summary": "Guest identity fixtures supporting unauthenticated checkout flows.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/inventory_balances.json",
+      "type": "config",
+      "name": "inventory_balances.json",
+      "filePath": "seeds/data/inventory_balances.json",
+      "summary": "Warehouse-level inventory balance fixtures for seeded product variants.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:seeds/data/list_items.json",
+      "type": "config",
+      "name": "list_items.json",
+      "filePath": "seeds/data/list_items.json",
+      "summary": "Placeholder fixture set for list items; currently empty.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/order_items.json",
+      "type": "config",
+      "name": "order_items.json",
+      "filePath": "seeds/data/order_items.json",
+      "summary": "Order-line fixtures connecting seeded orders to purchased variants.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/orders.json",
+      "type": "config",
+      "name": "orders.json",
+      "filePath": "seeds/data/orders.json",
+      "summary": "Sales order fixtures for checkout and fulfillment scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/organization_memberships.json",
+      "type": "config",
+      "name": "organization_memberships.json",
+      "filePath": "seeds/data/organization_memberships.json",
+      "summary": "Membership fixtures linking users to organizations and roles.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/organizations.json",
+      "type": "config",
+      "name": "organizations.json",
+      "filePath": "seeds/data/organizations.json",
+      "summary": "Organization fixtures for tenant and membership scenarios.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/password_credentials.json",
+      "type": "config",
+      "name": "password_credentials.json",
+      "filePath": "seeds/data/password_credentials.json",
+      "summary": "Password credential fixtures for seeded local authentication accounts.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:seeds/data/payment_methods.json",
+      "type": "config",
+      "name": "payment_methods.json",
+      "filePath": "seeds/data/payment_methods.json",
+      "summary": "Payment-method fixtures attached to seeded identities.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:seeds/data/permissions.json",
+      "type": "config",
+      "name": "permissions.json",
+      "filePath": "seeds/data/permissions.json",
+      "summary": "Canonical permission-code fixtures used by role-based access control.",
+      "tags": [
+        "configuration",
+        "seed-data",
+        "database"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:seeds/data/addresses.json",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/attributes.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/audit_log.json",
+      "target": "function:seeds/system.ts:seedSystem",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/auth_accounts.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/brands.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/categories.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/collection_tags.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/collections.json",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/discount_rules.json",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/guest_principals.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/inventory_balances.json",
+      "target": "function:seeds/inventory.ts:seedInventory",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/order_items.json",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/orders.json",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/organization_memberships.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/organizations.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/payment_methods.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:seeds/data/permissions.json",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

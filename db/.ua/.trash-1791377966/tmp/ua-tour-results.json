@@ -1,0 +1,1530 @@
+{
+  "scriptCompleted": true,
+  "entryPointCandidates": [
+    {
+      "id": "file:src/queries/partners/index.ts",
+      "score": 5,
+      "name": "index.ts",
+      "summary": "Provides the consolidated database query surface for partners operations."
+    },
+    {
+      "id": "file:seeds/index.ts",
+      "score": 4,
+      "name": "index.ts",
+      "summary": "Barrel entry point that re-exports the database seed modules."
+    },
+    {
+      "id": "file:src/index.ts",
+      "score": 4,
+      "name": "index.ts",
+      "summary": "Public package entry point that exposes only schemas and types, keeping runtime database connections out of client-safe imports."
+    },
+    {
+      "id": "file:src/queries/catalog/index.ts",
+      "score": 4,
+      "name": "index.ts",
+      "summary": "Catalog query barrel exposing product, category, brand, collection, tag, search, analytics, and inventory operations."
+    },
+    {
+      "id": "file:src/queries/identity/index.ts",
+      "score": 4,
+      "name": "index.ts",
+      "summary": "Identity query barrel exposing admin-user, role, and permission-management operations and their input/result types."
+    }
+  ],
+  "fanInRanking": [
+    {
+      "id": "file:src/schema/index.ts",
+      "fanIn": 60,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:src/connection.ts",
+      "fanIn": 56,
+      "name": "connection.ts"
+    },
+    {
+      "id": "file:src/schema/schemas.ts",
+      "fanIn": 25,
+      "name": "schemas.ts"
+    },
+    {
+      "id": "function:seeds/catalog.ts:seedCatalog",
+      "fanIn": 16,
+      "name": "seedCatalog"
+    },
+    {
+      "id": "function:seeds/identity.ts:seedIdentity",
+      "fanIn": 13,
+      "name": "seedIdentity"
+    },
+    {
+      "id": "file:src/schema/identity/users.ts",
+      "fanIn": 9,
+      "name": "users.ts"
+    },
+    {
+      "id": "file:src/types/index.ts",
+      "fanIn": 8,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:seeds/helpers/index.ts",
+      "fanIn": 7,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:src/schema/catalog/products.ts",
+      "fanIn": 7,
+      "name": "products.ts"
+    },
+    {
+      "id": "file:src/queries/transaction.ts",
+      "fanIn": 6,
+      "name": "transaction.ts"
+    },
+    {
+      "id": "function:seeds/sales.ts:seedSales",
+      "fanIn": 6,
+      "name": "seedSales"
+    },
+    {
+      "id": "file:src/queries/identity/authorization-version.ts",
+      "fanIn": 5,
+      "name": "authorization-version.ts"
+    },
+    {
+      "id": "file:src/schema/catalog/index.ts",
+      "fanIn": 5,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:src/schema/catalog/types.ts",
+      "fanIn": 5,
+      "name": "types.ts"
+    },
+    {
+      "id": "file:src/types/common.ts",
+      "fanIn": 5,
+      "name": "common.ts"
+    },
+    {
+      "id": "function:seeds/inventory.ts:seedInventory",
+      "fanIn": 5,
+      "name": "seedInventory"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/index.ts",
+      "fanIn": 4,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:src/schema/catalog/product-variants.ts",
+      "fanIn": 4,
+      "name": "product-variants.ts"
+    },
+    {
+      "id": "file:src/schema/enums.ts",
+      "fanIn": 4,
+      "name": "enums.ts"
+    },
+    {
+      "id": "file:src/schema/sales/orders.ts",
+      "fanIn": 4,
+      "name": "orders.ts"
+    }
+  ],
+  "fanOutRanking": [
+    {
+      "id": "file:src/queries/partners/index.ts",
+      "fanOut": 59,
+      "name": "index.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/products.ts",
+      "fanOut": 49,
+      "name": "products.ts"
+    },
+    {
+      "id": "file:src/queries/school-supply-lists/lifecycle.ts",
+      "fanOut": 35,
+      "name": "lifecycle.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/categories.ts",
+      "fanOut": 32,
+      "name": "categories.ts"
+    },
+    {
+      "id": "file:src/queries/sales/orders.ts",
+      "fanOut": 31,
+      "name": "orders.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-categories.ts",
+      "fanOut": 29,
+      "name": "admin-categories.ts"
+    },
+    {
+      "id": "file:src/queries/system/outbox.ts",
+      "fanOut": 25,
+      "name": "outbox.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-tags.ts",
+      "fanOut": 23,
+      "name": "admin-tags.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/collections.ts",
+      "fanOut": 22,
+      "name": "collections.ts"
+    },
+    {
+      "id": "file:src/queries/review/reviews.ts",
+      "fanOut": 21,
+      "name": "reviews.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/tags.ts",
+      "fanOut": 20,
+      "name": "tags.ts"
+    },
+    {
+      "id": "file:src/queries/identity/users.ts",
+      "fanOut": 20,
+      "name": "users.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-collections.ts",
+      "fanOut": 19,
+      "name": "admin-collections.ts"
+    },
+    {
+      "id": "file:src/types/identity.ts",
+      "fanOut": 19,
+      "name": "identity.ts"
+    },
+    {
+      "id": "file:seeds/catalog.ts",
+      "fanOut": 18,
+      "name": "catalog.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/brands.ts",
+      "fanOut": 18,
+      "name": "brands.ts"
+    },
+    {
+      "id": "file:seeds/identity.ts",
+      "fanOut": 16,
+      "name": "identity.ts"
+    },
+    {
+      "id": "file:src/queries/sales/checkout-idempotency.ts",
+      "fanOut": 16,
+      "name": "checkout-idempotency.ts"
+    },
+    {
+      "id": "file:src/queries/catalog/inventory.ts",
+      "fanOut": 15,
+      "name": "inventory.ts"
+    },
+    {
+      "id": "file:src/queries/sales/guest-access.ts",
+      "fanOut": 15,
+      "name": "guest-access.ts"
+    }
+  ],
+  "bfsTraversal": {
+    "startNode": "file:src/queries/partners/index.ts",
+    "order": [
+      "file:src/queries/partners/index.ts",
+      "file:src/schema/index.ts"
+    ],
+    "depthMap": {
+      "file:src/queries/partners/index.ts": 0,
+      "file:src/schema/index.ts": 1
+    },
+    "byDepth": {
+      "0": [
+        "file:src/queries/partners/index.ts"
+      ],
+      "1": [
+        "file:src/schema/index.ts"
+      ]
+    }
+  },
+  "nonCodeFiles": {
+    "documentation": [
+      {
+        "id": "document:docs/SCHEMA.md",
+        "name": "SCHEMA.md",
+        "type": "document",
+        "summary": "Database schema reference covering the global entity relationship model, feature-specific tables, complex types, and migration commands."
+      },
+      {
+        "id": "document:docs/SETUP.md",
+        "name": "SETUP.md",
+        "type": "document",
+        "summary": "Docker-based database setup guide covering startup scripts, connection details, troubleshooting, and direct PostgreSQL access."
+      },
+      {
+        "id": "document:docs/TAXONOMY.md",
+        "name": "TAXONOMY.md",
+        "type": "document",
+        "summary": "Explains the hybrid catalog taxonomy across tags, collections, attributes, and smart supply-list matching."
+      },
+      {
+        "id": "document:src/schema/catalog/README.md",
+        "name": "README.md",
+        "type": "document",
+        "summary": "Documents the catalog schema architecture, entity relationships, twelve core tables, cross-schema references, and data flow."
+      }
+    ],
+    "infrastructure": [],
+    "data": [],
+    "config": [
+      {
+        "id": "config:package.json",
+        "name": "package.json",
+        "type": "config",
+        "summary": "Defines the @findeg/db package exports, database lifecycle scripts, and runtime and development dependencies."
+      },
+      {
+        "id": "config:tsconfig.json",
+        "name": "tsconfig.json",
+        "type": "config",
+        "summary": "Configures no-emit TypeScript checking and @findeg/db path aliases while excluding migrations and tests."
+      },
+      {
+        "id": "config:seeds/data/addresses.json",
+        "name": "addresses.json",
+        "type": "config",
+        "summary": "Address fixtures for customer and order-delivery scenarios."
+      },
+      {
+        "id": "config:seeds/data/alternatives.json",
+        "name": "alternatives.json",
+        "type": "config",
+        "summary": "Placeholder fixture set for product alternatives; currently empty."
+      },
+      {
+        "id": "config:seeds/data/attributes.json",
+        "name": "attributes.json",
+        "type": "config",
+        "summary": "Catalog attribute-definition fixtures used to describe product characteristics."
+      },
+      {
+        "id": "config:seeds/data/audit_log.json",
+        "name": "audit_log.json",
+        "type": "config",
+        "summary": "Audit-event fixtures for system activity and administrative history."
+      },
+      {
+        "id": "config:seeds/data/auth_accounts.json",
+        "name": "auth_accounts.json",
+        "type": "config",
+        "summary": "Authentication-account fixtures linking identities to login providers."
+      },
+      {
+        "id": "config:seeds/data/brands.json",
+        "name": "brands.json",
+        "type": "config",
+        "summary": "Brand fixtures covering the catalog manufacturers represented in seeded products."
+      },
+      {
+        "id": "config:seeds/data/categories.json",
+        "name": "categories.json",
+        "type": "config",
+        "summary": "Hierarchical catalog category fixtures used to organize the seeded assortment."
+      },
+      {
+        "id": "config:seeds/data/collection_tags.json",
+        "name": "collection_tags.json",
+        "type": "config",
+        "summary": "Join fixtures associating curated collections with catalog tags."
+      },
+      {
+        "id": "config:seeds/data/collections.json",
+        "name": "collections.json",
+        "type": "config",
+        "summary": "Curated catalog collection fixtures and their presentation metadata."
+      },
+      {
+        "id": "config:seeds/data/discount_rules.json",
+        "name": "discount_rules.json",
+        "type": "config",
+        "summary": "Sales discount-rule fixtures used by pricing and checkout scenarios."
+      },
+      {
+        "id": "config:seeds/data/guest_principals.json",
+        "name": "guest_principals.json",
+        "type": "config",
+        "summary": "Guest identity fixtures supporting unauthenticated checkout flows."
+      },
+      {
+        "id": "config:seeds/data/inventory_balances.json",
+        "name": "inventory_balances.json",
+        "type": "config",
+        "summary": "Warehouse-level inventory balance fixtures for seeded product variants."
+      },
+      {
+        "id": "config:seeds/data/list_items.json",
+        "name": "list_items.json",
+        "type": "config",
+        "summary": "Placeholder fixture set for list items; currently empty."
+      },
+      {
+        "id": "config:seeds/data/order_items.json",
+        "name": "order_items.json",
+        "type": "config",
+        "summary": "Order-line fixtures connecting seeded orders to purchased variants."
+      },
+      {
+        "id": "config:seeds/data/orders.json",
+        "name": "orders.json",
+        "type": "config",
+        "summary": "Sales order fixtures for checkout and fulfillment scenarios."
+      },
+      {
+        "id": "config:seeds/data/organization_memberships.json",
+        "name": "organization_memberships.json",
+        "type": "config",
+        "summary": "Membership fixtures linking users to organizations and roles."
+      },
+      {
+        "id": "config:seeds/data/organizations.json",
+        "name": "organizations.json",
+        "type": "config",
+        "summary": "Organization fixtures for tenant and membership scenarios."
+      },
+      {
+        "id": "config:seeds/data/password_credentials.json",
+        "name": "password_credentials.json",
+        "type": "config",
+        "summary": "Password credential fixtures for seeded local authentication accounts."
+      },
+      {
+        "id": "config:seeds/data/payment_methods.json",
+        "name": "payment_methods.json",
+        "type": "config",
+        "summary": "Payment-method fixtures attached to seeded identities."
+      },
+      {
+        "id": "config:seeds/data/permissions.json",
+        "name": "permissions.json",
+        "type": "config",
+        "summary": "Canonical permission-code fixtures used by role-based access control."
+      },
+      {
+        "id": "config:seeds/data/product_attributes.json",
+        "name": "product_attributes.json",
+        "type": "config",
+        "summary": "Product-level attribute value fixtures for catalog filtering and display."
+      },
+      {
+        "id": "config:seeds/data/product_images.json",
+        "name": "product_images.json",
+        "type": "config",
+        "summary": "Placeholder fixture set for product images; currently empty."
+      },
+      {
+        "id": "config:seeds/data/product_tags.json",
+        "name": "product_tags.json",
+        "type": "config",
+        "summary": "Join fixtures assigning search and merchandising tags to products."
+      },
+      {
+        "id": "config:seeds/data/product_variants.json",
+        "name": "product_variants.json",
+        "type": "config",
+        "summary": "SKU-level variant fixtures containing purchasable catalog combinations."
+      },
+      {
+        "id": "config:seeds/data/products.json",
+        "name": "products.json",
+        "type": "config",
+        "summary": "Core product fixtures containing the seeded catalog assortment and localized content."
+      },
+      {
+        "id": "config:seeds/data/review_helpful_votes.json",
+        "name": "review_helpful_votes.json",
+        "type": "config",
+        "summary": "Placeholder fixture set for review helpfulness votes; currently empty."
+      },
+      {
+        "id": "config:seeds/data/reviews.json",
+        "name": "reviews.json",
+        "type": "config",
+        "summary": "Product review fixtures for rating and feedback scenarios."
+      },
+      {
+        "id": "config:seeds/data/role_permissions.json",
+        "name": "role_permissions.json",
+        "type": "config",
+        "summary": "Role-to-permission assignment fixtures defining baseline authorization policy."
+      },
+      {
+        "id": "config:seeds/data/roles.json",
+        "name": "roles.json",
+        "type": "config",
+        "summary": "Role fixtures used by identity and authorization scenarios."
+      },
+      {
+        "id": "config:seeds/data/search_logs.json",
+        "name": "search_logs.json",
+        "type": "config",
+        "summary": "Search-event fixtures for analytics and system-observability scenarios."
+      },
+      {
+        "id": "config:seeds/data/stock_movements.json",
+        "name": "stock_movements.json",
+        "type": "config",
+        "summary": "Inventory movement fixtures recording seeded stock changes."
+      },
+      {
+        "id": "config:seeds/data/tags.json",
+        "name": "tags.json",
+        "type": "config",
+        "summary": "Catalog tag fixtures used for discovery, grouping, and merchandising."
+      },
+      {
+        "id": "config:seeds/data/user_permissions.json",
+        "name": "user_permissions.json",
+        "type": "config",
+        "summary": "Per-user permission override fixtures."
+      },
+      {
+        "id": "config:seeds/data/user_roles.json",
+        "name": "user_roles.json",
+        "type": "config",
+        "summary": "User-to-role assignment fixtures for seeded authorization states."
+      },
+      {
+        "id": "config:seeds/data/users.json",
+        "name": "users.json",
+        "type": "config",
+        "summary": "User identity fixtures covering administrative and customer accounts."
+      },
+      {
+        "id": "config:seeds/data/variant_attributes.json",
+        "name": "variant_attributes.json",
+        "type": "config",
+        "summary": "Variant-level attribute fixtures describing SKU combinations."
+      },
+      {
+        "id": "config:seeds/data/variant_images.json",
+        "name": "variant_images.json",
+        "type": "config",
+        "summary": "Variant image fixtures associating media with specific SKUs."
+      },
+      {
+        "id": "config:seeds/data/warehouses.json",
+        "name": "warehouses.json",
+        "type": "config",
+        "summary": "Warehouse fixtures used as inventory storage locations."
+      }
+    ]
+  },
+  "clusters": [
+    {
+      "nodes": [
+        "file:src/schema/catalog/product-attributes.ts",
+        "file:src/schema/catalog/products.ts",
+        "file:src/schema/catalog/product-variants.ts",
+        "file:src/schema/sales/orders.ts",
+        "file:src/schema/schemas.ts"
+      ],
+      "edgeCount": 11
+    },
+    {
+      "nodes": [
+        "file:src/schema/catalog/product-variants.ts",
+        "file:src/schema/catalog/products.ts",
+        "file:src/schema/catalog/product-attributes.ts",
+        "file:src/schema/sales/orders.ts",
+        "file:src/schema/schemas.ts"
+      ],
+      "edgeCount": 11
+    },
+    {
+      "nodes": [
+        "file:src/schema/identity/addresses.ts",
+        "file:src/schema/identity/users.ts",
+        "file:src/schema/schemas.ts",
+        "file:src/schema/system/audit-log.ts",
+        "file:src/schema/system/notifications.ts"
+      ],
+      "edgeCount": 9
+    },
+    {
+      "nodes": [
+        "file:src/schema/identity/users.ts",
+        "file:src/schema/sales/reviews.ts",
+        "file:src/schema/schemas.ts",
+        "file:src/schema/system/audit-log.ts",
+        "file:src/schema/system/notifications.ts"
+      ],
+      "edgeCount": 9
+    },
+    {
+      "nodes": [
+        "file:src/schema/identity/users.ts",
+        "file:src/schema/sales/orders.ts",
+        "file:src/schema/enums.ts",
+        "file:src/schema/identity/partners.ts",
+        "file:src/schema/inventory/inventory.ts"
+      ],
+      "edgeCount": 8
+    },
+    {
+      "nodes": [
+        "file:src/schema/identity/users.ts",
+        "file:src/schema/system/audit-log.ts",
+        "file:src/schema/schemas.ts",
+        "file:src/schema/system/notifications.ts",
+        "file:src/schema/system/search-logs.ts"
+      ],
+      "edgeCount": 8
+    },
+    {
+      "nodes": [
+        "file:src/schema/catalog/brands.ts",
+        "file:src/schema/catalog/products.ts",
+        "file:src/schema/schemas.ts"
+      ],
+      "edgeCount": 4
+    },
+    {
+      "nodes": [
+        "file:src/schema/catalog/categories.ts",
+        "file:src/schema/catalog/products.ts",
+        "file:src/schema/schemas.ts"
+      ],
+      "edgeCount": 4
+    },
+    {
+      "nodes": [
+        "file:src/schema/catalog/products.ts",
+        "file:src/schema/catalog/tags.ts",
+        "file:src/schema/schemas.ts"
+      ],
+      "edgeCount": 4
+    }
+  ],
+  "layers": {
+    "count": 7,
+    "list": [
+      {
+        "id": "layer:query-and-transaction-services",
+        "name": "Query and Transaction Services",
+        "description": "Drizzle-backed reads, mutations, transactional workflows, reporting, and domain-specific data-access operations."
+      },
+      {
+        "id": "layer:database-schema-and-connection",
+        "name": "Database Schema and Connection",
+        "description": "PostgreSQL connection setup plus Drizzle table, relation, enum, index, constraint, and schema barrel definitions."
+      },
+      {
+        "id": "layer:types-contracts-and-public-api",
+        "name": "Types, Contracts, and Public API",
+        "description": "Shared TypeScript and Zod contracts together with the package entry point exposed to database consumers."
+      },
+      {
+        "id": "layer:seeding-and-fixtures",
+        "name": "Seeding and Fixtures",
+        "description": "Seed orchestration, reusable seed helpers, and JSON fixture datasets used to populate development and test databases."
+      },
+      {
+        "id": "layer:tests",
+        "name": "Tests",
+        "description": "Regression and synchronization tests covering seed helpers, permission codes, and protected database mutations."
+      },
+      {
+        "id": "layer:database-operations-and-tooling",
+        "name": "Database Operations and Tooling",
+        "description": "Package manifests, compiler and lint configuration, migration execution, database initialization SQL, and test-runner configuration."
+      },
+      {
+        "id": "layer:documentation",
+        "name": "Documentation",
+        "description": "Schema, setup, taxonomy, and catalog documentation for developers and database operators."
+      }
+    ]
+  },
+  "nodeSummaryIndex": {
+    "file:src/schema/catalog/brands.ts": {
+      "name": "brands.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for brands data."
+    },
+    "file:src/schema/catalog/categories.ts": {
+      "name": "categories.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for categories data."
+    },
+    "file:src/schema/catalog/collections.ts": {
+      "name": "collections.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for collections data."
+    },
+    "file:src/schema/catalog/product-attributes.ts": {
+      "name": "product-attributes.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product attributes data."
+    },
+    "file:src/schema/catalog/product-variants.ts": {
+      "name": "product-variants.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product variants data."
+    },
+    "file:src/schema/catalog/products.ts": {
+      "name": "products.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for products data."
+    },
+    "file:src/schema/catalog/tags.ts": {
+      "name": "tags.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for tags data."
+    },
+    "file:src/schema/catalog/types.ts": {
+      "name": "types.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for types data."
+    },
+    "file:src/schema/enums.ts": {
+      "name": "enums.ts",
+      "type": "file",
+      "summary": "Defines shared PostgreSQL enum declarations used by tables across the database schema."
+    },
+    "file:src/schema/identity/addresses.ts": {
+      "name": "addresses.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for addresses data."
+    },
+    "file:src/schema/identity/identity-access.ts": {
+      "name": "identity-access.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for identity access data."
+    },
+    "file:src/schema/identity/partners.ts": {
+      "name": "partners.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for partners data."
+    },
+    "file:src/schema/identity/users.ts": {
+      "name": "users.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for users data."
+    },
+    "file:src/schema/inventory/inventory.ts": {
+      "name": "inventory.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for inventory data."
+    },
+    "file:src/schema/sales/checkout-idempotency.ts": {
+      "name": "checkout-idempotency.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for checkout idempotency data."
+    },
+    "file:src/schema/sales/discount-rules.ts": {
+      "name": "discount-rules.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for discount rules data."
+    },
+    "file:src/schema/sales/guest-access.ts": {
+      "name": "guest-access.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for guest access data."
+    },
+    "file:src/schema/sales/list-offers.ts": {
+      "name": "list-offers.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for list offers data."
+    },
+    "file:src/schema/sales/orders.ts": {
+      "name": "orders.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for orders data."
+    },
+    "file:src/schema/sales/reviews.ts": {
+      "name": "reviews.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for reviews data."
+    },
+    "file:src/schema/schemas.ts": {
+      "name": "schemas.ts",
+      "type": "file",
+      "summary": "Collects runtime validation schemas used to validate database-facing values and API payloads."
+    },
+    "file:src/schema/school-engine/school-supply-lists.ts": {
+      "name": "school-supply-lists.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for school supply lists data."
+    },
+    "file:src/schema/system/audit-log.ts": {
+      "name": "audit-log.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for audit log data."
+    },
+    "file:src/schema/system/notifications.ts": {
+      "name": "notifications.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for notifications data."
+    },
+    "file:src/schema/system/outbox.ts": {
+      "name": "outbox.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for outbox data."
+    },
+    "file:src/schema/system/search-logs.ts": {
+      "name": "search-logs.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for search logs data."
+    },
+    "file:src/schema/system/server-logs.ts": {
+      "name": "server-logs.ts",
+      "type": "file",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for server logs data."
+    },
+    "file:src/types/sales.ts": {
+      "name": "sales.ts",
+      "type": "file",
+      "summary": "Defines shared TypeScript types for sales, order, checkout, and payment data exchanged across the database layer."
+    },
+    "file:src/connection.ts": {
+      "name": "connection.ts",
+      "type": "file",
+      "summary": "Initializes and exports the PostgreSQL connection and Drizzle database client used by the package."
+    },
+    "file:src/queries/administration/audit-logs.ts": {
+      "name": "audit-logs.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for audit logs."
+    },
+    "file:src/queries/catalog/admin-search-analytics.ts": {
+      "name": "admin-search-analytics.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for admin search analytics."
+    },
+    "file:src/queries/catalog/brands.ts": {
+      "name": "brands.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for brands."
+    },
+    "file:src/queries/catalog/categories.ts": {
+      "name": "categories.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for categories."
+    },
+    "file:src/queries/catalog/collections.ts": {
+      "name": "collections.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for collections."
+    },
+    "file:src/queries/catalog/inventory.ts": {
+      "name": "inventory.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for inventory."
+    },
+    "file:src/queries/catalog/search.ts": {
+      "name": "search.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for search."
+    },
+    "file:src/queries/catalog/tags.ts": {
+      "name": "tags.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for tags."
+    },
+    "file:src/queries/identity/admin-roles.ts": {
+      "name": "admin-roles.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for admin roles."
+    },
+    "file:src/queries/identity/admin-users.ts": {
+      "name": "admin-users.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for admin users."
+    },
+    "file:src/queries/identity/authorization-version.ts": {
+      "name": "authorization-version.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for authorization version."
+    },
+    "file:src/queries/identity/create-admin-user.ts": {
+      "name": "create-admin-user.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for create admin user."
+    },
+    "file:src/queries/identity/create-role.ts": {
+      "name": "create-role.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for create role."
+    },
+    "file:src/queries/identity/deactivate-admin-user.ts": {
+      "name": "deactivate-admin-user.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for deactivate admin user."
+    },
+    "file:src/queries/identity/delete-role.ts": {
+      "name": "delete-role.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for delete role."
+    },
+    "file:src/queries/identity/get-role-user-count.ts": {
+      "name": "get-role-user-count.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for get role user count."
+    },
+    "file:src/queries/identity/set-admin-permission-overrides.ts": {
+      "name": "set-admin-permission-overrides.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for set admin permission overrides."
+    },
+    "file:src/queries/identity/update-admin-user.ts": {
+      "name": "update-admin-user.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for update admin user."
+    },
+    "file:src/queries/identity/update-role-permissions.ts": {
+      "name": "update-role-permissions.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for update role permissions."
+    },
+    "file:src/queries/inventory/stock-reservations.ts": {
+      "name": "stock-reservations.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for stock reservations."
+    },
+    "file:src/queries/notifications/notifications.ts": {
+      "name": "notifications.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for notifications."
+    },
+    "file:src/queries/partner-sales/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Provides the consolidated database query surface for partner-sales operations."
+    },
+    "file:src/queries/partners/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Provides the consolidated database query surface for partners operations."
+    },
+    "file:src/queries/products/bulk-activate-products.ts": {
+      "name": "bulk-activate-products.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for bulk activate products."
+    },
+    "file:src/queries/products/bulk-deactivate-products.ts": {
+      "name": "bulk-deactivate-products.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for bulk deactivate products."
+    },
+    "file:src/queries/products/bulk-delete-products.ts": {
+      "name": "bulk-delete-products.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for bulk delete products."
+    },
+    "file:src/queries/products/check-product-slug-available.ts": {
+      "name": "check-product-slug-available.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for check product slug available."
+    },
+    "file:src/queries/products/check-product-variant-sku-available.ts": {
+      "name": "check-product-variant-sku-available.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for check product variant sku available."
+    },
+    "file:src/queries/products/create-product-with-variants.ts": {
+      "name": "create-product-with-variants.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for create product with variants."
+    },
+    "file:src/queries/products/deactivate-product-variant.ts": {
+      "name": "deactivate-product-variant.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for deactivate product variant."
+    },
+    "file:src/queries/products/duplicate-product.ts": {
+      "name": "duplicate-product.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for duplicate product."
+    },
+    "file:src/queries/products/get-admin-product-for-edit.ts": {
+      "name": "get-admin-product-for-edit.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for get admin product for edit."
+    },
+    "file:src/queries/products/get-admin-products-list.ts": {
+      "name": "get-admin-products-list.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for get admin products list."
+    },
+    "file:src/queries/products/get-product-variant-attributes.ts": {
+      "name": "get-product-variant-attributes.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for get product variant attributes."
+    },
+    "file:src/queries/products/insert-generated-product-variants.ts": {
+      "name": "insert-generated-product-variants.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for insert generated product variants."
+    },
+    "file:src/queries/products/insert-product-variant-in-tx.ts": {
+      "name": "insert-product-variant-in-tx.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for insert product variant in tx."
+    },
+    "file:src/queries/products/types.ts": {
+      "name": "types.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for types."
+    },
+    "file:src/queries/products/update-product-variant-key.ts": {
+      "name": "update-product-variant-key.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for update product variant key."
+    },
+    "file:src/queries/products/update-product-with-variants.ts": {
+      "name": "update-product-with-variants.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for update product with variants."
+    },
+    "file:src/queries/products/upsert-product-variant-images.ts": {
+      "name": "upsert-product-variant-images.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for upsert product variant images."
+    },
+    "file:src/queries/sales/checkout-idempotency.ts": {
+      "name": "checkout-idempotency.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for checkout idempotency."
+    },
+    "file:src/queries/sales/guest-access.ts": {
+      "name": "guest-access.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for guest access."
+    },
+    "file:src/queries/system/outbox.ts": {
+      "name": "outbox.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for outbox."
+    },
+    "file:src/queries/transaction.ts": {
+      "name": "transaction.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for transaction."
+    },
+    "file:src/schema/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the index.ts schema modules."
+    },
+    "file:src/queries/catalog/counts.ts": {
+      "name": "counts.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for counts."
+    },
+    "file:src/queries/catalog/distribution.ts": {
+      "name": "distribution.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for distribution."
+    },
+    "file:src/queries/catalog/health.ts": {
+      "name": "health.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for health."
+    },
+    "file:src/queries/catalog/top-products.ts": {
+      "name": "top-products.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for top products."
+    },
+    "file:src/queries/inventory/low-stock.ts": {
+      "name": "low-stock.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for low stock."
+    },
+    "file:src/queries/sales/order-stats.ts": {
+      "name": "order-stats.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for order stats."
+    },
+    "file:src/queries/sales/revenue.ts": {
+      "name": "revenue.ts",
+      "type": "file",
+      "summary": "Implements database queries and transactional operations for revenue."
+    },
+    "file:src/schema/catalog/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the catalog schema modules."
+    },
+    "file:src/schema/inventory/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the inventory schema modules."
+    },
+    "file:src/schema/sales/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the sales schema modules."
+    },
+    "file:seed.ts": {
+      "name": "seed.ts",
+      "type": "file",
+      "summary": "Runs the database seeding workflow, coordinating cleanup, fixture insertion, and sequence synchronization."
+    },
+    "file:seeds/catalog.ts": {
+      "name": "catalog.ts",
+      "type": "file",
+      "summary": "Populates deterministic catalog fixtures for local development and database tests."
+    },
+    "file:seeds/helpers/index.test.ts": {
+      "name": "index.test.ts",
+      "type": "file",
+      "summary": "Tests seed helper behavior for validated fixture preparation, parent resolution, password hashing, truncation, and sequence synchronization."
+    },
+    "file:seeds/helpers/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Provides reusable database seed helpers for validation, parent lookup, password hashing, table cleanup, and PostgreSQL sequence synchronization."
+    },
+    "file:seeds/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the database seed modules."
+    },
+    "file:seeds/inventory.ts": {
+      "name": "inventory.ts",
+      "type": "file",
+      "summary": "Populates deterministic inventory fixtures for local development and database tests."
+    },
+    "file:seeds/sales.ts": {
+      "name": "sales.ts",
+      "type": "file",
+      "summary": "Populates deterministic sales fixtures for local development and database tests."
+    },
+    "file:seeds/system.ts": {
+      "name": "system.ts",
+      "type": "file",
+      "summary": "Populates deterministic system fixtures for local development and database tests."
+    },
+    "file:seeds/identity.ts": {
+      "name": "identity.ts",
+      "type": "file",
+      "summary": "Seeds permissions, roles, organizations, users, credentials, authorization grants, memberships, and payment methods while validating fixtures and resolving parent rows."
+    },
+    "file:src/queries/catalog/products.ts": {
+      "name": "products.ts",
+      "type": "file",
+      "summary": "Provides catalog product reads, search and filtering, variant and taxonomy lookups, enriched views, and product mutations through Drizzle queries."
+    },
+    "file:src/queries/identity/users.ts": {
+      "name": "users.ts",
+      "type": "file",
+      "summary": "Implements user, credential, and authorization-context queries plus transactional user and password-credential mutations."
+    },
+    "file:src/queries/review/reviews.ts": {
+      "name": "reviews.ts",
+      "type": "file",
+      "summary": "Implements product-review retrieval, pagination, aggregate summaries, creation, helpful-vote updates, and product rating recalculation."
+    },
+    "file:src/queries/sales/__tests__/orders.test.ts": {
+      "name": "orders.test.ts",
+      "type": "file",
+      "summary": "Verifies order mutation guards reject immutable payment and reward accounting fields."
+    },
+    "file:src/queries/sales/orders.ts": {
+      "name": "orders.ts",
+      "type": "file",
+      "summary": "Provides order retrieval, filtering, purchase checks, transactional creation and updates, reference-conflict handling, and revenue analytics."
+    },
+    "file:src/types/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Barrel entry point that re-exports the database package type and validation modules."
+    },
+    "file:src/__tests__/permission-codes.test.ts": {
+      "name": "permission-codes.test.ts",
+      "type": "file",
+      "summary": "Checks that seeded permission codes remain synchronized with the canonical identity permission-code definitions."
+    },
+    "file:src/queries/catalog/admin-categories.ts": {
+      "name": "admin-categories.ts",
+      "type": "file",
+      "summary": "Provides administrative category hierarchy reads and category create, update, reorder, and delete operations."
+    },
+    "file:src/queries/catalog/admin-collections.ts": {
+      "name": "admin-collections.ts",
+      "type": "file",
+      "summary": "Provides administrative collection reads and mutations, including tag assignment and display-order updates."
+    },
+    "file:src/queries/catalog/admin-tags.ts": {
+      "name": "admin-tags.ts",
+      "type": "file",
+      "summary": "Provides administrative tag listing, lookup, slug validation, counts, CRUD, and bulk status operations."
+    },
+    "file:src/types/common.ts": {
+      "name": "common.ts",
+      "type": "file",
+      "summary": "Defines shared Zod schemas and inferred types for locales, money, identifiers, slugs, quantities, ratings, and media assets."
+    },
+    "file:src/types/identity.ts": {
+      "name": "identity.ts",
+      "type": "file",
+      "summary": "Defines identity and session schemas, canonical permission and role constants, user value-object construction, and authorization predicates."
+    },
+    "file:src/types/pricing.ts": {
+      "name": "pricing.ts",
+      "type": "file",
+      "summary": "Defines Zod schemas for persisted prices, discount rules, applied discounts, and resolved pricing results."
+    },
+    "file:src/queries/school-directory/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Implements partner-school directory filtering, search, facet options, and detailed lookup by school code."
+    },
+    "file:src/queries/school-supply-lists/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Finds product variant candidates for supply-list items and derives category attribute values for matching workflows."
+    },
+    "file:src/queries/school-supply-lists/lifecycle.ts": {
+      "name": "lifecycle.ts",
+      "type": "file",
+      "summary": "Implements transactional school-supply-list lifecycle operations, including locking, drafts, items, snapshots, publication, archival, and conflict detection."
+    },
+    "file:src/queries/school-supply-lists/list-offers.ts": {
+      "name": "list-offers.ts",
+      "type": "file",
+      "summary": "Reads, upserts, deletes, and copies commercial offer terms associated with school supply lists."
+    },
+    "file:src/queries/school-supply-lists/public-read.ts": {
+      "name": "public-read.ts",
+      "type": "file",
+      "summary": "Builds public supply-list views and resolves inventory availability and product-variant display details."
+    },
+    "file:src/types/school-supply-lists.ts": {
+      "name": "school-supply-lists.ts",
+      "type": "file",
+      "summary": "Defines identifiers and Zod validation schemas for supply-list drafts, items, and list offers."
+    },
+    "document:docs/SCHEMA.md": {
+      "name": "SCHEMA.md",
+      "type": "document",
+      "summary": "Database schema reference covering the global entity relationship model, feature-specific tables, complex types, and migration commands."
+    },
+    "document:docs/SETUP.md": {
+      "name": "SETUP.md",
+      "type": "document",
+      "summary": "Docker-based database setup guide covering startup scripts, connection details, troubleshooting, and direct PostgreSQL access."
+    },
+    "document:docs/TAXONOMY.md": {
+      "name": "TAXONOMY.md",
+      "type": "document",
+      "summary": "Explains the hybrid catalog taxonomy across tags, collections, attributes, and smart supply-list matching."
+    },
+    "file:init-db.sql": {
+      "name": "init-db.sql",
+      "type": "file",
+      "summary": "Initializes a fresh PostgreSQL database by enabling the uuid-ossp extension before Drizzle migrations create tables."
+    },
+    "config:package.json": {
+      "name": "package.json",
+      "type": "config",
+      "summary": "Defines the @findeg/db package exports, database lifecycle scripts, and runtime and development dependencies."
+    },
+    "config:tsconfig.json": {
+      "name": "tsconfig.json",
+      "type": "config",
+      "summary": "Configures no-emit TypeScript checking and @findeg/db path aliases while excluding migrations and tests."
+    },
+    "config:seeds/data/addresses.json": {
+      "name": "addresses.json",
+      "type": "config",
+      "summary": "Address fixtures for customer and order-delivery scenarios."
+    },
+    "config:seeds/data/alternatives.json": {
+      "name": "alternatives.json",
+      "type": "config",
+      "summary": "Placeholder fixture set for product alternatives; currently empty."
+    },
+    "config:seeds/data/attributes.json": {
+      "name": "attributes.json",
+      "type": "config",
+      "summary": "Catalog attribute-definition fixtures used to describe product characteristics."
+    },
+    "config:seeds/data/audit_log.json": {
+      "name": "audit_log.json",
+      "type": "config",
+      "summary": "Audit-event fixtures for system activity and administrative history."
+    },
+    "config:seeds/data/auth_accounts.json": {
+      "name": "auth_accounts.json",
+      "type": "config",
+      "summary": "Authentication-account fixtures linking identities to login providers."
+    },
+    "config:seeds/data/brands.json": {
+      "name": "brands.json",
+      "type": "config",
+      "summary": "Brand fixtures covering the catalog manufacturers represented in seeded products."
+    },
+    "config:seeds/data/categories.json": {
+      "name": "categories.json",
+      "type": "config",
+      "summary": "Hierarchical catalog category fixtures used to organize the seeded assortment."
+    },
+    "config:seeds/data/collection_tags.json": {
+      "name": "collection_tags.json",
+      "type": "config",
+      "summary": "Join fixtures associating curated collections with catalog tags."
+    },
+    "config:seeds/data/collections.json": {
+      "name": "collections.json",
+      "type": "config",
+      "summary": "Curated catalog collection fixtures and their presentation metadata."
+    },
+    "config:seeds/data/discount_rules.json": {
+      "name": "discount_rules.json",
+      "type": "config",
+      "summary": "Sales discount-rule fixtures used by pricing and checkout scenarios."
+    },
+    "config:seeds/data/guest_principals.json": {
+      "name": "guest_principals.json",
+      "type": "config",
+      "summary": "Guest identity fixtures supporting unauthenticated checkout flows."
+    },
+    "config:seeds/data/inventory_balances.json": {
+      "name": "inventory_balances.json",
+      "type": "config",
+      "summary": "Warehouse-level inventory balance fixtures for seeded product variants."
+    },
+    "config:seeds/data/list_items.json": {
+      "name": "list_items.json",
+      "type": "config",
+      "summary": "Placeholder fixture set for list items; currently empty."
+    },
+    "config:seeds/data/order_items.json": {
+      "name": "order_items.json",
+      "type": "config",
+      "summary": "Order-line fixtures connecting seeded orders to purchased variants."
+    },
+    "config:seeds/data/orders.json": {
+      "name": "orders.json",
+      "type": "config",
+      "summary": "Sales order fixtures for checkout and fulfillment scenarios."
+    },
+    "config:seeds/data/organization_memberships.json": {
+      "name": "organization_memberships.json",
+      "type": "config",
+      "summary": "Membership fixtures linking users to organizations and roles."
+    },
+    "config:seeds/data/organizations.json": {
+      "name": "organizations.json",
+      "type": "config",
+      "summary": "Organization fixtures for tenant and membership scenarios."
+    },
+    "config:seeds/data/password_credentials.json": {
+      "name": "password_credentials.json",
+      "type": "config",
+      "summary": "Password credential fixtures for seeded local authentication accounts."
+    },
+    "config:seeds/data/payment_methods.json": {
+      "name": "payment_methods.json",
+      "type": "config",
+      "summary": "Payment-method fixtures attached to seeded identities."
+    },
+    "config:seeds/data/permissions.json": {
+      "name": "permissions.json",
+      "type": "config",
+      "summary": "Canonical permission-code fixtures used by role-based access control."
+    },
+    "config:seeds/data/product_attributes.json": {
+      "name": "product_attributes.json",
+      "type": "config",
+      "summary": "Product-level attribute value fixtures for catalog filtering and display."
+    },
+    "config:seeds/data/product_images.json": {
+      "name": "product_images.json",
+      "type": "config",
+      "summary": "Placeholder fixture set for product images; currently empty."
+    },
+    "config:seeds/data/product_tags.json": {
+      "name": "product_tags.json",
+      "type": "config",
+      "summary": "Join fixtures assigning search and merchandising tags to products."
+    },
+    "config:seeds/data/product_variants.json": {
+      "name": "product_variants.json",
+      "type": "config",
+      "summary": "SKU-level variant fixtures containing purchasable catalog combinations."
+    },
+    "config:seeds/data/products.json": {
+      "name": "products.json",
+      "type": "config",
+      "summary": "Core product fixtures containing the seeded catalog assortment and localized content."
+    },
+    "config:seeds/data/review_helpful_votes.json": {
+      "name": "review_helpful_votes.json",
+      "type": "config",
+      "summary": "Placeholder fixture set for review helpfulness votes; currently empty."
+    },
+    "config:seeds/data/reviews.json": {
+      "name": "reviews.json",
+      "type": "config",
+      "summary": "Product review fixtures for rating and feedback scenarios."
+    },
+    "config:seeds/data/role_permissions.json": {
+      "name": "role_permissions.json",
+      "type": "config",
+      "summary": "Role-to-permission assignment fixtures defining baseline authorization policy."
+    },
+    "config:seeds/data/roles.json": {
+      "name": "roles.json",
+      "type": "config",
+      "summary": "Role fixtures used by identity and authorization scenarios."
+    },
+    "config:seeds/data/search_logs.json": {
+      "name": "search_logs.json",
+      "type": "config",
+      "summary": "Search-event fixtures for analytics and system-observability scenarios."
+    },
+    "config:seeds/data/stock_movements.json": {
+      "name": "stock_movements.json",
+      "type": "config",
+      "summary": "Inventory movement fixtures recording seeded stock changes."
+    },
+    "config:seeds/data/tags.json": {
+      "name": "tags.json",
+      "type": "config",
+      "summary": "Catalog tag fixtures used for discovery, grouping, and merchandising."
+    },
+    "config:seeds/data/user_permissions.json": {
+      "name": "user_permissions.json",
+      "type": "config",
+      "summary": "Per-user permission override fixtures."
+    },
+    "config:seeds/data/user_roles.json": {
+      "name": "user_roles.json",
+      "type": "config",
+      "summary": "User-to-role assignment fixtures for seeded authorization states."
+    },
+    "config:seeds/data/users.json": {
+      "name": "users.json",
+      "type": "config",
+      "summary": "User identity fixtures covering administrative and customer accounts."
+    },
+    "config:seeds/data/variant_attributes.json": {
+      "name": "variant_attributes.json",
+      "type": "config",
+      "summary": "Variant-level attribute fixtures describing SKU combinations."
+    },
+    "config:seeds/data/variant_images.json": {
+      "name": "variant_images.json",
+      "type": "config",
+      "summary": "Variant image fixtures associating media with specific SKUs."
+    },
+    "config:seeds/data/warehouses.json": {
+      "name": "warehouses.json",
+      "type": "config",
+      "summary": "Warehouse fixtures used as inventory storage locations."
+    },
+    "file:drizzle.config.ts": {
+      "name": "drizzle.config.ts",
+      "type": "file",
+      "summary": "Configures Drizzle Kit for the project PostgreSQL schemas, migration output directory, and environment-backed connection URL."
+    },
+    "file:eslint.config.js": {
+      "name": "eslint.config.js",
+      "type": "file",
+      "summary": "Re-exports the shared database ESLint preset for this package."
+    },
+    "file:migrate.ts": {
+      "name": "migrate.ts",
+      "type": "file",
+      "summary": "Runs pending Drizzle migrations only when the explicit migration safety flag is enabled, then closes the database connection."
+    },
+    "file:seed.test.ts": {
+      "name": "seed.test.ts",
+      "type": "file",
+      "summary": "Verifies the seed command executes every domain stage in order, reports failures, and always closes the database connection."
+    },
+    "file:seeds/helpers/constants.ts": {
+      "name": "constants.ts",
+      "type": "file",
+      "summary": "Defines the dependency-safe table import order used by seed helpers."
+    },
+    "file:src/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Public package entry point that exposes only schemas and types, keeping runtime database connections out of client-safe imports."
+    },
+    "file:src/queries/catalog/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Catalog query barrel exposing product, category, brand, collection, tag, search, analytics, and inventory operations."
+    },
+    "file:src/queries/identity/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Identity query barrel exposing admin-user, role, and permission-management operations and their input/result types."
+    },
+    "file:src/queries/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Top-level query barrel organizing domain primitives, feature-specific operations, transaction helpers, and namespaced query groups."
+    },
+    "file:src/queries/inventory/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Inventory query barrel for low-stock reporting and transactional stock reservation lifecycle operations."
+    },
+    "file:src/queries/products/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Administrative product query barrel covering listing, creation, duplication, bulk actions, variants, images, and availability checks."
+    },
+    "file:src/queries/sales/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Sales query barrel exposing order statistics, revenue reporting, purchase checks, checkout idempotency, and guest access."
+    },
+    "document:src/schema/catalog/README.md": {
+      "name": "README.md",
+      "type": "document",
+      "summary": "Documents the catalog schema architecture, entity relationships, twelve core tables, cross-schema references, and data flow."
+    },
+    "file:src/schema/identity/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "Identity schema barrel exporting access-control, user, and partner table definitions."
+    },
+    "file:src/schema/school-engine/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "School-engine schema barrel exporting school supply list definitions."
+    },
+    "file:src/schema/system/index.ts": {
+      "name": "index.ts",
+      "type": "file",
+      "summary": "System schema barrel exporting audit, logging, notification, search-log, and outbox definitions."
+    },
+    "file:src/types/catalog/IProduct.interface.ts": {
+      "name": "IProduct.interface.ts",
+      "type": "file",
+      "summary": "Defines the legacy product contract with localized content, media variants, catalog relations, and rating metadata."
+    },
+    "file:vitest.config.ts": {
+      "name": "vitest.config.ts",
+      "type": "file",
+      "summary": "Configures Vitest for Node-based database tests with isolated local PostgreSQL environment values."
+    }
+  },
+  "totalNodes": 478,
+  "totalEdges": 931
+}

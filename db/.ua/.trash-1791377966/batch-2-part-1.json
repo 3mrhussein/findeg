@@ -1,0 +1,2479 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/connection.ts",
+      "type": "file",
+      "name": "connection.ts",
+      "filePath": "src/connection.ts",
+      "summary": "Initializes and exports the PostgreSQL connection and Drizzle database client used by the package.",
+      "tags": [
+        "database",
+        "configuration",
+        "connection",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/administration/audit-logs.ts",
+      "type": "file",
+      "name": "audit-logs.ts",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "summary": "Implements database queries and transactional operations for audit logs.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/administration/audit-logs.ts:getAll",
+      "type": "function",
+      "name": "getAll",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "lineRange": [
+        34,
+        82
+      ],
+      "summary": "Retrieves all data for audit logs records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/administration/audit-logs.ts:getByEntity",
+      "type": "function",
+      "name": "getByEntity",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "lineRange": [
+        87,
+        93
+      ],
+      "summary": "Retrieves by entity data for audit logs records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/administration/audit-logs.ts:getRecent",
+      "type": "function",
+      "name": "getRecent",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "lineRange": [
+        98,
+        114
+      ],
+      "summary": "Retrieves recent data for audit logs records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/administration/audit-logs.ts:countLogs",
+      "type": "function",
+      "name": "countLogs",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "lineRange": [
+        119,
+        150
+      ],
+      "summary": "Retrieves logs data for audit logs records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/administration/audit-logs.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/administration/audit-logs.ts",
+      "lineRange": [
+        166,
+        181
+      ],
+      "summary": "Creates or records  data for audit logs records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-search-analytics.ts",
+      "type": "file",
+      "name": "admin-search-analytics.ts",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "summary": "Implements database queries and transactional operations for admin search analytics.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-search-analytics.ts:getMetrics",
+      "type": "function",
+      "name": "getMetrics",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "lineRange": [
+        61,
+        86
+      ],
+      "summary": "Retrieves metrics data for admin search analytics records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-search-analytics.ts:getTopSearches",
+      "type": "function",
+      "name": "getTopSearches",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "lineRange": [
+        88,
+        112
+      ],
+      "summary": "Retrieves top searches data for admin search analytics records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-search-analytics.ts:getZeroResultSearches",
+      "type": "function",
+      "name": "getZeroResultSearches",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "lineRange": [
+        114,
+        141
+      ],
+      "summary": "Retrieves zero result searches data for admin search analytics records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-search-analytics.ts:getLowCTRSearches",
+      "type": "function",
+      "name": "getLowCTRSearches",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "lineRange": [
+        143,
+        174
+      ],
+      "summary": "Retrieves low ctrsearches data for admin search analytics records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-search-analytics.ts:getLanguageBreakdown",
+      "type": "function",
+      "name": "getLanguageBreakdown",
+      "filePath": "src/queries/catalog/admin-search-analytics.ts",
+      "lineRange": [
+        176,
+        199
+      ],
+      "summary": "Retrieves language breakdown data for admin search analytics records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/brands.ts",
+      "type": "file",
+      "name": "brands.ts",
+      "filePath": "src/queries/catalog/brands.ts",
+      "summary": "Implements database queries and transactional operations for brands.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:getAll",
+      "type": "function",
+      "name": "getAll",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        40,
+        64
+      ],
+      "summary": "Retrieves all data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        66,
+        69
+      ],
+      "summary": "Retrieves by id data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:getBySlug",
+      "type": "function",
+      "name": "getBySlug",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        71,
+        74
+      ],
+      "summary": "Retrieves by slug data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        76,
+        88
+      ],
+      "summary": "Creates or records  data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        90,
+        102
+      ],
+      "summary": "Updates  state for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:deleteById",
+      "type": "function",
+      "name": "deleteById",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        104,
+        106
+      ],
+      "summary": "Removes by id data associated with brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:count",
+      "type": "function",
+      "name": "count",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        108,
+        111
+      ],
+      "summary": "Retrieves  data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/brands.ts:countProductsByBrandId",
+      "type": "function",
+      "name": "countProductsByBrandId",
+      "filePath": "src/queries/catalog/brands.ts",
+      "lineRange": [
+        113,
+        119
+      ],
+      "summary": "Retrieves products by brand id data for brands records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/categories.ts",
+      "type": "file",
+      "name": "categories.ts",
+      "filePath": "src/queries/catalog/categories.ts",
+      "summary": "Implements database queries and transactional operations for categories.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        30,
+        33
+      ],
+      "summary": "Retrieves by id data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getAll",
+      "type": "function",
+      "name": "getAll",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        35,
+        37
+      ],
+      "summary": "Retrieves all data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getBySlug",
+      "type": "function",
+      "name": "getBySlug",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        39,
+        42
+      ],
+      "summary": "Retrieves by slug data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getByPath",
+      "type": "function",
+      "name": "getByPath",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        44,
+        47
+      ],
+      "summary": "Retrieves by path data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getTree",
+      "type": "function",
+      "name": "getTree",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        51,
+        53
+      ],
+      "summary": "Retrieves tree data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getRoots",
+      "type": "function",
+      "name": "getRoots",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        55,
+        61
+      ],
+      "summary": "Retrieves roots data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getChildren",
+      "type": "function",
+      "name": "getChildren",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        63,
+        69
+      ],
+      "summary": "Retrieves children data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getProductCounts",
+      "type": "function",
+      "name": "getProductCounts",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        74,
+        93
+      ],
+      "summary": "Retrieves product counts data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getDescendants",
+      "type": "function",
+      "name": "getDescendants",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        98,
+        110
+      ],
+      "summary": "Retrieves descendants data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        114,
+        164
+      ],
+      "summary": "Creates or records  data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        166,
+        232
+      ],
+      "summary": "Updates  state for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:reorder",
+      "type": "function",
+      "name": "reorder",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        234,
+        243
+      ],
+      "summary": "Implements the reorder database operation for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:deleteById",
+      "type": "function",
+      "name": "deleteById",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        245,
+        247
+      ],
+      "summary": "Removes by id data associated with categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getCount",
+      "type": "function",
+      "name": "getCount",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        249,
+        252
+      ],
+      "summary": "Retrieves count data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/categories.ts:getProductCount",
+      "type": "function",
+      "name": "getProductCount",
+      "filePath": "src/queries/catalog/categories.ts",
+      "lineRange": [
+        254,
+        260
+      ],
+      "summary": "Retrieves product count data for categories records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/collections.ts",
+      "type": "file",
+      "name": "collections.ts",
+      "filePath": "src/queries/catalog/collections.ts",
+      "summary": "Implements database queries and transactional operations for collections.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getAllCollections",
+      "type": "function",
+      "name": "getAllCollections",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        19,
+        29
+      ],
+      "summary": "Retrieves all collections data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getCollectionById",
+      "type": "function",
+      "name": "getCollectionById",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        34,
+        37
+      ],
+      "summary": "Retrieves collection by id data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getCollectionBySlug",
+      "type": "function",
+      "name": "getCollectionBySlug",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        42,
+        45
+      ],
+      "summary": "Retrieves collection by slug data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getCollectionWithTags",
+      "type": "function",
+      "name": "getCollectionWithTags",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        50,
+        69
+      ],
+      "summary": "Retrieves collection with tags data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getCollectionBySlugWithTags",
+      "type": "function",
+      "name": "getCollectionBySlugWithTags",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        74,
+        93
+      ],
+      "summary": "Retrieves collection by slug with tags data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:createCollection",
+      "type": "function",
+      "name": "createCollection",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        98,
+        101
+      ],
+      "summary": "Creates or records collection data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:updateCollection",
+      "type": "function",
+      "name": "updateCollection",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        106,
+        116
+      ],
+      "summary": "Updates collection state for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:deleteCollection",
+      "type": "function",
+      "name": "deleteCollection",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        121,
+        123
+      ],
+      "summary": "Removes collection data associated with collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:setCollectionTags",
+      "type": "function",
+      "name": "setCollectionTags",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        128,
+        140
+      ],
+      "summary": "Updates collection tags state for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/collections.ts:getCollectionTagIds",
+      "type": "function",
+      "name": "getCollectionTagIds",
+      "filePath": "src/queries/catalog/collections.ts",
+      "lineRange": [
+        145,
+        152
+      ],
+      "summary": "Retrieves collection tag ids data for collections records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "summary": "Implements database queries and transactional operations for inventory.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:getBalance",
+      "type": "function",
+      "name": "getBalance",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        38,
+        66
+      ],
+      "summary": "Retrieves balance data for inventory records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:getAllBalances",
+      "type": "function",
+      "name": "getAllBalances",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        71,
+        88
+      ],
+      "summary": "Retrieves all balances data for inventory records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:adjustStock",
+      "type": "function",
+      "name": "adjustStock",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        93,
+        127
+      ],
+      "summary": "Applies the adjust stock inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:reserveStock",
+      "type": "function",
+      "name": "reserveStock",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        132,
+        179
+      ],
+      "summary": "Applies the reserve stock inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:releaseReservation",
+      "type": "function",
+      "name": "releaseReservation",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        184,
+        214
+      ],
+      "summary": "Applies the release reservation inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/inventory.ts:getLowStock",
+      "type": "function",
+      "name": "getLowStock",
+      "filePath": "src/queries/catalog/inventory.ts",
+      "lineRange": [
+        219,
+        247
+      ],
+      "summary": "Retrieves low stock data for inventory records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/search.ts",
+      "type": "file",
+      "name": "search.ts",
+      "filePath": "src/queries/catalog/search.ts",
+      "summary": "Implements database queries and transactional operations for search.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/search.ts:logCatalogSearchRaw",
+      "type": "function",
+      "name": "logCatalogSearchRaw",
+      "filePath": "src/queries/catalog/search.ts",
+      "lineRange": [
+        31,
+        45
+      ],
+      "summary": "Implements the log catalog search raw database operation for search records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/search.ts:executeCatalogScoredSearchRaw",
+      "type": "function",
+      "name": "executeCatalogScoredSearchRaw",
+      "filePath": "src/queries/catalog/search.ts",
+      "lineRange": [
+        47,
+        115
+      ],
+      "summary": "Implements the execute catalog scored search raw database operation for search records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/search.ts:getCatalogSuggestionsRaw",
+      "type": "function",
+      "name": "getCatalogSuggestionsRaw",
+      "filePath": "src/queries/catalog/search.ts",
+      "lineRange": [
+        117,
+        165
+      ],
+      "summary": "Retrieves catalog suggestions raw data for search records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/tags.ts",
+      "type": "file",
+      "name": "tags.ts",
+      "filePath": "src/queries/catalog/tags.ts",
+      "summary": "Implements database queries and transactional operations for tags.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:getAllTags",
+      "type": "function",
+      "name": "getAllTags",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        18,
+        20
+      ],
+      "summary": "Retrieves all tags data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:getTagsByGroup",
+      "type": "function",
+      "name": "getTagsByGroup",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        25,
+        27
+      ],
+      "summary": "Retrieves tags by group data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:getTagById",
+      "type": "function",
+      "name": "getTagById",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        32,
+        35
+      ],
+      "summary": "Retrieves tag by id data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:createTag",
+      "type": "function",
+      "name": "createTag",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        40,
+        43
+      ],
+      "summary": "Creates or records tag data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:updateTag",
+      "type": "function",
+      "name": "updateTag",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        48,
+        55
+      ],
+      "summary": "Updates tag state for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:deleteTag",
+      "type": "function",
+      "name": "deleteTag",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        60,
+        62
+      ],
+      "summary": "Removes tag data associated with tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:getTagsForProduct",
+      "type": "function",
+      "name": "getTagsForProduct",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        67,
+        75
+      ],
+      "summary": "Retrieves tags for product data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:setProductTags",
+      "type": "function",
+      "name": "setProductTags",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        80,
+        94
+      ],
+      "summary": "Updates product tags state for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/tags.ts:getProductIdsByTag",
+      "type": "function",
+      "name": "getProductIdsByTag",
+      "filePath": "src/queries/catalog/tags.ts",
+      "lineRange": [
+        99,
+        106
+      ],
+      "summary": "Retrieves product ids by tag data for tags records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/admin-roles.ts",
+      "type": "file",
+      "name": "admin-roles.ts",
+      "filePath": "src/queries/identity/admin-roles.ts",
+      "summary": "Implements database queries and transactional operations for admin roles.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/identity/admin-roles.ts:listRoleIdsRaw",
+      "type": "function",
+      "name": "listRoleIdsRaw",
+      "filePath": "src/queries/identity/admin-roles.ts",
+      "lineRange": [
+        36,
+        40
+      ],
+      "summary": "Retrieves role ids raw data for admin roles records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/admin-roles.ts:getAdminRolesSnapshotRaw",
+      "type": "function",
+      "name": "getAdminRolesSnapshotRaw",
+      "filePath": "src/queries/identity/admin-roles.ts",
+      "lineRange": [
+        42,
+        89
+      ],
+      "summary": "Retrieves admin roles snapshot raw data for admin roles records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/admin-roles.ts:listPermissionItemsRaw",
+      "type": "function",
+      "name": "listPermissionItemsRaw",
+      "filePath": "src/queries/identity/admin-roles.ts",
+      "lineRange": [
+        91,
+        100
+      ],
+      "summary": "Retrieves permission items raw data for admin roles records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/admin-users.ts",
+      "type": "file",
+      "name": "admin-users.ts",
+      "filePath": "src/queries/identity/admin-users.ts",
+      "summary": "Implements database queries and transactional operations for admin users.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/identity/admin-users.ts:listAdminUserIdsRaw",
+      "type": "function",
+      "name": "listAdminUserIdsRaw",
+      "filePath": "src/queries/identity/admin-users.ts",
+      "lineRange": [
+        34,
+        38
+      ],
+      "summary": "Retrieves admin user ids raw data for admin users records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/admin-users.ts:getAdminUsersSnapshotRaw",
+      "type": "function",
+      "name": "getAdminUsersSnapshotRaw",
+      "filePath": "src/queries/identity/admin-users.ts",
+      "lineRange": [
+        40,
+        87
+      ],
+      "summary": "Retrieves admin users snapshot raw data for admin users records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/authorization-version.ts",
+      "type": "file",
+      "name": "authorization-version.ts",
+      "filePath": "src/queries/identity/authorization-version.ts",
+      "summary": "Implements database queries and transactional operations for authorization version.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/authorization-version.ts:advanceAuthorizationVersion",
+      "type": "function",
+      "name": "advanceAuthorizationVersion",
+      "filePath": "src/queries/identity/authorization-version.ts",
+      "lineRange": [
+        6,
+        14
+      ],
+      "summary": "Updates authorization version state for authorization version records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getByEntity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getByEntity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getRecent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:getRecent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:countLogs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:countLogs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "function:src/queries/administration/audit-logs.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getMetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getMetrics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getTopSearches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getTopSearches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getZeroResultSearches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getZeroResultSearches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getLowCTRSearches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getLowCTRSearches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getLanguageBreakdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "function:src/queries/catalog/admin-search-analytics.ts:getLanguageBreakdown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:getBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:deleteById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:deleteById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:countProductsByBrandId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "function:src/queries/catalog/brands.ts:countProductsByBrandId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getByPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getByPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getTree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getTree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getRoots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getRoots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getChildren",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getChildren",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getProductCounts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getProductCounts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getDescendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getDescendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:reorder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:reorder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:deleteById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:deleteById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getProductCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "function:src/queries/catalog/categories.ts:getProductCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getAllCollections",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getAllCollections",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionWithTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionWithTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionBySlugWithTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionBySlugWithTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:createCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:createCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:updateCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:updateCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:deleteCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:deleteCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:setCollectionTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:setCollectionTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionTagIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "function:src/queries/catalog/collections.ts:getCollectionTagIds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getBalance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getBalance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getAllBalances",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getAllBalances",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:adjustStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:adjustStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:reserveStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:reserveStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:releaseReservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:releaseReservation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getLowStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "function:src/queries/catalog/inventory.ts:getLowStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:logCatalogSearchRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:logCatalogSearchRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:executeCatalogScoredSearchRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:executeCatalogScoredSearchRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:getCatalogSuggestionsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "function:src/queries/catalog/search.ts:getCatalogSuggestionsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getAllTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getAllTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagsByGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagsByGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:createTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:createTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:updateTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:updateTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:deleteTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:deleteTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagsForProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getTagsForProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:setProductTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:setProductTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getProductIdsByTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "function:src/queries/catalog/tags.ts:getProductIdsByTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:listRoleIdsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:listRoleIdsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:getAdminRolesSnapshotRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:getAdminRolesSnapshotRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:listPermissionItemsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "function:src/queries/identity/admin-roles.ts:listPermissionItemsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "function:src/queries/identity/admin-users.ts:listAdminUserIdsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "function:src/queries/identity/admin-users.ts:listAdminUserIdsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "function:src/queries/identity/admin-users.ts:getAdminUsersSnapshotRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "function:src/queries/identity/admin-users.ts:getAdminUsersSnapshotRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/authorization-version.ts",
+      "target": "function:src/queries/identity/authorization-version.ts:advanceAuthorizationVersion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/authorization-version.ts",
+      "target": "function:src/queries/identity/authorization-version.ts:advanceAuthorizationVersion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/connection.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/administration/audit-logs.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-search-analytics.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/brands.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/search.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-roles.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/admin-users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/authorization-version.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

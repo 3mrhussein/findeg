@@ -1,0 +1,1485 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/__tests__/permission-codes.test.ts",
+      "type": "file",
+      "name": "permission-codes.test.ts",
+      "filePath": "src/__tests__/permission-codes.test.ts",
+      "summary": "Checks that seeded permission codes remain synchronized with the canonical identity permission-code definitions.",
+      "tags": [
+        "test",
+        "permissions",
+        "seed-data",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-categories.ts",
+      "type": "file",
+      "name": "admin-categories.ts",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "summary": "Provides administrative category hierarchy reads and category create, update, reorder, and delete operations.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "hierarchy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryById",
+      "type": "function",
+      "name": "getCategoryById",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        14,
+        21
+      ],
+      "summary": "Queries or evaluates database state to get category by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getAllCategories",
+      "type": "function",
+      "name": "getAllCategories",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        26,
+        29
+      ],
+      "summary": "Queries or evaluates database state to get all categories.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryBySlug",
+      "type": "function",
+      "name": "getCategoryBySlug",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        34,
+        37
+      ],
+      "summary": "Queries or evaluates database state to get category by slug.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryRoots",
+      "type": "function",
+      "name": "getCategoryRoots",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        42,
+        49
+      ],
+      "summary": "Queries or evaluates database state to get category roots.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryChildren",
+      "type": "function",
+      "name": "getCategoryChildren",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        54,
+        61
+      ],
+      "summary": "Queries or evaluates database state to get category children.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryDescendants",
+      "type": "function",
+      "name": "getCategoryDescendants",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        66,
+        78
+      ],
+      "summary": "Queries or evaluates database state to get category descendants.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryByPath",
+      "type": "function",
+      "name": "getCategoryByPath",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        83,
+        86
+      ],
+      "summary": "Queries or evaluates database state to get category by path.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:countCategories",
+      "type": "function",
+      "name": "countCategories",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        91,
+        94
+      ],
+      "summary": "Queries or evaluates database state to count categories.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:getCategoryProductCount",
+      "type": "function",
+      "name": "getCategoryProductCount",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        99,
+        106
+      ],
+      "summary": "Queries or evaluates database state to get category product count.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:createCategory",
+      "type": "function",
+      "name": "createCategory",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        113,
+        156
+      ],
+      "summary": "Creates persisted state to create category.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:updateCategory",
+      "type": "function",
+      "name": "updateCategory",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        161,
+        224
+      ],
+      "summary": "Updates persisted state to update category.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:reorderCategories",
+      "type": "function",
+      "name": "reorderCategories",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        229,
+        238
+      ],
+      "summary": "Updates persisted state to reorder categories.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-categories.ts:deleteCategory",
+      "type": "function",
+      "name": "deleteCategory",
+      "filePath": "src/queries/catalog/admin-categories.ts",
+      "lineRange": [
+        243,
+        245
+      ],
+      "summary": "Removes or retires persisted state to delete category.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-collections.ts",
+      "type": "file",
+      "name": "admin-collections.ts",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "summary": "Provides administrative collection reads and mutations, including tag assignment and display-order updates.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "collections"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:getCollectionsAll",
+      "type": "function",
+      "name": "getCollectionsAll",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        12,
+        21
+      ],
+      "summary": "Queries or evaluates database state to get collections all.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:getCollectionByIdWithTags",
+      "type": "function",
+      "name": "getCollectionByIdWithTags",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        26,
+        47
+      ],
+      "summary": "Queries or evaluates database state to get collection by id with tags.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:getCollectionBySlug",
+      "type": "function",
+      "name": "getCollectionBySlug",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        52,
+        69
+      ],
+      "summary": "Queries or evaluates database state to get collection by slug.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:createCollection",
+      "type": "function",
+      "name": "createCollection",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        76,
+        79
+      ],
+      "summary": "Creates persisted state to create collection.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:updateCollection",
+      "type": "function",
+      "name": "updateCollection",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        84,
+        91
+      ],
+      "summary": "Updates persisted state to update collection.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:deleteCollection",
+      "type": "function",
+      "name": "deleteCollection",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        96,
+        98
+      ],
+      "summary": "Removes or retires persisted state to delete collection.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:setCollectionTags",
+      "type": "function",
+      "name": "setCollectionTags",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        103,
+        115
+      ],
+      "summary": "Updates persisted state to set collection tags.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-collections.ts:updateCollectionSortOrders",
+      "type": "function",
+      "name": "updateCollectionSortOrders",
+      "filePath": "src/queries/catalog/admin-collections.ts",
+      "lineRange": [
+        120,
+        131
+      ],
+      "summary": "Updates persisted state to update collection sort orders.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/admin-tags.ts",
+      "type": "file",
+      "name": "admin-tags.ts",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "summary": "Provides administrative tag listing, lookup, slug validation, counts, CRUD, and bulk status operations.",
+      "tags": [
+        "database",
+        "catalog",
+        "admin",
+        "taxonomy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:checkTagSlugAvailableRaw",
+      "type": "function",
+      "name": "checkTagSlugAvailableRaw",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        9,
+        15
+      ],
+      "summary": "Queries or evaluates database state to check tag slug available raw.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:getTagProductCountRaw",
+      "type": "function",
+      "name": "getTagProductCountRaw",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        17,
+        24
+      ],
+      "summary": "Queries or evaluates database state to get tag product count raw.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:getAllTags",
+      "type": "function",
+      "name": "getAllTags",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        31,
+        34
+      ],
+      "summary": "Queries or evaluates database state to get all tags.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:getTagById",
+      "type": "function",
+      "name": "getTagById",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        39,
+        46
+      ],
+      "summary": "Queries or evaluates database state to get tag by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:listDistinctTagGroups",
+      "type": "function",
+      "name": "listDistinctTagGroups",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        51,
+        54
+      ],
+      "summary": "Queries or evaluates database state to list distinct tag groups.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:createTag",
+      "type": "function",
+      "name": "createTag",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        61,
+        64
+      ],
+      "summary": "Creates persisted state to create tag.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:updateTag",
+      "type": "function",
+      "name": "updateTag",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        69,
+        76
+      ],
+      "summary": "Updates persisted state to update tag.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:deleteTag",
+      "type": "function",
+      "name": "deleteTag",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        81,
+        83
+      ],
+      "summary": "Removes or retires persisted state to delete tag.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:bulkDeleteTags",
+      "type": "function",
+      "name": "bulkDeleteTags",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        88,
+        91
+      ],
+      "summary": "Implements the bulk delete tags operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/admin-tags.ts:bulkUpdateTagStatus",
+      "type": "function",
+      "name": "bulkUpdateTagStatus",
+      "filePath": "src/queries/catalog/admin-tags.ts",
+      "lineRange": [
+        96,
+        102
+      ],
+      "summary": "Implements the bulk update tag status operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/common.ts",
+      "type": "file",
+      "name": "common.ts",
+      "filePath": "src/types/common.ts",
+      "summary": "Defines shared Zod schemas and inferred types for locales, money, identifiers, slugs, quantities, ratings, and media assets.",
+      "tags": [
+        "type-definition",
+        "validation",
+        "zod",
+        "shared-types"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/types/identity.ts",
+      "type": "file",
+      "name": "identity.ts",
+      "filePath": "src/types/identity.ts",
+      "summary": "Defines identity and session schemas, canonical permission and role constants, user value-object construction, and authorization predicates.",
+      "tags": [
+        "type-definition",
+        "identity",
+        "authorization",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/types/identity.ts:createUserVO",
+      "type": "function",
+      "name": "createUserVO",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        130,
+        144
+      ],
+      "summary": "Creates persisted state to create user vo.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:staffRole",
+      "type": "function",
+      "name": "staffRole",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        164,
+        166
+      ],
+      "summary": "Implements the staff role operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:customerRole",
+      "type": "function",
+      "name": "customerRole",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        168,
+        170
+      ],
+      "summary": "Implements the customer role operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:systemAdmin",
+      "type": "function",
+      "name": "systemAdmin",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        172,
+        174
+      ],
+      "summary": "Implements the system admin operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:adminSession",
+      "type": "function",
+      "name": "adminSession",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        176,
+        181
+      ],
+      "summary": "Implements the admin session operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:hasPermission",
+      "type": "function",
+      "name": "hasPermission",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        183,
+        186
+      ],
+      "summary": "Queries or evaluates database state to has permission.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:hasAnyPermission",
+      "type": "function",
+      "name": "hasAnyPermission",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        188,
+        190
+      ],
+      "summary": "Queries or evaluates database state to has any permission.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/identity.ts:hasAllPermissions",
+      "type": "function",
+      "name": "hasAllPermissions",
+      "filePath": "src/types/identity.ts",
+      "lineRange": [
+        192,
+        194
+      ],
+      "summary": "Queries or evaluates database state to has all permissions.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/pricing.ts",
+      "type": "file",
+      "name": "pricing.ts",
+      "filePath": "src/types/pricing.ts",
+      "summary": "Defines Zod schemas for persisted prices, discount rules, applied discounts, and resolved pricing results.",
+      "tags": [
+        "type-definition",
+        "pricing",
+        "validation",
+        "zod"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "file:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/permission-codes.test.ts",
+      "target": "file:src/types/identity.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/__tests__/permission-codes.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getAllCategories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getAllCategories",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryRoots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryRoots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryChildren",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryChildren",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryDescendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryDescendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryByPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryByPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:countCategories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:countCategories",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryProductCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryProductCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:createCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:createCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:updateCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:updateCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:reorderCategories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:reorderCategories",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:deleteCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "function:src/queries/catalog/admin-categories.ts:deleteCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-categories.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/queries/catalog/admin-categories.ts:getCategoryDescendants",
+      "target": "function:src/queries/catalog/admin-categories.ts:getCategoryById",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionsAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionsAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionByIdWithTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionByIdWithTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:getCollectionBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:createCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:createCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:updateCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:updateCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:deleteCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:deleteCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:setCollectionTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:setCollectionTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:updateCollectionSortOrders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "function:src/queries/catalog/admin-collections.ts:updateCollectionSortOrders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-collections.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:checkTagSlugAvailableRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:checkTagSlugAvailableRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getTagProductCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getTagProductCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getAllTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getAllTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getTagById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:getTagById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:listDistinctTagGroups",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:listDistinctTagGroups",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:createTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:createTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:updateTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:updateTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:deleteTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:deleteTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:bulkDeleteTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:bulkDeleteTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:bulkUpdateTagStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "function:src/queries/catalog/admin-tags.ts:bulkUpdateTagStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/admin-tags.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:createUserVO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:createUserVO",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:staffRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:staffRole",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:customerRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:customerRole",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:systemAdmin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:systemAdmin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:adminSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:adminSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasPermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasPermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasAnyPermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasAnyPermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasAllPermissions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "function:src/types/identity.ts:hasAllPermissions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/identity.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/types/identity.ts:hasPermission",
+      "target": "function:src/types/identity.ts:systemAdmin",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/types/identity.ts:hasAnyPermission",
+      "target": "function:src/types/identity.ts:hasPermission",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/types/identity.ts:hasAllPermissions",
+      "target": "function:src/types/identity.ts:hasPermission",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/pricing.ts",
+      "target": "file:src/types/common.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

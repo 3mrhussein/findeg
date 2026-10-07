@@ -1,0 +1,254 @@
+{
+  "nodes": [
+    {
+      "id": "file:drizzle.config.ts",
+      "type": "file",
+      "name": "drizzle.config.ts",
+      "filePath": "drizzle.config.ts",
+      "summary": "Configures Drizzle Kit for the project PostgreSQL schemas, migration output directory, and environment-backed connection URL.",
+      "tags": [
+        "configuration",
+        "drizzle",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:eslint.config.js",
+      "type": "file",
+      "name": "eslint.config.js",
+      "filePath": "eslint.config.js",
+      "summary": "Re-exports the shared database ESLint preset for this package.",
+      "tags": [
+        "configuration",
+        "eslint",
+        "barrel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:migrate.ts",
+      "type": "file",
+      "name": "migrate.ts",
+      "filePath": "migrate.ts",
+      "summary": "Runs pending Drizzle migrations only when the explicit migration safety flag is enabled, then closes the database connection.",
+      "tags": [
+        "entry-point",
+        "migration",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seed.test.ts",
+      "type": "file",
+      "name": "seed.test.ts",
+      "filePath": "seed.test.ts",
+      "summary": "Verifies the seed command executes every domain stage in order, reports failures, and always closes the database connection.",
+      "tags": [
+        "test",
+        "database",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "seeds/helpers/constants.ts",
+      "summary": "Defines the dependency-safe table import order used by seed helpers.",
+      "tags": [
+        "configuration",
+        "seeding",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/index.ts",
+      "summary": "Public package entry point that exposes only schemas and types, keeping runtime database connections out of client-safe imports.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/catalog/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/catalog/index.ts",
+      "summary": "Catalog query barrel exposing product, category, brand, collection, tag, search, analytics, and inventory operations.",
+      "tags": [
+        "barrel",
+        "database",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/queries/identity/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/identity/index.ts",
+      "summary": "Identity query barrel exposing admin-user, role, and permission-management operations and their input/result types.",
+      "tags": [
+        "barrel",
+        "database",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/index.ts",
+      "summary": "Top-level query barrel organizing domain primitives, feature-specific operations, transaction helpers, and namespaced query groups.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/inventory/index.ts",
+      "summary": "Inventory query barrel for low-stock reporting and transactional stock reservation lifecycle operations.",
+      "tags": [
+        "barrel",
+        "database",
+        "inventory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/products/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/products/index.ts",
+      "summary": "Administrative product query barrel covering listing, creation, duplication, bulk actions, variants, images, and availability checks.",
+      "tags": [
+        "barrel",
+        "database",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/sales/index.ts",
+      "summary": "Sales query barrel exposing order statistics, revenue reporting, purchase checks, checkout idempotency, and guest access.",
+      "tags": [
+        "barrel",
+        "database",
+        "sales"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/schema/catalog/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/schema/catalog/README.md",
+      "summary": "Documents the catalog schema architecture, entity relationships, twelve core tables, cross-schema references, and data flow.",
+      "tags": [
+        "documentation",
+        "database",
+        "schema-definition"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/identity/index.ts",
+      "summary": "Identity schema barrel exporting access-control, user, and partner table definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/school-engine/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/school-engine/index.ts",
+      "summary": "School-engine schema barrel exporting school supply list definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "school-engine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/schema/system/index.ts",
+      "summary": "System schema barrel exporting audit, logging, notification, search-log, and outbox definitions.",
+      "tags": [
+        "barrel",
+        "schema-definition",
+        "system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/catalog/IProduct.interface.ts",
+      "type": "file",
+      "name": "IProduct.interface.ts",
+      "filePath": "src/types/catalog/IProduct.interface.ts",
+      "summary": "Defines the legacy product contract with localized content, media variants, catalog relations, and rating metadata.",
+      "tags": [
+        "type-definition",
+        "catalog",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:vitest.config.ts",
+      "type": "file",
+      "name": "vitest.config.ts",
+      "filePath": "vitest.config.ts",
+      "summary": "Configures Vitest for Node-based database tests with isolated local PostgreSQL environment values.",
+      "tags": [
+        "configuration",
+        "test",
+        "vitest"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:migrate.ts",
+      "target": "file:drizzle.config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:migrate.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

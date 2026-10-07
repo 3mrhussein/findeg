@@ -1,0 +1,526 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "file",
+      "name": "orders.test.ts",
+      "filePath": "src/queries/sales/__tests__/orders.test.ts",
+      "summary": "Verifies order mutation guards reject immutable payment and reward accounting fields.",
+      "tags": [
+        "test",
+        "orders",
+        "validation",
+        "regression"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "src/queries/sales/orders.ts",
+      "summary": "Provides order retrieval, filtering, purchase checks, transactional creation and updates, reference-conflict handling, and revenue analytics.",
+      "tags": [
+        "database",
+        "orders",
+        "transactions",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "function",
+      "name": "assertMutableOrderColumns",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        60,
+        66
+      ],
+      "summary": "Implements the assert mutable order columns operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        73,
+        106
+      ],
+      "summary": "Queries or evaluates database state to get by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "function",
+      "name": "getByUserId",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        111,
+        140
+      ],
+      "summary": "Queries or evaluates database state to get by user id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "function",
+      "name": "hasPurchasedProduct",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        145,
+        168
+      ],
+      "summary": "Queries or evaluates database state to has purchased product.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "function",
+      "name": "getFiltered",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        173,
+        257
+      ],
+      "summary": "Queries or evaluates database state to get filtered.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "function",
+      "name": "getRecent",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        262,
+        265
+      ],
+      "summary": "Queries or evaluates database state to get recent.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:count",
+      "type": "function",
+      "name": "count",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        270,
+        282
+      ],
+      "summary": "Queries or evaluates database state to count.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "function",
+      "name": "isOrderReferenceConflict",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        293,
+        306
+      ],
+      "summary": "Queries or evaluates database state to is order reference conflict.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        311,
+        431
+      ],
+      "summary": "Creates persisted state to create.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "orders"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "function",
+      "name": "updateOrder",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        436,
+        446
+      ],
+      "summary": "Updates persisted state to update order.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "function",
+      "name": "getOrdersCountByStatus",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        453,
+        463
+      ],
+      "summary": "Queries or evaluates database state to get orders count by status.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "function",
+      "name": "getTotalRevenue",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        468,
+        481
+      ],
+      "summary": "Queries or evaluates database state to get total revenue.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "function",
+      "name": "getRevenueByPeriod",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        486,
+        508
+      ],
+      "summary": "Queries or evaluates database state to get revenue by period.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/types/index.ts",
+      "summary": "Barrel entry point that re-exports the database package type and validation modules.",
+      "tags": [
+        "barrel",
+        "type-definition",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/sales/__tests__/orders.test.ts",
+      "target": "file:src/queries/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:getRecent",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:create",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:updateOrder",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

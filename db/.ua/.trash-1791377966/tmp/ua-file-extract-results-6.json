@@ -1,0 +1,3597 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 7,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 7,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "seeds/identity.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 244,
+      "nonEmptyLines": 221,
+      "functions": [
+        {
+          "name": "seedIdentity",
+          "startLine": 34,
+          "endLine": 244,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "seedIdentity",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 35
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 39
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert(schema.permissions)\n      .values",
+          "lineNumber": 40
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert",
+          "lineNumber": 40
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 43
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object({ code: PermissionCodeSchema }).passthrough",
+          "lineNumber": 46
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object",
+          "lineNumber": 46
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 53
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert(schema.roles)\n      .values",
+          "lineNumber": 54
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert",
+          "lineNumber": 54
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 57
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object({ code: RoleIdSchema }).passthrough",
+          "lineNumber": 57
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object",
+          "lineNumber": 57
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 63
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert(schema.organizations)\n      .values",
+          "lineNumber": 64
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert",
+          "lineNumber": 64
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 67
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object({ code: OrganizationIdSchema }).passthrough",
+          "lineNumber": 70
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object",
+          "lineNumber": 70
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 77
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert(schema.guestPrincipals)\n      .values",
+          "lineNumber": 78
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n      .insert",
+          "lineNumber": 78
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 80
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert(schema.users)\n        .values(prepareSeedData(schema.users, [user])[0])\n        .returning",
+          "lineNumber": 87
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert(schema.users)\n        .values",
+          "lineNumber": 87
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert",
+          "lineNumber": 87
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 89
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "hashPassword",
+          "lineNumber": 93
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert(schema.passwordCredentials).values",
+          "lineNumber": 95
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert",
+          "lineNumber": 95
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "ensureParents",
+          "lineNumber": 106
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "Promise.all",
+          "lineNumber": 110
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "rolePermissionsData.map",
+          "lineNumber": 111
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.roles.findFirst",
+          "lineNumber": 112
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 113
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.permissions.findFirst",
+          "lineNumber": 115
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 116
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert(schema.rolePermissions).values",
+          "lineNumber": 132
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert",
+          "lineNumber": 132
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 139
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert(schema.authAccounts)\n        .values",
+          "lineNumber": 140
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert",
+          "lineNumber": 140
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 143
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object({ provider: AuthProviderSchema }).passthrough",
+          "lineNumber": 146
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object",
+          "lineNumber": 146
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 153
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "ensureParents",
+          "lineNumber": 154
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "Promise.all",
+          "lineNumber": 158
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "userRolesData.map",
+          "lineNumber": 159
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.users.findFirst",
+          "lineNumber": 160
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 161
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.roles.findFirst",
+          "lineNumber": 163
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 164
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert(schema.userRoles).values",
+          "lineNumber": 182
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert",
+          "lineNumber": 182
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 187
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "ensureParents",
+          "lineNumber": 188
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert(schema.userPermissions)\n        .values",
+          "lineNumber": 192
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert",
+          "lineNumber": 192
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 194
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 199
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "ensureParents",
+          "lineNumber": 200
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "Promise.all",
+          "lineNumber": 204
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "organizationMembershipsData.map",
+          "lineNumber": 205
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.organizations.findFirst",
+          "lineNumber": 206
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 207
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.query.users.findFirst",
+          "lineNumber": 209
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "eq",
+          "lineNumber": 210
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert(schema.organizationMemberships).values",
+          "lineNumber": 227
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db.insert",
+          "lineNumber": 227
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "console.log",
+          "lineNumber": 232
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert(schema.paymentMethods)\n        .values",
+          "lineNumber": 233
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "db\n        .insert",
+          "lineNumber": 233
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "prepareSeedData",
+          "lineNumber": 236
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object({ provider: PaymentProviderSchema }).passthrough",
+          "lineNumber": 239
+        },
+        {
+          "caller": "seedIdentity",
+          "callee": "z.object",
+          "lineNumber": 239
+        }
+      ],
+      "metrics": {
+        "importCount": 14,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 399,
+      "nonEmptyLines": 341,
+      "functions": [
+        {
+          "name": "getById",
+          "startLine": 52,
+          "endLine": 56,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getBySlug",
+          "startLine": 61,
+          "endLine": 65,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "getAll",
+          "startLine": 72,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "getFeatured",
+          "startLine": 79,
+          "endLine": 86,
+          "params": [
+            "limit"
+          ]
+        },
+        {
+          "name": "search",
+          "startLine": 92,
+          "endLine": 103,
+          "params": [
+            "query",
+            "language"
+          ]
+        },
+        {
+          "name": "getByCategory",
+          "startLine": 108,
+          "endLine": 110,
+          "params": [
+            "categoryId"
+          ]
+        },
+        {
+          "name": "getByBrand",
+          "startLine": 115,
+          "endLine": 117,
+          "params": [
+            "brandId"
+          ]
+        },
+        {
+          "name": "getFiltered",
+          "startLine": 122,
+          "endLine": 157,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "getByIds",
+          "startLine": 162,
+          "endLine": 166,
+          "params": [
+            "ids"
+          ]
+        },
+        {
+          "name": "countProducts",
+          "startLine": 171,
+          "endLine": 189,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "getLowStockProducts",
+          "startLine": 194,
+          "endLine": 196,
+          "params": [
+            "_threshold"
+          ]
+        },
+        {
+          "name": "checkSlugAvailable",
+          "startLine": 201,
+          "endLine": 211,
+          "params": [
+            "slug",
+            "excludeId"
+          ]
+        },
+        {
+          "name": "getVariantsByProductIds",
+          "startLine": 219,
+          "endLine": 237,
+          "params": [
+            "productIds"
+          ]
+        },
+        {
+          "name": "getVariantsByIds",
+          "startLine": 242,
+          "endLine": 250,
+          "params": [
+            "variantIds"
+          ]
+        },
+        {
+          "name": "getProductTags",
+          "startLine": 257,
+          "endLine": 265,
+          "params": [
+            "productId"
+          ]
+        },
+        {
+          "name": "getProductsByTag",
+          "startLine": 270,
+          "endLine": 278,
+          "params": [
+            "tagId"
+          ]
+        },
+        {
+          "name": "getProductAttributes",
+          "startLine": 285,
+          "endLine": 302,
+          "params": [
+            "productId"
+          ]
+        },
+        {
+          "name": "getByIdWithBrand",
+          "startLine": 309,
+          "endLine": 320,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getByIdWithBrandAndCategory",
+          "startLine": 325,
+          "endLine": 337,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getAllWithBrandAndCategory",
+          "startLine": 342,
+          "endLine": 351,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 368,
+          "endLine": 372,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "update",
+          "startLine": 387,
+          "endLine": 392,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "deleteProduct",
+          "startLine": 397,
+          "endLine": 399,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getById",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "getBySlug",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "getAll",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "getFeatured",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "search",
+          "line": 92,
+          "isDefault": false
+        },
+        {
+          "name": "getByCategory",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "getByBrand",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "getFiltered",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "getByIds",
+          "line": 162,
+          "isDefault": false
+        },
+        {
+          "name": "countProducts",
+          "line": 171,
+          "isDefault": false
+        },
+        {
+          "name": "getLowStockProducts",
+          "line": 194,
+          "isDefault": false
+        },
+        {
+          "name": "checkSlugAvailable",
+          "line": 201,
+          "isDefault": false
+        },
+        {
+          "name": "getVariantsByProductIds",
+          "line": 219,
+          "isDefault": false
+        },
+        {
+          "name": "getVariantsByIds",
+          "line": 242,
+          "isDefault": false
+        },
+        {
+          "name": "getProductTags",
+          "line": 257,
+          "isDefault": false
+        },
+        {
+          "name": "getProductsByTag",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "getProductAttributes",
+          "line": 285,
+          "isDefault": false
+        },
+        {
+          "name": "getByIdWithBrand",
+          "line": 309,
+          "isDefault": false
+        },
+        {
+          "name": "getByIdWithBrandAndCategory",
+          "line": 325,
+          "isDefault": false
+        },
+        {
+          "name": "getAllWithBrandAndCategory",
+          "line": 342,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 368,
+          "isDefault": false
+        },
+        {
+          "name": "update",
+          "line": 387,
+          "isDefault": false
+        },
+        {
+          "name": "deleteProduct",
+          "line": 397,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getById",
+          "callee": "db.select().from(products).where(eq(products.id, id)).limit",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from(products).where(eq(products.slug, slug)).limit",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "eq",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select().from(products).orderBy",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select().from",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "asc",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(eq(products.isActive, true))\n    .orderBy(desc(products.createdAt))\n    .limit",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(eq(products.isActive, true))\n    .orderBy",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "db\n    .select()\n    .from(products)\n    .where",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "db\n    .select",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "eq",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getFeatured",
+          "callee": "desc",
+          "lineNumber": 84
+        },
+        {
+          "caller": "search",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(\n      and(\n        eq(products.isActive, true),\n        sql`${products.localizedName}->>${language} ILIKE ${`%${query}%`}`,\n      ),\n    )\n    .limit",
+          "lineNumber": 93
+        },
+        {
+          "caller": "search",
+          "callee": "db\n    .select()\n    .from(products)\n    .where",
+          "lineNumber": 93
+        },
+        {
+          "caller": "search",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 93
+        },
+        {
+          "caller": "search",
+          "callee": "db\n    .select",
+          "lineNumber": 93
+        },
+        {
+          "caller": "search",
+          "callee": "and",
+          "lineNumber": 97
+        },
+        {
+          "caller": "search",
+          "callee": "eq",
+          "lineNumber": 98
+        },
+        {
+          "caller": "search",
+          "callee": "sql",
+          "lineNumber": 99
+        },
+        {
+          "caller": "getByCategory",
+          "callee": "db.select().from(products).where(eq(products.categoryId, categoryId)).limit",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getByCategory",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getByCategory",
+          "callee": "db.select().from",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getByCategory",
+          "callee": "db.select",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getByCategory",
+          "callee": "eq",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getByBrand",
+          "callee": "db.select().from(products).where(eq(products.brandId, brandId)).limit",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getByBrand",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getByBrand",
+          "callee": "db.select().from",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getByBrand",
+          "callee": "db.select",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getByBrand",
+          "callee": "eq",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 128
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 128
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "Number",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 134
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 134
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "Number",
+          "lineNumber": 134
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "and",
+          "lineNumber": 136
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db.select({ count: count() }).from(products).where",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db.select({ count: count() }).from",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db.select",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "count",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(where)\n    .offset(filters.offset || 0)\n    .limit(filters.limit || 20)\n    .orderBy",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(where)\n    .offset(filters.offset || 0)\n    .limit",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from(products)\n    .where(where)\n    .offset",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from(products)\n    .where",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "desc",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getByIds",
+          "callee": "db.select().from(products).where",
+          "lineNumber": 165
+        },
+        {
+          "caller": "getByIds",
+          "callee": "db.select().from",
+          "lineNumber": 165
+        },
+        {
+          "caller": "getByIds",
+          "callee": "db.select",
+          "lineNumber": 165
+        },
+        {
+          "caller": "getByIds",
+          "callee": "inArray",
+          "lineNumber": 165
+        },
+        {
+          "caller": "countProducts",
+          "callee": "conditions.push",
+          "lineNumber": 175
+        },
+        {
+          "caller": "countProducts",
+          "callee": "eq",
+          "lineNumber": 175
+        },
+        {
+          "caller": "countProducts",
+          "callee": "conditions.push",
+          "lineNumber": 178
+        },
+        {
+          "caller": "countProducts",
+          "callee": "eq",
+          "lineNumber": 178
+        },
+        {
+          "caller": "countProducts",
+          "callee": "Number",
+          "lineNumber": 178
+        },
+        {
+          "caller": "countProducts",
+          "callee": "conditions.push",
+          "lineNumber": 181
+        },
+        {
+          "caller": "countProducts",
+          "callee": "eq",
+          "lineNumber": 181
+        },
+        {
+          "caller": "countProducts",
+          "callee": "Number",
+          "lineNumber": 181
+        },
+        {
+          "caller": "countProducts",
+          "callee": "db\n    .select({ value: count() })\n    .from(products)\n    .where",
+          "lineNumber": 184
+        },
+        {
+          "caller": "countProducts",
+          "callee": "db\n    .select({ value: count() })\n    .from",
+          "lineNumber": 184
+        },
+        {
+          "caller": "countProducts",
+          "callee": "db\n    .select",
+          "lineNumber": 184
+        },
+        {
+          "caller": "countProducts",
+          "callee": "count",
+          "lineNumber": 185
+        },
+        {
+          "caller": "countProducts",
+          "callee": "and",
+          "lineNumber": 187
+        },
+        {
+          "caller": "countProducts",
+          "callee": "Number",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getLowStockProducts",
+          "callee": "db.select().from(products).limit",
+          "lineNumber": 195
+        },
+        {
+          "caller": "getLowStockProducts",
+          "callee": "db.select().from",
+          "lineNumber": 195
+        },
+        {
+          "caller": "getLowStockProducts",
+          "callee": "db.select",
+          "lineNumber": 195
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "db\n    .select({ id: products.id })\n    .from(products)\n    .where(\n      and(eq(products.slug, slug), excludeId ? sql`${products.id} != ${excludeId}` : sql`TRUE`),\n    )\n    .limit",
+          "lineNumber": 202
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "db\n    .select({ id: products.id })\n    .from(products)\n    .where",
+          "lineNumber": 202
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "db\n    .select({ id: products.id })\n    .from",
+          "lineNumber": 202
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "db\n    .select",
+          "lineNumber": 202
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "and",
+          "lineNumber": 206
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "eq",
+          "lineNumber": 206
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "sql",
+          "lineNumber": 206
+        },
+        {
+          "caller": "checkSlugAvailable",
+          "callee": "sql",
+          "lineNumber": 206
+        },
+        {
+          "caller": "getVariantsByProductIds",
+          "callee": "db\n    .select()\n    .from(productVariants)\n    .where",
+          "lineNumber": 224
+        },
+        {
+          "caller": "getVariantsByProductIds",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 224
+        },
+        {
+          "caller": "getVariantsByProductIds",
+          "callee": "db\n    .select",
+          "lineNumber": 224
+        },
+        {
+          "caller": "getVariantsByProductIds",
+          "callee": "inArray",
+          "lineNumber": 227
+        },
+        {
+          "caller": "getVariantsByProductIds",
+          "callee": "map[pid].push",
+          "lineNumber": 233
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "db\n    .select()\n    .from(productVariants)\n    .where(inArray(productVariants.id, variantIds))\n    .orderBy",
+          "lineNumber": 245
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "db\n    .select()\n    .from(productVariants)\n    .where",
+          "lineNumber": 245
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 245
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "db\n    .select",
+          "lineNumber": 245
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "inArray",
+          "lineNumber": 248
+        },
+        {
+          "caller": "getVariantsByIds",
+          "callee": "asc",
+          "lineNumber": 249
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(productTags)\n    .innerJoin(tags, eq(tags.id, productTags.tagId))\n    .where",
+          "lineNumber": 258
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(productTags)\n    .innerJoin",
+          "lineNumber": 258
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 258
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "db\n    .select",
+          "lineNumber": 258
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "eq",
+          "lineNumber": 261
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "eq",
+          "lineNumber": 262
+        },
+        {
+          "caller": "getProductTags",
+          "callee": "results.map",
+          "lineNumber": 264
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "db\n    .select({ product: products })\n    .from(productTags)\n    .innerJoin(products, eq(products.id, productTags.productId))\n    .where",
+          "lineNumber": 271
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "db\n    .select({ product: products })\n    .from(productTags)\n    .innerJoin",
+          "lineNumber": 271
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "db\n    .select({ product: products })\n    .from",
+          "lineNumber": 271
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "db\n    .select",
+          "lineNumber": 271
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "eq",
+          "lineNumber": 274
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "eq",
+          "lineNumber": 275
+        },
+        {
+          "caller": "getProductsByTag",
+          "callee": "results.map",
+          "lineNumber": 277
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "db\n    .select({\n      attributeId: attributeTable.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin(attributeTable, eq(attributeTable.id, variantAttributes.attributeId))\n    .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))\n    .where",
+          "lineNumber": 286
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "db\n    .select({\n      attributeId: attributeTable.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin(attributeTable, eq(attributeTable.id, variantAttributes.attributeId))\n    .innerJoin",
+          "lineNumber": 286
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "db\n    .select({\n      attributeId: attributeTable.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from(variantAttributes)\n    .innerJoin",
+          "lineNumber": 286
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "db\n    .select({\n      attributeId: attributeTable.id,\n      key: attributeTable.key,\n      valueText: variantAttributes.valueText,\n    })\n    .from",
+          "lineNumber": 286
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "db\n    .select",
+          "lineNumber": 286
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "eq",
+          "lineNumber": 293
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "eq",
+          "lineNumber": 294
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "eq",
+          "lineNumber": 295
+        },
+        {
+          "caller": "getProductAttributes",
+          "callee": "results.map",
+          "lineNumber": 297
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "db\n    .select({ product: products, brand: brands })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .where(eq(products.id, id))\n    .limit",
+          "lineNumber": 312
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "db\n    .select({ product: products, brand: brands })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .where",
+          "lineNumber": 312
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "db\n    .select({ product: products, brand: brands })\n    .from(products)\n    .leftJoin",
+          "lineNumber": 312
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "db\n    .select({ product: products, brand: brands })\n    .from",
+          "lineNumber": 312
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "db\n    .select",
+          "lineNumber": 312
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "eq",
+          "lineNumber": 315
+        },
+        {
+          "caller": "getByIdWithBrand",
+          "callee": "eq",
+          "lineNumber": 316
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .leftJoin(categories, eq(categories.id, products.categoryId))\n    .where(eq(products.id, id))\n    .limit",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .leftJoin(categories, eq(categories.id, products.categoryId))\n    .where",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .leftJoin",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "db\n    .select",
+          "lineNumber": 328
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "eq",
+          "lineNumber": 331
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "eq",
+          "lineNumber": 332
+        },
+        {
+          "caller": "getByIdWithBrandAndCategory",
+          "callee": "eq",
+          "lineNumber": 333
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .leftJoin(categories, eq(categories.id, products.categoryId))\n    .orderBy",
+          "lineNumber": 345
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin(brands, eq(brands.id, products.brandId))\n    .leftJoin",
+          "lineNumber": 345
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from(products)\n    .leftJoin",
+          "lineNumber": 345
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "db\n    .select({ product: products, brand: brands, category: categories })\n    .from",
+          "lineNumber": 345
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "db\n    .select",
+          "lineNumber": 345
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "eq",
+          "lineNumber": 348
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "eq",
+          "lineNumber": 349
+        },
+        {
+          "caller": "getAllWithBrandAndCategory",
+          "callee": "asc",
+          "lineNumber": 350
+        },
+        {
+          "caller": "create",
+          "callee": "db.insert(products).values(input).returning",
+          "lineNumber": 369
+        },
+        {
+          "caller": "create",
+          "callee": "db.insert(products).values",
+          "lineNumber": 369
+        },
+        {
+          "caller": "create",
+          "callee": "db.insert",
+          "lineNumber": 369
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(products).set(updates).where(eq(products.id, id)).returning",
+          "lineNumber": 389
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(products).set(updates).where",
+          "lineNumber": 389
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(products).set",
+          "lineNumber": 389
+        },
+        {
+          "caller": "update",
+          "callee": "db.update",
+          "lineNumber": 389
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 389
+        },
+        {
+          "caller": "deleteProduct",
+          "callee": "db.delete(products).where",
+          "lineNumber": 398
+        },
+        {
+          "caller": "deleteProduct",
+          "callee": "db.delete",
+          "lineNumber": 398
+        },
+        {
+          "caller": "deleteProduct",
+          "callee": "eq",
+          "lineNumber": 398
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 23,
+        "functionCount": 23,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/users.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 284,
+      "nonEmptyLines": 253,
+      "functions": [
+        {
+          "name": "getById",
+          "startLine": 47,
+          "endLine": 54,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "getByEmail",
+          "startLine": 59,
+          "endLine": 62,
+          "params": [
+            "email"
+          ]
+        },
+        {
+          "name": "getByEmailWithPassword",
+          "startLine": 67,
+          "endLine": 87,
+          "params": [
+            "email"
+          ]
+        },
+        {
+          "name": "findPasswordCredentials",
+          "startLine": 92,
+          "endLine": 108,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "getAuthorizationContext",
+          "startLine": 113,
+          "endLine": 185,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 201,
+          "endLine": 217,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "update",
+          "startLine": 233,
+          "endLine": 247,
+          "params": [
+            "userId",
+            "input"
+          ]
+        },
+        {
+          "name": "upsertPasswordCredentials",
+          "startLine": 252,
+          "endLine": 284,
+          "params": [
+            "userId",
+            "payload",
+            "options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getById",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "getByEmail",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "getByEmailWithPassword",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "findPasswordCredentials",
+          "line": 92,
+          "isDefault": false
+        },
+        {
+          "name": "getAuthorizationContext",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 201,
+          "isDefault": false
+        },
+        {
+          "name": "update",
+          "line": 233,
+          "isDefault": false
+        },
+        {
+          "name": "upsertPasswordCredentials",
+          "line": 252,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from(users)\n    .where(eq(users.id, userId as number))\n    .limit",
+          "lineNumber": 48
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from(users)\n    .where",
+          "lineNumber": 48
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 48
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select",
+          "lineNumber": 48
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getByEmail",
+          "callee": "db.select().from(users).where(eq(users.email, email)).limit",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getByEmail",
+          "callee": "db.select().from(users).where",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getByEmail",
+          "callee": "db.select().from",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getByEmail",
+          "callee": "db.select",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getByEmail",
+          "callee": "eq",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "db\n    .select({\n      user: users,\n      passwordHash: passwordCredentials.passwordHash,\n    })\n    .from(users)\n    .leftJoin(passwordCredentials, eq(users.id, passwordCredentials.userId))\n    .where(eq(users.email, email))\n    .limit",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "db\n    .select({\n      user: users,\n      passwordHash: passwordCredentials.passwordHash,\n    })\n    .from(users)\n    .leftJoin(passwordCredentials, eq(users.id, passwordCredentials.userId))\n    .where",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "db\n    .select({\n      user: users,\n      passwordHash: passwordCredentials.passwordHash,\n    })\n    .from(users)\n    .leftJoin",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "db\n    .select({\n      user: users,\n      passwordHash: passwordCredentials.passwordHash,\n    })\n    .from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "db\n    .select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "eq",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getByEmailWithPassword",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "findPasswordCredentials",
+          "callee": "db\n    .select()\n    .from(passwordCredentials)\n    .where(eq(passwordCredentials.userId, userId as number))\n    .limit",
+          "lineNumber": 93
+        },
+        {
+          "caller": "findPasswordCredentials",
+          "callee": "db\n    .select()\n    .from(passwordCredentials)\n    .where",
+          "lineNumber": 93
+        },
+        {
+          "caller": "findPasswordCredentials",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 93
+        },
+        {
+          "caller": "findPasswordCredentials",
+          "callee": "db\n    .select",
+          "lineNumber": 93
+        },
+        {
+          "caller": "findPasswordCredentials",
+          "callee": "eq",
+          "lineNumber": 96
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "Promise.all",
+          "lineNumber": 115
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          roleCode: roles.code,\n          scope: userRoles.scope,\n          organizationId: userRoles.organizationId,\n        })\n        .from(userRoles)\n        .innerJoin(roles, eq(roles.id, userRoles.roleId))\n        .where",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          roleCode: roles.code,\n          scope: userRoles.scope,\n          organizationId: userRoles.organizationId,\n        })\n        .from(userRoles)\n        .innerJoin",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          roleCode: roles.code,\n          scope: userRoles.scope,\n          organizationId: userRoles.organizationId,\n        })\n        .from",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 123
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 124
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n        })\n        .from(userRoles)\n        .innerJoin(rolePermissions, eq(rolePermissions.roleId, userRoles.roleId))\n        .innerJoin(permissions, eq(permissions.id, rolePermissions.permissionId))\n        .where",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n        })\n        .from(userRoles)\n        .innerJoin(rolePermissions, eq(rolePermissions.roleId, userRoles.roleId))\n        .innerJoin",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n        })\n        .from(userRoles)\n        .innerJoin",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n        })\n        .from",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 130
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n          action: userPermissions.action,\n        })\n        .from(userPermissions)\n        .innerJoin(permissions, eq(permissions.id, userPermissions.permissionId))\n        .where",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n          action: userPermissions.action,\n        })\n        .from(userPermissions)\n        .innerJoin",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select({\n          permissionCode: permissions.code,\n          action: userPermissions.action,\n        })\n        .from",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "db\n        .select",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 139
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "eq",
+          "lineNumber": 140
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "Array.from",
+          "lineNumber": 143
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "roleRows\n          .map((row) => row.roleCode?.trim())\n          .filter",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "roleRows\n          .map",
+          "lineNumber": 145
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "row.roleCode?.trim",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "Boolean",
+          "lineNumber": 147
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "permissionRows\n        .map((row) => row.permissionCode?.trim())\n        .filter",
+          "lineNumber": 153
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "permissionRows\n        .map",
+          "lineNumber": 153
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "row.permissionCode?.trim",
+          "lineNumber": 154
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "Boolean",
+          "lineNumber": 155
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "effectivePermissions.add",
+          "lineNumber": 162
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "effectivePermissions.delete",
+          "lineNumber": 164
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "Array.from",
+          "lineNumber": 168
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "roleRows.find",
+          "lineNumber": 170
+        },
+        {
+          "caller": "getAuthorizationContext",
+          "callee": "String",
+          "lineNumber": 177
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(users)\n    .values({\n      email: input.email,\n      firstName: input.firstName,\n      lastName: input.lastName,\n      phone: input.phone,\n      image: input.image,\n      portalRole: input.portalRole || 'customer',\n      createdAt: new Date(),\n      updatedAt: new Date(),\n    })\n    .returning",
+          "lineNumber": 202
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(users)\n    .values",
+          "lineNumber": 202
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert",
+          "lineNumber": 202
+        },
+        {
+          "caller": "update",
+          "callee": "db\n    .update(users)\n    .set(\n      changesAuthorization\n        ? advanceAuthorizationVersion(input)\n        : { ...input, updatedAt: new Date() },\n    )\n    .where(eq(users.id, userId as number))\n    .returning",
+          "lineNumber": 236
+        },
+        {
+          "caller": "update",
+          "callee": "db\n    .update(users)\n    .set(\n      changesAuthorization\n        ? advanceAuthorizationVersion(input)\n        : { ...input, updatedAt: new Date() },\n    )\n    .where",
+          "lineNumber": 236
+        },
+        {
+          "caller": "update",
+          "callee": "db\n    .update(users)\n    .set",
+          "lineNumber": 236
+        },
+        {
+          "caller": "update",
+          "callee": "db\n    .update",
+          "lineNumber": 236
+        },
+        {
+          "caller": "update",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 240
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 243
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "db.transaction",
+          "lineNumber": 260
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n      .insert(passwordCredentials)\n      .values({\n        userId: userId as number,\n        passwordHash: payload.passwordHash,\n        hashStrategy: payload.hashStrategy,\n      })\n      .onConflictDoUpdate",
+          "lineNumber": 261
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n      .insert(passwordCredentials)\n      .values",
+          "lineNumber": 261
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n      .insert",
+          "lineNumber": 261
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n        .update(users)\n        .set(advanceAuthorizationVersion())\n        .where",
+          "lineNumber": 278
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n        .update(users)\n        .set",
+          "lineNumber": 278
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "tx\n        .update",
+          "lineNumber": 278
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 280
+        },
+        {
+          "caller": "upsertPasswordCredentials",
+          "callee": "eq",
+          "lineNumber": 281
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/review/reviews.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 243,
+      "nonEmptyLines": 212,
+      "functions": [
+        {
+          "name": "getByProductId",
+          "startLine": 38,
+          "endLine": 44,
+          "params": [
+            "productId"
+          ]
+        },
+        {
+          "name": "getByProductIdPaginated",
+          "startLine": 49,
+          "endLine": 80,
+          "params": [
+            "productId",
+            "filters"
+          ]
+        },
+        {
+          "name": "getSummaryByProductId",
+          "startLine": 85,
+          "endLine": 113,
+          "params": [
+            "productId"
+          ]
+        },
+        {
+          "name": "getById",
+          "startLine": 118,
+          "endLine": 126,
+          "params": [
+            "reviewId"
+          ]
+        },
+        {
+          "name": "getByUserId",
+          "startLine": 131,
+          "endLine": 137,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "hasUserReviewed",
+          "startLine": 142,
+          "endLine": 150,
+          "params": [
+            "productId",
+            "userId"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 165,
+          "endLine": 180,
+          "params": [
+            "review"
+          ]
+        },
+        {
+          "name": "markHelpful",
+          "startLine": 186,
+          "endLine": 222,
+          "params": [
+            "reviewId",
+            "voterKey"
+          ]
+        },
+        {
+          "name": "recalculateProductAggregates",
+          "startLine": 227,
+          "endLine": 243,
+          "params": [
+            "productId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getByProductId",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "getByProductIdPaginated",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "getSummaryByProductId",
+          "line": 85,
+          "isDefault": false
+        },
+        {
+          "name": "getById",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "getByUserId",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "hasUserReviewed",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 165,
+          "isDefault": false
+        },
+        {
+          "name": "markHelpful",
+          "line": 186,
+          "isDefault": false
+        },
+        {
+          "name": "recalculateProductAggregates",
+          "line": 227,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getByProductId",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(eq(reviews.productId, productId as number))\n    .orderBy",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getByProductId",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getByProductId",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getByProductId",
+          "callee": "db\n    .select",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getByProductId",
+          "callee": "eq",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getByProductId",
+          "callee": "desc",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "Math.max",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "Math.min",
+          "lineNumber": 54
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "Math.max",
+          "lineNumber": 54
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "eq",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "conditions.push",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "eq",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "String",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "conditions.push",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "eq",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "and",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db.select({ count: count() }).from(reviews).where",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db.select({ count: count() }).from",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db.select",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "count",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "Number",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(where)\n    .orderBy(desc(reviews.createdAt))\n    .limit(limit)\n    .offset",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(where)\n    .orderBy(desc(reviews.createdAt))\n    .limit",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(where)\n    .orderBy",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "db\n    .select",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getByProductIdPaginated",
+          "callee": "desc",
+          "lineNumber": 75
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "db\n    .select({\n      averageRating: avg(reviews.rating),\n      totalReviews: count(reviews.id),\n      verifiedReviews: count(sql`CASE WHEN ${reviews.isVerifiedPurchase} = true THEN 1 END`),\n      rating1: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 1 THEN 1 END`),\n      rating2: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 2 THEN 1 END`),\n      rating3: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 3 THEN 1 END`),\n      rating4: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 4 THEN 1 END`),\n      rating5: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 5 THEN 1 END`),\n    })\n    .from(reviews)\n    .where",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "db\n    .select({\n      averageRating: avg(reviews.rating),\n      totalReviews: count(reviews.id),\n      verifiedReviews: count(sql`CASE WHEN ${reviews.isVerifiedPurchase} = true THEN 1 END`),\n      rating1: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 1 THEN 1 END`),\n      rating2: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 2 THEN 1 END`),\n      rating3: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 3 THEN 1 END`),\n      rating4: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 4 THEN 1 END`),\n      rating5: count(sql`CASE WHEN CAST(${reviews.rating} AS INTEGER) = 5 THEN 1 END`),\n    })\n    .from",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "db\n    .select",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "avg",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 93
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 94
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 94
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "count",
+          "lineNumber": 95
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "sql",
+          "lineNumber": 95
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "eq",
+          "lineNumber": 98
+        },
+        {
+          "caller": "getSummaryByProductId",
+          "callee": "Number",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(eq(reviews.id, reviewId as number))\n    .limit",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where(eq(reviews.userId, userId as number))\n    .orderBy",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from(reviews)\n    .where",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "eq",
+          "lineNumber": 135
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "desc",
+          "lineNumber": 136
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "db\n    .select({ count: count() })\n    .from(reviews)\n    .where(and(eq(reviews.productId, productId as number), eq(reviews.userId, userId as number)))\n    .limit",
+          "lineNumber": 143
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "db\n    .select({ count: count() })\n    .from(reviews)\n    .where",
+          "lineNumber": 143
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "db\n    .select({ count: count() })\n    .from",
+          "lineNumber": 143
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "db\n    .select",
+          "lineNumber": 143
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "count",
+          "lineNumber": 144
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "and",
+          "lineNumber": 146
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "eq",
+          "lineNumber": 146
+        },
+        {
+          "caller": "hasUserReviewed",
+          "callee": "eq",
+          "lineNumber": 146
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(reviews)\n    .values({\n      productId: review.productId,\n      userId: review.userId,\n      rating: String(review.rating),\n      comment: review.comment,\n      isVerifiedPurchase: review.isVerifiedPurchase ?? false,\n      createdAt: new Date(),\n      updatedAt: new Date(),\n    })\n    .returning",
+          "lineNumber": 166
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(reviews)\n    .values",
+          "lineNumber": 166
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert",
+          "lineNumber": 166
+        },
+        {
+          "caller": "create",
+          "callee": "String",
+          "lineNumber": 171
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select({ id: reviewHelpfulVotes.id })\n    .from(reviewHelpfulVotes)\n    .where(\n      and(\n        eq(reviewHelpfulVotes.reviewId, reviewId as number),\n        eq(reviewHelpfulVotes.voterKey, voterKey),\n      ),\n    )\n    .limit",
+          "lineNumber": 188
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select({ id: reviewHelpfulVotes.id })\n    .from(reviewHelpfulVotes)\n    .where",
+          "lineNumber": 188
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select({ id: reviewHelpfulVotes.id })\n    .from",
+          "lineNumber": 188
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select",
+          "lineNumber": 188
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "and",
+          "lineNumber": 192
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "eq",
+          "lineNumber": 193
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "eq",
+          "lineNumber": 194
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n      .select({ count: count() })\n      .from(reviewHelpfulVotes)\n      .where",
+          "lineNumber": 201
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n      .select({ count: count() })\n      .from",
+          "lineNumber": 201
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n      .select",
+          "lineNumber": 201
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "count",
+          "lineNumber": 202
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "eq",
+          "lineNumber": 204
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db.insert(reviewHelpfulVotes).values",
+          "lineNumber": 209
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db.insert",
+          "lineNumber": 209
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select({ count: count() })\n    .from(reviewHelpfulVotes)\n    .where",
+          "lineNumber": 216
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select({ count: count() })\n    .from",
+          "lineNumber": 216
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "db\n    .select",
+          "lineNumber": 216
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "count",
+          "lineNumber": 217
+        },
+        {
+          "caller": "markHelpful",
+          "callee": "eq",
+          "lineNumber": 219
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "db\n    .select({\n      rating: avg(reviews.rating),\n      count: count(),\n    })\n    .from(reviews)\n    .where",
+          "lineNumber": 230
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "db\n    .select({\n      rating: avg(reviews.rating),\n      count: count(),\n    })\n    .from",
+          "lineNumber": 230
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "db\n    .select",
+          "lineNumber": 230
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "avg",
+          "lineNumber": 232
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "count",
+          "lineNumber": 233
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "eq",
+          "lineNumber": 236
+        },
+        {
+          "caller": "recalculateProductAggregates",
+          "callee": "Number",
+          "lineNumber": 240
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 9,
+        "functionCount": 9,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/__tests__/orders.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/orders.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 508,
+      "nonEmptyLines": 447,
+      "functions": [
+        {
+          "name": "assertMutableOrderColumns",
+          "startLine": 60,
+          "endLine": 66,
+          "params": [
+            "update"
+          ]
+        },
+        {
+          "name": "getById",
+          "startLine": 73,
+          "endLine": 106,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getByUserId",
+          "startLine": 111,
+          "endLine": 140,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "hasPurchasedProduct",
+          "startLine": 145,
+          "endLine": 168,
+          "params": [
+            "userId",
+            "productId"
+          ]
+        },
+        {
+          "name": "getFiltered",
+          "startLine": 173,
+          "endLine": 257,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "getRecent",
+          "startLine": 262,
+          "endLine": 265,
+          "params": [
+            "limit"
+          ]
+        },
+        {
+          "name": "count",
+          "startLine": 270,
+          "endLine": 282,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "isOrderReferenceConflict",
+          "startLine": 293,
+          "endLine": 306,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 311,
+          "endLine": 431,
+          "params": [
+            "data",
+            "tx"
+          ]
+        },
+        {
+          "name": "updateOrder",
+          "startLine": 436,
+          "endLine": 446,
+          "params": [
+            "id",
+            "data",
+            "tx"
+          ]
+        },
+        {
+          "name": "getOrdersCountByStatus",
+          "startLine": 453,
+          "endLine": 463,
+          "params": []
+        },
+        {
+          "name": "getTotalRevenue",
+          "startLine": 468,
+          "endLine": 481,
+          "params": [
+            "startDate",
+            "endDate"
+          ]
+        },
+        {
+          "name": "getRevenueByPeriod",
+          "startLine": 486,
+          "endLine": 508,
+          "params": [
+            "startDate",
+            "endDate",
+            "interval"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "generateOrderReference",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "assertMutableOrderColumns",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "getById",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "getByUserId",
+          "line": 111,
+          "isDefault": false
+        },
+        {
+          "name": "hasPurchasedProduct",
+          "line": 145,
+          "isDefault": false
+        },
+        {
+          "name": "getFiltered",
+          "line": 173,
+          "isDefault": false
+        },
+        {
+          "name": "getRecent",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "count",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "isOrderReferenceConflict",
+          "line": 293,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 311,
+          "isDefault": false
+        },
+        {
+          "name": "updateOrder",
+          "line": 436,
+          "isDefault": false
+        },
+        {
+          "name": "getOrdersCountByStatus",
+          "line": 453,
+          "isDefault": false
+        },
+        {
+          "name": "getTotalRevenue",
+          "line": 468,
+          "isDefault": false
+        },
+        {
+          "name": "getRevenueByPeriod",
+          "line": 486,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "assertMutableOrderColumns",
+          "callee": "Object.keys",
+          "lineNumber": 61
+        },
+        {
+          "caller": "assertMutableOrderColumns",
+          "callee": "ALLOWED_MUTABLE_ORDER_COLUMNS.has",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where(eq(orders.id, Number(id)))\n    .limit",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 81
+        },
+        {
+          "caller": "getById",
+          "callee": "Number",
+          "lineNumber": 81
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from(orderItems)\n    .where",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getById",
+          "callee": "db\n    .select",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getById",
+          "callee": "Number",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getById",
+          "callee": "[row.user.firstName, row.user.lastName].filter(Boolean).join(' ').trim",
+          "lineNumber": 94
+        },
+        {
+          "caller": "getById",
+          "callee": "[row.user.firstName, row.user.lastName].filter(Boolean).join",
+          "lineNumber": 94
+        },
+        {
+          "caller": "getById",
+          "callee": "[row.user.firstName, row.user.lastName].filter",
+          "lineNumber": 94
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from(orders)\n    .where(eq(orders.userId, userId))\n    .orderBy",
+          "lineNumber": 112
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from(orders)\n    .where",
+          "lineNumber": 112
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 112
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select",
+          "lineNumber": 112
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "eq",
+          "lineNumber": 115
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "desc",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "orderResults.map",
+          "lineNumber": 121
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from(orderItems)\n    .where",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "db\n    .select",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "inArray",
+          "lineNumber": 125
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsResults.forEach",
+          "lineNumber": 129
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsByOrderId.has",
+          "lineNumber": 130
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsByOrderId.set",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsByOrderId.get(item.orderId)!.push",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsByOrderId.get",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "orderResults.map",
+          "lineNumber": 136
+        },
+        {
+          "caller": "getByUserId",
+          "callee": "itemsByOrderId.get",
+          "lineNumber": 138
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "db\n    .select({ id: orderItems.id })\n    .from(orderItems)\n    .innerJoin(orders, eq(orderItems.orderId, orders.id))\n    .where(\n      and(\n        eq(orders.userId, Number(userId)),\n        eq(orderItems.productId, Number(productId)),\n        inArray(orders.status, purchasableStatuses),\n      ),\n    )\n    .limit",
+          "lineNumber": 154
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "db\n    .select({ id: orderItems.id })\n    .from(orderItems)\n    .innerJoin(orders, eq(orderItems.orderId, orders.id))\n    .where",
+          "lineNumber": 154
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "db\n    .select({ id: orderItems.id })\n    .from(orderItems)\n    .innerJoin",
+          "lineNumber": 154
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "db\n    .select({ id: orderItems.id })\n    .from",
+          "lineNumber": 154
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "db\n    .select",
+          "lineNumber": 154
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "eq",
+          "lineNumber": 157
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "and",
+          "lineNumber": 159
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "eq",
+          "lineNumber": 160
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "Number",
+          "lineNumber": 160
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "eq",
+          "lineNumber": 161
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "Number",
+          "lineNumber": 161
+        },
+        {
+          "caller": "hasPurchasedProduct",
+          "callee": "inArray",
+          "lineNumber": 162
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 179
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 179
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 181
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 181
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 182
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "gte",
+          "lineNumber": 182
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 183
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "lte",
+          "lineNumber": 183
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "or",
+          "lineNumber": 186
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "ilike",
+          "lineNumber": 187
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "ilike",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "ilike",
+          "lineNumber": 189
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "/^\\d+$/.test",
+          "lineNumber": 191
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 192
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "or",
+          "lineNumber": 192
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 192
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "Number",
+          "lineNumber": 192
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "conditions.push",
+          "lineNumber": 194
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "and",
+          "lineNumber": 198
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where(whereClause)\n    .orderBy(desc(orders.createdAt))\n    .limit(filters.limit || 50)\n    .offset",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where(whereClause)\n    .orderBy(desc(orders.createdAt))\n    .limit",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where(whereClause)\n    .orderBy",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin(users, eq(orders.userId, users.id))\n    .where",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from(orders)\n    .leftJoin",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({\n      order: orders,\n      user: users,\n    })\n    .from",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select",
+          "lineNumber": 201
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "eq",
+          "lineNumber": 207
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "desc",
+          "lineNumber": 209
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from(orders)\n    .where",
+          "lineNumber": 214
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 214
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select",
+          "lineNumber": 214
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "orderRows.map",
+          "lineNumber": 224
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from(orderItems)\n    .where",
+          "lineNumber": 225
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 225
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "db\n    .select",
+          "lineNumber": 225
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "inArray",
+          "lineNumber": 228
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsResults.forEach",
+          "lineNumber": 231
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsByOrderId.has",
+          "lineNumber": 232
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsByOrderId.set",
+          "lineNumber": 233
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsByOrderId.get(item.orderId)!.push",
+          "lineNumber": 235
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsByOrderId.get",
+          "lineNumber": 235
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "orderRows.map",
+          "lineNumber": 239
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "[row.user.firstName, row.user.lastName].filter(Boolean).join(' ').trim",
+          "lineNumber": 242
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "[row.user.firstName, row.user.lastName].filter(Boolean).join",
+          "lineNumber": 242
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "[row.user.firstName, row.user.lastName].filter",
+          "lineNumber": 242
+        },
+        {
+          "caller": "getFiltered",
+          "callee": "itemsByOrderId.get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "getRecent",
+          "callee": "getFiltered",
+          "lineNumber": 263
+        },
+        {
+          "caller": "count",
+          "callee": "conditions.push",
+          "lineNumber": 274
+        },
+        {
+          "caller": "count",
+          "callee": "eq",
+          "lineNumber": 274
+        },
+        {
+          "caller": "count",
+          "callee": "conditions.push",
+          "lineNumber": 275
+        },
+        {
+          "caller": "count",
+          "callee": "eq",
+          "lineNumber": 275
+        },
+        {
+          "caller": "count",
+          "callee": "conditions.push",
+          "lineNumber": 276
+        },
+        {
+          "caller": "count",
+          "callee": "eq",
+          "lineNumber": 276
+        },
+        {
+          "caller": "count",
+          "callee": "and",
+          "lineNumber": 279
+        },
+        {
+          "caller": "count",
+          "callee": "db.select({ value: sqlCount() }).from(orders).where",
+          "lineNumber": 280
+        },
+        {
+          "caller": "count",
+          "callee": "db.select({ value: sqlCount() }).from",
+          "lineNumber": 280
+        },
+        {
+          "caller": "count",
+          "callee": "db.select",
+          "lineNumber": 280
+        },
+        {
+          "caller": "count",
+          "callee": "sqlCount",
+          "lineNumber": 280
+        },
+        {
+          "caller": "create",
+          "callee": "withTransaction",
+          "lineNumber": 352
+        },
+        {
+          "caller": "create",
+          "callee": "generateOrderReference",
+          "lineNumber": 359
+        },
+        {
+          "caller": "create",
+          "callee": "tx.transaction",
+          "lineNumber": 362
+        },
+        {
+          "caller": "create",
+          "callee": "sp\n            .insert(orders)\n            .values({\n              orderReference: candidateReference,\n              userId: orderData.userId,\n              guestEmail: orderData.guestEmail,\n              status: orderData.status || 'pending',\n              paymentStatus: orderData.paymentStatus || 'unpaid',\n              subtotal: orderData.subtotal,\n              shippingCost: orderData.shippingCost,\n              totalAmount: orderData.totalAmount,\n              currency: orderData.currency || 'EGP',\n              paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,\n              schoolSupplyListId: orderData.schoolSupplyListId,\n              schoolSupplyListPublicCode: orderData.schoolSupplyListPublicCode,\n              schoolSupplyListPublishedAt: orderData.schoolSupplyListPublishedAt,\n              businessPartnerId: orderData.businessPartnerId,\n              listOfferBasisPoints: orderData.listOfferBasisPoints,\n              discountTotal: orderData.discountTotal,\n              shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,\n            })\n            .returning",
+          "lineNumber": 363
+        },
+        {
+          "caller": "create",
+          "callee": "sp\n            .insert(orders)\n            .values",
+          "lineNumber": 363
+        },
+        {
+          "caller": "create",
+          "callee": "sp\n            .insert",
+          "lineNumber": 363
+        },
+        {
+          "caller": "create",
+          "callee": "isOrderReferenceConflict",
+          "lineNumber": 388
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .insert(orderItems)\n        .values(\n          items.map((item) => ({\n            orderId: newOrder!.id,\n            productId: item.productId,\n            variantId: item.variantId,\n            quantity: item.quantity,\n            uomCode: item.uomCode,\n            unitPriceSnapshot: item.unitPriceSnapshot,\n            totalPrice: item.totalPrice,\n            unitPrice: item.unitPrice,\n            discountAmount: item.discountAmount,\n            lineTotal: item.lineTotal,\n            productNameSnapshot: item.productNameSnapshot,\n            productSkuSnapshot: item.productSkuSnapshot,\n            variantSkuSnapshot: item.variantSkuSnapshot,\n            variantSnapshot: item.variantSnapshot,\n            schoolSupplyListItemId: item.schoolSupplyListItemId,\n            isSubstitute: item.isSubstitute,\n          })),\n        )\n        .returning",
+          "lineNumber": 401
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .insert(orderItems)\n        .values",
+          "lineNumber": 401
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .insert",
+          "lineNumber": 401
+        },
+        {
+          "caller": "create",
+          "callee": "items.map",
+          "lineNumber": 404
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "assertMutableOrderColumns",
+          "lineNumber": 441
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "(tx ?? db)\n    .update(orders)\n    .set({ ...data, updatedAt: new Date() })\n    .where",
+          "lineNumber": 442
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "(tx ?? db)\n    .update(orders)\n    .set",
+          "lineNumber": 442
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "(tx ?? db)\n    .update",
+          "lineNumber": 442
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "eq",
+          "lineNumber": 445
+        },
+        {
+          "caller": "updateOrder",
+          "callee": "Number",
+          "lineNumber": 445
+        },
+        {
+          "caller": "getOrdersCountByStatus",
+          "callee": "db\n    .select({\n      status: orders.status,\n      count: sql<number>`cast(count(*) as integer)`,\n    })\n    .from(orders)\n    .groupBy",
+          "lineNumber": 454
+        },
+        {
+          "caller": "getOrdersCountByStatus",
+          "callee": "db\n    .select({\n      status: orders.status,\n      count: sql<number>`cast(count(*) as integer)`,\n    })\n    .from",
+          "lineNumber": 454
+        },
+        {
+          "caller": "getOrdersCountByStatus",
+          "callee": "db\n    .select",
+          "lineNumber": 454
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "conditions.push",
+          "lineNumber": 470
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "gte",
+          "lineNumber": 470
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "conditions.push",
+          "lineNumber": 471
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "lte",
+          "lineNumber": 471
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "and",
+          "lineNumber": 473
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "db\n    .select({ total: sql<string>`COALESCE(SUM(${orders.totalAmount}), 0)` })\n    .from(orders)\n    .where",
+          "lineNumber": 475
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "db\n    .select({ total: sql<string>`COALESCE(SUM(${orders.totalAmount}), 0)` })\n    .from",
+          "lineNumber": 475
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "db\n    .select",
+          "lineNumber": 475
+        },
+        {
+          "caller": "getTotalRevenue",
+          "callee": "Number",
+          "lineNumber": 480
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "await db.execute",
+          "lineNumber": 493
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "sql",
+          "lineNumber": 493
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "startDate.toISOString",
+          "lineNumber": 498
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "endDate.toISOString",
+          "lineNumber": 499
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "result.map",
+          "lineNumber": 504
+        },
+        {
+          "caller": "getRevenueByPeriod",
+          "callee": "Number",
+          "lineNumber": 506
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 14,
+        "functionCount": 13,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 5,
+      "nonEmptyLines": 5,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

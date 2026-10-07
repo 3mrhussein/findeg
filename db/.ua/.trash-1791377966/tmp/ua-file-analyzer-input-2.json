@@ -1,0 +1,239 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "src/connection.ts",
+      "language": "typescript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/administration/audit-logs.ts",
+      "language": "typescript",
+      "sizeLines": 181,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/admin-search-analytics.ts",
+      "language": "typescript",
+      "sizeLines": 199,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/brands.ts",
+      "language": "typescript",
+      "sizeLines": 119,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/categories.ts",
+      "language": "typescript",
+      "sizeLines": 260,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/collections.ts",
+      "language": "typescript",
+      "sizeLines": 152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/inventory.ts",
+      "language": "typescript",
+      "sizeLines": 247,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/search.ts",
+      "language": "typescript",
+      "sizeLines": 165,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/tags.ts",
+      "language": "typescript",
+      "sizeLines": 106,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/admin-roles.ts",
+      "language": "typescript",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/admin-users.ts",
+      "language": "typescript",
+      "sizeLines": 87,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/authorization-version.ts",
+      "language": "typescript",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/create-admin-user.ts",
+      "language": "typescript",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/create-role.ts",
+      "language": "typescript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/deactivate-admin-user.ts",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/delete-role.ts",
+      "language": "typescript",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/get-role-user-count.ts",
+      "language": "typescript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/set-admin-permission-overrides.ts",
+      "language": "typescript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/update-admin-user.ts",
+      "language": "typescript",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/identity/update-role-permissions.ts",
+      "language": "typescript",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/inventory/stock-reservations.ts",
+      "language": "typescript",
+      "sizeLines": 247,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/notifications/notifications.ts",
+      "language": "typescript",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/partner-sales/index.ts",
+      "language": "typescript",
+      "sizeLines": 226,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/connection.ts": [
+      "src/schema/index.ts"
+    ],
+    "src/queries/administration/audit-logs.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/admin-search-analytics.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/brands.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/categories.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/collections.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/inventory.ts": [
+      "src/connection.ts",
+      "src/queries/transaction.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/search.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/catalog/tags.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/admin-roles.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/admin-users.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/authorization-version.ts": [
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/create-admin-user.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/create-role.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/deactivate-admin-user.ts": [
+      "src/connection.ts",
+      "src/queries/identity/authorization-version.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/delete-role.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/get-role-user-count.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/set-admin-permission-overrides.ts": [
+      "src/connection.ts",
+      "src/queries/identity/authorization-version.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/update-admin-user.ts": [
+      "src/connection.ts",
+      "src/queries/identity/authorization-version.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/identity/update-role-permissions.ts": [
+      "src/connection.ts",
+      "src/queries/identity/authorization-version.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/inventory/stock-reservations.ts": [
+      "src/queries/transaction.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/notifications/notifications.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/partner-sales/index.ts": [
+      "src/schema/index.ts"
+    ]
+  }
+}

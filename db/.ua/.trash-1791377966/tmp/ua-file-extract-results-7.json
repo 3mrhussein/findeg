@@ -1,0 +1,1869 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 7,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 7,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/__tests__/permission-codes.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 19,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/admin-categories.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 245,
+      "nonEmptyLines": 215,
+      "functions": [
+        {
+          "name": "getCategoryById",
+          "startLine": 14,
+          "endLine": 21,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getAllCategories",
+          "startLine": 26,
+          "endLine": 29,
+          "params": []
+        },
+        {
+          "name": "getCategoryBySlug",
+          "startLine": 34,
+          "endLine": 37,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "getCategoryRoots",
+          "startLine": 42,
+          "endLine": 49,
+          "params": []
+        },
+        {
+          "name": "getCategoryChildren",
+          "startLine": 54,
+          "endLine": 61,
+          "params": [
+            "parentId"
+          ]
+        },
+        {
+          "name": "getCategoryDescendants",
+          "startLine": 66,
+          "endLine": 78,
+          "params": [
+            "categoryId"
+          ]
+        },
+        {
+          "name": "getCategoryByPath",
+          "startLine": 83,
+          "endLine": 86,
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "countCategories",
+          "startLine": 91,
+          "endLine": 94,
+          "params": []
+        },
+        {
+          "name": "getCategoryProductCount",
+          "startLine": 99,
+          "endLine": 106,
+          "params": [
+            "categoryId"
+          ]
+        },
+        {
+          "name": "createCategory",
+          "startLine": 113,
+          "endLine": 156,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "updateCategory",
+          "startLine": 161,
+          "endLine": 224,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "reorderCategories",
+          "startLine": 229,
+          "endLine": 238,
+          "params": [
+            "items"
+          ]
+        },
+        {
+          "name": "deleteCategory",
+          "startLine": 243,
+          "endLine": 245,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getCategoryById",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "getAllCategories",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryBySlug",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryRoots",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryChildren",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryDescendants",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryByPath",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "countCategories",
+          "line": 91,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryProductCount",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "createCategory",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "updateCategory",
+          "line": 161,
+          "isDefault": false
+        },
+        {
+          "name": "reorderCategories",
+          "line": 229,
+          "isDefault": false
+        },
+        {
+          "name": "deleteCategory",
+          "line": 243,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCategoryById",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(eq(categories.id, id as number))\n    .limit",
+          "lineNumber": 15
+        },
+        {
+          "caller": "getCategoryById",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 15
+        },
+        {
+          "caller": "getCategoryById",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 15
+        },
+        {
+          "caller": "getCategoryById",
+          "callee": "db\n    .select",
+          "lineNumber": 15
+        },
+        {
+          "caller": "getCategoryById",
+          "callee": "eq",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getAllCategories",
+          "callee": "db.select().from(categories).orderBy",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getAllCategories",
+          "callee": "db.select().from",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getAllCategories",
+          "callee": "db.select",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getAllCategories",
+          "callee": "asc",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getCategoryBySlug",
+          "callee": "db.select().from(categories).where(eq(categories.slug, slug)).limit",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCategoryBySlug",
+          "callee": "db.select().from(categories).where",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCategoryBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCategoryBySlug",
+          "callee": "db.select",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCategoryBySlug",
+          "callee": "eq",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(or(isNull(categories.parentId), eq(categories.depth, 0)))\n    .orderBy",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "db\n    .select",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "or",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "isNull",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "eq",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCategoryRoots",
+          "callee": "asc",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(eq(categories.parentId, parentId as number))\n    .orderBy",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "db\n    .select",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "eq",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getCategoryChildren",
+          "callee": "asc",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "getCategoryById",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(like(categories.path, `${parent.path}%`))\n    .orderBy",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "db\n    .select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "like",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "asc",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "asc",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getCategoryDescendants",
+          "callee": "results.filter",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCategoryByPath",
+          "callee": "db.select().from(categories).where(eq(categories.path, path)).limit",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getCategoryByPath",
+          "callee": "db.select().from(categories).where",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getCategoryByPath",
+          "callee": "db.select().from",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getCategoryByPath",
+          "callee": "db.select",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getCategoryByPath",
+          "callee": "eq",
+          "lineNumber": 84
+        },
+        {
+          "caller": "countCategories",
+          "callee": "db.select({ value: count() }).from",
+          "lineNumber": 92
+        },
+        {
+          "caller": "countCategories",
+          "callee": "db.select",
+          "lineNumber": 92
+        },
+        {
+          "caller": "countCategories",
+          "callee": "count",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "import",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "db\n    .select({ value: count() })\n    .from(products)\n    .where",
+          "lineNumber": 101
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "db\n    .select({ value: count() })\n    .from",
+          "lineNumber": 101
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "db\n    .select",
+          "lineNumber": 101
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "count",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getCategoryProductCount",
+          "callee": "eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "createCategory",
+          "callee": "db.transaction",
+          "lineNumber": 114
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n        .select()\n        .from(categories)\n        .where(eq(categories.id, input.parentId as number))\n        .limit",
+          "lineNumber": 120
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n        .select()\n        .from(categories)\n        .where",
+          "lineNumber": 120
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n        .select()\n        .from",
+          "lineNumber": 120
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n        .select",
+          "lineNumber": 120
+        },
+        {
+          "caller": "createCategory",
+          "callee": "eq",
+          "lineNumber": 123
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .insert(categories)\n      .values({\n        slug: input.slug,\n        localizedName: input.localizedName || {},\n        localizedDescription: input.localizedDescription || {},\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder || 0,\n        isActive: input.isActive ?? true,\n        path: `${path}`,\n        depth: depth,\n      })\n      .returning",
+          "lineNumber": 131
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .insert(categories)\n      .values",
+          "lineNumber": 131
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .insert",
+          "lineNumber": 131
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .update(categories)\n      .set({ path: inclusivePath })\n      .where(eq(categories.id, newCategory.id as number))\n      .returning",
+          "lineNumber": 148
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .update(categories)\n      .set({ path: inclusivePath })\n      .where",
+          "lineNumber": 148
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .update(categories)\n      .set",
+          "lineNumber": 148
+        },
+        {
+          "caller": "createCategory",
+          "callee": "tx\n      .update",
+          "lineNumber": 148
+        },
+        {
+          "caller": "createCategory",
+          "callee": "eq",
+          "lineNumber": 151
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "db.transaction",
+          "lineNumber": 162
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .select()\n      .from(categories)\n      .where(eq(categories.id, id as number))\n      .limit",
+          "lineNumber": 163
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .select()\n      .from(categories)\n      .where",
+          "lineNumber": 163
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .select()\n      .from",
+          "lineNumber": 163
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .select",
+          "lineNumber": 163
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "eq",
+          "lineNumber": 166
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n          .select()\n          .from(categories)\n          .where(eq(categories.id, input.parentId as number))\n          .limit",
+          "lineNumber": 182
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n          .select()\n          .from(categories)\n          .where",
+          "lineNumber": 182
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n          .select()\n          .from",
+          "lineNumber": 182
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n          .select",
+          "lineNumber": 182
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "eq",
+          "lineNumber": 185
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx.execute",
+          "lineNumber": 197
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "sql",
+          "lineNumber": 197
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .update(categories)\n      .set({\n        slug: input.slug,\n        localizedName: input.localizedName || {},\n        localizedDescription: input.localizedDescription || {},\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder ?? existing[0].sortOrder,\n        isActive: input.isActive ?? existing[0].isActive,\n        path: newPath,\n        depth: newDepth,\n        updatedAt: new Date(),\n      })\n      .where(eq(categories.id, id as number))\n      .returning",
+          "lineNumber": 205
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .update(categories)\n      .set({\n        slug: input.slug,\n        localizedName: input.localizedName || {},\n        localizedDescription: input.localizedDescription || {},\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder ?? existing[0].sortOrder,\n        isActive: input.isActive ?? existing[0].isActive,\n        path: newPath,\n        depth: newDepth,\n        updatedAt: new Date(),\n      })\n      .where",
+          "lineNumber": 205
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .update(categories)\n      .set",
+          "lineNumber": 205
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "tx\n      .update",
+          "lineNumber": 205
+        },
+        {
+          "caller": "updateCategory",
+          "callee": "eq",
+          "lineNumber": 219
+        },
+        {
+          "caller": "reorderCategories",
+          "callee": "db.transaction",
+          "lineNumber": 230
+        },
+        {
+          "caller": "reorderCategories",
+          "callee": "tx\n        .update(categories)\n        .set({ sortOrder: item.sortOrder })\n        .where",
+          "lineNumber": 232
+        },
+        {
+          "caller": "reorderCategories",
+          "callee": "tx\n        .update(categories)\n        .set",
+          "lineNumber": 232
+        },
+        {
+          "caller": "reorderCategories",
+          "callee": "tx\n        .update",
+          "lineNumber": 232
+        },
+        {
+          "caller": "reorderCategories",
+          "callee": "eq",
+          "lineNumber": 235
+        },
+        {
+          "caller": "deleteCategory",
+          "callee": "db.delete(categories).where",
+          "lineNumber": 244
+        },
+        {
+          "caller": "deleteCategory",
+          "callee": "db.delete",
+          "lineNumber": 244
+        },
+        {
+          "caller": "deleteCategory",
+          "callee": "eq",
+          "lineNumber": 244
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 13,
+        "functionCount": 13,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/admin-collections.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 131,
+      "nonEmptyLines": 112,
+      "functions": [
+        {
+          "name": "getCollectionsAll",
+          "startLine": 12,
+          "endLine": 21,
+          "params": [
+            "options"
+          ]
+        },
+        {
+          "name": "getCollectionByIdWithTags",
+          "startLine": 26,
+          "endLine": 47,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getCollectionBySlug",
+          "startLine": 52,
+          "endLine": 69,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "createCollection",
+          "startLine": 76,
+          "endLine": 79,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "updateCollection",
+          "startLine": 84,
+          "endLine": 91,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "deleteCollection",
+          "startLine": 96,
+          "endLine": 98,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "setCollectionTags",
+          "startLine": 103,
+          "endLine": 115,
+          "params": [
+            "collectionId",
+            "tagIds"
+          ]
+        },
+        {
+          "name": "updateCollectionSortOrders",
+          "startLine": 120,
+          "endLine": 131,
+          "params": [
+            "items"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getCollectionsAll",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionByIdWithTags",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionBySlug",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "createCollection",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "updateCollection",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "deleteCollection",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "setCollectionTags",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "updateCollectionSortOrders",
+          "line": 120,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCollectionsAll",
+          "callee": "db.select().from(collections).$dynamic",
+          "lineNumber": 13
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "db.select().from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "db.select",
+          "lineNumber": 13
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "query.where",
+          "lineNumber": 16
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "eq",
+          "lineNumber": 16
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "query.orderBy",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getCollectionsAll",
+          "callee": "asc",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select()\n    .from(collections)\n    .where(eq(collections.id, id as number))\n    .limit",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select()\n    .from(collections)\n    .where",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "eq",
+          "lineNumber": 30
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin(tags, eq(collectionTags.tagId, tags.id))\n    .where",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "db\n    .select",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "eq",
+          "lineNumber": 41
+        },
+        {
+          "caller": "getCollectionByIdWithTags",
+          "callee": "tagResults.map",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from(collections).where(eq(collections.slug, slug)).limit",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from(collections).where",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "eq",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin(tags, eq(collectionTags.tagId, tags.id))\n    .where",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db\n    .select",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "eq",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "eq",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "tagResults.map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert(collections).values(input).returning",
+          "lineNumber": 77
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert(collections).values",
+          "lineNumber": 77
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert",
+          "lineNumber": 77
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set({ ...input, updatedAt: new Date() })\n    .where(eq(collections.id, id as number))\n    .returning",
+          "lineNumber": 85
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set({ ...input, updatedAt: new Date() })\n    .where",
+          "lineNumber": 85
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set",
+          "lineNumber": 85
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update",
+          "lineNumber": 85
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "eq",
+          "lineNumber": 88
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "db.delete(collections).where",
+          "lineNumber": 97
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "db.delete",
+          "lineNumber": 97
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "eq",
+          "lineNumber": 97
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "db.transaction",
+          "lineNumber": 104
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.delete(collectionTags).where",
+          "lineNumber": 105
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.delete",
+          "lineNumber": 105
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "eq",
+          "lineNumber": 105
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.insert(collectionTags).values",
+          "lineNumber": 107
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.insert",
+          "lineNumber": 107
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tagIds.map",
+          "lineNumber": 108
+        },
+        {
+          "caller": "updateCollectionSortOrders",
+          "callee": "db.transaction",
+          "lineNumber": 123
+        },
+        {
+          "caller": "updateCollectionSortOrders",
+          "callee": "tx\n        .update(collections)\n        .set({ sortOrder: item.sortOrder, updatedAt: new Date() })\n        .where",
+          "lineNumber": 125
+        },
+        {
+          "caller": "updateCollectionSortOrders",
+          "callee": "tx\n        .update(collections)\n        .set",
+          "lineNumber": 125
+        },
+        {
+          "caller": "updateCollectionSortOrders",
+          "callee": "tx\n        .update",
+          "lineNumber": 125
+        },
+        {
+          "caller": "updateCollectionSortOrders",
+          "callee": "eq",
+          "lineNumber": 128
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/admin-tags.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 102,
+      "nonEmptyLines": 85,
+      "functions": [
+        {
+          "name": "checkTagSlugAvailableRaw",
+          "startLine": 9,
+          "endLine": 15,
+          "params": [
+            "slug",
+            "excludeId"
+          ]
+        },
+        {
+          "name": "getTagProductCountRaw",
+          "startLine": 17,
+          "endLine": 24,
+          "params": [
+            "tagId"
+          ]
+        },
+        {
+          "name": "getAllTags",
+          "startLine": 31,
+          "endLine": 34,
+          "params": []
+        },
+        {
+          "name": "getTagById",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "listDistinctTagGroups",
+          "startLine": 51,
+          "endLine": 54,
+          "params": []
+        },
+        {
+          "name": "createTag",
+          "startLine": 61,
+          "endLine": 64,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "updateTag",
+          "startLine": 69,
+          "endLine": 76,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "deleteTag",
+          "startLine": 81,
+          "endLine": 83,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "bulkDeleteTags",
+          "startLine": 88,
+          "endLine": 91,
+          "params": [
+            "ids"
+          ]
+        },
+        {
+          "name": "bulkUpdateTagStatus",
+          "startLine": 96,
+          "endLine": 102,
+          "params": [
+            "ids",
+            "isActive"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkTagSlugAvailableRaw",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "getTagProductCountRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "getAllTags",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "getTagById",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "listDistinctTagGroups",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "createTag",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "updateTag",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "deleteTag",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "bulkDeleteTags",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "bulkUpdateTagStatus",
+          "line": 96,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "and",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "eq",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "ne",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "eq",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "db.select({ value: count() }).from(tags).where",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "db.select({ value: count() }).from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "db.select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "count",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkTagSlugAvailableRaw",
+          "callee": "Number",
+          "lineNumber": 14
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "db\n    .select({ value: count() })\n    .from(productTags)\n    .where",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "db\n    .select({ value: count() })\n    .from",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "count",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "eq",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getTagProductCountRaw",
+          "callee": "Number",
+          "lineNumber": 23
+        },
+        {
+          "caller": "getAllTags",
+          "callee": "db.select().from(tags).orderBy",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getAllTags",
+          "callee": "db.select().from",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getAllTags",
+          "callee": "db.select",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db\n    .select()\n    .from(tags)\n    .where(eq(tags.id, id as number))\n    .limit",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db\n    .select()\n    .from(tags)\n    .where",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db\n    .select",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getTagById",
+          "callee": "eq",
+          "lineNumber": 43
+        },
+        {
+          "caller": "listDistinctTagGroups",
+          "callee": "db.selectDistinct({ group: tags.group }).from",
+          "lineNumber": 52
+        },
+        {
+          "caller": "listDistinctTagGroups",
+          "callee": "db.selectDistinct",
+          "lineNumber": 52
+        },
+        {
+          "caller": "listDistinctTagGroups",
+          "callee": "results.map",
+          "lineNumber": 53
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert(tags).values(input).returning",
+          "lineNumber": 62
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert(tags).values",
+          "lineNumber": 62
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert",
+          "lineNumber": 62
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set({ ...input, updatedAt: new Date() })\n    .where(eq(tags.id, id as number))\n    .returning",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set({ ...input, updatedAt: new Date() })\n    .where",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update",
+          "lineNumber": 70
+        },
+        {
+          "caller": "updateTag",
+          "callee": "eq",
+          "lineNumber": 73
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "db.delete(tags).where",
+          "lineNumber": 82
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "db.delete",
+          "lineNumber": 82
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "eq",
+          "lineNumber": 82
+        },
+        {
+          "caller": "bulkDeleteTags",
+          "callee": "db.delete(tags).where",
+          "lineNumber": 90
+        },
+        {
+          "caller": "bulkDeleteTags",
+          "callee": "db.delete",
+          "lineNumber": 90
+        },
+        {
+          "caller": "bulkDeleteTags",
+          "callee": "inArray",
+          "lineNumber": 90
+        },
+        {
+          "caller": "bulkUpdateTagStatus",
+          "callee": "db\n    .update(tags)\n    .set({ isActive, updatedAt: new Date() })\n    .where",
+          "lineNumber": 98
+        },
+        {
+          "caller": "bulkUpdateTagStatus",
+          "callee": "db\n    .update(tags)\n    .set",
+          "lineNumber": 98
+        },
+        {
+          "caller": "bulkUpdateTagStatus",
+          "callee": "db\n    .update",
+          "lineNumber": 98
+        },
+        {
+          "caller": "bulkUpdateTagStatus",
+          "callee": "inArray",
+          "lineNumber": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 10,
+        "functionCount": 10,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/common.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 107,
+      "nonEmptyLines": 78,
+      "exports": [
+        {
+          "name": "SUPPORTED_LOCALES",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "DEFAULT_LOCALE",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "LocaleSchema",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "TranslationMapSchema",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "CurrencyCodeSchema",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "DEFAULT_CURRENCY",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "MoneyAmountSchema",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "MoneySchema",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "IdSchema",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "SkuSchema",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "SkuRequiredSchema",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "EmailSchema",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "SlugSchema",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "QuantitySchema",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "RatingSchema",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "MediaVariantKeySchema",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "MediaAssetSchema",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "ResponsiveMediaSetSchema",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 18,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/identity.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 257,
+      "nonEmptyLines": 219,
+      "functions": [
+        {
+          "name": "createUserVO",
+          "startLine": 130,
+          "endLine": 144,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "staffRole",
+          "startLine": 164,
+          "endLine": 166,
+          "params": [
+            "portalRole"
+          ]
+        },
+        {
+          "name": "customerRole",
+          "startLine": 168,
+          "endLine": 170,
+          "params": [
+            "portalRole"
+          ]
+        },
+        {
+          "name": "systemAdmin",
+          "startLine": 172,
+          "endLine": 174,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "adminSession",
+          "startLine": 176,
+          "endLine": 181,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "hasPermission",
+          "startLine": 183,
+          "endLine": 186,
+          "params": [
+            "session",
+            "requiredPermission"
+          ]
+        },
+        {
+          "name": "hasAnyPermission",
+          "startLine": 188,
+          "endLine": 190,
+          "params": [
+            "session",
+            "requiredPermissions"
+          ]
+        },
+        {
+          "name": "hasAllPermissions",
+          "startLine": 192,
+          "endLine": 194,
+          "params": [
+            "session",
+            "requiredPermissions"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ActorTypeSchema",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "PortalRoleSchema",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "PERMISSION_CODES",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "ADMIN_ROLE_IDS",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "RoleIdSchema",
+          "line": 92,
+          "isDefault": false
+        },
+        {
+          "name": "PermissionIdSchema",
+          "line": 95,
+          "isDefault": false
+        },
+        {
+          "name": "PermissionCodeSchema",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "RoleScopeSchema",
+          "line": 109,
+          "isDefault": false
+        },
+        {
+          "name": "OrganizationIdSchema",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "GuestPrincipalIdSchema",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "UserVOSchema",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "createUserVO",
+          "line": 130,
+          "isDefault": false
+        },
+        {
+          "name": "SessionPayloadSchema",
+          "line": 149,
+          "isDefault": false
+        },
+        {
+          "name": "staffRole",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "customerRole",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "systemAdmin",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "adminSession",
+          "line": 176,
+          "isDefault": false
+        },
+        {
+          "name": "hasPermission",
+          "line": 183,
+          "isDefault": false
+        },
+        {
+          "name": "hasAnyPermission",
+          "line": 188,
+          "isDefault": false
+        },
+        {
+          "name": "hasAllPermissions",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "AuthProviderSchema",
+          "line": 199,
+          "isDefault": false
+        },
+        {
+          "name": "PaymentProviderSchema",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "LinkedAuthAccountSchema",
+          "line": 208,
+          "isDefault": false
+        },
+        {
+          "name": "RoleGrantSchema",
+          "line": 219,
+          "isDefault": false
+        },
+        {
+          "name": "OrganizationMembershipStatusSchema",
+          "line": 237,
+          "isDefault": false
+        },
+        {
+          "name": "OrganizationMembershipSchema",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "SavedPaymentMethodSchema",
+          "line": 251,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createUserVO",
+          "callee": "data.firstName?.trim",
+          "lineNumber": 135
+        },
+        {
+          "caller": "createUserVO",
+          "callee": "data.lastName?.trim",
+          "lineNumber": 136
+        },
+        {
+          "caller": "createUserVO",
+          "callee": "[fName, lName].filter(Boolean).join",
+          "lineNumber": 142
+        },
+        {
+          "caller": "createUserVO",
+          "callee": "[fName, lName].filter",
+          "lineNumber": 142
+        },
+        {
+          "caller": "systemAdmin",
+          "callee": "session.activeRoleIds?.includes",
+          "lineNumber": 173
+        },
+        {
+          "caller": "adminSession",
+          "callee": "session.activeRoleIds?.some",
+          "lineNumber": 178
+        },
+        {
+          "caller": "adminSession",
+          "callee": "ADMIN_ROLE_IDS.includes",
+          "lineNumber": 178
+        },
+        {
+          "caller": "adminSession",
+          "callee": "session.permissionCodes?.includes",
+          "lineNumber": 179
+        },
+        {
+          "caller": "hasPermission",
+          "callee": "systemAdmin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "hasPermission",
+          "callee": "session.permissionCodes?.some",
+          "lineNumber": 185
+        },
+        {
+          "caller": "hasAnyPermission",
+          "callee": "requiredPermissions.some",
+          "lineNumber": 189
+        },
+        {
+          "caller": "hasAnyPermission",
+          "callee": "hasPermission",
+          "lineNumber": 189
+        },
+        {
+          "caller": "hasAllPermissions",
+          "callee": "requiredPermissions.every",
+          "lineNumber": 193
+        },
+        {
+          "caller": "hasAllPermissions",
+          "callee": "hasPermission",
+          "lineNumber": 193
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 27,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/pricing.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 49,
+      "exports": [
+        {
+          "name": "PersistedPricingSchema",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "DiscountTypeSchema",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "DiscountRuleSchema",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "AppliedDiscountSchema",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "ResolvedPricingSchema",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

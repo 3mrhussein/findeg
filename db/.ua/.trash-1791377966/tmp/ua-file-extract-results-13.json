@@ -1,0 +1,1090 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 18,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 18,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 17,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "drizzle.config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "eslint.config.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "migrate.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seed.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 81,
+      "nonEmptyLines": 76,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/helpers/constants.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 37,
+      "exports": [
+        {
+          "name": "TABLE_IMPORT_ORDER",
+          "line": 1,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 108,
+      "nonEmptyLines": 99,
+      "exports": [
+        {
+          "name": "checkTagSlugAvailableRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getTagProductCountRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getAllTags",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getTagById",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "createTag",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "updateTag",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "deleteTag",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "bulkDeleteTags",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "bulkUpdateTagStatus",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "listDistinctTagGroups",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionsAll",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionByIdWithTags",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionBySlug",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "createCollection",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "updateCollection",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "deleteCollection",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "setCollectionTags",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "updateCollectionSortOrders",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "getAllProducts",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "getProductById",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "getProductsByIds",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "getVariantsByIds",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "getFilteredProducts",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "countProducts",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "ProductRow",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "ProductFiltersInput",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "executeCatalogScoredSearchRaw",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "getCatalogSuggestionsRaw",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "logCatalogSearchRaw",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "CatalogSearchQueryRawParams",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "CatalogSearchScoreRowRaw",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "CatalogSearchSuggestionCategoryRaw",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "CatalogSearchSuggestionProductRaw",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "getProductCountRaw",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryCountRaw",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "getBrandCountRaw",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "getCatalogHealthRaw",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "CatalogHealthRaw",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryDistributionRaw",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "CategoryDistributionRaw",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "getTopProductsRaw",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "TopProductRaw",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryById",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getAllCategories",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryBySlug",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryRoots",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryChildren",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryDescendants",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryByPath",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "countCategories",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryProductCount",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "createCategory",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "updateCategory",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "reorderCategories",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "deleteCategory",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "DbCategory",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "getBalance",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "getAllBalances",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "adjustStock",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "reserveStock",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "releaseReservation",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "getLowStock",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "InventoryBalanceRow",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "StockMovementRow",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "WarehouseRow",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "InventoryBalanceResult",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "StockMovementInput",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "getAllBrands",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "getBrandById",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "getBrandBySlug",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "createBrand",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "updateBrand",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "deleteBrand",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "countBrands",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "countProductsByBrandId",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "BrandRow",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "BrandWithProductCount",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "BrandCreateInput",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "BrandUpdateInput",
+          "line": 108,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 79,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "exports": [
+        {
+          "name": "getAdminUsersSnapshotRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "listAdminUserIdsRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getAdminRolesSnapshotRaw",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "listPermissionItemsRaw",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "listRoleIdsRaw",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "createAdminUserRaw",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "updateAdminUserRaw",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "deactivateAdminUserRaw",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "setAdminPermissionOverridesRaw",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "createRoleRaw",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "updateRolePermissionsRaw",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "getRoleUserCountRaw",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "deleteRoleRaw",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "AdminUserPermissionOverrideRowRaw",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "AdminUserRoleRowRaw",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "AdminUserRowRaw",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "AdminUsersSnapshotRaw",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "AdminRolePermissionRowRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "AdminRoleRowRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "AdminRolesSnapshotRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "AdminRoleUserCountRowRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "PermissionItemRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "CreateAdminUserRawInput",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "UpdateAdminUserRawInput",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "PermissionOverrideMutationRawInput",
+          "line": 26,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 25,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 23,
+      "exports": [
+        {
+          "name": "OrderRow",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "OrderItemRow",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "withTransaction",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "DbTransaction",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/inventory/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 9,
+      "exports": [
+        {
+          "name": "getLowStockCountRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "reserveOrderStock",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "consumeOrderStock",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "releaseOrderStock",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "InsufficientStockError",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "StockReservationStateError",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "ReservationLine",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "ReservedStock",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "StockShortfall",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/products/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "exports": [
+        {
+          "name": "getAdminProductsListRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getAdminProductForEditRaw",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "createProductWithVariantsInDb",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "bulkActivateProducts",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "bulkDeactivateProducts",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "bulkDeleteProducts",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "duplicateProductWithVariants",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "getProductVariantAttributes",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "insertProductVariantInTx",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "insertGeneratedProductVariants",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "updateProductWithVariantsInDb",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "updateProductVariantKey",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "checkProductVariantSkuAvailable",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "checkProductSlugAvailable",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "deactivateProductVariant",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "upsertProductVariantImages",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "AdminProductListQueryFilters",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "AdminProductListQueryResult",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "AdminProductListRowRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "InsertProductVariantAttributeInput",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "InsertProductVariantImageInput",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "InsertProductVariantInput",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 22,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 7,
+      "exports": [
+        {
+          "name": "getTotalOrderStatsRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getOrderStatsRaw",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "OrderStats",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "getRevenueByPeriodRaw",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "RevenuePeriodRaw",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "hasPurchasedProduct",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/catalog/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 316,
+      "nonEmptyLines": 225,
+      "sections": [
+        {
+          "heading": "Catalog Schema (`catalog.*`)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Architecture Overview",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Entity-Relationship Diagram",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Tables",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "1. `catalog.categories`",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "2. `catalog.brands`",
+          "level": 3,
+          "line": 69
+        },
+        {
+          "heading": "3. `catalog.products` (SPU)",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "4. `catalog.product_variants` (SKU)",
+          "level": 3,
+          "line": 113
+        },
+        {
+          "heading": "5. `catalog.variant_images`",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "6. `catalog.attribute_definitions`",
+          "level": 3,
+          "line": 163
+        },
+        {
+          "heading": "7. `catalog.product_attributes` (SPU-level values)",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "8. `catalog.variant_attributes` (SKU-level values)",
+          "level": 3,
+          "line": 205
+        },
+        {
+          "heading": "9. `catalog.tags`",
+          "level": 3,
+          "line": 226
+        },
+        {
+          "heading": "10. `catalog.product_tags` (Join Table)",
+          "level": 3,
+          "line": 248
+        },
+        {
+          "heading": "11. `catalog.collections`",
+          "level": 3,
+          "line": 261
+        },
+        {
+          "heading": "12. `catalog.collection_tags` (Join Table)",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "Cross-Schema References",
+          "level": 2,
+          "line": 295
+        },
+        {
+          "heading": "Data Flow Summary",
+          "level": 2,
+          "line": 308
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "src/schema/identity/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 3,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/school-engine/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/system/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 5,
+      "nonEmptyLines": 5,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types/catalog/IProduct.interface.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 45,
+      "nonEmptyLines": 45,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vitest.config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

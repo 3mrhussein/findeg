@@ -1,0 +1,28 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "docs/SCHEMA.md",
+      "language": "markdown",
+      "sizeLines": 77,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/SETUP.md",
+      "language": "markdown",
+      "sizeLines": 84,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/TAXONOMY.md",
+      "language": "markdown",
+      "sizeLines": 59,
+      "fileCategory": "docs"
+    }
+  ],
+  "batchImportData": {
+    "docs/SCHEMA.md": [],
+    "docs/SETUP.md": [],
+    "docs/TAXONOMY.md": []
+  }
+}

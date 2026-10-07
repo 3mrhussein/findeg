@@ -1,0 +1,5667 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 23,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 23,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/connection.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 31,
+      "exports": [
+        {
+          "name": "connection",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "db",
+          "line": 36,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/administration/audit-logs.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 181,
+      "nonEmptyLines": 147,
+      "functions": [
+        {
+          "name": "getAll",
+          "startLine": 34,
+          "endLine": 82,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "getByEntity",
+          "startLine": 87,
+          "endLine": 93,
+          "params": [
+            "entityType",
+            "entityId"
+          ]
+        },
+        {
+          "name": "getRecent",
+          "startLine": 98,
+          "endLine": 114,
+          "params": [
+            "limit",
+            "entityTypes"
+          ]
+        },
+        {
+          "name": "countLogs",
+          "startLine": 119,
+          "endLine": 150,
+          "params": [
+            "filters"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 166,
+          "endLine": 181,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAll",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "getByEntity",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "getRecent",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "countLogs",
+          "line": 119,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 166,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAll",
+          "callee": "Math.max",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getAll",
+          "callee": "Math.min",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getAll",
+          "callee": "Math.max",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getAll",
+          "callee": "gte",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getAll",
+          "callee": "conditions.push",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getAll",
+          "callee": "lte",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getAll",
+          "callee": "and",
+          "lineNumber": 66
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select({ count: count() }).from(auditLog).where",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select({ count: count() }).from",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAll",
+          "callee": "count",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where(where)\n    .orderBy(desc(auditLog.createdAt))\n    .limit(limit)\n    .offset",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where(where)\n    .orderBy(desc(auditLog.createdAt))\n    .limit",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where(where)\n    .orderBy",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select",
+          "lineNumber": 73
+        },
+        {
+          "caller": "getAll",
+          "callee": "desc",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where(and(eq(auditLog.entityType, entityType), eq(auditLog.entityId, entityId)))\n    .orderBy",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .where",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "db\n    .select",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "and",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "eq",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "eq",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getByEntity",
+          "callee": "desc",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getRecent",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .orderBy(desc(auditLog.createdAt))\n    .limit",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getRecent",
+          "callee": "db\n    .select()\n    .from(auditLog)\n    .orderBy",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getRecent",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getRecent",
+          "callee": "db\n    .select",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getRecent",
+          "callee": "desc",
+          "lineNumber": 105
+        },
+        {
+          "caller": "getRecent",
+          "callee": "Math.min",
+          "lineNumber": 106
+        },
+        {
+          "caller": "getRecent",
+          "callee": "Math.max",
+          "lineNumber": 106
+        },
+        {
+          "caller": "getRecent",
+          "callee": "logs.filter",
+          "lineNumber": 110
+        },
+        {
+          "caller": "getRecent",
+          "callee": "entityTypes.includes",
+          "lineNumber": 110
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 123
+        },
+        {
+          "caller": "countLogs",
+          "callee": "eq",
+          "lineNumber": 123
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 127
+        },
+        {
+          "caller": "countLogs",
+          "callee": "eq",
+          "lineNumber": 127
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 131
+        },
+        {
+          "caller": "countLogs",
+          "callee": "eq",
+          "lineNumber": 131
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 135
+        },
+        {
+          "caller": "countLogs",
+          "callee": "eq",
+          "lineNumber": 135
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 139
+        },
+        {
+          "caller": "countLogs",
+          "callee": "gte",
+          "lineNumber": 139
+        },
+        {
+          "caller": "countLogs",
+          "callee": "conditions.push",
+          "lineNumber": 143
+        },
+        {
+          "caller": "countLogs",
+          "callee": "lte",
+          "lineNumber": 143
+        },
+        {
+          "caller": "countLogs",
+          "callee": "and",
+          "lineNumber": 146
+        },
+        {
+          "caller": "countLogs",
+          "callee": "db.select({ count: count() }).from(auditLog).where",
+          "lineNumber": 148
+        },
+        {
+          "caller": "countLogs",
+          "callee": "db.select({ count: count() }).from",
+          "lineNumber": 148
+        },
+        {
+          "caller": "countLogs",
+          "callee": "db.select",
+          "lineNumber": 148
+        },
+        {
+          "caller": "countLogs",
+          "callee": "count",
+          "lineNumber": 148
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(auditLog)\n    .values({\n      adminUserId: input.adminUserId,\n      entityType: input.entityType,\n      entityId: input.entityId,\n      action: input.action,\n      oldValues: input.oldValues,\n      newValues: input.newValues,\n      createdAt: new Date(),\n    })\n    .returning",
+          "lineNumber": 167
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(auditLog)\n    .values",
+          "lineNumber": 167
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/admin-search-analytics.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 199,
+      "nonEmptyLines": 171,
+      "functions": [
+        {
+          "name": "getStartDate",
+          "startLine": 52,
+          "endLine": 57,
+          "params": [
+            "days"
+          ]
+        },
+        {
+          "name": "getMetrics",
+          "startLine": 61,
+          "endLine": 86,
+          "params": [
+            "days"
+          ]
+        },
+        {
+          "name": "getTopSearches",
+          "startLine": 88,
+          "endLine": 112,
+          "params": [
+            "days",
+            "limit"
+          ]
+        },
+        {
+          "name": "getZeroResultSearches",
+          "startLine": 114,
+          "endLine": 141,
+          "params": [
+            "days",
+            "limit"
+          ]
+        },
+        {
+          "name": "getLowCTRSearches",
+          "startLine": 143,
+          "endLine": 174,
+          "params": [
+            "days",
+            "limit",
+            "minImpressions"
+          ]
+        },
+        {
+          "name": "getLanguageBreakdown",
+          "startLine": 176,
+          "endLine": 199,
+          "params": [
+            "days"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getMetrics",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "getTopSearches",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "getZeroResultSearches",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "getLowCTRSearches",
+          "line": 143,
+          "isDefault": false
+        },
+        {
+          "name": "getLanguageBreakdown",
+          "line": 176,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getStartDate",
+          "callee": "date.setDate",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getStartDate",
+          "callee": "date.getDate",
+          "lineNumber": 55
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "getStartDate",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "gte",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "db\n    .select({\n      total: sql<number>`count(*)`,\n      zeroResults: sql<number>`count(case when ${searchLogs.resultsCount} = 0 then 1 end)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "db\n    .select({\n      total: sql<number>`count(*)`,\n      zeroResults: sql<number>`count(case when ${searchLogs.resultsCount} = 0 then 1 end)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "db\n    .select",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "Number",
+          "lineNumber": 75
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "Number",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "Number",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getMetrics",
+          "callee": "Number",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "getStartDate",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "gte",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy(searchLogs.query)\n    .orderBy(desc(sql`count(*)`))\n    .limit",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy(searchLogs.query)\n    .orderBy",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      avgResults: sql<number>`avg(${searchLogs.resultsCount})`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "db\n    .select",
+          "lineNumber": 92
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "desc",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "sql",
+          "lineNumber": 102
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "results.map",
+          "lineNumber": 105
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "Number",
+          "lineNumber": 108
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "Number",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "Number",
+          "lineNumber": 110
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "Number",
+          "lineNumber": 110
+        },
+        {
+          "caller": "getTopSearches",
+          "callee": "Number",
+          "lineNumber": 110
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "getStartDate",
+          "lineNumber": 118
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "eq",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "filters.push",
+          "lineNumber": 120
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "gte",
+          "lineNumber": 120
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      lastSearchedAt: sql<Date>`max(${searchLogs.createdAt})`,\n      locale: searchLogs.locale,\n    })\n    .from(searchLogs)\n    .where(and(...filters))\n    .groupBy(searchLogs.query, searchLogs.locale)\n    .orderBy(desc(sql`count(*)`))\n    .limit",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      lastSearchedAt: sql<Date>`max(${searchLogs.createdAt})`,\n      locale: searchLogs.locale,\n    })\n    .from(searchLogs)\n    .where(and(...filters))\n    .groupBy(searchLogs.query, searchLogs.locale)\n    .orderBy",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      lastSearchedAt: sql<Date>`max(${searchLogs.createdAt})`,\n      locale: searchLogs.locale,\n    })\n    .from(searchLogs)\n    .where(and(...filters))\n    .groupBy",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      lastSearchedAt: sql<Date>`max(${searchLogs.createdAt})`,\n      locale: searchLogs.locale,\n    })\n    .from(searchLogs)\n    .where",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      count: sql<number>`count(*)`,\n      lastSearchedAt: sql<Date>`max(${searchLogs.createdAt})`,\n      locale: searchLogs.locale,\n    })\n    .from",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "db\n    .select",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "and",
+          "lineNumber": 130
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "desc",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "sql",
+          "lineNumber": 132
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "results.map",
+          "lineNumber": 135
+        },
+        {
+          "caller": "getZeroResultSearches",
+          "callee": "Number",
+          "lineNumber": 137
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "getStartDate",
+          "lineNumber": 148
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "gte",
+          "lineNumber": 149
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy(searchLogs.query)\n    .having(sql`count(*) >= ${minImpressions}`)\n    .orderBy(\n      sql`(count(case when ${searchLogs.clickedProductId} is not null then 1 end)::float / count(*)) ASC`,\n    )\n    .limit",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy(searchLogs.query)\n    .having(sql`count(*) >= ${minImpressions}`)\n    .orderBy",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy(searchLogs.query)\n    .having",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from(searchLogs)\n    .where",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select({\n      query: searchLogs.query,\n      impressions: sql<number>`count(*)`,\n      clicks: sql<number>`count(case when ${searchLogs.clickedProductId} is not null then 1 end)`,\n    })\n    .from",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "db\n    .select",
+          "lineNumber": 151
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "sql",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "sql",
+          "lineNumber": 162
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "results\n    .map((row) => ({\n      query: row.query,\n      impressions: Number(row.impressions),\n      clicks: Number(row.clicks),\n      ctr: (Number(row.clicks) / Number(row.impressions)) * 100,\n    }))\n    .filter",
+          "lineNumber": 166
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "results\n    .map",
+          "lineNumber": 166
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "Number",
+          "lineNumber": 169
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "Number",
+          "lineNumber": 170
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "Number",
+          "lineNumber": 171
+        },
+        {
+          "caller": "getLowCTRSearches",
+          "callee": "Number",
+          "lineNumber": 171
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "getStartDate",
+          "lineNumber": 177
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "gte",
+          "lineNumber": 178
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db.select({ total: count() }).from(searchLogs).where",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db.select({ total: count() }).from",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db.select",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "count",
+          "lineNumber": 180
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db\n    .select({\n      locale: searchLogs.locale,\n      count: count(),\n    })\n    .from(searchLogs)\n    .where(whereClause)\n    .groupBy",
+          "lineNumber": 185
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db\n    .select({\n      locale: searchLogs.locale,\n      count: count(),\n    })\n    .from(searchLogs)\n    .where",
+          "lineNumber": 185
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db\n    .select({\n      locale: searchLogs.locale,\n      count: count(),\n    })\n    .from",
+          "lineNumber": 185
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "db\n    .select",
+          "lineNumber": 185
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "count",
+          "lineNumber": 188
+        },
+        {
+          "caller": "getLanguageBreakdown",
+          "callee": "results.map",
+          "lineNumber": 194
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/brands.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 119,
+      "nonEmptyLines": 101,
+      "functions": [
+        {
+          "name": "getAll",
+          "startLine": 40,
+          "endLine": 64,
+          "params": []
+        },
+        {
+          "name": "getById",
+          "startLine": 66,
+          "endLine": 69,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getBySlug",
+          "startLine": 71,
+          "endLine": 74,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 76,
+          "endLine": 88,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "update",
+          "startLine": 90,
+          "endLine": 102,
+          "params": [
+            "id",
+            "data"
+          ]
+        },
+        {
+          "name": "deleteById",
+          "startLine": 104,
+          "endLine": 106,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "count",
+          "startLine": 108,
+          "endLine": 111,
+          "params": []
+        },
+        {
+          "name": "countProductsByBrandId",
+          "startLine": 113,
+          "endLine": 119,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAll",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "getById",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "getBySlug",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "update",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "deleteById",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "count",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "countProductsByBrandId",
+          "line": 113,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brandId: products.brandId,\n      count: sql<number>`count(*)`.as('count'),\n    })\n    .from(products)\n    .groupBy(products.brandId)\n    .as",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brandId: products.brandId,\n      count: sql<number>`count(*)`.as('count'),\n    })\n    .from(products)\n    .groupBy",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brandId: products.brandId,\n      count: sql<number>`count(*)`.as('count'),\n    })\n    .from",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getAll",
+          "callee": "`count(*)`.as",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brand: brands,\n      productCount: sql<number>`COALESCE(${productCountSubquery.count}, 0)`,\n    })\n    .from(brands)\n    .leftJoin(productCountSubquery, eq(brands.id, productCountSubquery.brandId))\n    .orderBy",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brand: brands,\n      productCount: sql<number>`COALESCE(${productCountSubquery.count}, 0)`,\n    })\n    .from(brands)\n    .leftJoin",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select({\n      brand: brands,\n      productCount: sql<number>`COALESCE(${productCountSubquery.count}, 0)`,\n    })\n    .from",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getAll",
+          "callee": "desc",
+          "lineNumber": 58
+        },
+        {
+          "caller": "getAll",
+          "callee": "dbBrands.map",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from(brands).where",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from(brands).where",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "eq",
+          "lineNumber": 72
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(brands)\n    .values({\n      slug: data.slug,\n      logoUrl: data.logoUrl || null,\n      isActive: data.isActive ?? true,\n      localizedName: data.localizedName,\n      localizedDescription: data.localizedDescription || null,\n    })\n    .returning",
+          "lineNumber": 77
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert(brands)\n    .values",
+          "lineNumber": 77
+        },
+        {
+          "caller": "create",
+          "callee": "db\n    .insert",
+          "lineNumber": 77
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(brands).set(updatePayload).where(eq(brands.id, id)).returning",
+          "lineNumber": 100
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(brands).set(updatePayload).where",
+          "lineNumber": 100
+        },
+        {
+          "caller": "update",
+          "callee": "db.update(brands).set",
+          "lineNumber": 100
+        },
+        {
+          "caller": "update",
+          "callee": "db.update",
+          "lineNumber": 100
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 100
+        },
+        {
+          "caller": "deleteById",
+          "callee": "db.delete(brands).where",
+          "lineNumber": 105
+        },
+        {
+          "caller": "deleteById",
+          "callee": "db.delete",
+          "lineNumber": 105
+        },
+        {
+          "caller": "deleteById",
+          "callee": "eq",
+          "lineNumber": 105
+        },
+        {
+          "caller": "count",
+          "callee": "db.select({ count: sql<number>`count(*)` }).from",
+          "lineNumber": 109
+        },
+        {
+          "caller": "count",
+          "callee": "db.select",
+          "lineNumber": 109
+        },
+        {
+          "caller": "countProductsByBrandId",
+          "callee": "db\n    .select({ count: sql<number>`count(*)` })\n    .from(products)\n    .where",
+          "lineNumber": 114
+        },
+        {
+          "caller": "countProductsByBrandId",
+          "callee": "db\n    .select({ count: sql<number>`count(*)` })\n    .from",
+          "lineNumber": 114
+        },
+        {
+          "caller": "countProductsByBrandId",
+          "callee": "db\n    .select",
+          "lineNumber": 114
+        },
+        {
+          "caller": "countProductsByBrandId",
+          "callee": "eq",
+          "lineNumber": 117
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/categories.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 260,
+      "nonEmptyLines": 221,
+      "functions": [
+        {
+          "name": "getById",
+          "startLine": 30,
+          "endLine": 33,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getAll",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "getBySlug",
+          "startLine": 39,
+          "endLine": 42,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "getByPath",
+          "startLine": 44,
+          "endLine": 47,
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "getTree",
+          "startLine": 51,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "getRoots",
+          "startLine": 55,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "getChildren",
+          "startLine": 63,
+          "endLine": 69,
+          "params": [
+            "parentId"
+          ]
+        },
+        {
+          "name": "getProductCounts",
+          "startLine": 74,
+          "endLine": 93,
+          "params": [
+            "categoryIds"
+          ]
+        },
+        {
+          "name": "getDescendants",
+          "startLine": 98,
+          "endLine": 110,
+          "params": [
+            "categoryId"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 114,
+          "endLine": 164,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "update",
+          "startLine": 166,
+          "endLine": 232,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "reorder",
+          "startLine": 234,
+          "endLine": 243,
+          "params": [
+            "items"
+          ]
+        },
+        {
+          "name": "deleteById",
+          "startLine": 245,
+          "endLine": 247,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getCount",
+          "startLine": 249,
+          "endLine": 252,
+          "params": []
+        },
+        {
+          "name": "getProductCount",
+          "startLine": 254,
+          "endLine": 260,
+          "params": [
+            "categoryId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getById",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "getAll",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "getBySlug",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "getByPath",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "getTree",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "getRoots",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "getChildren",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "getProductCounts",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "getDescendants",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "update",
+          "line": 166,
+          "isDefault": false
+        },
+        {
+          "name": "reorder",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "deleteById",
+          "line": 245,
+          "isDefault": false
+        },
+        {
+          "name": "getCount",
+          "line": 249,
+          "isDefault": false
+        },
+        {
+          "name": "getProductCount",
+          "line": 254,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getById",
+          "callee": "db.select().from(categories).where(eq(categories.id, id)).limit",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from(categories).where",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select().from",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getById",
+          "callee": "db.select",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getById",
+          "callee": "eq",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select().from(categories).orderBy",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select().from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getAll",
+          "callee": "db.select",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getAll",
+          "callee": "asc",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from(categories).where(eq(categories.slug, slug)).limit",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from(categories).where",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "db.select",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getBySlug",
+          "callee": "eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getByPath",
+          "callee": "db.select().from(categories).where(eq(categories.path, path)).limit",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getByPath",
+          "callee": "db.select().from(categories).where",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getByPath",
+          "callee": "db.select().from",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getByPath",
+          "callee": "db.select",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getByPath",
+          "callee": "eq",
+          "lineNumber": 45
+        },
+        {
+          "caller": "getTree",
+          "callee": "db.select().from(categories).orderBy",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getTree",
+          "callee": "db.select().from",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getTree",
+          "callee": "db.select",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getTree",
+          "callee": "asc",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getRoots",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(or(isNull(categories.parentId), eq(categories.depth, 0)))\n    .orderBy",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getRoots",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getRoots",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getRoots",
+          "callee": "db\n    .select",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getRoots",
+          "callee": "or",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getRoots",
+          "callee": "isNull",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getRoots",
+          "callee": "eq",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getRoots",
+          "callee": "asc",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getChildren",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(eq(categories.parentId, parentId))\n    .orderBy",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getChildren",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getChildren",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getChildren",
+          "callee": "db\n    .select",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getChildren",
+          "callee": "eq",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getChildren",
+          "callee": "asc",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "db\n    .select({\n      categoryId: products.categoryId,\n      count: count(),\n    })\n    .from(products)\n    .where(or(...categoryIds.map((id) => eq(products.categoryId, id))))\n    .groupBy",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "db\n    .select({\n      categoryId: products.categoryId,\n      count: count(),\n    })\n    .from(products)\n    .where",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "db\n    .select({\n      categoryId: products.categoryId,\n      count: count(),\n    })\n    .from",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "db\n    .select",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "count",
+          "lineNumber": 80
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "or",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "categoryIds.map",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "eq",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "results.forEach",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "counts.set",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getProductCounts",
+          "callee": "Number",
+          "lineNumber": 89
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "getById",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where(like(categories.path, `${parent.path}%`))\n    .orderBy",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "db\n    .select()\n    .from(categories)\n    .where",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "db\n    .select",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "like",
+          "lineNumber": 106
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "asc",
+          "lineNumber": 107
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "asc",
+          "lineNumber": 107
+        },
+        {
+          "caller": "getDescendants",
+          "callee": "results.filter",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "db.transaction",
+          "lineNumber": 115
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .select()\n        .from(categories)\n        .where(eq(categories.id, input.parentId))\n        .limit",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .select()\n        .from(categories)\n        .where",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .select()\n        .from",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n        .select",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "eq",
+          "lineNumber": 124
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .insert(categories)\n      .values({\n        slug: input.slug,\n        localizedName: Object.fromEntries(\n          (input.translations || []).map((t) => [t.language, t.name]),\n        ),\n        localizedDescription: Object.fromEntries(\n          (input.translations || [])\n            .filter((t) => !!t.description)\n            .map((t) => [t.language, t.description as string]),\n        ),\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder || 0,\n        isActive: input.isActive ?? true,\n        path: path,\n        depth: depth,\n      })\n      .returning",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .insert(categories)\n      .values",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .insert",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create",
+          "callee": "Object.fromEntries",
+          "lineNumber": 136
+        },
+        {
+          "caller": "create",
+          "callee": "(input.translations || []).map",
+          "lineNumber": 137
+        },
+        {
+          "caller": "create",
+          "callee": "Object.fromEntries",
+          "lineNumber": 139
+        },
+        {
+          "caller": "create",
+          "callee": "(input.translations || [])\n            .filter((t) => !!t.description)\n            .map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "create",
+          "callee": "(input.translations || [])\n            .filter",
+          "lineNumber": 140
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .update(categories)\n      .set({ path: inclusivePath })\n      .where(eq(categories.id, newCategory.id))\n      .returning",
+          "lineNumber": 156
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .update(categories)\n      .set({ path: inclusivePath })\n      .where",
+          "lineNumber": 156
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .update(categories)\n      .set",
+          "lineNumber": 156
+        },
+        {
+          "caller": "create",
+          "callee": "tx\n      .update",
+          "lineNumber": 156
+        },
+        {
+          "caller": "create",
+          "callee": "eq",
+          "lineNumber": 159
+        },
+        {
+          "caller": "update",
+          "callee": "db.transaction",
+          "lineNumber": 167
+        },
+        {
+          "caller": "update",
+          "callee": "tx.select().from(categories).where(eq(categories.id, id)).limit",
+          "lineNumber": 168
+        },
+        {
+          "caller": "update",
+          "callee": "tx.select().from(categories).where",
+          "lineNumber": 168
+        },
+        {
+          "caller": "update",
+          "callee": "tx.select().from",
+          "lineNumber": 168
+        },
+        {
+          "caller": "update",
+          "callee": "tx.select",
+          "lineNumber": 168
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 168
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n          .select()\n          .from(categories)\n          .where(eq(categories.id, input.parentId))\n          .limit",
+          "lineNumber": 183
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n          .select()\n          .from(categories)\n          .where",
+          "lineNumber": 183
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n          .select()\n          .from",
+          "lineNumber": 183
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n          .select",
+          "lineNumber": 183
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 186
+        },
+        {
+          "caller": "update",
+          "callee": "tx.execute",
+          "lineNumber": 199
+        },
+        {
+          "caller": "update",
+          "callee": "sql",
+          "lineNumber": 199
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n      .update(categories)\n      .set({\n        slug: input.slug,\n        localizedName: Object.fromEntries(\n          (input.translations || []).map((t) => [t.language, t.name]),\n        ),\n        localizedDescription: Object.fromEntries(\n          (input.translations || [])\n            .filter((t) => !!t.description)\n            .map((t) => [t.language, t.description as string]),\n        ),\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder ?? existing[0].sortOrder,\n        isActive: input.isActive ?? existing[0].isActive,\n        path: newPath,\n        depth: newDepth,\n        updatedAt: new Date(),\n      })\n      .where(eq(categories.id, id))\n      .returning",
+          "lineNumber": 207
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n      .update(categories)\n      .set({\n        slug: input.slug,\n        localizedName: Object.fromEntries(\n          (input.translations || []).map((t) => [t.language, t.name]),\n        ),\n        localizedDescription: Object.fromEntries(\n          (input.translations || [])\n            .filter((t) => !!t.description)\n            .map((t) => [t.language, t.description as string]),\n        ),\n        parentId: input.parentId || null,\n        icon: input.icon || null,\n        sortOrder: input.sortOrder ?? existing[0].sortOrder,\n        isActive: input.isActive ?? existing[0].isActive,\n        path: newPath,\n        depth: newDepth,\n        updatedAt: new Date(),\n      })\n      .where",
+          "lineNumber": 207
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n      .update(categories)\n      .set",
+          "lineNumber": 207
+        },
+        {
+          "caller": "update",
+          "callee": "tx\n      .update",
+          "lineNumber": 207
+        },
+        {
+          "caller": "update",
+          "callee": "Object.fromEntries",
+          "lineNumber": 211
+        },
+        {
+          "caller": "update",
+          "callee": "(input.translations || []).map",
+          "lineNumber": 212
+        },
+        {
+          "caller": "update",
+          "callee": "Object.fromEntries",
+          "lineNumber": 214
+        },
+        {
+          "caller": "update",
+          "callee": "(input.translations || [])\n            .filter((t) => !!t.description)\n            .map",
+          "lineNumber": 215
+        },
+        {
+          "caller": "update",
+          "callee": "(input.translations || [])\n            .filter",
+          "lineNumber": 215
+        },
+        {
+          "caller": "update",
+          "callee": "eq",
+          "lineNumber": 227
+        },
+        {
+          "caller": "reorder",
+          "callee": "db.transaction",
+          "lineNumber": 235
+        },
+        {
+          "caller": "reorder",
+          "callee": "tx\n        .update(categories)\n        .set({ sortOrder: item.sortOrder })\n        .where",
+          "lineNumber": 237
+        },
+        {
+          "caller": "reorder",
+          "callee": "tx\n        .update(categories)\n        .set",
+          "lineNumber": 237
+        },
+        {
+          "caller": "reorder",
+          "callee": "tx\n        .update",
+          "lineNumber": 237
+        },
+        {
+          "caller": "reorder",
+          "callee": "eq",
+          "lineNumber": 240
+        },
+        {
+          "caller": "deleteById",
+          "callee": "db.delete(categories).where",
+          "lineNumber": 246
+        },
+        {
+          "caller": "deleteById",
+          "callee": "db.delete",
+          "lineNumber": 246
+        },
+        {
+          "caller": "deleteById",
+          "callee": "eq",
+          "lineNumber": 246
+        },
+        {
+          "caller": "getCount",
+          "callee": "db.select({ value: count() }).from",
+          "lineNumber": 250
+        },
+        {
+          "caller": "getCount",
+          "callee": "db.select",
+          "lineNumber": 250
+        },
+        {
+          "caller": "getCount",
+          "callee": "count",
+          "lineNumber": 250
+        },
+        {
+          "caller": "getProductCount",
+          "callee": "db\n    .select({ value: count() })\n    .from(products)\n    .where",
+          "lineNumber": 255
+        },
+        {
+          "caller": "getProductCount",
+          "callee": "db\n    .select({ value: count() })\n    .from",
+          "lineNumber": 255
+        },
+        {
+          "caller": "getProductCount",
+          "callee": "db\n    .select",
+          "lineNumber": 255
+        },
+        {
+          "caller": "getProductCount",
+          "callee": "count",
+          "lineNumber": 256
+        },
+        {
+          "caller": "getProductCount",
+          "callee": "eq",
+          "lineNumber": 258
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 15,
+        "functionCount": 15,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/collections.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 152,
+      "nonEmptyLines": 131,
+      "functions": [
+        {
+          "name": "getAllCollections",
+          "startLine": 19,
+          "endLine": 29,
+          "params": [
+            "options"
+          ]
+        },
+        {
+          "name": "getCollectionById",
+          "startLine": 34,
+          "endLine": 37,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getCollectionBySlug",
+          "startLine": 42,
+          "endLine": 45,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "getCollectionWithTags",
+          "startLine": 50,
+          "endLine": 69,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getCollectionBySlugWithTags",
+          "startLine": 74,
+          "endLine": 93,
+          "params": [
+            "slug"
+          ]
+        },
+        {
+          "name": "createCollection",
+          "startLine": 98,
+          "endLine": 101,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "updateCollection",
+          "startLine": 106,
+          "endLine": 116,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "deleteCollection",
+          "startLine": 121,
+          "endLine": 123,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "setCollectionTags",
+          "startLine": 128,
+          "endLine": 140,
+          "params": [
+            "collectionId",
+            "tagIds"
+          ]
+        },
+        {
+          "name": "getCollectionTagIds",
+          "startLine": 145,
+          "endLine": 152,
+          "params": [
+            "collectionId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAllCollections",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionById",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionBySlug",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionWithTags",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionBySlugWithTags",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "createCollection",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "updateCollection",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "deleteCollection",
+          "line": 121,
+          "isDefault": false
+        },
+        {
+          "name": "setCollectionTags",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "getCollectionTagIds",
+          "line": 145,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAllCollections",
+          "callee": "db.select().from(collections).$dynamic",
+          "lineNumber": 22
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "db.select().from",
+          "lineNumber": 22
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "db.select",
+          "lineNumber": 22
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "query.where",
+          "lineNumber": 25
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "eq",
+          "lineNumber": 25
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "query.orderBy",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getAllCollections",
+          "callee": "asc",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCollectionById",
+          "callee": "db.select().from(collections).where(eq(collections.id, id)).limit",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCollectionById",
+          "callee": "db.select().from(collections).where",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCollectionById",
+          "callee": "db.select().from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCollectionById",
+          "callee": "db.select",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCollectionById",
+          "callee": "eq",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from(collections).where(eq(collections.slug, slug)).limit",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from(collections).where",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select().from",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "db.select",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCollectionBySlug",
+          "callee": "eq",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db.select().from(collections).where(eq(collections.id, id)).limit",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db.select().from(collections).where",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db.select().from",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db.select",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "eq",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin(tags, eq(collectionTags.tagId, tags.id))\n    .where",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "db\n    .select",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "eq",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "eq",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getCollectionWithTags",
+          "callee": "tagResults.map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db.select().from(collections).where(eq(collections.slug, slug)).limit",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db.select().from(collections).where",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db.select().from",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db.select",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "eq",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin(tags, eq(collectionTags.tagId, tags.id))\n    .where",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from(collectionTags)\n    .innerJoin",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "db\n    .select",
+          "lineNumber": 83
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "eq",
+          "lineNumber": 86
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "eq",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getCollectionBySlugWithTags",
+          "callee": "tagResults.map",
+          "lineNumber": 91
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert(collections).values(input).returning",
+          "lineNumber": 99
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert(collections).values",
+          "lineNumber": 99
+        },
+        {
+          "caller": "createCollection",
+          "callee": "db.insert",
+          "lineNumber": 99
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set({ ...input, updatedAt: new Date() })\n    .where(eq(collections.id, id))\n    .returning",
+          "lineNumber": 110
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set({ ...input, updatedAt: new Date() })\n    .where",
+          "lineNumber": 110
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update(collections)\n    .set",
+          "lineNumber": 110
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "db\n    .update",
+          "lineNumber": 110
+        },
+        {
+          "caller": "updateCollection",
+          "callee": "eq",
+          "lineNumber": 113
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "db.delete(collections).where",
+          "lineNumber": 122
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "db.delete",
+          "lineNumber": 122
+        },
+        {
+          "caller": "deleteCollection",
+          "callee": "eq",
+          "lineNumber": 122
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "db.transaction",
+          "lineNumber": 129
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.delete(collectionTags).where",
+          "lineNumber": 130
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.delete",
+          "lineNumber": 130
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "eq",
+          "lineNumber": 130
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.insert(collectionTags).values",
+          "lineNumber": 132
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tx.insert",
+          "lineNumber": 132
+        },
+        {
+          "caller": "setCollectionTags",
+          "callee": "tagIds.map",
+          "lineNumber": 133
+        },
+        {
+          "caller": "getCollectionTagIds",
+          "callee": "db\n    .select({ tagId: collectionTags.tagId })\n    .from(collectionTags)\n    .where",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getCollectionTagIds",
+          "callee": "db\n    .select({ tagId: collectionTags.tagId })\n    .from",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getCollectionTagIds",
+          "callee": "db\n    .select",
+          "lineNumber": 146
+        },
+        {
+          "caller": "getCollectionTagIds",
+          "callee": "eq",
+          "lineNumber": 149
+        },
+        {
+          "caller": "getCollectionTagIds",
+          "callee": "results.map",
+          "lineNumber": 151
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 10,
+        "functionCount": 10,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/inventory.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 247,
+      "nonEmptyLines": 226,
+      "functions": [
+        {
+          "name": "getBalance",
+          "startLine": 38,
+          "endLine": 66,
+          "params": [
+            "variantId",
+            "warehouseId"
+          ]
+        },
+        {
+          "name": "getAllBalances",
+          "startLine": 71,
+          "endLine": 88,
+          "params": [
+            "variantId"
+          ]
+        },
+        {
+          "name": "adjustStock",
+          "startLine": 93,
+          "endLine": 127,
+          "params": [
+            "variantId",
+            "warehouseId",
+            "movement"
+          ]
+        },
+        {
+          "name": "reserveStock",
+          "startLine": 132,
+          "endLine": 179,
+          "params": [
+            "variantId",
+            "warehouseId",
+            "quantity",
+            "orderId",
+            "tx"
+          ]
+        },
+        {
+          "name": "releaseReservation",
+          "startLine": 184,
+          "endLine": 214,
+          "params": [
+            "variantId",
+            "warehouseId",
+            "quantity",
+            "orderId",
+            "tx"
+          ]
+        },
+        {
+          "name": "getLowStock",
+          "startLine": 219,
+          "endLine": 247,
+          "params": [
+            "threshold"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getBalance",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "getAllBalances",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "adjustStock",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "reserveStock",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "releaseReservation",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "getLowStock",
+          "line": 219,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getBalance",
+          "callee": "eq",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getBalance",
+          "callee": "conditions.push",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getBalance",
+          "callee": "eq",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getBalance",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from(inventoryBalances)\n    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))\n    .where(and(...conditions))\n    .limit",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getBalance",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from(inventoryBalances)\n    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))\n    .where",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getBalance",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from(inventoryBalances)\n    .innerJoin",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getBalance",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getBalance",
+          "callee": "db\n    .select",
+          "lineNumber": 47
+        },
+        {
+          "caller": "getBalance",
+          "callee": "eq",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getBalance",
+          "callee": "and",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from(inventoryBalances)\n    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))\n    .where",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from(inventoryBalances)\n    .innerJoin",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "db\n    .select({\n      variantId: inventoryBalances.variantId,\n      warehouseId: inventoryBalances.warehouseId,\n      warehouseCode: warehouses.code,\n      onHand: inventoryBalances.onHand,\n      reserved: inventoryBalances.reserved,\n    })\n    .from",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "db\n    .select",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "eq",
+          "lineNumber": 81
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "eq",
+          "lineNumber": 82
+        },
+        {
+          "caller": "getAllBalances",
+          "callee": "results.map",
+          "lineNumber": 84
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "db.transaction",
+          "lineNumber": 98
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "tx\n      .insert(inventoryBalances)\n      .values({\n        variantId,\n        warehouseId,\n        onHand: movement.quantity,\n        reserved: 0,\n      })\n      .onConflictDoUpdate",
+          "lineNumber": 100
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "tx\n      .insert(inventoryBalances)\n      .values",
+          "lineNumber": 100
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "tx\n      .insert",
+          "lineNumber": 100
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "sql",
+          "lineNumber": 111
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "tx.insert(stockMovements).values",
+          "lineNumber": 116
+        },
+        {
+          "caller": "adjustStock",
+          "callee": "tx.insert",
+          "lineNumber": 116
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "withTransaction",
+          "lineNumber": 139
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .select()\n      .from(inventoryBalances)\n      .where(\n        and(\n          eq(inventoryBalances.variantId, variantId),\n          eq(inventoryBalances.warehouseId, warehouseId),\n        ),\n      )\n      .for",
+          "lineNumber": 141
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .select()\n      .from(inventoryBalances)\n      .where",
+          "lineNumber": 141
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .select()\n      .from",
+          "lineNumber": 141
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .select",
+          "lineNumber": 141
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "and",
+          "lineNumber": 145
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "eq",
+          "lineNumber": 146
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "eq",
+          "lineNumber": 147
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .update(inventoryBalances)\n      .set({ reserved: sql`${inventoryBalances.reserved} + ${quantity}` })\n      .where",
+          "lineNumber": 156
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .update(inventoryBalances)\n      .set",
+          "lineNumber": 156
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx\n      .update",
+          "lineNumber": 156
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "sql",
+          "lineNumber": 158
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "and",
+          "lineNumber": 160
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "eq",
+          "lineNumber": 161
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "eq",
+          "lineNumber": 162
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx.insert(stockMovements).values",
+          "lineNumber": 167
+        },
+        {
+          "caller": "reserveStock",
+          "callee": "tx.insert",
+          "lineNumber": 167
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "withTransaction",
+          "lineNumber": 191
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "tx\n      .update(inventoryBalances)\n      .set({\n        reserved: sql`${inventoryBalances.reserved} - ${quantity}`,\n      })\n      .where",
+          "lineNumber": 192
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "tx\n      .update(inventoryBalances)\n      .set",
+          "lineNumber": 192
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "tx\n      .update",
+          "lineNumber": 192
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "sql",
+          "lineNumber": 195
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "and",
+          "lineNumber": 198
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "eq",
+          "lineNumber": 199
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "eq",
+          "lineNumber": 200
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "tx.insert(stockMovements).values",
+          "lineNumber": 204
+        },
+        {
+          "caller": "releaseReservation",
+          "callee": "tx.insert",
+          "lineNumber": 204
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select({\n      variant: productVariants,\n      balance: inventoryBalances,\n      warehouseCode: warehouses.code,\n    })\n    .from(inventoryBalances)\n    .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))\n    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))\n    .where(\n      threshold !== undefined\n        ? sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= ${threshold}`\n        : sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= 5`,\n    )\n    .orderBy",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select({\n      variant: productVariants,\n      balance: inventoryBalances,\n      warehouseCode: warehouses.code,\n    })\n    .from(inventoryBalances)\n    .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))\n    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))\n    .where",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select({\n      variant: productVariants,\n      balance: inventoryBalances,\n      warehouseCode: warehouses.code,\n    })\n    .from(inventoryBalances)\n    .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))\n    .innerJoin",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select({\n      variant: productVariants,\n      balance: inventoryBalances,\n      warehouseCode: warehouses.code,\n    })\n    .from(inventoryBalances)\n    .innerJoin",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select({\n      variant: productVariants,\n      balance: inventoryBalances,\n      warehouseCode: warehouses.code,\n    })\n    .from",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "db\n    .select",
+          "lineNumber": 220
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "eq",
+          "lineNumber": 227
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "eq",
+          "lineNumber": 228
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "sql",
+          "lineNumber": 231
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "sql",
+          "lineNumber": 232
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "desc",
+          "lineNumber": 234
+        },
+        {
+          "caller": "getLowStock",
+          "callee": "results.map",
+          "lineNumber": 236
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/search.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 165,
+      "nonEmptyLines": 141,
+      "functions": [
+        {
+          "name": "logCatalogSearchRaw",
+          "startLine": 31,
+          "endLine": 45,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "executeCatalogScoredSearchRaw",
+          "startLine": 47,
+          "endLine": 115,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "getCatalogSuggestionsRaw",
+          "startLine": 117,
+          "endLine": 165,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "logCatalogSearchRaw",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "executeCatalogScoredSearchRaw",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "getCatalogSuggestionsRaw",
+          "line": 117,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "logCatalogSearchRaw",
+          "callee": "db.insert(searchLogs).values",
+          "lineNumber": 38
+        },
+        {
+          "caller": "logCatalogSearchRaw",
+          "callee": "db.insert",
+          "lineNumber": 38
+        },
+        {
+          "caller": "logCatalogSearchRaw",
+          "callee": "input.query.substring",
+          "lineNumber": 39
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 57
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 83
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 83
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 84
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 84
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 85
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 85
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 86
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 86
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 87
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "sql",
+          "lineNumber": 87
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "db.execute",
+          "lineNumber": 109
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "(results as unknown as Record<string, unknown>[]).map",
+          "lineNumber": 111
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "Number",
+          "lineNumber": 112
+        },
+        {
+          "caller": "executeCatalogScoredSearchRaw",
+          "callee": "Number",
+          "lineNumber": 113
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "sql",
+          "lineNumber": 127
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "sql",
+          "lineNumber": 139
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "Promise.all",
+          "lineNumber": 148
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "db.execute",
+          "lineNumber": 149
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "db.execute",
+          "lineNumber": 150
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "(productResults as unknown as Record<string, unknown>[]).map",
+          "lineNumber": 154
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "Number",
+          "lineNumber": 155
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "String",
+          "lineNumber": 156
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "String",
+          "lineNumber": 157
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "(categoryResults as unknown as Record<string, unknown>[]).map",
+          "lineNumber": 159
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "Number",
+          "lineNumber": 160
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "String",
+          "lineNumber": 161
+        },
+        {
+          "caller": "getCatalogSuggestionsRaw",
+          "callee": "String",
+          "lineNumber": 162
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/tags.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 93,
+      "functions": [
+        {
+          "name": "getAllTags",
+          "startLine": 18,
+          "endLine": 20,
+          "params": []
+        },
+        {
+          "name": "getTagsByGroup",
+          "startLine": 25,
+          "endLine": 27,
+          "params": [
+            "group"
+          ]
+        },
+        {
+          "name": "getTagById",
+          "startLine": 32,
+          "endLine": 35,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "createTag",
+          "startLine": 40,
+          "endLine": 43,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "updateTag",
+          "startLine": 48,
+          "endLine": 55,
+          "params": [
+            "id",
+            "input"
+          ]
+        },
+        {
+          "name": "deleteTag",
+          "startLine": 60,
+          "endLine": 62,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "getTagsForProduct",
+          "startLine": 67,
+          "endLine": 75,
+          "params": [
+            "productId"
+          ]
+        },
+        {
+          "name": "setProductTags",
+          "startLine": 80,
+          "endLine": 94,
+          "params": [
+            "productId",
+            "tagIds"
+          ]
+        },
+        {
+          "name": "getProductIdsByTag",
+          "startLine": 99,
+          "endLine": 106,
+          "params": [
+            "tagId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getAllTags",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "getTagsByGroup",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "getTagById",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "createTag",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "updateTag",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "deleteTag",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "getTagsForProduct",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "setProductTags",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "getProductIdsByTag",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getAllTags",
+          "callee": "db.select().from(tags).orderBy",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getAllTags",
+          "callee": "db.select().from",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getAllTags",
+          "callee": "db.select",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getTagsByGroup",
+          "callee": "db.select().from(tags).where(eq(tags.group, group)).orderBy",
+          "lineNumber": 26
+        },
+        {
+          "caller": "getTagsByGroup",
+          "callee": "db.select().from(tags).where",
+          "lineNumber": 26
+        },
+        {
+          "caller": "getTagsByGroup",
+          "callee": "db.select().from",
+          "lineNumber": 26
+        },
+        {
+          "caller": "getTagsByGroup",
+          "callee": "db.select",
+          "lineNumber": 26
+        },
+        {
+          "caller": "getTagsByGroup",
+          "callee": "eq",
+          "lineNumber": 26
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db.select().from(tags).where(eq(tags.id, id)).limit",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db.select().from(tags).where",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db.select().from",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getTagById",
+          "callee": "db.select",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getTagById",
+          "callee": "eq",
+          "lineNumber": 33
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert(tags).values(input).returning",
+          "lineNumber": 41
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert(tags).values",
+          "lineNumber": 41
+        },
+        {
+          "caller": "createTag",
+          "callee": "db.insert",
+          "lineNumber": 41
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set({ ...input, updatedAt: new Date() })\n    .where(eq(tags.id, id))\n    .returning",
+          "lineNumber": 49
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set({ ...input, updatedAt: new Date() })\n    .where",
+          "lineNumber": 49
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update(tags)\n    .set",
+          "lineNumber": 49
+        },
+        {
+          "caller": "updateTag",
+          "callee": "db\n    .update",
+          "lineNumber": 49
+        },
+        {
+          "caller": "updateTag",
+          "callee": "eq",
+          "lineNumber": 52
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "db.delete(tags).where",
+          "lineNumber": 61
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "db.delete",
+          "lineNumber": 61
+        },
+        {
+          "caller": "deleteTag",
+          "callee": "eq",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "db\n    .select({ tag: tags })\n    .from(productTags)\n    .innerJoin(tags, eq(productTags.tagId, tags.id))\n    .where",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "db\n    .select({ tag: tags })\n    .from(productTags)\n    .innerJoin",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "db\n    .select({ tag: tags })\n    .from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "db\n    .select",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "eq",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "eq",
+          "lineNumber": 72
+        },
+        {
+          "caller": "getTagsForProduct",
+          "callee": "results.map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "db.transaction",
+          "lineNumber": 81
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "tx.delete(productTags).where",
+          "lineNumber": 83
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "tx.delete",
+          "lineNumber": 83
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "eq",
+          "lineNumber": 83
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "tx.insert(productTags).values",
+          "lineNumber": 86
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "tx.insert",
+          "lineNumber": 86
+        },
+        {
+          "caller": "setProductTags",
+          "callee": "tagIds.map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getProductIdsByTag",
+          "callee": "db\n    .select({ productId: productTags.productId })\n    .from(productTags)\n    .where",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getProductIdsByTag",
+          "callee": "db\n    .select({ productId: productTags.productId })\n    .from",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getProductIdsByTag",
+          "callee": "db\n    .select",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getProductIdsByTag",
+          "callee": "eq",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getProductIdsByTag",
+          "callee": "results.map",
+          "lineNumber": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 9,
+        "functionCount": 9,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/admin-roles.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 100,
+      "nonEmptyLines": 88,
+      "functions": [
+        {
+          "name": "listRoleIdsRaw",
+          "startLine": 36,
+          "endLine": 40,
+          "params": []
+        },
+        {
+          "name": "getAdminRolesSnapshotRaw",
+          "startLine": 42,
+          "endLine": 89,
+          "params": [
+            "roleIds"
+          ]
+        },
+        {
+          "name": "listPermissionItemsRaw",
+          "startLine": 91,
+          "endLine": 100,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "listRoleIdsRaw",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "getAdminRolesSnapshotRaw",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "listPermissionItemsRaw",
+          "line": 91,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "listRoleIdsRaw",
+          "callee": "db.select({ id: roles.id }).from(roles).orderBy",
+          "lineNumber": 37
+        },
+        {
+          "caller": "listRoleIdsRaw",
+          "callee": "db.select({ id: roles.id }).from",
+          "lineNumber": 37
+        },
+        {
+          "caller": "listRoleIdsRaw",
+          "callee": "db.select",
+          "lineNumber": 37
+        },
+        {
+          "caller": "listRoleIdsRaw",
+          "callee": "rows.map",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "Promise.all",
+          "lineNumber": 51
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        id: roles.id,\n        code: roles.code,\n        name: roles.name,\n      })\n      .from(roles)\n      .where(inArray(roles.id, roleIds))\n      .orderBy",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        id: roles.id,\n        code: roles.code,\n        name: roles.name,\n      })\n      .from(roles)\n      .where",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        id: roles.id,\n        code: roles.code,\n        name: roles.name,\n      })\n      .from",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 52
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 59
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: rolePermissions.roleId,\n        permissionId: permissions.id,\n        permissionCode: permissions.code,\n        permissionName: permissions.name,\n      })\n      .from(rolePermissions)\n      .innerJoin(permissions, eq(permissions.id, rolePermissions.permissionId))\n      .where",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: rolePermissions.roleId,\n        permissionId: permissions.id,\n        permissionCode: permissions.code,\n        permissionName: permissions.name,\n      })\n      .from(rolePermissions)\n      .innerJoin",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: rolePermissions.roleId,\n        permissionId: permissions.id,\n        permissionCode: permissions.code,\n        permissionName: permissions.name,\n      })\n      .from",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "eq",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: userRoles.roleId,\n        userCount: count(),\n      })\n      .from(userRoles)\n      .where(inArray(userRoles.roleId, roleIds))\n      .groupBy",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: userRoles.roleId,\n        userCount: count(),\n      })\n      .from(userRoles)\n      .where",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select({\n        roleId: userRoles.roleId,\n        userCount: count(),\n      })\n      .from",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "count",
+          "lineNumber": 74
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "userCountRows.map",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getAdminRolesSnapshotRaw",
+          "callee": "Number",
+          "lineNumber": 86
+        },
+        {
+          "caller": "listPermissionItemsRaw",
+          "callee": "db\n    .select({\n      id: permissions.id,\n      code: permissions.code,\n      name: permissions.name,\n    })\n    .from(permissions)\n    .orderBy",
+          "lineNumber": 92
+        },
+        {
+          "caller": "listPermissionItemsRaw",
+          "callee": "db\n    .select({\n      id: permissions.id,\n      code: permissions.code,\n      name: permissions.name,\n    })\n    .from",
+          "lineNumber": 92
+        },
+        {
+          "caller": "listPermissionItemsRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 92
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/admin-users.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 87,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "listAdminUserIdsRaw",
+          "startLine": 34,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "getAdminUsersSnapshotRaw",
+          "startLine": 40,
+          "endLine": 87,
+          "params": [
+            "userIds"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "listAdminUserIdsRaw",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "getAdminUsersSnapshotRaw",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "listAdminUserIdsRaw",
+          "callee": "db.selectDistinct({ userId: userRoles.userId }).from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "listAdminUserIdsRaw",
+          "callee": "db.selectDistinct",
+          "lineNumber": 35
+        },
+        {
+          "caller": "listAdminUserIdsRaw",
+          "callee": "rows.map",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "Promise.all",
+          "lineNumber": 49
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        id: users.id,\n        email: users.email,\n        firstName: users.firstName,\n        lastName: users.lastName,\n        isActive: users.isActive,\n        createdAt: users.createdAt,\n      })\n      .from(users)\n      .where",
+          "lineNumber": 50
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        id: users.id,\n        email: users.email,\n        firstName: users.firstName,\n        lastName: users.lastName,\n        isActive: users.isActive,\n        createdAt: users.createdAt,\n      })\n      .from",
+          "lineNumber": 50
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 50
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userRoles.userId,\n        roleId: roles.id,\n        roleCode: roles.code,\n        roleName: roles.name,\n      })\n      .from(userRoles)\n      .innerJoin(roles, eq(roles.id, userRoles.roleId))\n      .where",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userRoles.userId,\n        roleId: roles.id,\n        roleCode: roles.code,\n        roleName: roles.name,\n      })\n      .from(userRoles)\n      .innerJoin",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userRoles.userId,\n        roleId: roles.id,\n        roleCode: roles.code,\n        roleName: roles.name,\n      })\n      .from",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "eq",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 70
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userPermissions.userId,\n        permissionCode: permissions.code,\n        action: userPermissions.action,\n      })\n      .from(userPermissions)\n      .innerJoin(permissions, eq(permissions.id, userPermissions.permissionId))\n      .where",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userPermissions.userId,\n        permissionCode: permissions.code,\n        action: userPermissions.action,\n      })\n      .from(userPermissions)\n      .innerJoin",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select({\n        userId: userPermissions.userId,\n        permissionCode: permissions.code,\n        action: userPermissions.action,\n      })\n      .from",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "db\n      .select",
+          "lineNumber": 71
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "eq",
+          "lineNumber": 78
+        },
+        {
+          "caller": "getAdminUsersSnapshotRaw",
+          "callee": "inArray",
+          "lineNumber": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/authorization-version.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 12,
+      "functions": [
+        {
+          "name": "advanceAuthorizationVersion",
+          "startLine": 6,
+          "endLine": 14,
+          "params": [
+            "updates"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "advanceAuthorizationVersion",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "advanceAuthorizationVersion",
+          "callee": "sql",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/create-admin-user.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 38,
+      "functions": [
+        {
+          "name": "createAdminUserRaw",
+          "startLine": 12,
+          "endLine": 43,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createAdminUserRaw",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "db.transaction",
+          "lineNumber": 13
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx\n      .insert(users)\n      .values({\n        email: input.email,\n        firstName: input.firstName,\n        lastName: input.lastName,\n        portalRole: 'staff',\n        isActive: true,\n      })\n      .returning",
+          "lineNumber": 14
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx\n      .insert(users)\n      .values",
+          "lineNumber": 14
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx\n      .insert",
+          "lineNumber": 14
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx.insert(passwordCredentials).values",
+          "lineNumber": 25
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx.insert",
+          "lineNumber": 25
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx.insert(userRoles).values",
+          "lineNumber": 32
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "tx.insert",
+          "lineNumber": 32
+        },
+        {
+          "caller": "createAdminUserRaw",
+          "callee": "input.roleIds.map",
+          "lineNumber": 33
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/create-role.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 20,
+      "functions": [
+        {
+          "name": "createRoleRaw",
+          "startLine": 4,
+          "endLine": 23,
+          "params": [
+            "code",
+            "name",
+            "permissionIds"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createRoleRaw",
+          "line": 4,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createRoleRaw",
+          "callee": "db.transaction",
+          "lineNumber": 9
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "tx.insert(roles).values({ code, name }).returning",
+          "lineNumber": 10
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "tx.insert(roles).values",
+          "lineNumber": 10
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "tx.insert",
+          "lineNumber": 10
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "tx.insert(rolePermissions).values",
+          "lineNumber": 13
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "tx.insert",
+          "lineNumber": 13
+        },
+        {
+          "caller": "createRoleRaw",
+          "callee": "permissionIds.map",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/deactivate-admin-user.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 10,
+      "functions": [
+        {
+          "name": "deactivateAdminUserRaw",
+          "startLine": 7,
+          "endLine": 12,
+          "params": [
+            "userId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "deactivateAdminUserRaw",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "deactivateAdminUserRaw",
+          "callee": "db\n    .update(users)\n    .set(advanceAuthorizationVersion({ isActive: false }))\n    .where",
+          "lineNumber": 8
+        },
+        {
+          "caller": "deactivateAdminUserRaw",
+          "callee": "db\n    .update(users)\n    .set",
+          "lineNumber": 8
+        },
+        {
+          "caller": "deactivateAdminUserRaw",
+          "callee": "db\n    .update",
+          "lineNumber": 8
+        },
+        {
+          "caller": "deactivateAdminUserRaw",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 10
+        },
+        {
+          "caller": "deactivateAdminUserRaw",
+          "callee": "eq",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/delete-role.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "deleteRoleRaw",
+          "startLine": 6,
+          "endLine": 8,
+          "params": [
+            "roleId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "deleteRoleRaw",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "deleteRoleRaw",
+          "callee": "db.delete(roles).where",
+          "lineNumber": 7
+        },
+        {
+          "caller": "deleteRoleRaw",
+          "callee": "db.delete",
+          "lineNumber": 7
+        },
+        {
+          "caller": "deleteRoleRaw",
+          "callee": "eq",
+          "lineNumber": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/get-role-user-count.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 10,
+      "functions": [
+        {
+          "name": "getRoleUserCountRaw",
+          "startLine": 6,
+          "endLine": 13,
+          "params": [
+            "roleId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getRoleUserCountRaw",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "db\n    .select({ userCount: count() })\n    .from(userRoles)\n    .where",
+          "lineNumber": 7
+        },
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "db\n    .select({ userCount: count() })\n    .from",
+          "lineNumber": 7
+        },
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 7
+        },
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "count",
+          "lineNumber": 8
+        },
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "eq",
+          "lineNumber": 10
+        },
+        {
+          "caller": "getRoleUserCountRaw",
+          "callee": "Number",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/set-admin-permission-overrides.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 33,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "setAdminPermissionOverridesRaw",
+          "startLine": 12,
+          "endLine": 33,
+          "params": [
+            "userId",
+            "overrides",
+            "grantedBy"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "setAdminPermissionOverridesRaw",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "db.transaction",
+          "lineNumber": 17
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.delete(userPermissions).where",
+          "lineNumber": 18
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.delete",
+          "lineNumber": 18
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "eq",
+          "lineNumber": 18
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.insert(userPermissions).values",
+          "lineNumber": 21
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.insert",
+          "lineNumber": 21
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "overrides.map",
+          "lineNumber": 22
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.update(users).set(advanceAuthorizationVersion()).where",
+          "lineNumber": 31
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.update(users).set",
+          "lineNumber": 31
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "tx.update",
+          "lineNumber": 31
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 31
+        },
+        {
+          "caller": "setAdminPermissionOverridesRaw",
+          "callee": "eq",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/update-admin-user.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 49,
+      "functions": [
+        {
+          "name": "updateAdminUserRaw",
+          "startLine": 14,
+          "endLine": 56,
+          "params": [
+            "userId",
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "updateAdminUserRaw",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "db.transaction",
+          "lineNumber": 18
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx\n        .update(users)\n        .set(\n          changesAuthorization\n            ? advanceAuthorizationVersion(updates)\n            : ({ ...updates, updatedAt: new Date() } as Partial<typeof users.$inferInsert>),\n        )\n        .where",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx\n        .update(users)\n        .set",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx\n        .update",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 36
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "eq",
+          "lineNumber": 39
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx.delete(userRoles).where",
+          "lineNumber": 43
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx.delete",
+          "lineNumber": 43
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "eq",
+          "lineNumber": 43
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx.insert(userRoles).values",
+          "lineNumber": 46
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "tx.insert",
+          "lineNumber": 46
+        },
+        {
+          "caller": "updateAdminUserRaw",
+          "callee": "input.roleIds.map",
+          "lineNumber": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/identity/update-role-permissions.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 38,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "updateRolePermissionsRaw",
+          "startLine": 7,
+          "endLine": 38,
+          "params": [
+            "roleId",
+            "permissionIds"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "updateRolePermissionsRaw",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "db.transaction",
+          "lineNumber": 11
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx.delete(rolePermissions).where",
+          "lineNumber": 12
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx.delete",
+          "lineNumber": 12
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "eq",
+          "lineNumber": 12
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx.insert(rolePermissions).values",
+          "lineNumber": 15
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx.insert",
+          "lineNumber": 15
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "permissionIds.map",
+          "lineNumber": 16
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n      .selectDistinct({ userId: userRoles.userId })\n      .from(userRoles)\n      .where",
+          "lineNumber": 25
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n      .selectDistinct({ userId: userRoles.userId })\n      .from",
+          "lineNumber": 25
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n      .selectDistinct",
+          "lineNumber": 25
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "eq",
+          "lineNumber": 28
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "affectedUsers.map",
+          "lineNumber": 30
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n        .update(users)\n        .set(advanceAuthorizationVersion())\n        .where",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n        .update(users)\n        .set",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "tx\n        .update",
+          "lineNumber": 32
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "advanceAuthorizationVersion",
+          "lineNumber": 34
+        },
+        {
+          "caller": "updateRolePermissionsRaw",
+          "callee": "inArray",
+          "lineNumber": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/inventory/stock-reservations.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 247,
+      "nonEmptyLines": 229,
+      "functions": [
+        {
+          "name": "aggregate",
+          "startLine": 54,
+          "endLine": 65,
+          "params": [
+            "lines"
+          ]
+        },
+        {
+          "name": "reserveOrderStock",
+          "startLine": 73,
+          "endLine": 150,
+          "params": [
+            "orderId",
+            "lines",
+            "tx"
+          ]
+        },
+        {
+          "name": "settleOrderStock",
+          "startLine": 158,
+          "endLine": 237,
+          "params": [
+            "orderId",
+            "settlement",
+            "tx"
+          ]
+        },
+        {
+          "name": "consumeOrderStock",
+          "startLine": 240,
+          "endLine": 242,
+          "params": [
+            "orderId",
+            "tx"
+          ]
+        },
+        {
+          "name": "releaseOrderStock",
+          "startLine": 245,
+          "endLine": 247,
+          "params": [
+            "orderId",
+            "tx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "InsufficientStockError",
+          "startLine": 32,
+          "endLine": 41,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StockReservationStateError",
+          "startLine": 44,
+          "endLine": 52,
+          "methods": [
+            "constructor"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "InsufficientStockError",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "StockReservationStateError",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "reserveOrderStock",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "consumeOrderStock",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "releaseOrderStock",
+          "line": 245,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 34
+        },
+        {
+          "caller": "constructor",
+          "callee": "shortfalls\n        .map((s) => `variant ${s.variantId} requested ${s.requested}, available ${s.available}`)\n        .join",
+          "lineNumber": 35
+        },
+        {
+          "caller": "constructor",
+          "callee": "shortfalls\n        .map",
+          "lineNumber": 35
+        },
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 49
+        },
+        {
+          "caller": "aggregate",
+          "callee": "Number.isInteger",
+          "lineNumber": 57
+        },
+        {
+          "caller": "aggregate",
+          "callee": "totals.set",
+          "lineNumber": 60
+        },
+        {
+          "caller": "aggregate",
+          "callee": "totals.get",
+          "lineNumber": 60
+        },
+        {
+          "caller": "aggregate",
+          "callee": "[...totals]\n    .map(([variantId, quantity]) => ({ variantId, quantity }))\n    .sort",
+          "lineNumber": 62
+        },
+        {
+          "caller": "aggregate",
+          "callee": "[...totals]\n    .map",
+          "lineNumber": 62
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "aggregate",
+          "lineNumber": 78
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "withTransaction",
+          "lineNumber": 81
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n      .select({\n        variantId: inventoryBalances.variantId,\n        warehouseId: inventoryBalances.warehouseId,\n        onHand: inventoryBalances.onHand,\n        reserved: inventoryBalances.reserved,\n      })\n      .from(inventoryBalances)\n      .where(\n        and(\n          inArray(\n            inventoryBalances.variantId,\n            wanted.map((line) => line.variantId),\n          ),\n          // A subquery, not a join: Postgres rejects the schema-qualified\n          // `FOR UPDATE OF` Drizzle emits for joined tables.\n          inArray(\n            inventoryBalances.warehouseId,\n            tx.select({ id: warehouses.id }).from(warehouses).where(eq(warehouses.isActive, true)),\n          ),\n        ),\n      )\n      .orderBy(asc(inventoryBalances.variantId), asc(inventoryBalances.warehouseId))\n      .for",
+          "lineNumber": 82
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n      .select({\n        variantId: inventoryBalances.variantId,\n        warehouseId: inventoryBalances.warehouseId,\n        onHand: inventoryBalances.onHand,\n        reserved: inventoryBalances.reserved,\n      })\n      .from(inventoryBalances)\n      .where(\n        and(\n          inArray(\n            inventoryBalances.variantId,\n            wanted.map((line) => line.variantId),\n          ),\n          // A subquery, not a join: Postgres rejects the schema-qualified\n          // `FOR UPDATE OF` Drizzle emits for joined tables.\n          inArray(\n            inventoryBalances.warehouseId,\n            tx.select({ id: warehouses.id }).from(warehouses).where(eq(warehouses.isActive, true)),\n          ),\n        ),\n      )\n      .orderBy",
+          "lineNumber": 82
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n      .select({\n        variantId: inventoryBalances.variantId,\n        warehouseId: inventoryBalances.warehouseId,\n        onHand: inventoryBalances.onHand,\n        reserved: inventoryBalances.reserved,\n      })\n      .from(inventoryBalances)\n      .where",
+          "lineNumber": 82
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n      .select({\n        variantId: inventoryBalances.variantId,\n        warehouseId: inventoryBalances.warehouseId,\n        onHand: inventoryBalances.onHand,\n        reserved: inventoryBalances.reserved,\n      })\n      .from",
+          "lineNumber": 82
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n      .select",
+          "lineNumber": 82
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "and",
+          "lineNumber": 91
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "inArray",
+          "lineNumber": 92
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "wanted.map",
+          "lineNumber": 94
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "inArray",
+          "lineNumber": 98
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.select({ id: warehouses.id }).from(warehouses).where",
+          "lineNumber": 100
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.select({ id: warehouses.id }).from",
+          "lineNumber": 100
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.select",
+          "lineNumber": 100
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "eq",
+          "lineNumber": 100
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "asc",
+          "lineNumber": 104
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "asc",
+          "lineNumber": 104
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "balances.filter",
+          "lineNumber": 112
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "Math.max",
+          "lineNumber": 113
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "Math.min",
+          "lineNumber": 115
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "reservedLines.push",
+          "lineNumber": 117
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "shortfalls.push",
+          "lineNumber": 121
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.insert(stockReservations).values",
+          "lineNumber": 125
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.insert",
+          "lineNumber": 125
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "reservedLines.map",
+          "lineNumber": 125
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n        .update(inventoryBalances)\n        .set({ reserved: sql`${inventoryBalances.reserved} + ${a.quantity}` })\n        .where",
+          "lineNumber": 127
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n        .update(inventoryBalances)\n        .set",
+          "lineNumber": 127
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx\n        .update",
+          "lineNumber": 127
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "sql",
+          "lineNumber": 129
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "and",
+          "lineNumber": 131
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "eq",
+          "lineNumber": 132
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "eq",
+          "lineNumber": 133
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.insert(stockMovements).values",
+          "lineNumber": 137
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "tx.insert",
+          "lineNumber": 137
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "reservedLines.map",
+          "lineNumber": 138
+        },
+        {
+          "caller": "reserveOrderStock",
+          "callee": "String",
+          "lineNumber": 144
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "withTransaction",
+          "lineNumber": 163
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .select({\n        variantId: stockReservations.variantId,\n        warehouseId: stockReservations.warehouseId,\n        quantity: stockReservations.quantity,\n      })\n      .from(stockReservations)\n      .where(eq(stockReservations.orderId, orderId))\n      .orderBy",
+          "lineNumber": 164
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .select({\n        variantId: stockReservations.variantId,\n        warehouseId: stockReservations.warehouseId,\n        quantity: stockReservations.quantity,\n      })\n      .from(stockReservations)\n      .where",
+          "lineNumber": 164
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .select({\n        variantId: stockReservations.variantId,\n        warehouseId: stockReservations.warehouseId,\n        quantity: stockReservations.quantity,\n      })\n      .from",
+          "lineNumber": 164
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .select",
+          "lineNumber": 164
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 171
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "asc",
+          "lineNumber": 172
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "asc",
+          "lineNumber": 172
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .select({ id: inventoryBalances.id })\n        .from(inventoryBalances)\n        .where(\n          and(\n            eq(inventoryBalances.variantId, r.variantId),\n            eq(inventoryBalances.warehouseId, r.warehouseId),\n          ),\n        )\n        .for",
+          "lineNumber": 178
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .select({ id: inventoryBalances.id })\n        .from(inventoryBalances)\n        .where",
+          "lineNumber": 178
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .select({ id: inventoryBalances.id })\n        .from",
+          "lineNumber": 178
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .select",
+          "lineNumber": 178
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "and",
+          "lineNumber": 182
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 183
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 184
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .selectDistinct({ movementType: stockMovements.movementType })\n      .from(stockMovements)\n      .where",
+          "lineNumber": 190
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .selectDistinct({ movementType: stockMovements.movementType })\n      .from",
+          "lineNumber": 190
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n      .selectDistinct",
+          "lineNumber": 190
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "and",
+          "lineNumber": 194
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 195
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 196
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "String",
+          "lineNumber": 196
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "inArray",
+          "lineNumber": 197
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "settled.some",
+          "lineNumber": 200
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .update(inventoryBalances)\n        .set(\n          settlement === 'consume'\n            ? {\n                onHand: sql`${inventoryBalances.onHand} - ${r.quantity}`,\n                reserved: sql`${inventoryBalances.reserved} - ${r.quantity}`,\n              }\n            : { reserved: sql`${inventoryBalances.reserved} - ${r.quantity}` },\n        )\n        .where",
+          "lineNumber": 206
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .update(inventoryBalances)\n        .set",
+          "lineNumber": 206
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx\n        .update",
+          "lineNumber": 206
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "sql",
+          "lineNumber": 211
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "sql",
+          "lineNumber": 212
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "sql",
+          "lineNumber": 214
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "and",
+          "lineNumber": 217
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 218
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "eq",
+          "lineNumber": 219
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx.insert(stockMovements).values",
+          "lineNumber": 223
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "tx.insert",
+          "lineNumber": 223
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "reservations.map",
+          "lineNumber": 224
+        },
+        {
+          "caller": "settleOrderStock",
+          "callee": "String",
+          "lineNumber": 231
+        },
+        {
+          "caller": "consumeOrderStock",
+          "callee": "settleOrderStock",
+          "lineNumber": 241
+        },
+        {
+          "caller": "releaseOrderStock",
+          "callee": "settleOrderStock",
+          "lineNumber": 246
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/queries/notifications/notifications.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 105,
+      "nonEmptyLines": 92,
+      "functions": [
+        {
+          "name": "create",
+          "startLine": 35,
+          "endLine": 37,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "markRead",
+          "startLine": 42,
+          "endLine": 47,
+          "params": [
+            "id",
+            "userId"
+          ]
+        },
+        {
+          "name": "markAllRead",
+          "startLine": 52,
+          "endLine": 57,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "getUnread",
+          "startLine": 64,
+          "endLine": 71,
+          "params": [
+            "userId",
+            "limit"
+          ]
+        },
+        {
+          "name": "getAll",
+          "startLine": 76,
+          "endLine": 94,
+          "params": [
+            "userId",
+            "page",
+            "perPage",
+            "unreadOnly"
+          ]
+        },
+        {
+          "name": "getUnreadCount",
+          "startLine": 99,
+          "endLine": 105,
+          "params": [
+            "userId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "create",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "markRead",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "markAllRead",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "getUnread",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "getAll",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "getUnreadCount",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "create",
+          "callee": "db.insert(notifications).values",
+          "lineNumber": 36
+        },
+        {
+          "caller": "create",
+          "callee": "db.insert",
+          "lineNumber": 36
+        },
+        {
+          "caller": "markRead",
+          "callee": "db\n    .update(notifications)\n    .set({ isRead: true })\n    .where",
+          "lineNumber": 43
+        },
+        {
+          "caller": "markRead",
+          "callee": "db\n    .update(notifications)\n    .set",
+          "lineNumber": 43
+        },
+        {
+          "caller": "markRead",
+          "callee": "db\n    .update",
+          "lineNumber": 43
+        },
+        {
+          "caller": "markRead",
+          "callee": "and",
+          "lineNumber": 46
+        },
+        {
+          "caller": "markRead",
+          "callee": "eq",
+          "lineNumber": 46
+        },
+        {
+          "caller": "markRead",
+          "callee": "eq",
+          "lineNumber": 46
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "db\n    .update(notifications)\n    .set({ isRead: true })\n    .where",
+          "lineNumber": 53
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "db\n    .update(notifications)\n    .set",
+          "lineNumber": 53
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "db\n    .update",
+          "lineNumber": 53
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "and",
+          "lineNumber": 56
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "eq",
+          "lineNumber": 56
+        },
+        {
+          "caller": "markAllRead",
+          "callee": "eq",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getUnread",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)))\n    .orderBy(desc(notifications.createdAt))\n    .limit",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getUnread",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)))\n    .orderBy",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getUnread",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getUnread",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getUnread",
+          "callee": "db\n    .select",
+          "lineNumber": 65
+        },
+        {
+          "caller": "getUnread",
+          "callee": "and",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getUnread",
+          "callee": "eq",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getUnread",
+          "callee": "eq",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getUnread",
+          "callee": "desc",
+          "lineNumber": 69
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 82
+        },
+        {
+          "caller": "getAll",
+          "callee": "filters.push",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getAll",
+          "callee": "eq",
+          "lineNumber": 84
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where(and(...filters))\n    .orderBy(desc(notifications.createdAt))\n    .limit(perPage)\n    .offset",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where(and(...filters))\n    .orderBy(desc(notifications.createdAt))\n    .limit",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where(and(...filters))\n    .orderBy",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from(notifications)\n    .where",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select()\n    .from",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "db\n    .select",
+          "lineNumber": 87
+        },
+        {
+          "caller": "getAll",
+          "callee": "and",
+          "lineNumber": 90
+        },
+        {
+          "caller": "getAll",
+          "callee": "desc",
+          "lineNumber": 91
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "db\n    .select({ val: count() })\n    .from(notifications)\n    .where",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "db\n    .select({ val: count() })\n    .from",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "db\n    .select",
+          "lineNumber": 100
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "count",
+          "lineNumber": 101
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "and",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "eq",
+          "lineNumber": 103
+        },
+        {
+          "caller": "getUnreadCount",
+          "callee": "eq",
+          "lineNumber": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/partner-sales/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 226,
+      "nonEmptyLines": 208,
+      "functions": [
+        {
+          "name": "startOfLocalDay",
+          "startLine": 40,
+          "endLine": 41,
+          "params": [
+            "day",
+            "timeZone"
+          ]
+        },
+        {
+          "name": "attributedOrderWhere",
+          "startLine": 43,
+          "endLine": 51,
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "listAttributedOrders",
+          "startLine": 74,
+          "endLine": 103,
+          "params": [
+            "executor",
+            "filter"
+          ]
+        },
+        {
+          "name": "getAttributedOrderTotals",
+          "startLine": 112,
+          "endLine": 131,
+          "params": [
+            "executor",
+            "filter"
+          ]
+        },
+        {
+          "name": "getFirstAttributedOrderMonth",
+          "startLine": 134,
+          "endLine": 147,
+          "params": [
+            "executor",
+            "businessPartnerId",
+            "timeZone"
+          ]
+        },
+        {
+          "name": "listAttributedSalesRows",
+          "startLine": 180,
+          "endLine": 226,
+          "params": [
+            "executor",
+            "filter"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "listAttributedOrders",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "getAttributedOrderTotals",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "getFirstAttributedOrderMonth",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "listAttributedSalesRows",
+          "line": 180,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "startOfLocalDay",
+          "callee": "sql",
+          "lineNumber": 41
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "and",
+          "lineNumber": 44
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "eq",
+          "lineNumber": 45
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "gte",
+          "lineNumber": 46
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "startOfLocalDay",
+          "lineNumber": 46
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "sql",
+          "lineNumber": 46
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "lt",
+          "lineNumber": 47
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "startOfLocalDay",
+          "lineNumber": 47
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "sql",
+          "lineNumber": 47
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "inArray",
+          "lineNumber": 48
+        },
+        {
+          "caller": "attributedOrderWhere",
+          "callee": "inArray",
+          "lineNumber": 49
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "executor\n    .select({\n      id: orders.id,\n      orderReference: orders.orderReference,\n      status: orders.status,\n      paymentStatus: orders.paymentStatus,\n      acceptedAt: orders.createdAt,\n      schoolSupplyListId: orders.schoolSupplyListId,\n      schoolSupplyListPublicCode: orders.schoolSupplyListPublicCode,\n      grossPiasters: piasters(gross),\n      discountPiasters: piasters(orders.discountTotal),\n      chargedPiasters: piasters(charged),\n    })\n    .from(orders)\n    .where(attributedOrderWhere(filter))\n    .orderBy",
+          "lineNumber": 78
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "executor\n    .select({\n      id: orders.id,\n      orderReference: orders.orderReference,\n      status: orders.status,\n      paymentStatus: orders.paymentStatus,\n      acceptedAt: orders.createdAt,\n      schoolSupplyListId: orders.schoolSupplyListId,\n      schoolSupplyListPublicCode: orders.schoolSupplyListPublicCode,\n      grossPiasters: piasters(gross),\n      discountPiasters: piasters(orders.discountTotal),\n      chargedPiasters: piasters(charged),\n    })\n    .from(orders)\n    .where",
+          "lineNumber": 78
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "executor\n    .select({\n      id: orders.id,\n      orderReference: orders.orderReference,\n      status: orders.status,\n      paymentStatus: orders.paymentStatus,\n      acceptedAt: orders.createdAt,\n      schoolSupplyListId: orders.schoolSupplyListId,\n      schoolSupplyListPublicCode: orders.schoolSupplyListPublicCode,\n      grossPiasters: piasters(gross),\n      discountPiasters: piasters(orders.discountTotal),\n      chargedPiasters: piasters(charged),\n    })\n    .from",
+          "lineNumber": 78
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "executor\n    .select",
+          "lineNumber": 78
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "piasters",
+          "lineNumber": 87
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "piasters",
+          "lineNumber": 88
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "piasters",
+          "lineNumber": 89
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "attributedOrderWhere",
+          "lineNumber": 92
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "asc",
+          "lineNumber": 93
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "asc",
+          "lineNumber": 93
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "rows.map",
+          "lineNumber": 94
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "BigInt",
+          "lineNumber": 99
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "BigInt",
+          "lineNumber": 100
+        },
+        {
+          "caller": "listAttributedOrders",
+          "callee": "BigInt",
+          "lineNumber": 101
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "executor\n    .select({\n      orderCount: sql<number>`count(*)::int`,\n      grossPiasters: sql<string>`coalesce(sum(${piasters(gross)}), 0)`,\n      discountPiasters: sql<string>`coalesce(sum(${piasters(orders.discountTotal)}), 0)`,\n      chargedPiasters: sql<string>`coalesce(sum(${piasters(charged)}), 0)`,\n    })\n    .from(orders)\n    .where",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "executor\n    .select({\n      orderCount: sql<number>`count(*)::int`,\n      grossPiasters: sql<string>`coalesce(sum(${piasters(gross)}), 0)`,\n      discountPiasters: sql<string>`coalesce(sum(${piasters(orders.discountTotal)}), 0)`,\n      chargedPiasters: sql<string>`coalesce(sum(${piasters(charged)}), 0)`,\n    })\n    .from",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "executor\n    .select",
+          "lineNumber": 116
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "piasters",
+          "lineNumber": 119
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "piasters",
+          "lineNumber": 120
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "piasters",
+          "lineNumber": 121
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "attributedOrderWhere",
+          "lineNumber": 124
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "BigInt",
+          "lineNumber": 127
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "BigInt",
+          "lineNumber": 128
+        },
+        {
+          "caller": "getAttributedOrderTotals",
+          "callee": "BigInt",
+          "lineNumber": 129
+        },
+        {
+          "caller": "getFirstAttributedOrderMonth",
+          "callee": "executor\n    .select({\n      month: sql<string | null>`to_char(\n        (min(${orders.createdAt}) at time zone 'UTC') at time zone ${timeZone}::text, 'YYYY-MM')`,\n    })\n    .from(orders)\n    .where",
+          "lineNumber": 139
+        },
+        {
+          "caller": "getFirstAttributedOrderMonth",
+          "callee": "executor\n    .select({\n      month: sql<string | null>`to_char(\n        (min(${orders.createdAt}) at time zone 'UTC') at time zone ${timeZone}::text, 'YYYY-MM')`,\n    })\n    .from",
+          "lineNumber": 139
+        },
+        {
+          "caller": "getFirstAttributedOrderMonth",
+          "callee": "executor\n    .select",
+          "lineNumber": 139
+        },
+        {
+          "caller": "getFirstAttributedOrderMonth",
+          "callee": "eq",
+          "lineNumber": 145
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin(\n      schoolSupplyListItems,\n      eq(schoolSupplyListItems.id, orderItems.schoolSupplyListItemId),\n    )\n    .leftJoin(productVariants, eq(productVariants.id, orderItems.variantId))\n    .leftJoin(products, eq(products.id, orderItems.productId))\n    .where(attributedOrderWhere(filter))\n    .groupBy(\n      orders.schoolSupplyListId,\n      orderItems.schoolSupplyListItemId,\n      orderItems.variantId,\n      orderItems.productId,\n      deletedVariantSnapshot,\n      schoolSupplyLists.localizedTitle,\n      schoolSupplyListItems.localizedLabel,\n      products.localizedName,\n      productVariants.localizedLabel,\n    )\n    .orderBy",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin(\n      schoolSupplyListItems,\n      eq(schoolSupplyListItems.id, orderItems.schoolSupplyListItemId),\n    )\n    .leftJoin(productVariants, eq(productVariants.id, orderItems.variantId))\n    .leftJoin(products, eq(products.id, orderItems.productId))\n    .where(attributedOrderWhere(filter))\n    .groupBy",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin(\n      schoolSupplyListItems,\n      eq(schoolSupplyListItems.id, orderItems.schoolSupplyListItemId),\n    )\n    .leftJoin(productVariants, eq(productVariants.id, orderItems.variantId))\n    .leftJoin(products, eq(products.id, orderItems.productId))\n    .where",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin(\n      schoolSupplyListItems,\n      eq(schoolSupplyListItems.id, orderItems.schoolSupplyListItemId),\n    )\n    .leftJoin(productVariants, eq(productVariants.id, orderItems.variantId))\n    .leftJoin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin(\n      schoolSupplyListItems,\n      eq(schoolSupplyListItems.id, orderItems.schoolSupplyListItemId),\n    )\n    .leftJoin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin(schoolSupplyLists, eq(schoolSupplyLists.id, orders.schoolSupplyListId))\n    .leftJoin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin(orders, eq(orders.id, orderItems.orderId))\n    .leftJoin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from(orderItems)\n    .innerJoin",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select({\n      listId: orders.schoolSupplyListId,\n      listItemId: orderItems.schoolSupplyListItemId,\n      variantId: orderItems.variantId,\n      listTitle: schoolSupplyLists.localizedTitle,\n      listItemLabel: schoolSupplyListItems.localizedLabel,\n      productName: products.localizedName,\n      variantLabel: productVariants.localizedLabel,\n      productNameSnapshot: sql<string | null>`max(${orderItems.productNameSnapshot})`,\n      variantLabelSnapshot: sql<TranslationMap | null>`max(${orderItems.variantSnapshot}::text)::jsonb`,\n      quantity: sql<number>`sum(${orderItems.quantity})::int`,\n      chargedPiasters: sql<string>`sum(${piasters(orderItems.lineTotal)})`,\n      orderCount: sql<number>`count(distinct ${orders.id})::int`,\n    })\n    .from",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "executor\n    .select",
+          "lineNumber": 184
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "piasters",
+          "lineNumber": 196
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "eq",
+          "lineNumber": 200
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "eq",
+          "lineNumber": 201
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "eq",
+          "lineNumber": 204
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "eq",
+          "lineNumber": 206
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "eq",
+          "lineNumber": 207
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "attributedOrderWhere",
+          "lineNumber": 208
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "asc",
+          "lineNumber": 221
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "asc",
+          "lineNumber": 222
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "asc",
+          "lineNumber": 223
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "rows.map",
+          "lineNumber": 225
+        },
+        {
+          "caller": "listAttributedSalesRows",
+          "callee": "BigInt",
+          "lineNumber": 225
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 4,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    }
+  ]
+}

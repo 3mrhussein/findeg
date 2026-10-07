@@ -1,0 +1,28 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "init-db.sql",
+      "language": "sql",
+      "sizeLines": 8,
+      "fileCategory": "data"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 52,
+      "fileCategory": "config"
+    },
+    {
+      "path": "tsconfig.json",
+      "language": "json",
+      "sizeLines": 27,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "init-db.sql": [],
+    "package.json": [],
+    "tsconfig.json": []
+  }
+}

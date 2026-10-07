@@ -1,0 +1,48 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node 'document:docs/SCHEMA.md' has no edges (orphan)",
+    "Node 'document:docs/SETUP.md' has no edges (orphan)",
+    "Node 'document:docs/TAXONOMY.md' has no edges (orphan)",
+    "Node 'file:init-db.sql' has no edges (orphan)",
+    "Node 'config:seeds/data/alternatives.json' has no edges (orphan)",
+    "Node 'config:seeds/data/list_items.json' has no edges (orphan)",
+    "Node 'config:seeds/data/password_credentials.json' has no edges (orphan)",
+    "Node 'config:seeds/data/product_images.json' has no edges (orphan)",
+    "Node 'file:eslint.config.js' has no edges (orphan)",
+    "Node 'file:seeds/helpers/constants.ts' has no edges (orphan)",
+    "Node 'file:src/queries/catalog/index.ts' has no edges (orphan)",
+    "Node 'file:src/queries/identity/index.ts' has no edges (orphan)",
+    "Node 'file:src/queries/index.ts' has no edges (orphan)",
+    "Node 'file:src/queries/inventory/index.ts' has no edges (orphan)",
+    "Node 'file:src/queries/products/index.ts' has no edges (orphan)",
+    "Node 'file:src/queries/sales/index.ts' has no edges (orphan)",
+    "Node 'document:src/schema/catalog/README.md' has no edges (orphan)",
+    "Node 'file:src/schema/identity/index.ts' has no edges (orphan)",
+    "Node 'file:src/schema/school-engine/index.ts' has no edges (orphan)",
+    "Node 'file:src/schema/system/index.ts' has no edges (orphan)",
+    "Node 'file:src/types/catalog/IProduct.interface.ts' has no edges (orphan)",
+    "Node 'file:vitest.config.ts' has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 478,
+    "totalEdges": 931,
+    "totalLayers": 7,
+    "tourSteps": 10,
+    "nodeTypes": {
+      "file": 130,
+      "function": 301,
+      "class": 3,
+      "document": 4,
+      "config": 40
+    },
+    "edgeTypes": {
+      "contains": 304,
+      "exports": 300,
+      "imports": 277,
+      "tested_by": 4,
+      "calls": 10,
+      "configures": 36
+    }
+  }
+}

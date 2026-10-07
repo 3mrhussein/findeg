@@ -1,0 +1,237 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "src/queries/partners/index.ts",
+      "language": "typescript",
+      "sizeLines": 454,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/bulk-activate-products.ts",
+      "language": "typescript",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/bulk-deactivate-products.ts",
+      "language": "typescript",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/bulk-delete-products.ts",
+      "language": "typescript",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/check-product-slug-available.ts",
+      "language": "typescript",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/check-product-variant-sku-available.ts",
+      "language": "typescript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/create-product-with-variants.ts",
+      "language": "typescript",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/deactivate-product-variant.ts",
+      "language": "typescript",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/duplicate-product.ts",
+      "language": "typescript",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/get-admin-product-for-edit.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/get-admin-products-list.ts",
+      "language": "typescript",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/get-product-variant-attributes.ts",
+      "language": "typescript",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/insert-generated-product-variants.ts",
+      "language": "typescript",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/insert-product-variant-in-tx.ts",
+      "language": "typescript",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/types.ts",
+      "language": "typescript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/update-product-variant-key.ts",
+      "language": "typescript",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/update-product-with-variants.ts",
+      "language": "typescript",
+      "sizeLines": 129,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/products/upsert-product-variant-images.ts",
+      "language": "typescript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/sales/checkout-idempotency.ts",
+      "language": "typescript",
+      "sizeLines": 133,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/sales/guest-access.ts",
+      "language": "typescript",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/system/outbox.ts",
+      "language": "typescript",
+      "sizeLines": 181,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/transaction.ts",
+      "language": "typescript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/index.ts",
+      "language": "typescript",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/queries/partners/index.ts": [
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/bulk-activate-products.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/bulk-deactivate-products.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/bulk-delete-products.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/check-product-slug-available.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/check-product-variant-sku-available.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/create-product-with-variants.ts": [
+      "src/connection.ts",
+      "src/queries/products/insert-product-variant-in-tx.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/deactivate-product-variant.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/duplicate-product.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/get-admin-product-for-edit.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/get-admin-products-list.ts": [
+      "src/connection.ts",
+      "src/queries/products/types.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/get-product-variant-attributes.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/insert-generated-product-variants.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/insert-product-variant-in-tx.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/types.ts": [],
+    "src/queries/products/update-product-variant-key.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/update-product-with-variants.ts": [
+      "src/connection.ts",
+      "src/queries/products/insert-product-variant-in-tx.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/products/upsert-product-variant-images.ts": [
+      "src/connection.ts",
+      "src/queries/products/insert-product-variant-in-tx.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/sales/checkout-idempotency.ts": [
+      "src/connection.ts",
+      "src/queries/transaction.ts",
+      "src/schema/index.ts",
+      "src/types/sales.ts"
+    ],
+    "src/queries/sales/guest-access.ts": [
+      "src/connection.ts",
+      "src/queries/transaction.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/system/outbox.ts": [
+      "src/connection.ts",
+      "src/queries/transaction.ts",
+      "src/schema/index.ts"
+    ],
+    "src/queries/transaction.ts": [
+      "src/connection.ts"
+    ],
+    "src/schema/index.ts": []
+  }
+}

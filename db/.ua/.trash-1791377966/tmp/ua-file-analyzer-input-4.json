@@ -1,0 +1,100 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "src/queries/catalog/counts.ts",
+      "language": "typescript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/distribution.ts",
+      "language": "typescript",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/health.ts",
+      "language": "typescript",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/top-products.ts",
+      "language": "typescript",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/inventory/low-stock.ts",
+      "language": "typescript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/sales/order-stats.ts",
+      "language": "typescript",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/sales/revenue.ts",
+      "language": "typescript",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/catalog/index.ts",
+      "language": "typescript",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/inventory/index.ts",
+      "language": "typescript",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/schema/sales/index.ts",
+      "language": "typescript",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/queries/catalog/counts.ts": [
+      "src/connection.ts",
+      "src/schema/catalog/index.ts"
+    ],
+    "src/queries/catalog/distribution.ts": [
+      "src/connection.ts",
+      "src/schema/catalog/index.ts"
+    ],
+    "src/queries/catalog/health.ts": [
+      "src/connection.ts",
+      "src/schema/catalog/index.ts"
+    ],
+    "src/queries/catalog/top-products.ts": [
+      "src/connection.ts",
+      "src/schema/catalog/index.ts",
+      "src/schema/sales/index.ts"
+    ],
+    "src/queries/inventory/low-stock.ts": [
+      "src/connection.ts",
+      "src/schema/catalog/index.ts",
+      "src/schema/inventory/index.ts"
+    ],
+    "src/queries/sales/order-stats.ts": [
+      "src/connection.ts",
+      "src/schema/sales/index.ts"
+    ],
+    "src/queries/sales/revenue.ts": [
+      "src/connection.ts",
+      "src/schema/sales/index.ts"
+    ],
+    "src/schema/catalog/index.ts": [],
+    "src/schema/inventory/index.ts": [],
+    "src/schema/sales/index.ts": []
+  }
+}

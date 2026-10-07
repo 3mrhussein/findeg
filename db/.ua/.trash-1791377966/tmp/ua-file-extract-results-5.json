@@ -1,0 +1,1118 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 8,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "seed.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 16,
+          "endLine": 38,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "Date.now",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "truncateTables",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "seeds.seedIdentity",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "seeds.seedCatalog",
+          "lineNumber": 26
+        },
+        {
+          "caller": "main",
+          "callee": "seeds.seedSales",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "seeds.seedInventory",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "seeds.seedSystem",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "synchronizeSeedSequences",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "Date.now",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "connection.end",
+          "lineNumber": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/catalog.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 133,
+      "nonEmptyLines": 121,
+      "functions": [
+        {
+          "name": "seedCatalog",
+          "startLine": 20,
+          "endLine": 133,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "seedCatalog",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 21
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.brands).values",
+          "lineNumber": 26
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 26
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 26
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.categories).values",
+          "lineNumber": 30
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 30
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 30
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.tags).values",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.collections)\n      .values",
+          "lineNumber": 38
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 38
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 40
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.attributes).values",
+          "lineNumber": 44
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 44
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 44
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 50
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.products).values",
+          "lineNumber": 54
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 54
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 54
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 60
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.productVariants)\n      .values",
+          "lineNumber": 61
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 61
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 63
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 67
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 68
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.variantImages)\n      .values",
+          "lineNumber": 71
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 71
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 73
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 77
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 78
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.variantAttributes)\n      .values",
+          "lineNumber": 82
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 82
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 84
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 88
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 89
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.productTags)\n      .values",
+          "lineNumber": 93
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 93
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 95
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 100
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.collectionTags)\n      .values",
+          "lineNumber": 104
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 104
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 106
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 111
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.productAttributes)\n      .values",
+          "lineNumber": 115
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 115
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 117
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 121
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 122
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert(schema.reviews).values",
+          "lineNumber": 123
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db.insert",
+          "lineNumber": 123
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 123
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "console.log",
+          "lineNumber": 127
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "ensureParents",
+          "lineNumber": 128
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert(schema.reviewHelpfulVotes)\n      .values",
+          "lineNumber": 129
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "db\n      .insert",
+          "lineNumber": 129
+        },
+        {
+          "caller": "seedCatalog",
+          "callee": "prepareSeedData",
+          "lineNumber": 131
+        }
+      ],
+      "metrics": {
+        "importCount": 16,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/helpers/index.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 135,
+      "nonEmptyLines": 126,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/helpers/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 157,
+      "nonEmptyLines": 143,
+      "functions": [
+        {
+          "name": "synchronizeSeedSequences",
+          "startLine": 17,
+          "endLine": 44,
+          "params": [
+            "db"
+          ]
+        },
+        {
+          "name": "hashPassword",
+          "startLine": 46,
+          "endLine": 48,
+          "params": [
+            "plain"
+          ]
+        },
+        {
+          "name": "ensureParents",
+          "startLine": 56,
+          "endLine": 71,
+          "params": [
+            "db",
+            "parents"
+          ]
+        },
+        {
+          "name": "prepareSeedData",
+          "startLine": 81,
+          "endLine": 128,
+          "params": [
+            "table",
+            "data",
+            "schema"
+          ]
+        },
+        {
+          "name": "truncateTables",
+          "startLine": 136,
+          "endLine": 157,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "synchronizeSeedSequences",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "hashPassword",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "ensureParents",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "prepareSeedData",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "truncateTables",
+          "line": 136,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "db.execute",
+          "lineNumber": 18
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql",
+          "lineNumber": 18
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql.join",
+          "lineNumber": 22
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "managedSchemas.map",
+          "lineNumber": 23
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql",
+          "lineNumber": 23
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql",
+          "lineNumber": 24
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "db.execute",
+          "lineNumber": 35
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql",
+          "lineNumber": 35
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql.identifier",
+          "lineNumber": 36
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql.identifier",
+          "lineNumber": 37
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql.identifier",
+          "lineNumber": 37
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "db.execute",
+          "lineNumber": 40
+        },
+        {
+          "caller": "synchronizeSeedSequences",
+          "callee": "sql",
+          "lineNumber": 40
+        },
+        {
+          "caller": "hashPassword",
+          "callee": "bcrypt.hash",
+          "lineNumber": 47
+        },
+        {
+          "caller": "ensureParents",
+          "callee": "db.execute",
+          "lineNumber": 61
+        },
+        {
+          "caller": "ensureParents",
+          "callee": "sql.raw",
+          "lineNumber": 61
+        },
+        {
+          "caller": "ensureParents",
+          "callee": "Number",
+          "lineNumber": 64
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "data.map",
+          "lineNumber": 86
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "schema.safeParse",
+          "lineNumber": 89
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "firstError.path.join",
+          "lineNumber": 93
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 103
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 104
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 114
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 115
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 116
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 117
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "key.endsWith",
+          "lineNumber": 118
+        },
+        {
+          "caller": "prepareSeedData",
+          "callee": "val.toString",
+          "lineNumber": 123
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "db.execute",
+          "lineNumber": 141
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql",
+          "lineNumber": 141
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "tables.map",
+          "lineNumber": 146
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql",
+          "lineNumber": 147
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql.identifier",
+          "lineNumber": 147
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql.identifier",
+          "lineNumber": 147
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "console.log",
+          "lineNumber": 149
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "db.execute",
+          "lineNumber": 150
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql",
+          "lineNumber": 151
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql.join",
+          "lineNumber": 151
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "sql",
+          "lineNumber": 151
+        },
+        {
+          "caller": "truncateTables",
+          "callee": "console.log",
+          "lineNumber": 156
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 5,
+      "nonEmptyLines": 5,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/inventory.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "seedInventory",
+          "startLine": 9,
+          "endLine": 41,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "seedInventory",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seedInventory",
+          "callee": "console.log",
+          "lineNumber": 10
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "console.log",
+          "lineNumber": 14
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db.insert(schema.warehouses).values",
+          "lineNumber": 15
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db.insert",
+          "lineNumber": 15
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "prepareSeedData",
+          "lineNumber": 15
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "console.log",
+          "lineNumber": 20
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "ensureParents",
+          "lineNumber": 21
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db\n      .insert(schema.inventoryBalances)\n      .values",
+          "lineNumber": 25
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db\n      .insert",
+          "lineNumber": 25
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "prepareSeedData",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "ensureParents",
+          "lineNumber": 33
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db\n      .insert(schema.stockMovements)\n      .values",
+          "lineNumber": 37
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "db\n      .insert",
+          "lineNumber": 37
+        },
+        {
+          "caller": "seedInventory",
+          "callee": "prepareSeedData",
+          "lineNumber": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/sales.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 40,
+      "functions": [
+        {
+          "name": "seedSales",
+          "startLine": 10,
+          "endLine": 46,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "seedSales",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seedSales",
+          "callee": "console.log",
+          "lineNumber": 11
+        },
+        {
+          "caller": "seedSales",
+          "callee": "console.log",
+          "lineNumber": 15
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db\n      .insert(schema.discountRules)\n      .values",
+          "lineNumber": 16
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db\n      .insert",
+          "lineNumber": 16
+        },
+        {
+          "caller": "seedSales",
+          "callee": "prepareSeedData",
+          "lineNumber": 18
+        },
+        {
+          "caller": "seedSales",
+          "callee": "console.log",
+          "lineNumber": 23
+        },
+        {
+          "caller": "seedSales",
+          "callee": "addressesData.some",
+          "lineNumber": 24
+        },
+        {
+          "caller": "seedSales",
+          "callee": "ensureParents",
+          "lineNumber": 25
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert(schema.addresses).values",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedSales",
+          "callee": "prepareSeedData",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedSales",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "seedSales",
+          "callee": "ensureParents",
+          "lineNumber": 33
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert(schema.orders).values",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedSales",
+          "callee": "prepareSeedData",
+          "lineNumber": 34
+        },
+        {
+          "caller": "seedSales",
+          "callee": "console.log",
+          "lineNumber": 39
+        },
+        {
+          "caller": "seedSales",
+          "callee": "ensureParents",
+          "lineNumber": 40
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert(schema.orderItems).values",
+          "lineNumber": 44
+        },
+        {
+          "caller": "seedSales",
+          "callee": "db.insert",
+          "lineNumber": 44
+        },
+        {
+          "caller": "seedSales",
+          "callee": "prepareSeedData",
+          "lineNumber": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "seeds/system.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 25,
+      "functions": [
+        {
+          "name": "seedSystem",
+          "startLine": 8,
+          "endLine": 29,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "seedSystem",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seedSystem",
+          "callee": "console.log",
+          "lineNumber": 9
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "auditLogData.some",
+          "lineNumber": 14
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "ensureParents",
+          "lineNumber": 15
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "db.insert(schema.auditLog).values",
+          "lineNumber": 17
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "db.insert",
+          "lineNumber": 17
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "prepareSeedData",
+          "lineNumber": 17
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "console.log",
+          "lineNumber": 22
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "ensureParents",
+          "lineNumber": 23
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "db.insert(schema.searchLogs).values",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "db.insert",
+          "lineNumber": 27
+        },
+        {
+          "caller": "seedSystem",
+          "callee": "prepareSeedData",
+          "lineNumber": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

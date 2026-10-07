@@ -1,0 +1,683 @@
+{
+  "nodes": [
+    {
+      "id": "file:seed.ts",
+      "type": "file",
+      "name": "seed.ts",
+      "filePath": "seed.ts",
+      "summary": "Runs the database seeding workflow, coordinating cleanup, fixture insertion, and sequence synchronization.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seed.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "seed.ts",
+      "lineRange": [
+        16,
+        38
+      ],
+      "summary": "Coordinates and executes the complete database seeding workflow.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/catalog.ts",
+      "type": "file",
+      "name": "catalog.ts",
+      "filePath": "seeds/catalog.ts",
+      "summary": "Populates deterministic catalog fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:seeds/catalog.ts:seedCatalog",
+      "type": "function",
+      "name": "seedCatalog",
+      "filePath": "seeds/catalog.ts",
+      "lineRange": [
+        20,
+        133
+      ],
+      "summary": "Populates deterministic catalog fixtures in the database.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/index.test.ts",
+      "type": "file",
+      "name": "index.test.ts",
+      "filePath": "seeds/helpers/index.test.ts",
+      "summary": "Tests seed helper behavior for validated fixture preparation, parent resolution, password hashing, truncation, and sequence synchronization.",
+      "tags": [
+        "test",
+        "database",
+        "seed-data",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:seeds/helpers/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "seeds/helpers/index.ts",
+      "summary": "Provides reusable database seed helpers for validation, parent lookup, password hashing, table cleanup, and PostgreSQL sequence synchronization.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:seeds/helpers/index.ts:synchronizeSeedSequences",
+      "type": "function",
+      "name": "synchronizeSeedSequences",
+      "filePath": "seeds/helpers/index.ts",
+      "lineRange": [
+        17,
+        44
+      ],
+      "summary": "Performs the synchronize seed sequences helper operation used by database seeding.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/helpers/index.ts:hashPassword",
+      "type": "function",
+      "name": "hashPassword",
+      "filePath": "seeds/helpers/index.ts",
+      "lineRange": [
+        46,
+        48
+      ],
+      "summary": "Evaluates hash password for index seed data and returns the database-backed result.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/helpers/index.ts:ensureParents",
+      "type": "function",
+      "name": "ensureParents",
+      "filePath": "seeds/helpers/index.ts",
+      "lineRange": [
+        56,
+        71
+      ],
+      "summary": "Performs the ensure parents helper operation used by database seeding.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/helpers/index.ts:prepareSeedData",
+      "type": "function",
+      "name": "prepareSeedData",
+      "filePath": "seeds/helpers/index.ts",
+      "lineRange": [
+        81,
+        128
+      ],
+      "summary": "Performs the prepare seed data helper operation used by database seeding.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/helpers/index.ts:truncateTables",
+      "type": "function",
+      "name": "truncateTables",
+      "filePath": "seeds/helpers/index.ts",
+      "lineRange": [
+        136,
+        157
+      ],
+      "summary": "Removes tables data associated with index seed data.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "seeds/index.ts",
+      "summary": "Barrel entry point that re-exports the database seed modules.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "seeds/inventory.ts",
+      "summary": "Populates deterministic inventory fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/inventory.ts:seedInventory",
+      "type": "function",
+      "name": "seedInventory",
+      "filePath": "seeds/inventory.ts",
+      "lineRange": [
+        9,
+        41
+      ],
+      "summary": "Populates deterministic inventory fixtures in the database.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/sales.ts",
+      "type": "file",
+      "name": "sales.ts",
+      "filePath": "seeds/sales.ts",
+      "summary": "Populates deterministic sales fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/sales.ts:seedSales",
+      "type": "function",
+      "name": "seedSales",
+      "filePath": "seeds/sales.ts",
+      "lineRange": [
+        10,
+        46
+      ],
+      "summary": "Populates deterministic sales fixtures in the database.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:seeds/system.ts",
+      "type": "file",
+      "name": "system.ts",
+      "filePath": "seeds/system.ts",
+      "summary": "Populates deterministic system fixtures for local development and database tests.",
+      "tags": [
+        "database",
+        "seed-data",
+        "data-fixtures",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:seeds/system.ts:seedSystem",
+      "type": "function",
+      "name": "seedSystem",
+      "filePath": "seeds/system.ts",
+      "lineRange": [
+        8,
+        29
+      ],
+      "summary": "Populates deterministic system fixtures in the database.",
+      "tags": [
+        "database",
+        "data-access",
+        "seed-data",
+        "typescript"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:seed.ts",
+      "target": "function:seed.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "function:seeds/catalog.ts:seedCatalog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:synchronizeSeedSequences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:synchronizeSeedSequences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:hashPassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:hashPassword",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:ensureParents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:ensureParents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:prepareSeedData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:prepareSeedData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:truncateTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "function:seeds/helpers/index.ts:truncateTables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "function:seeds/inventory.ts:seedInventory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "function:seeds/inventory.ts:seedInventory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "function:seeds/sales.ts:seedSales",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "function:seeds/system.ts:seedSystem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "function:seeds/system.ts:seedSystem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:seeds/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seed.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/brands.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/categories.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/collection_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/collections.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/product_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/product_tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/product_variants.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/products.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/review_helpful_votes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/reviews.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/tags.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/variant_attributes.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/data/variant_images.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/catalog.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.test.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/helpers/index.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/data/inventory_balances.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/data/stock_movements.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/data/warehouses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/inventory.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/data/addresses.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/data/discount_rules.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/data/order_items.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/data/orders.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/sales.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:seeds/data/audit_log.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:seeds/data/search_logs.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/system.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

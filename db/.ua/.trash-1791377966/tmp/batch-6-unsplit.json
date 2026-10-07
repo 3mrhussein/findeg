@@ -1,0 +1,2062 @@
+{
+  "nodes": [
+    {
+      "id": "file:seeds/identity.ts",
+      "type": "file",
+      "name": "identity.ts",
+      "filePath": "seeds/identity.ts",
+      "summary": "Seeds permissions, roles, organizations, users, credentials, authorization grants, memberships, and payment methods while validating fixtures and resolving parent rows.",
+      "tags": [
+        "database",
+        "seed-data",
+        "identity",
+        "authorization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:seeds/identity.ts:seedIdentity",
+      "type": "function",
+      "name": "seedIdentity",
+      "filePath": "seeds/identity.ts",
+      "lineRange": [
+        34,
+        244
+      ],
+      "summary": "Coordinates database work to seed identity.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "identity"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/queries/catalog/products.ts",
+      "type": "file",
+      "name": "products.ts",
+      "filePath": "src/queries/catalog/products.ts",
+      "summary": "Provides catalog product reads, search and filtering, variant and taxonomy lookups, enriched views, and product mutations through Drizzle queries.",
+      "tags": [
+        "database",
+        "catalog",
+        "query-layer",
+        "data-access"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        52,
+        56
+      ],
+      "summary": "Queries or evaluates database state to get by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getBySlug",
+      "type": "function",
+      "name": "getBySlug",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        61,
+        65
+      ],
+      "summary": "Queries or evaluates database state to get by slug.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getAll",
+      "type": "function",
+      "name": "getAll",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        72,
+        74
+      ],
+      "summary": "Queries or evaluates database state to get all.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getFeatured",
+      "type": "function",
+      "name": "getFeatured",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        79,
+        86
+      ],
+      "summary": "Queries or evaluates database state to get featured.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:search",
+      "type": "function",
+      "name": "search",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        92,
+        103
+      ],
+      "summary": "Queries or evaluates database state to search.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getByCategory",
+      "type": "function",
+      "name": "getByCategory",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        108,
+        110
+      ],
+      "summary": "Queries or evaluates database state to get by category.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getByBrand",
+      "type": "function",
+      "name": "getByBrand",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        115,
+        117
+      ],
+      "summary": "Queries or evaluates database state to get by brand.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getFiltered",
+      "type": "function",
+      "name": "getFiltered",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        122,
+        157
+      ],
+      "summary": "Queries or evaluates database state to get filtered.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getByIds",
+      "type": "function",
+      "name": "getByIds",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        162,
+        166
+      ],
+      "summary": "Queries or evaluates database state to get by ids.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:countProducts",
+      "type": "function",
+      "name": "countProducts",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        171,
+        189
+      ],
+      "summary": "Queries or evaluates database state to count products.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getLowStockProducts",
+      "type": "function",
+      "name": "getLowStockProducts",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        194,
+        196
+      ],
+      "summary": "Queries or evaluates database state to get low stock products.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:checkSlugAvailable",
+      "type": "function",
+      "name": "checkSlugAvailable",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        201,
+        211
+      ],
+      "summary": "Queries or evaluates database state to check slug available.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getVariantsByProductIds",
+      "type": "function",
+      "name": "getVariantsByProductIds",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        219,
+        237
+      ],
+      "summary": "Queries or evaluates database state to get variants by product ids.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getVariantsByIds",
+      "type": "function",
+      "name": "getVariantsByIds",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        242,
+        250
+      ],
+      "summary": "Queries or evaluates database state to get variants by ids.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getProductTags",
+      "type": "function",
+      "name": "getProductTags",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        257,
+        265
+      ],
+      "summary": "Queries or evaluates database state to get product tags.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getProductsByTag",
+      "type": "function",
+      "name": "getProductsByTag",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        270,
+        278
+      ],
+      "summary": "Queries or evaluates database state to get products by tag.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getProductAttributes",
+      "type": "function",
+      "name": "getProductAttributes",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        285,
+        302
+      ],
+      "summary": "Queries or evaluates database state to get product attributes.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getByIdWithBrand",
+      "type": "function",
+      "name": "getByIdWithBrand",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        309,
+        320
+      ],
+      "summary": "Queries or evaluates database state to get by id with brand.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getByIdWithBrandAndCategory",
+      "type": "function",
+      "name": "getByIdWithBrandAndCategory",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        325,
+        337
+      ],
+      "summary": "Queries or evaluates database state to get by id with brand and category.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:getAllWithBrandAndCategory",
+      "type": "function",
+      "name": "getAllWithBrandAndCategory",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        342,
+        351
+      ],
+      "summary": "Queries or evaluates database state to get all with brand and category.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        368,
+        372
+      ],
+      "summary": "Creates persisted state to create.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        387,
+        392
+      ],
+      "summary": "Updates persisted state to update.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/catalog/products.ts:deleteProduct",
+      "type": "function",
+      "name": "deleteProduct",
+      "filePath": "src/queries/catalog/products.ts",
+      "lineRange": [
+        397,
+        399
+      ],
+      "summary": "Removes or retires persisted state to delete product.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/users.ts",
+      "type": "file",
+      "name": "users.ts",
+      "filePath": "src/queries/identity/users.ts",
+      "summary": "Implements user, credential, and authorization-context queries plus transactional user and password-credential mutations.",
+      "tags": [
+        "database",
+        "identity",
+        "authentication",
+        "data-access"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        47,
+        54
+      ],
+      "summary": "Queries or evaluates database state to get by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:getByEmail",
+      "type": "function",
+      "name": "getByEmail",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        59,
+        62
+      ],
+      "summary": "Queries or evaluates database state to get by email.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:getByEmailWithPassword",
+      "type": "function",
+      "name": "getByEmailWithPassword",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        67,
+        87
+      ],
+      "summary": "Queries or evaluates database state to get by email with password.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:findPasswordCredentials",
+      "type": "function",
+      "name": "findPasswordCredentials",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        92,
+        108
+      ],
+      "summary": "Queries or evaluates database state to find password credentials.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:getAuthorizationContext",
+      "type": "function",
+      "name": "getAuthorizationContext",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        113,
+        185
+      ],
+      "summary": "Queries or evaluates database state to get authorization context.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "identity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        201,
+        217
+      ],
+      "summary": "Creates persisted state to create.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        233,
+        247
+      ],
+      "summary": "Updates persisted state to update.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/users.ts:upsertPasswordCredentials",
+      "type": "function",
+      "name": "upsertPasswordCredentials",
+      "filePath": "src/queries/identity/users.ts",
+      "lineRange": [
+        252,
+        284
+      ],
+      "summary": "Updates persisted state to upsert password credentials.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "identity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/review/reviews.ts",
+      "type": "file",
+      "name": "reviews.ts",
+      "filePath": "src/queries/review/reviews.ts",
+      "summary": "Implements product-review retrieval, pagination, aggregate summaries, creation, helpful-vote updates, and product rating recalculation.",
+      "tags": [
+        "database",
+        "reviews",
+        "query-layer",
+        "aggregation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:getByProductId",
+      "type": "function",
+      "name": "getByProductId",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        38,
+        44
+      ],
+      "summary": "Queries or evaluates database state to get by product id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:getByProductIdPaginated",
+      "type": "function",
+      "name": "getByProductIdPaginated",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        49,
+        80
+      ],
+      "summary": "Queries or evaluates database state to get by product id paginated.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:getSummaryByProductId",
+      "type": "function",
+      "name": "getSummaryByProductId",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        85,
+        113
+      ],
+      "summary": "Queries or evaluates database state to get summary by product id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        118,
+        126
+      ],
+      "summary": "Queries or evaluates database state to get by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:getByUserId",
+      "type": "function",
+      "name": "getByUserId",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        131,
+        137
+      ],
+      "summary": "Queries or evaluates database state to get by user id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:hasUserReviewed",
+      "type": "function",
+      "name": "hasUserReviewed",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        142,
+        150
+      ],
+      "summary": "Queries or evaluates database state to has user reviewed.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        165,
+        180
+      ],
+      "summary": "Creates persisted state to create.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:markHelpful",
+      "type": "function",
+      "name": "markHelpful",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        186,
+        222
+      ],
+      "summary": "Updates persisted state to mark helpful.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/review/reviews.ts:recalculateProductAggregates",
+      "type": "function",
+      "name": "recalculateProductAggregates",
+      "filePath": "src/queries/review/reviews.ts",
+      "lineRange": [
+        227,
+        243
+      ],
+      "summary": "Updates persisted state to recalculate product aggregates.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "reviews"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "file",
+      "name": "orders.test.ts",
+      "filePath": "src/queries/sales/__tests__/orders.test.ts",
+      "summary": "Verifies order mutation guards reject immutable payment and reward accounting fields.",
+      "tags": [
+        "test",
+        "orders",
+        "validation",
+        "regression"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/sales/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "src/queries/sales/orders.ts",
+      "summary": "Provides order retrieval, filtering, purchase checks, transactional creation and updates, reference-conflict handling, and revenue analytics.",
+      "tags": [
+        "database",
+        "orders",
+        "transactions",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "function",
+      "name": "assertMutableOrderColumns",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        60,
+        66
+      ],
+      "summary": "Implements the assert mutable order columns operation for this module.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getById",
+      "type": "function",
+      "name": "getById",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        73,
+        106
+      ],
+      "summary": "Queries or evaluates database state to get by id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "function",
+      "name": "getByUserId",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        111,
+        140
+      ],
+      "summary": "Queries or evaluates database state to get by user id.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "function",
+      "name": "hasPurchasedProduct",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        145,
+        168
+      ],
+      "summary": "Queries or evaluates database state to has purchased product.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "function",
+      "name": "getFiltered",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        173,
+        257
+      ],
+      "summary": "Queries or evaluates database state to get filtered.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "function",
+      "name": "getRecent",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        262,
+        265
+      ],
+      "summary": "Queries or evaluates database state to get recent.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:count",
+      "type": "function",
+      "name": "count",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        270,
+        282
+      ],
+      "summary": "Queries or evaluates database state to count.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "function",
+      "name": "isOrderReferenceConflict",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        293,
+        306
+      ],
+      "summary": "Queries or evaluates database state to is order reference conflict.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        311,
+        431
+      ],
+      "summary": "Creates persisted state to create.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "orders"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "function",
+      "name": "updateOrder",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        436,
+        446
+      ],
+      "summary": "Updates persisted state to update order.",
+      "tags": [
+        "database",
+        "query-function",
+        "mutation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "function",
+      "name": "getOrdersCountByStatus",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        453,
+        463
+      ],
+      "summary": "Queries or evaluates database state to get orders count by status.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "function",
+      "name": "getTotalRevenue",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        468,
+        481
+      ],
+      "summary": "Queries or evaluates database state to get total revenue.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "function",
+      "name": "getRevenueByPeriod",
+      "filePath": "src/queries/sales/orders.ts",
+      "lineRange": [
+        486,
+        508
+      ],
+      "summary": "Queries or evaluates database state to get revenue by period.",
+      "tags": [
+        "database",
+        "query-function",
+        "read-operation",
+        "orders"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/types/index.ts",
+      "summary": "Barrel entry point that re-exports the database package type and validation modules.",
+      "tags": [
+        "barrel",
+        "type-definition",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "function:seeds/identity.ts:seedIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/auth_accounts.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/guest_principals.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/organization_memberships.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/organizations.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/payment_methods.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/role_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/user_permissions.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/user_roles.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/data/users.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:seeds/helpers/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:seeds/identity.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getBySlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getBySlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getFeatured",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getFeatured",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:search",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:search",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByBrand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByBrand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getFiltered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getFiltered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:countProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:countProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getLowStockProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getLowStockProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:checkSlugAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:checkSlugAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getVariantsByProductIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getVariantsByProductIds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getVariantsByIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getVariantsByIds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductTags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductTags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductsByTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductsByTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductAttributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getProductAttributes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIdWithBrand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIdWithBrand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIdWithBrandAndCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getByIdWithBrandAndCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getAllWithBrandAndCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:getAllWithBrandAndCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:deleteProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "function:src/queries/catalog/products.ts:deleteProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getByEmail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getByEmail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getByEmailWithPassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getByEmailWithPassword",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:findPasswordCredentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:findPasswordCredentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getAuthorizationContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:getAuthorizationContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:upsertPasswordCredentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "function:src/queries/identity/users.ts:upsertPasswordCredentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/users.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByProductId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByProductId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByProductIdPaginated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByProductIdPaginated",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getSummaryByProductId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getSummaryByProductId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:getByUserId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:hasUserReviewed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:hasUserReviewed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:markHelpful",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:markHelpful",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:recalculateProductAggregates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "function:src/queries/review/reviews.ts:recalculateProductAggregates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/review/reviews.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/__tests__/orders.test.ts",
+      "target": "file:src/queries/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/sales/__tests__/orders.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getByUserId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:hasPurchasedProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRecent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:updateOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getOrdersCountByStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getTotalRevenue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "function:src/queries/sales/orders.ts:getRevenueByPeriod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:getRecent",
+      "target": "function:src/queries/sales/orders.ts:getFiltered",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:create",
+      "target": "function:src/queries/sales/orders.ts:isOrderReferenceConflict",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/queries/sales/orders.ts:updateOrder",
+      "target": "function:src/queries/sales/orders.ts:assertMutableOrderColumns",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

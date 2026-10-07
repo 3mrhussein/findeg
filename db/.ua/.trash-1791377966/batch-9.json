@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/SCHEMA.md",
+      "type": "document",
+      "name": "SCHEMA.md",
+      "filePath": "docs/SCHEMA.md",
+      "summary": "Database schema reference covering the global entity relationship model, feature-specific tables, complex types, and migration commands.",
+      "tags": [
+        "documentation",
+        "database",
+        "schema-reference",
+        "er-diagram"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/SETUP.md",
+      "type": "document",
+      "name": "SETUP.md",
+      "filePath": "docs/SETUP.md",
+      "summary": "Docker-based database setup guide covering startup scripts, connection details, troubleshooting, and direct PostgreSQL access.",
+      "tags": [
+        "documentation",
+        "database",
+        "docker",
+        "setup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/TAXONOMY.md",
+      "type": "document",
+      "name": "TAXONOMY.md",
+      "filePath": "docs/TAXONOMY.md",
+      "summary": "Explains the hybrid catalog taxonomy across tags, collections, attributes, and smart supply-list matching.",
+      "tags": [
+        "documentation",
+        "catalog",
+        "taxonomy",
+        "product-matching"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,76 @@
+{
+  "projectRoot": "/Users/amr/projects/findeg/db",
+  "batchFiles": [
+    {
+      "path": "src/__tests__/permission-codes.test.ts",
+      "language": "typescript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/admin-categories.ts",
+      "language": "typescript",
+      "sizeLines": 245,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/admin-collections.ts",
+      "language": "typescript",
+      "sizeLines": 131,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/queries/catalog/admin-tags.ts",
+      "language": "typescript",
+      "sizeLines": 102,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types/common.ts",
+      "language": "typescript",
+      "sizeLines": 107,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types/identity.ts",
+      "language": "typescript",
+      "sizeLines": 257,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types/pricing.ts",
+      "language": "typescript",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/__tests__/permission-codes.test.ts": [
+      "seeds/data/permissions.json",
+      "src/types/identity.ts"
+    ],
+    "src/queries/catalog/admin-categories.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts",
+      "src/types/common.ts"
+    ],
+    "src/queries/catalog/admin-collections.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts",
+      "src/types/common.ts"
+    ],
+    "src/queries/catalog/admin-tags.ts": [
+      "src/connection.ts",
+      "src/schema/index.ts",
+      "src/types/common.ts"
+    ],
+    "src/types/common.ts": [],
+    "src/types/identity.ts": [
+      "src/schema/enums.ts",
+      "src/types/common.ts"
+    ],
+    "src/types/pricing.ts": [
+      "src/types/common.ts"
+    ]
+  }
+}

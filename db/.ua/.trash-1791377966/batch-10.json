@@ -1,0 +1,59 @@
+{
+  "nodes": [
+    {
+      "id": "file:init-db.sql",
+      "type": "file",
+      "name": "init-db.sql",
+      "filePath": "init-db.sql",
+      "summary": "Initializes a fresh PostgreSQL database by enabling the uuid-ossp extension before Drizzle migrations create tables.",
+      "tags": [
+        "database",
+        "initialization",
+        "postgresql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Defines the @findeg/db package exports, database lifecycle scripts, and runtime and development dependencies.",
+      "tags": [
+        "configuration",
+        "package-manifest",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "Configures no-emit TypeScript checking and @findeg/db path aliases while excluding migrations and tests.",
+      "tags": [
+        "configuration",
+        "typescript",
+        "build-system"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:package.json",
+      "target": "file:src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

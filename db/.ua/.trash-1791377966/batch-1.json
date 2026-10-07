@@ -1,0 +1,947 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/schema/catalog/brands.ts",
+      "type": "file",
+      "name": "brands.ts",
+      "filePath": "src/schema/catalog/brands.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for brands data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/catalog/categories.ts",
+      "type": "file",
+      "name": "categories.ts",
+      "filePath": "src/schema/catalog/categories.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for categories data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/collections.ts",
+      "type": "file",
+      "name": "collections.ts",
+      "filePath": "src/schema/catalog/collections.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for collections data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/product-attributes.ts",
+      "type": "file",
+      "name": "product-attributes.ts",
+      "filePath": "src/schema/catalog/product-attributes.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product attributes data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/product-variants.ts",
+      "type": "file",
+      "name": "product-variants.ts",
+      "filePath": "src/schema/catalog/product-variants.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for product variants data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/products.ts",
+      "type": "file",
+      "name": "products.ts",
+      "filePath": "src/schema/catalog/products.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for products data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/tags.ts",
+      "type": "file",
+      "name": "tags.ts",
+      "filePath": "src/schema/catalog/tags.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for tags data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/catalog/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/schema/catalog/types.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for types data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/enums.ts",
+      "type": "file",
+      "name": "enums.ts",
+      "filePath": "src/schema/enums.ts",
+      "summary": "Defines shared PostgreSQL enum declarations used by tables across the database schema.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/identity/addresses.ts",
+      "type": "file",
+      "name": "addresses.ts",
+      "filePath": "src/schema/identity/addresses.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for addresses data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/identity/identity-access.ts",
+      "type": "file",
+      "name": "identity-access.ts",
+      "filePath": "src/schema/identity/identity-access.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for identity access data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/partners.ts",
+      "type": "file",
+      "name": "partners.ts",
+      "filePath": "src/schema/identity/partners.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for partners data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/schema/identity/users.ts",
+      "type": "file",
+      "name": "users.ts",
+      "filePath": "src/schema/identity/users.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for users data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/inventory/inventory.ts",
+      "type": "file",
+      "name": "inventory.ts",
+      "filePath": "src/schema/inventory/inventory.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for inventory data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/sales/checkout-idempotency.ts",
+      "type": "file",
+      "name": "checkout-idempotency.ts",
+      "filePath": "src/schema/sales/checkout-idempotency.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for checkout idempotency data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/discount-rules.ts",
+      "type": "file",
+      "name": "discount-rules.ts",
+      "filePath": "src/schema/sales/discount-rules.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for discount rules data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/guest-access.ts",
+      "type": "file",
+      "name": "guest-access.ts",
+      "filePath": "src/schema/sales/guest-access.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for guest access data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/sales/list-offers.ts",
+      "type": "file",
+      "name": "list-offers.ts",
+      "filePath": "src/schema/sales/list-offers.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for list offers data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "src/schema/sales/orders.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for orders data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/schema/sales/orders.ts:generateOrderReference",
+      "type": "function",
+      "name": "generateOrderReference",
+      "filePath": "src/schema/sales/orders.ts",
+      "lineRange": [
+        35,
+        42
+      ],
+      "summary": "Implements the generate order reference database operation for orders domain data.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/sales/reviews.ts",
+      "type": "file",
+      "name": "reviews.ts",
+      "filePath": "src/schema/sales/reviews.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for reviews data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/schemas.ts",
+      "type": "file",
+      "name": "schemas.ts",
+      "filePath": "src/schema/schemas.ts",
+      "summary": "Collects runtime validation schemas used to validate database-facing values and API payloads.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "file",
+      "name": "school-supply-lists.ts",
+      "filePath": "src/schema/school-engine/school-supply-lists.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for school supply lists data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/schema/system/audit-log.ts",
+      "type": "file",
+      "name": "audit-log.ts",
+      "filePath": "src/schema/system/audit-log.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for audit log data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/notifications.ts",
+      "type": "file",
+      "name": "notifications.ts",
+      "filePath": "src/schema/system/notifications.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for notifications data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/outbox.ts",
+      "type": "file",
+      "name": "outbox.ts",
+      "filePath": "src/schema/system/outbox.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for outbox data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/search-logs.ts",
+      "type": "file",
+      "name": "search-logs.ts",
+      "filePath": "src/schema/system/search-logs.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for search logs data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/schema/system/server-logs.ts",
+      "type": "file",
+      "name": "server-logs.ts",
+      "filePath": "src/schema/system/server-logs.ts",
+      "summary": "Defines Drizzle ORM tables, constraints, indexes, and relations for server logs data.",
+      "tags": [
+        "data-model",
+        "database",
+        "schema-definition",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/types/sales.ts",
+      "type": "file",
+      "name": "sales.ts",
+      "filePath": "src/types/sales.ts",
+      "summary": "Defines shared TypeScript types for sales, order, checkout, and payment data exchanged across the database layer.",
+      "tags": [
+        "type-definition",
+        "database",
+        "sales"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "function:src/schema/sales/orders.ts:generateOrderReference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "function:src/schema/sales/orders.ts:generateOrderReference",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/brands.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/categories.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/collections.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-attributes.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/product-variants.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/brands.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/categories.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-attributes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/catalog/tags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/products.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/catalog/tags.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/enums.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/addresses.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/identity-access.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/partners.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/identity/addresses.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/sales/reviews.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/identity/users.ts",
+      "target": "file:src/schema/system/audit-log.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/inventory/inventory.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/checkout-idempotency.ts",
+      "target": "file:src/types/sales.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/discount-rules.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/sales/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/guest-access.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/list-offers.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/schema/school-engine/school-supply-lists.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/orders.ts",
+      "target": "file:src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/catalog/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/sales/reviews.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/product-variants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/catalog/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/identity/partners.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/school-engine/school-supply-lists.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/audit-log.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/notifications.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/outbox.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/identity/users.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/search-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/schema/system/server-logs.ts",
+      "target": "file:src/schema/schemas.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/sales.ts",
+      "target": "file:src/schema/enums.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 10,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 10,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/queries/catalog/counts.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 23,
+      "functions": [
+        {
+          "name": "getProductCountRaw",
+          "startLine": 10,
+          "endLine": 15,
+          "params": []
+        },
+        {
+          "name": "getCategoryCountRaw",
+          "startLine": 17,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "getBrandCountRaw",
+          "startLine": 24,
+          "endLine": 27,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getProductCountRaw",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryCountRaw",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "getBrandCountRaw",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getProductCountRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 11
+        },
+        {
+          "caller": "getProductCountRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 11
+        },
+        {
+          "caller": "getCategoryCountRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getCategoryCountRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getBrandCountRaw",
+          "callee": "db.select({ count: sql<number>`cast(count(*) as integer)` }).from",
+          "lineNumber": 25
+        },
+        {
+          "caller": "getBrandCountRaw",
+          "callee": "db.select",
+          "lineNumber": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/distribution.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 42,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "getCategoryDistributionRaw",
+          "startLine": 25,
+          "endLine": 42,
+          "params": [
+            "limit"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CategoryDistributionRawSchema",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "getCategoryDistributionRaw",
+          "line": 25,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select({\n      categoryId: categories.id,\n      localizedName: categories.localizedName,\n      slug: categories.slug,\n      productCount: sql<number>`cast(count(${products.id}) as integer)`,\n    })\n    .from(categories)\n    .leftJoin(products, eq(categories.id, products.categoryId))\n    .groupBy(categories.id, categories.localizedName, categories.slug)\n    .orderBy(desc(sql`count(${products.id})`))\n    .limit",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select({\n      categoryId: categories.id,\n      localizedName: categories.localizedName,\n      slug: categories.slug,\n      productCount: sql<number>`cast(count(${products.id}) as integer)`,\n    })\n    .from(categories)\n    .leftJoin(products, eq(categories.id, products.categoryId))\n    .groupBy(categories.id, categories.localizedName, categories.slug)\n    .orderBy",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select({\n      categoryId: categories.id,\n      localizedName: categories.localizedName,\n      slug: categories.slug,\n      productCount: sql<number>`cast(count(${products.id}) as integer)`,\n    })\n    .from(categories)\n    .leftJoin(products, eq(categories.id, products.categoryId))\n    .groupBy",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select({\n      categoryId: categories.id,\n      localizedName: categories.localizedName,\n      slug: categories.slug,\n      productCount: sql<number>`cast(count(${products.id}) as integer)`,\n    })\n    .from(categories)\n    .leftJoin",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select({\n      categoryId: categories.id,\n      localizedName: categories.localizedName,\n      slug: categories.slug,\n      productCount: sql<number>`cast(count(${products.id}) as integer)`,\n    })\n    .from",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "eq",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "desc",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "sql",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getCategoryDistributionRaw",
+          "callee": "CategoryDistributionRawSchema.parse",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/health.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 91,
+      "nonEmptyLines": 82,
+      "functions": [
+        {
+          "name": "getCatalogHealthRaw",
+          "startLine": 27,
+          "endLine": 91,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CatalogHealthRawSchema",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "getCatalogHealthRaw",
+          "line": 27,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({\n      total: sql<number>`cast(count(*) as integer)`,\n      missingCategory: sql<number>`cast(sum(case when ${products.categoryId} is null then 1 else 0 end) as integer)`,\n      draftProducts: sql<number>`cast(sum(case when ${products.isActive} = false then 1 else 0 end) as integer)`,\n    })\n    .from",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from(products)\n    .where",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "sql",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from(products)\n    .where",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 46
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "sql",
+          "lineNumber": 50
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from(products)\n    .where",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select({ count: sql<number>`cast(count(*) as integer)` })\n    .from",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 57
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "and",
+          "lineNumber": 61
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "sql",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "eq",
+          "lineNumber": 63
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "sql",
+          "lineNumber": 64
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "sql",
+          "lineNumber": 68
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "Promise.all",
+          "lineNumber": 76
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db.select({ count: sql<number>`cast(count(*) as integer)` }).from",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db.select",
+          "lineNumber": 77
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db.select({ count: sql<number>`cast(count(*) as integer)` }).from",
+          "lineNumber": 78
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "db.select",
+          "lineNumber": 78
+        },
+        {
+          "caller": "getCatalogHealthRaw",
+          "callee": "CatalogHealthRawSchema.parse",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/catalog/top-products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 42,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "getTopProductsRaw",
+          "startLine": 27,
+          "endLine": 42,
+          "params": [
+            "limit"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TopProductRawSchema",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "getTopProductsRaw",
+          "line": 27,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      name: sql<string>`${products.localizedName}->>'en'`,\n      sold: sql<number>`cast(sum(${orderItems.quantity}) as integer)`,\n      revenue: sql<number>`cast(sum(${orderItems.totalPrice}) as float)`,\n    })\n    .from(orderItems)\n    .innerJoin(products, eq(orderItems.productId, products.id))\n    .groupBy(products.id, products.localizedName)\n    .orderBy(desc(sql`sum(${orderItems.quantity})`))\n    .limit",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      name: sql<string>`${products.localizedName}->>'en'`,\n      sold: sql<number>`cast(sum(${orderItems.quantity}) as integer)`,\n      revenue: sql<number>`cast(sum(${orderItems.totalPrice}) as float)`,\n    })\n    .from(orderItems)\n    .innerJoin(products, eq(orderItems.productId, products.id))\n    .groupBy(products.id, products.localizedName)\n    .orderBy",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      name: sql<string>`${products.localizedName}->>'en'`,\n      sold: sql<number>`cast(sum(${orderItems.quantity}) as integer)`,\n      revenue: sql<number>`cast(sum(${orderItems.totalPrice}) as float)`,\n    })\n    .from(orderItems)\n    .innerJoin(products, eq(orderItems.productId, products.id))\n    .groupBy",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      name: sql<string>`${products.localizedName}->>'en'`,\n      sold: sql<number>`cast(sum(${orderItems.quantity}) as integer)`,\n      revenue: sql<number>`cast(sum(${orderItems.totalPrice}) as float)`,\n    })\n    .from(orderItems)\n    .innerJoin",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select({\n      id: products.id,\n      name: sql<string>`${products.localizedName}->>'en'`,\n      sold: sql<number>`cast(sum(${orderItems.quantity}) as integer)`,\n      revenue: sql<number>`cast(sum(${orderItems.totalPrice}) as float)`,\n    })\n    .from",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "eq",
+          "lineNumber": 36
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "desc",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "sql",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "z.array(TopProductRawSchema).parse",
+          "lineNumber": 41
+        },
+        {
+          "caller": "getTopProductsRaw",
+          "callee": "z.array",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/inventory/low-stock.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 18,
+      "functions": [
+        {
+          "name": "getLowStockCountRaw",
+          "startLine": 9,
+          "endLine": 19,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getLowStockCountRaw",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "db\n    .select({\n      count: sql<number>`cast(count(distinct ${inventoryBalances.variantId}) as integer)`,\n    })\n    .from(inventoryBalances)\n    .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))\n    .where",
+          "lineNumber": 10
+        },
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "db\n    .select({\n      count: sql<number>`cast(count(distinct ${inventoryBalances.variantId}) as integer)`,\n    })\n    .from(inventoryBalances)\n    .innerJoin",
+          "lineNumber": 10
+        },
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "db\n    .select({\n      count: sql<number>`cast(count(distinct ${inventoryBalances.variantId}) as integer)`,\n    })\n    .from",
+          "lineNumber": 10
+        },
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 10
+        },
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "eq",
+          "lineNumber": 15
+        },
+        {
+          "caller": "getLowStockCountRaw",
+          "callee": "sql",
+          "lineNumber": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/order-stats.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 50,
+      "nonEmptyLines": 43,
+      "functions": [
+        {
+          "name": "getTotalOrderStatsRaw",
+          "startLine": 20,
+          "endLine": 32,
+          "params": []
+        },
+        {
+          "name": "getOrderStatsRaw",
+          "startLine": 37,
+          "endLine": 50,
+          "params": [
+            "startDate",
+            "endDate"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OrderStatsSchema",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "getTotalOrderStatsRaw",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "getOrderStatsRaw",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getTotalOrderStatsRaw",
+          "callee": "db\n    .select({\n      totalOrders: sql<number>`cast(count(*) as integer)`,\n      totalRevenue: sql<number>`cast(coalesce(sum(${orders.totalAmount}), 0) as float)`,\n    })\n    .from",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getTotalOrderStatsRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getTotalOrderStatsRaw",
+          "callee": "OrderStatsSchema.parse",
+          "lineNumber": 28
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "db\n    .select({\n      totalOrders: sql<number>`cast(count(*) as integer)`,\n      totalRevenue: sql<number>`cast(coalesce(sum(${orders.totalAmount}), 0) as float)`,\n    })\n    .from(orders)\n    .where",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "db\n    .select({\n      totalOrders: sql<number>`cast(count(*) as integer)`,\n      totalRevenue: sql<number>`cast(coalesce(sum(${orders.totalAmount}), 0) as float)`,\n    })\n    .from",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "and",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "gte",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "lte",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getOrderStatsRaw",
+          "callee": "OrderStatsSchema.parse",
+          "lineNumber": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/queries/sales/revenue.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "getRevenueByPeriodRaw",
+          "startLine": 22,
+          "endLine": 44,
+          "params": [
+            "startDate",
+            "endDate",
+            "interval"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RevenuePeriodRawSchema",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "getRevenueByPeriodRaw",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "['day', 'week', 'month'].includes",
+          "lineNumber": 27
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "sql.raw",
+          "lineNumber": 31
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "db\n    .select({\n      period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,\n      revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,\n    })\n    .from(orders)\n    .where(and(gte(orders.createdAt, startDate), lte(orders.createdAt, endDate)))\n    .groupBy(sql`date_trunc(${intervalLiteral}, ${orders.createdAt})`)\n    .orderBy",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "db\n    .select({\n      period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,\n      revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,\n    })\n    .from(orders)\n    .where(and(gte(orders.createdAt, startDate), lte(orders.createdAt, endDate)))\n    .groupBy",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "db\n    .select({\n      period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,\n      revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,\n    })\n    .from(orders)\n    .where",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "db\n    .select({\n      period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,\n      revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,\n    })\n    .from",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "db\n    .select",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "and",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "gte",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "lte",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "sql",
+          "lineNumber": 40
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "sql",
+          "lineNumber": 41
+        },
+        {
+          "caller": "getRevenueByPeriodRaw",
+          "callee": "RevenuePeriodRawSchema.parse",
+          "lineNumber": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/catalog/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/inventory/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/schema/sales/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 6,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

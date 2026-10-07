@@ -1,0 +1,1119 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/queries/identity/create-admin-user.ts",
+      "type": "file",
+      "name": "create-admin-user.ts",
+      "filePath": "src/queries/identity/create-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for create admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/create-admin-user.ts:createAdminUserRaw",
+      "type": "function",
+      "name": "createAdminUserRaw",
+      "filePath": "src/queries/identity/create-admin-user.ts",
+      "lineRange": [
+        12,
+        43
+      ],
+      "summary": "Creates or records admin user raw data for create admin user records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/create-role.ts",
+      "type": "file",
+      "name": "create-role.ts",
+      "filePath": "src/queries/identity/create-role.ts",
+      "summary": "Implements database queries and transactional operations for create role.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/create-role.ts:createRoleRaw",
+      "type": "function",
+      "name": "createRoleRaw",
+      "filePath": "src/queries/identity/create-role.ts",
+      "lineRange": [
+        4,
+        23
+      ],
+      "summary": "Creates or records role raw data for create role records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/deactivate-admin-user.ts",
+      "type": "file",
+      "name": "deactivate-admin-user.ts",
+      "filePath": "src/queries/identity/deactivate-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for deactivate admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/deactivate-admin-user.ts:deactivateAdminUserRaw",
+      "type": "function",
+      "name": "deactivateAdminUserRaw",
+      "filePath": "src/queries/identity/deactivate-admin-user.ts",
+      "lineRange": [
+        7,
+        12
+      ],
+      "summary": "Implements the deactivate admin user raw database operation for deactivate admin user records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/delete-role.ts",
+      "type": "file",
+      "name": "delete-role.ts",
+      "filePath": "src/queries/identity/delete-role.ts",
+      "summary": "Implements database queries and transactional operations for delete role.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/delete-role.ts:deleteRoleRaw",
+      "type": "function",
+      "name": "deleteRoleRaw",
+      "filePath": "src/queries/identity/delete-role.ts",
+      "lineRange": [
+        6,
+        8
+      ],
+      "summary": "Removes role raw data associated with delete role records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/get-role-user-count.ts",
+      "type": "file",
+      "name": "get-role-user-count.ts",
+      "filePath": "src/queries/identity/get-role-user-count.ts",
+      "summary": "Implements database queries and transactional operations for get role user count.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/get-role-user-count.ts:getRoleUserCountRaw",
+      "type": "function",
+      "name": "getRoleUserCountRaw",
+      "filePath": "src/queries/identity/get-role-user-count.ts",
+      "lineRange": [
+        6,
+        13
+      ],
+      "summary": "Retrieves role user count raw data for get role user count records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "type": "file",
+      "name": "set-admin-permission-overrides.ts",
+      "filePath": "src/queries/identity/set-admin-permission-overrides.ts",
+      "summary": "Implements database queries and transactional operations for set admin permission overrides.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/set-admin-permission-overrides.ts:setAdminPermissionOverridesRaw",
+      "type": "function",
+      "name": "setAdminPermissionOverridesRaw",
+      "filePath": "src/queries/identity/set-admin-permission-overrides.ts",
+      "lineRange": [
+        12,
+        33
+      ],
+      "summary": "Updates admin permission overrides raw state for set admin permission overrides records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/update-admin-user.ts",
+      "type": "file",
+      "name": "update-admin-user.ts",
+      "filePath": "src/queries/identity/update-admin-user.ts",
+      "summary": "Implements database queries and transactional operations for update admin user.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/update-admin-user.ts:updateAdminUserRaw",
+      "type": "function",
+      "name": "updateAdminUserRaw",
+      "filePath": "src/queries/identity/update-admin-user.ts",
+      "lineRange": [
+        14,
+        56
+      ],
+      "summary": "Updates admin user raw state for update admin user records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/identity/update-role-permissions.ts",
+      "type": "file",
+      "name": "update-role-permissions.ts",
+      "filePath": "src/queries/identity/update-role-permissions.ts",
+      "summary": "Implements database queries and transactional operations for update role permissions.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/identity/update-role-permissions.ts:updateRolePermissionsRaw",
+      "type": "function",
+      "name": "updateRolePermissionsRaw",
+      "filePath": "src/queries/identity/update-role-permissions.ts",
+      "lineRange": [
+        7,
+        38
+      ],
+      "summary": "Updates role permissions raw state for update role permissions records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/inventory/stock-reservations.ts",
+      "type": "file",
+      "name": "stock-reservations.ts",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "summary": "Implements database queries and transactional operations for stock reservations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/inventory/stock-reservations.ts:aggregate",
+      "type": "function",
+      "name": "aggregate",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        54,
+        65
+      ],
+      "summary": "Implements the aggregate database operation for stock reservations records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/inventory/stock-reservations.ts:reserveOrderStock",
+      "type": "function",
+      "name": "reserveOrderStock",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        73,
+        150
+      ],
+      "summary": "Applies the reserve order stock inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/inventory/stock-reservations.ts:settleOrderStock",
+      "type": "function",
+      "name": "settleOrderStock",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        158,
+        237
+      ],
+      "summary": "Updates tle order stock state for stock reservations records.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/inventory/stock-reservations.ts:consumeOrderStock",
+      "type": "function",
+      "name": "consumeOrderStock",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        240,
+        242
+      ],
+      "summary": "Applies the consume order stock inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/inventory/stock-reservations.ts:releaseOrderStock",
+      "type": "function",
+      "name": "releaseOrderStock",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        245,
+        247
+      ],
+      "summary": "Applies the release order stock inventory operation while preserving transactional stock invariants.",
+      "tags": [
+        "database",
+        "data-access",
+        "transaction",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/queries/inventory/stock-reservations.ts:InsufficientStockError",
+      "type": "class",
+      "name": "InsufficientStockError",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        32,
+        41
+      ],
+      "summary": "Represents a typed failure raised while enforcing stock reservations records invariants.",
+      "tags": [
+        "error-handling",
+        "database",
+        "domain-invariant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/queries/inventory/stock-reservations.ts:StockReservationStateError",
+      "type": "class",
+      "name": "StockReservationStateError",
+      "filePath": "src/queries/inventory/stock-reservations.ts",
+      "lineRange": [
+        44,
+        52
+      ],
+      "summary": "Represents a typed failure raised while enforcing stock reservations records invariants.",
+      "tags": [
+        "error-handling",
+        "database",
+        "domain-invariant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/notifications/notifications.ts",
+      "type": "file",
+      "name": "notifications.ts",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "summary": "Implements database queries and transactional operations for notifications.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        35,
+        37
+      ],
+      "summary": "Creates or records  data for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:markRead",
+      "type": "function",
+      "name": "markRead",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        42,
+        47
+      ],
+      "summary": "Updates read state for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:markAllRead",
+      "type": "function",
+      "name": "markAllRead",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        52,
+        57
+      ],
+      "summary": "Updates all read state for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:getUnread",
+      "type": "function",
+      "name": "getUnread",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        64,
+        71
+      ],
+      "summary": "Retrieves unread data for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:getAll",
+      "type": "function",
+      "name": "getAll",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        76,
+        94
+      ],
+      "summary": "Retrieves all data for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/notifications/notifications.ts:getUnreadCount",
+      "type": "function",
+      "name": "getUnreadCount",
+      "filePath": "src/queries/notifications/notifications.ts",
+      "lineRange": [
+        99,
+        105
+      ],
+      "summary": "Retrieves unread count data for notifications records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/queries/partner-sales/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "summary": "Provides the consolidated database query surface for partner-sales operations.",
+      "tags": [
+        "data-access",
+        "database",
+        "query",
+        "drizzle-orm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/queries/partner-sales/index.ts:listAttributedOrders",
+      "type": "function",
+      "name": "listAttributedOrders",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "lineRange": [
+        74,
+        103
+      ],
+      "summary": "Retrieves attributed orders data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partner-sales/index.ts:getAttributedOrderTotals",
+      "type": "function",
+      "name": "getAttributedOrderTotals",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "lineRange": [
+        112,
+        131
+      ],
+      "summary": "Retrieves attributed order totals data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partner-sales/index.ts:getFirstAttributedOrderMonth",
+      "type": "function",
+      "name": "getFirstAttributedOrderMonth",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "lineRange": [
+        134,
+        147
+      ],
+      "summary": "Retrieves first attributed order month data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "query",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/queries/partner-sales/index.ts:listAttributedSalesRows",
+      "type": "function",
+      "name": "listAttributedSalesRows",
+      "filePath": "src/queries/partner-sales/index.ts",
+      "lineRange": [
+        180,
+        226
+      ],
+      "summary": "Retrieves attributed sales rows data for index records.",
+      "tags": [
+        "database",
+        "data-access",
+        "validation",
+        "typescript"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "function:src/queries/identity/create-admin-user.ts:createAdminUserRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "function:src/queries/identity/create-admin-user.ts:createAdminUserRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "function:src/queries/identity/create-role.ts:createRoleRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "function:src/queries/identity/create-role.ts:createRoleRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "function:src/queries/identity/deactivate-admin-user.ts:deactivateAdminUserRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "function:src/queries/identity/deactivate-admin-user.ts:deactivateAdminUserRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "function:src/queries/identity/delete-role.ts:deleteRoleRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "function:src/queries/identity/delete-role.ts:deleteRoleRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "function:src/queries/identity/get-role-user-count.ts:getRoleUserCountRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "function:src/queries/identity/get-role-user-count.ts:getRoleUserCountRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "function:src/queries/identity/set-admin-permission-overrides.ts:setAdminPermissionOverridesRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "function:src/queries/identity/set-admin-permission-overrides.ts:setAdminPermissionOverridesRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "function:src/queries/identity/update-admin-user.ts:updateAdminUserRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "function:src/queries/identity/update-admin-user.ts:updateAdminUserRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "function:src/queries/identity/update-role-permissions.ts:updateRolePermissionsRaw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "function:src/queries/identity/update-role-permissions.ts:updateRolePermissionsRaw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:aggregate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:reserveOrderStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:reserveOrderStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:settleOrderStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:consumeOrderStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:consumeOrderStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:releaseOrderStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "function:src/queries/inventory/stock-reservations.ts:releaseOrderStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "class:src/queries/inventory/stock-reservations.ts:InsufficientStockError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "class:src/queries/inventory/stock-reservations.ts:InsufficientStockError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "class:src/queries/inventory/stock-reservations.ts:StockReservationStateError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "class:src/queries/inventory/stock-reservations.ts:StockReservationStateError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:markRead",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:markRead",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:markAllRead",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:markAllRead",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getUnread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getUnread",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getAll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getUnreadCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "function:src/queries/notifications/notifications.ts:getUnreadCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:listAttributedOrders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:listAttributedOrders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:getAttributedOrderTotals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:getAttributedOrderTotals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:getFirstAttributedOrderMonth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:getFirstAttributedOrderMonth",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:listAttributedSalesRows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "function:src/queries/partner-sales/index.ts:listAttributedSalesRows",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/create-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/deactivate-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/delete-role.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/get-role-user-count.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/set-admin-permission-overrides.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-admin-user.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/queries/identity/authorization-version.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/identity/update-role-permissions.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/queries/transaction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/inventory/stock-reservations.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/connection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/notifications/notifications.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/queries/partner-sales/index.ts",
+      "target": "file:src/schema/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}
