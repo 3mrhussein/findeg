@@ -283,6 +283,8 @@ jobs:
       - name: Execute E2E test suites
         id: e2e
         continue-on-error: true
+        env:
+          TEST_ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
         run: pnpm test:e2e --continue
       - name: Upload E2E failure evidence
         if: failure() || steps.e2e.outcome == 'failure'
@@ -290,7 +292,7 @@ jobs:
         with:
           name: e2e-failure-evidence
           path: |
-            **/coverage/**
+            ${{ runner.temp }}/artifacts
             ${{ runner.temp }}/*.log
           if-no-files-found: warn
       - name: Require E2E test suites to pass
