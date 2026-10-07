@@ -11,6 +11,8 @@ import type { Locale } from '@findeg/backend/features/core';
  * Enforces admin authentication at layout root, redirecting unauthenticated
  * users cleanly to /login without rendering a hollow shell or throwing Suspense errors.
  */
+export const instant = false;
+
 export default async function AdminDashboardLayout({
   children,
   params,
