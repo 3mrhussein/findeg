@@ -55,6 +55,9 @@ on:
   pull_request:
     types: [opened, ready_for_review, synchronize, labeled]
 
+env:
+  GH_REPO: ${{ github.repository }}
+
 # ── queue-pr ──────────────────────────────────────────────────────────────────
 # Adds review:queued to every non-draft PR that opens, becomes ready, or gets a
 # new push — so the label always reflects "has unreviewed changes".
