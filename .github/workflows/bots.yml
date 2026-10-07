@@ -88,7 +88,9 @@ jobs:
 
           # Only queue if no review is already in-progress or done on this push.
           LABELS=$(gh pr view "$PR_NUM" --json labels -q '.labels[].name' | tr '\n' ' ')
-          if echo "$LABELS" | grep -qE 'review:in-progress'; then
+          # A push always re-queues: a stale in-progress label (e.g. Codex never
+          # answered) must not block review of new commits.
+          if [ "${{ github.event.action }}" != "synchronize" ] && echo "$LABELS" | grep -qE 'review:in-progress'; then
             echo "Review already in progress, skipping re-queue."
           else
             gh pr edit "$PR_NUM" \
@@ -198,12 +200,15 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/pull/{0}/head', github.event.inputs.pr_number) || '' }}
+          persist-credentials: false
 
       - name: Mark review in-progress
+        id: pr
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ github.event.pull_request.number || github.event.issue.number || github.event.inputs.pr_number }}
+          PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number || (github.event.issue.pull_request && github.event.issue.number) || '' }}
         run: |
+          echo "num=$PR_NUM" >> "$GITHUB_OUTPUT"
           [ -z "$PR_NUM" ] && exit 0
           # Ensure all state labels exist.
           gh label create "review:queued"       --color "e4e669" --description "Waiting for agent review"   --force
@@ -219,10 +224,9 @@ jobs:
         id: prompt_step
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
-          COMMENT_PR_NUM: ${{ github.event.issue.pull_request && github.event.issue.number || '' }}
+          PR_NUM: ${{ steps.pr.outputs.num }}
         run: |
-          echo "pr_num=${PR_NUM:-$COMMENT_PR_NUM}" >> "$GITHUB_OUTPUT"
+          echo "pr_num=$PR_NUM" >> "$GITHUB_OUTPUT"
           if [ -n "$PR_NUM" ]; then
             BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
             echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md, then post the verdict with gh pr comment $PR_NUM." >> "$GITHUB_OUTPUT"

@@ -251,7 +251,7 @@ jobs:
           cache: 'false'
       # pnpm's allowBuilds disables Cypress's postinstall.
       - name: Install Cypress binary
-        run: pnpm exec cypress install
+        run: pnpm --filter @findeg/storefront exec cypress install
       - name: Write root .env
         run: |
           cat > .env <<'EOF'

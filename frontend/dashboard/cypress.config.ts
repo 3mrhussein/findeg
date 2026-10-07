@@ -7,9 +7,6 @@ const artifactsBase = process.env.TEST_ARTIFACTS_DIR
 
 export default defineConfig({
   reporter: 'spec',
-  reporterOptions: {
-    reportDir: path.join(artifactsBase, 'reports'),
-  },
   allowCypressEnv: false,
   viewportWidth: 1280,
   viewportHeight: 800,
