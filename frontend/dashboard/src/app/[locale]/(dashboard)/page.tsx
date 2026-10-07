@@ -30,13 +30,6 @@ interface AdminDashboardPageProps {
   params: Promise<{ locale: string }>;
 }
 
-/**
- * Generate static params for supported locales
- */
-export async function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'ar' }];
-}
-
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);

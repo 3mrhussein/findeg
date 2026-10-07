@@ -171,7 +171,8 @@ jobs:
       (vars.AUTO_REVIEW == 'claude' &&
         github.event_name == 'pull_request' &&
         (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
-        !github.event.pull_request.draft) ||
+        !github.event.pull_request.draft &&
+        !contains(github.event.pull_request.labels.*.name, 'review:codex')) ||
       (github.actor == github.repository_owner && !endsWith(github.actor, '[bot]') && (
         (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
@@ -266,6 +267,35 @@ jobs:
             echo
             echo "$msg"
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # ── codex-trigger ─────────────────────────────────────────────────────────────
+  # When AUTO_REVIEW == 'codex' or label 'review:codex' is added, trigger Codex
+  # by posting an `@codex review` comment so the Codex GitHub App starts reviewing.
+  codex-trigger:
+    name: Codex trigger
+    if: >-
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'review:codex') ||
+      (vars.AUTO_REVIEW == 'codex' &&
+        github.event_name == 'pull_request' &&
+        (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
+        !github.event.pull_request.draft)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Trigger Codex review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          gh label create "review:queued"       --color "e4e669" --description "Waiting for agent review"   --force
+          gh label create "review:in-progress"  --color "d93f0b" --description "Agent review in progress"   --force
+          gh label create "review:codex"        --color "2ea44f" --description "Request Codex review"       --force
+          gh pr edit "$PR_NUM" --remove-label "review:queued" 2>/dev/null || true
+          gh pr edit "$PR_NUM" --add-label "review:in-progress"
+          gh pr comment "$PR_NUM" --body "@codex review"
 
   # ── codex-label ───────────────────────────────────────────────────────────────
   # The Codex GitHub app (chatgpt-codex-connector[bot]) reviews on its own — no
