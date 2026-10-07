@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit",
     "clean": " rm -rf node_modules dist .turbo .next cypress/coverage",
     "test": "vitest --run",
+    "test:e2e": "cypress run --browser chrome --headless",
     "e2e:run:ci": "cypress run --browser chrome --headless"
   },
   "dependencies": {

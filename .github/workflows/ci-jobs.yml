@@ -251,7 +251,7 @@ jobs:
           cache: 'false'
       # pnpm's allowBuilds disables Cypress's postinstall.
       - name: Install Cypress binary
-        run: pnpm --filter @findeg/storefront exec cypress install
+        run: pnpm exec cypress install
       - name: Write root .env
         run: |
           cat > .env <<'EOF'
@@ -278,39 +278,24 @@ jobs:
           pnpm --filter @findeg/dashboard start > "$RUNNER_TEMP/dashboard.log" 2>&1 &
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3000/en > /dev/null
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3001/en > /dev/null
-      # Run both suites even if the first fails; the final step fails the job
-      # after collecting both results. CI OK requires this job's success.
-      - name: Storefront Cypress suite
-        id: storefront
+      # Run E2E suites across all packages implementing the test:e2e contract.
+      # Continue-on-error runs every suite to collect complete failure evidence.
+      - name: Execute E2E test suites
+        id: e2e
         continue-on-error: true
-        run: pnpm --filter @findeg/storefront e2e:run:ci
-      - name: Dashboard Cypress suite
-        id: dashboard
-        continue-on-error: true
-        run: pnpm --filter @findeg/dashboard e2e:run:ci
+        run: pnpm test:e2e --continue
       - name: Upload E2E failure evidence
-        if: failure() || steps.storefront.outcome == 'failure' || steps.dashboard.outcome == 'failure'
+        if: failure() || steps.e2e.outcome == 'failure'
         uses: actions/upload-artifact@v7
         with:
           name: e2e-failure-evidence
           path: |
-            frontend/storefront/cypress/coverage
-            frontend/dashboard/cypress/coverage
-            frontend/storefront/cypress/screenshots
-            frontend/storefront/cypress/videos
-            frontend/dashboard/cypress/screenshots
-            frontend/dashboard/cypress/videos
-            ${{ runner.temp }}/storefront.log
-            ${{ runner.temp }}/dashboard.log
+            **/coverage/**
+            ${{ runner.temp }}/*.log
           if-no-files-found: warn
-      - name: Require both Cypress suites to pass
+      - name: Require E2E test suites to pass
         if: always()
-        env:
-          STOREFRONT_RESULT: ${{ steps.storefront.outcome }}
-          DASHBOARD_RESULT: ${{ steps.dashboard.outcome }}
-        run: |
-          test "$STOREFRONT_RESULT" = success
-          test "$DASHBOARD_RESULT" = success
+        run: test "${{ steps.e2e.outcome }}" = success
 
   # The only check a ruleset needs to require. It always runs, so skipped jobs
   # can't leave it pending; the policy decides whether the results pass.
