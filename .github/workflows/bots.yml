@@ -80,6 +80,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUM: ${{ github.event.pull_request.number }}
+          ACTION: ${{ github.event.action }}
         run: |
           gh label create "review:queued" \
             --color "e4e669" \
@@ -90,7 +91,7 @@ jobs:
           LABELS=$(gh pr view "$PR_NUM" --json labels -q '.labels[].name' | tr '\n' ' ')
           # A push always re-queues: a stale in-progress label (e.g. Codex never
           # answered) must not block review of new commits.
-          if [ "${{ github.event.action }}" != "synchronize" ] && echo "$LABELS" | grep -qE 'review:in-progress'; then
+          if [ "$ACTION" != "synchronize" ] && echo "$LABELS" | grep -qE 'review:in-progress'; then
             echo "Review already in progress, skipping re-queue."
           else
             gh pr edit "$PR_NUM" \
@@ -210,6 +211,8 @@ jobs:
         run: |
           echo "num=$PR_NUM" >> "$GITHUB_OUTPUT"
           [ -z "$PR_NUM" ] && exit 0
+          # Pin the commit this run reviews; a later push must not inherit the verdict.
+          echo "sha=$(gh pr view "$PR_NUM" --json headRefOid -q .headRefOid)" >> "$GITHUB_OUTPUT"
           # Ensure all state labels exist.
           gh label create "review:queued"       --color "e4e669" --description "Waiting for agent review"   --force
           gh label create "review:in-progress"  --color "d93f0b" --description "Agent review in progress"   --force
@@ -255,9 +258,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUM: ${{ steps.prompt_step.outputs.pr_num }}
           OUTCOME: ${{ steps.claude.outcome }}
+          REVIEWED_SHA: ${{ steps.pr.outputs.sha }}
         run: |
           gh pr edit "$PR_NUM" --remove-label "review:in-progress" 2>/dev/null || true
-          if [ "$OUTCOME" = "success" ]; then
+          HEAD_SHA=$(gh pr view "$PR_NUM" --json headRefOid -q .headRefOid)
+          if [ "$OUTCOME" = "success" ] && [ "$HEAD_SHA" = "$REVIEWED_SHA" ]; then
             gh pr edit "$PR_NUM" --add-label "reviewed:claude"
           else
             # Re-queue so the PR can be retried.
