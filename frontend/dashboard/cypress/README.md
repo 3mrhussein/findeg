@@ -10,7 +10,7 @@ This project uses a layered Cypress structure so tests stay maintainable as UI e
 - `cypress/support/actions/**`: reusable UI/API actions (login, product creation, filtering)
 - `cypress/support/assertions/**`: reusable assertions, separated from actions
 - `cypress/support/utils/**`: route/data helpers and test data factories
-- `cypress/support/scenario/**`: business/system scenario functions consumed by spec files
+- `cypress/support/scenarios/**`: business/system scenario functions consumed by spec files
 - `cypress/support/commands.ts`: custom Cypress commands composed from actions
 - `cypress/coverage/**`: test execution artifacts (screenshots, videos, downloads)
 
