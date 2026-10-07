@@ -2,7 +2,9 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   reporter: 'spec',
-  reporterOptions: {},
+  reporterOptions: {
+    reportDir: 'cypress/coverage/reports',
+  },
   allowCypressEnv: false,
   viewportWidth: 1280,
   viewportHeight: 800,
@@ -21,9 +23,9 @@ export default defineConfig({
     video: true,
     screenshotOnRunFailure: true,
     trashAssetsBeforeRuns: true,
-    screenshotsFolder: 'cypress/screenshots',
-    videosFolder: 'cypress/videos',
-    downloadsFolder: 'cypress/downloads',
+    screenshotsFolder: 'cypress/coverage/screenshots',
+    videosFolder: 'cypress/coverage/videos',
+    downloadsFolder: 'cypress/coverage/downloads',
     setupNodeEvents(on, config) {
       return config;
     },

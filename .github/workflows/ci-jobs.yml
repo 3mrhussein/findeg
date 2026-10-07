@@ -294,6 +294,8 @@ jobs:
         with:
           name: e2e-failure-evidence
           path: |
+            frontend/storefront/cypress/coverage
+            frontend/dashboard/cypress/coverage
             frontend/storefront/cypress/screenshots
             frontend/storefront/cypress/videos
             frontend/dashboard/cypress/screenshots
