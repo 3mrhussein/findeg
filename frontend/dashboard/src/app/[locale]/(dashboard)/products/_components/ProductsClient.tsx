@@ -70,42 +70,57 @@ export function ProductsClient({ initialData, categories, brands }: ProductsClie
     });
   };
 
+  /**
+   * Runs a bulk mutation and reports its real outcome. Products that failed stay selected
+   * so they can be retried; the rest leave the selection.
+   */
+  const runBulk = (
+    ids: number[],
+    action: (ids: number[]) => Promise<{ success: boolean; error?: string; failedIds: number[] }>,
+    toasts: { pending: string; success: string; error: string },
+  ) => {
+    startTransition(async () => {
+      toast({ title: t(toasts.pending) });
+      const result = await action(ids);
+      if (result.success) {
+        toast({ title: t(toasts.success) });
+      } else {
+        toast({ title: t(toasts.error), description: result.error, variant: 'destructive' });
+      }
+      setSelectedIds((prev) =>
+        prev.filter((sid) => !ids.includes(sid) || result.failedIds.includes(sid)),
+      );
+    });
+  };
+
+  const deleteToasts = {
+    pending: 'Toasts.Deleting',
+    success: 'Toasts.DeleteSuccess',
+    error: 'Toasts.DeleteError',
+  } as const;
+
   const handleDelete = (id: number) => {
     if (!confirm('Are you sure you want to delete this product? This cannot be undone.')) return;
-    startTransition(async () => {
-      toast({ title: t('Toasts.Deleting') });
-      await bulkDeleteAction([id]);
-      toast({ title: t('Toasts.DeleteSuccess') });
-      setSelectedIds((prev) => prev.filter((sid) => sid !== id));
-    });
+    runBulk([id], bulkDeleteAction, deleteToasts);
   };
 
-  const handleBulkActivate = (ids: number[]) => {
-    startTransition(async () => {
-      toast({ title: t('Toasts.Activating') });
-      await bulkActivateAction(ids);
-      toast({ title: t('Toasts.ActivateSuccess') });
-      setSelectedIds([]);
+  const handleBulkActivate = (ids: number[]) =>
+    runBulk(ids, bulkActivateAction, {
+      pending: 'Toasts.Activating',
+      success: 'Toasts.ActivateSuccess',
+      error: 'Toasts.ActivateError',
     });
-  };
 
-  const handleBulkDeactivate = (ids: number[]) => {
-    startTransition(async () => {
-      toast({ title: t('Toasts.Deactivating') });
-      await bulkDeactivateAction(ids);
-      toast({ title: t('Toasts.DeactivateSuccess') });
-      setSelectedIds([]);
+  const handleBulkDeactivate = (ids: number[]) =>
+    runBulk(ids, bulkDeactivateAction, {
+      pending: 'Toasts.Deactivating',
+      success: 'Toasts.DeactivateSuccess',
+      error: 'Toasts.DeactivateError',
     });
-  };
 
   const handleBulkDelete = (ids: number[]) => {
     if (!confirm(`Are you sure you want to delete ${ids.length} products?`)) return;
-    startTransition(async () => {
-      toast({ title: t('Toasts.Deleting') });
-      await bulkDeleteAction(ids);
-      toast({ title: t('Toasts.DeleteSuccess') });
-      setSelectedIds([]);
-    });
+    runBulk(ids, bulkDeleteAction, deleteToasts);
   };
 
   return (
