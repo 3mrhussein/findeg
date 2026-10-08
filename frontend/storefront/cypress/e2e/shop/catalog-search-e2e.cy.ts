@@ -1,4 +1,3 @@
-// Quarantined pending https://github.com/3mrhussein/findeg/issues/348
 const card = '[data-testid^="product-card-title-"]';
 
 describe('Catalog search', () => {
