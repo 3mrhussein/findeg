@@ -3,7 +3,6 @@ import {
   getCatalogSuggestionsRaw,
   logCatalogSearchRaw,
   getFilteredProducts,
-  getProductsByIds,
 } from '@findeg/db/queries';
 import {
   type ISearchService,
@@ -13,11 +12,12 @@ import {
   type ParsedQuery,
   type Suggestion,
 } from '../interfaces/ISearchService';
+import { ProductService } from './ProductService';
 import { type Locale } from '../../../core/domain/value-objects';
 import { type ID } from '../../../core/domain/types/common';
 
 export class SearchService implements ISearchService {
-  constructor() {}
+  private readonly productService = new ProductService();
 
   public parseQuery(query: string): ParsedQuery {
     const arabicRegex = /[\u0600-\u06FF]+/g;
@@ -171,26 +171,15 @@ export class SearchService implements ISearchService {
     }
 
     // Calculate pagination over the IDs
-    const total = allScoredResults.length;
+    const scoredTotal = allScoredResults.length;
     const pagedIds = allScoredResults.slice(offset, offset + limit).map((r) => r.productId);
 
-    // Fetch the fully hydrated products by IDs
-    const hydratedProducts = await getProductsByIds(pagedIds);
-
-    // If sorting by relevance, ensure the fetched items match the scored order
-    const finalItems = hydratedProducts;
-    if (sort === 'relevance') {
-      const orderMap = new Map(pagedIds.map((id, index) => [id, index]));
-      finalItems.sort((a, b) => {
-        const indexA = orderMap.get(a.id as number) ?? 999;
-        const indexB = orderMap.get(b.id as number) ?? 999;
-        return indexA - indexB;
-      });
-    } else {
-      // Assume getFiltered handles sorting if not relevance.
-      // Wait, DrizzleProductRepository doesn't implement sort currently! It forces `orderBy(desc(products.createdAt))`.
-      // To implement sort options, I need to modify getFiltered, but for now we follow what's there and focus on relevance handling.
-    }
+    // Hydrate the page of IDs in one batch into storefront-ready products (localized, with
+    // variants), keeping the order of `pagedIds`. Ids that no longer exist (e.g. deleted between
+    // scoring and hydration) are dropped, and `total` is reduced by the same count so that
+    // total and items never disagree.
+    const finalItems = await this.productService.getByIds(pagedIds, locale);
+    const total = scoredTotal - (pagedIds.length - finalItems.length);
 
     this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
 

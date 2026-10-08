@@ -178,6 +178,50 @@ export class ProductService implements IProductService {
     );
   }
 
+  /**
+   * Batch variant of getById: five queries total regardless of how many ids.
+   * Returns products in the order of `ids`; ids that do not exist are omitted.
+   */
+  async getByIds(ids: ID[], language?: Locale): Promise<Product[]> {
+    if (ids.length === 0) return [];
+    const lang = parse(language);
+    const numericIds = ids as number[];
+
+    const [rows, variantsMap, tagsMap, attrsMap] = await Promise.all([
+      productQueries.getByIdsWithBrandAndCategory(numericIds),
+      productQueries.getVariantsByProductIds(numericIds),
+      productQueries.getProductTagsByProductIds(numericIds),
+      productQueries.getProductAttributesByProductIds(numericIds),
+    ]);
+    const rowById = new Map(rows.map((r) => [r.product.id, r]));
+
+    const products: Product[] = [];
+    for (const id of numericIds) {
+      const row = rowById.get(id);
+      if (!row) continue;
+      const variants = (variantsMap[id] || []).map((v) => this.mapVariantToDomain(v));
+      const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
+      const catName = row.category
+        ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
+        : undefined;
+      const brandName = row.brand
+        ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)
+        : undefined;
+      const domain = await this.mapToDomain(
+        row.product,
+        variants,
+        catName,
+        brandName,
+        (tagsMap[id] || []).map((t) => this.mapTagToDomain(t)),
+        attrsMap[id] || [],
+        lang,
+        defaultVariant,
+      );
+      if (domain) products.push(domain);
+    }
+    return products;
+  }
+
   async getBySlug(slug: string, language?: Locale): Promise<Product | null> {
     const lang = parse(language);
     const product = await productQueries.getBySlug(slug);

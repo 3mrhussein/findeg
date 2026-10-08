@@ -64,11 +64,12 @@ export class AdminBrandService implements IAdminBrandService {
    * Retrieves all brands.
    *
    * @param activeOnly - If true, filtering for only active brands.
+   * @param language - Language for the resolved `name` and `description`.
    * @returns List of brands.
    */
-  async getAll(_activeOnly: boolean = false): Promise<Brand[]> {
+  async getAll(_activeOnly: boolean = false, language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
     const brands = await getAllBrands();
-    return brands.map((b) => this.mapToDomain(b));
+    return brands.map((b) => this.mapToDomain(b, language));
   }
 
   /**
@@ -125,6 +126,7 @@ export class AdminBrandService implements IAdminBrandService {
     const brand = await updateBrand(id as number, {
       slug: input.slug as Slug,
       logoUrl: input.logoUrl,
+      isActive: input.isActive,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });

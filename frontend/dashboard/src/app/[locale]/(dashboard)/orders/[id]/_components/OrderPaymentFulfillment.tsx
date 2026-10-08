@@ -8,9 +8,16 @@ import { Button } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
-import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
-import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
+import {
+  getAllowedOrderStatusTransitions,
+  getAllowedPaymentStatusTransitions,
+} from '@findeg/backend/features/order/schemas';
+import {
+  updateOrderStatusAction as adminUpdateOrderStatusAction,
+  updateOrderPaymentStatusAction,
+} from '@actions/order-actions';
 
+import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
 /**
@@ -18,6 +25,8 @@ import { useToast } from '@hooks/use-toast';
  */
 type OrderStatus =
   'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+
+type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
 
 interface OrderPaymentFulfillmentProps {
   order: import('@findeg/backend/features/order').Order;
@@ -32,51 +41,74 @@ const STATUS_FLOW: { label: string; value: OrderStatus }[] = [
   { label: 'Cancelled', value: 'cancelled' },
 ];
 
+const paymentActionLabel = (target: PaymentStatus) => `Mark as ${target}`;
+
 /**
  *
  */
 export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
   const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || '');
   const allowedTargets = getAllowedOrderStatusTransitions(order.status);
+  const paymentTargets = getAllowedPaymentStatusTransitions(order.paymentStatus ?? 'unpaid');
   // A delivered Order's only next status is refunded, which the header's refund action owns.
   const hasSelectableTarget = STATUS_FLOW.some((s) => allowedTargets.includes(s.value));
 
   /**
-   *
+   * Runs one order write and reports the outcome. A rejected request (network failure,
+   * server error) is shown as a failed update rather than escaping as an unhandled rejection.
    */
-  const handleStatusChange = (newStatus: string) => {
+  const runUpdate = (
+    write: () => Promise<{ success: boolean; error?: string }>,
+    successTitle: string,
+  ) => {
     startTransition(async () => {
-      const result = await adminUpdateOrderStatusAction(Number(order.id), {
-        status: newStatus as OrderStatus,
-        trackingNumber: trackingNumber || undefined,
-      });
-      if (result.success) {
-        toast({ title: 'Order status updated' });
-      } else {
-        toast({ title: 'Update failed', description: result.error, variant: 'destructive' });
+      try {
+        const result = await write();
+        if (result.success) {
+          toast({ title: successTitle });
+          // The page is rendered from the database on demand; re-render it with the new state.
+          router.refresh();
+        } else {
+          toast({ title: 'Update failed', description: result.error, variant: 'destructive' });
+        }
+      } catch {
+        toast({
+          title: 'Update failed',
+          description: 'The update request failed. Check your connection and try again.',
+          variant: 'destructive',
+        });
       }
     });
   };
 
-  /**
-   *
-   */
-  const handleUpdateTracking = () => {
-    startTransition(async () => {
-      const result = await adminUpdateOrderStatusAction(Number(order.id), {
-        status: order.status,
-        trackingNumber: trackingNumber || undefined,
-      });
+  const handleStatusChange = (newStatus: string) =>
+    runUpdate(
+      () =>
+        adminUpdateOrderStatusAction(Number(order.id), {
+          status: newStatus as OrderStatus,
+          trackingNumber: trackingNumber || undefined,
+        }),
+      'Order status updated',
+    );
 
-      if (result.success) {
-        toast({ title: 'Tracking information updated' });
-      } else {
-        toast({ title: 'Update failed', description: result.error, variant: 'destructive' });
-      }
-    });
-  };
+  const handleUpdateTracking = () =>
+    runUpdate(
+      () =>
+        adminUpdateOrderStatusAction(Number(order.id), {
+          status: order.status,
+          trackingNumber: trackingNumber || undefined,
+        }),
+      'Tracking information updated',
+    );
+
+  const handlePaymentChange = (paymentStatus: PaymentStatus) =>
+    runUpdate(
+      () => updateOrderPaymentStatusAction(Number(order.id), paymentStatus),
+      'Payment status updated',
+    );
 
   return (
     <Card className="shadow-sm">
@@ -95,7 +127,10 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
             </span>
             <span className="font-semibold capitalize">{order.paymentStatus}</span>
           </div>
-          <Badge variant={order.paymentStatus === 'paid' ? 'default' : 'secondary'}>
+          <Badge
+            data-testid="order-payment-badge"
+            variant={order.paymentStatus === 'paid' ? 'default' : 'secondary'}
+          >
             {order.paymentStatus === 'paid' ? (
               <CheckCircle2 className="w-3 h-3 mr-1" />
             ) : (
@@ -105,15 +140,32 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
           </Badge>
         </div>
 
+        {paymentTargets.length > 0 && (
+          <div className="flex gap-2" data-testid="order-payment-actions">
+            {paymentTargets.map((target) => (
+              <Button
+                key={target}
+                size="sm"
+                variant="outline"
+                disabled={isPending}
+                onClick={() => handlePaymentChange(target)}
+              >
+                {paymentActionLabel(target)}
+              </Button>
+            ))}
+          </div>
+        )}
+
         {/* Change Logistical Status */}
         <div className="space-y-2">
           <Label className="text-xs uppercase text-muted-foreground">Logistical Status</Label>
           <Select
             disabled={isPending || !hasSelectableTarget}
             onValueChange={handleStatusChange}
-            defaultValue={order.status}
+            // Controlled by the persisted status: a rejected update snaps back, a refresh follows.
+            value={order.status}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" data-testid="order-status-select">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>

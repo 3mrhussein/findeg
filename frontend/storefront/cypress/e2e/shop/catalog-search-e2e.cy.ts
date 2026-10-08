@@ -1,4 +1,3 @@
-// Quarantined pending https://github.com/3mrhussein/findeg/issues/348
 const card = '[data-testid^="product-card-title-"]';
 
 describe('Catalog search', () => {
@@ -9,8 +8,9 @@ describe('Catalog search', () => {
   });
 
   it('shows an empty result set for an unmatched search', () => {
-    cy.visit('/en/search?q=zzzz-unmatched-cypress-312');
-    cy.get('main h1').should('be.visible');
+    const query = 'zzzz-unmatched-cypress-312';
+    cy.visit(`/en/search?q=${query}`);
+    cy.get('h1').should('be.visible').and('contain.text', query);
     cy.get(card).should('not.exist');
   });
 });

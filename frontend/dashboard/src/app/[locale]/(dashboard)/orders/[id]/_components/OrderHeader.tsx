@@ -8,6 +8,7 @@ import { Printer, RefreshCcw } from 'lucide-react';
 import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
 import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
 
+import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
 interface OrderHeaderProps {
@@ -20,6 +21,7 @@ interface OrderHeaderProps {
 export function OrderHeader({ order }: OrderHeaderProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   /**
    *
@@ -34,6 +36,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
 
       if (result.success) {
         toast({ title: 'Order refunded successfully' });
+        router.refresh();
       } else {
         toast({ title: 'Refund failed', description: result.error, variant: 'destructive' });
       }

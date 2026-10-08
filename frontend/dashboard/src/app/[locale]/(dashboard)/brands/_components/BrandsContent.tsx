@@ -8,6 +8,8 @@ import {
 } from '@data/brands/actions';
 import { BrandInput } from '@findeg/backend/features/catalog';
 import { revalidatePath } from 'next/cache';
+import { getAllBrands } from '@data/resources/queries';
+import { parse } from '@findeg/backend/features/core';
 
 interface BrandsContentProps {
   locale: string;
@@ -20,9 +22,7 @@ interface BrandsContentProps {
 export async function BrandsContent({ locale }: BrandsContentProps) {
   const t = await getTranslations('Administration.Catalog.Brands');
 
-  // TODO: Replace with proper data layer query from @data/brands/queries
-  // const brands = await getBrands(locale);
-  const brands: import('@findeg/backend/features/catalog').Brand[] = []; // Stubbed - empty brand list
+  const brands = await getAllBrands(false, parse(locale));
 
   /**
    * Wrapper for Save (Create/Update)

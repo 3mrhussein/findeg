@@ -16,6 +16,11 @@ function addCartItem() {
     .first()
     .closest('article')
     .contains('button', 'Add to Cart')
+    // Clicking before React attaches handlers silently drops the interaction in the production build.
+    .should(($button) => {
+      const hydrated = Object.keys($button[0]).some((key) => key.startsWith('__reactProps$'));
+      expect(hydrated, 'Add to Cart hydrated by React').to.equal(true);
+    })
     .click();
   cy.get('[data-testid="header-cart-trigger"]').should('contain.text', '1');
   cy.get(drawer).should('be.visible');

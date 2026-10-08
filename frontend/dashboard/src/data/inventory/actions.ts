@@ -5,7 +5,7 @@
  */
 'use server';
 
-import { revalidateTag } from 'next/cache';
+import { revalidateTag, updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { getErrorMessage } from '@lib/type-guards';
 
@@ -17,8 +17,9 @@ export async function updateStock(input: { variantId: number; quantity: number }
     const { inventory } = createAdministrationServices();
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
-    // Invalidate inventory caches
-    revalidateTag('inventory', 'max');
+    // Invalidate inventory caches; the product list shows stock levels too.
+    updateTag('inventory');
+    updateTag('products');
 
     return { success: true };
   } catch (error: unknown) {
