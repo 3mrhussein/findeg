@@ -66,6 +66,8 @@ export interface Order {
   subtotal?: Price;
   /** Shipping and handling fees */
   shippingCost?: Price;
+  /** Discount applied to the order */
+  discountTotal?: Price;
   /** Final amount charged (subtotal + shippingCost) */
   totalAmount?: Price;
   /** ISO currency code (e.g., 'EGP') */

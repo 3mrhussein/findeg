@@ -21,6 +21,7 @@ export function toLegacyOrder(order: ExactOrder): Order {
     customerEmail: order.customerEmail ?? undefined,
     subtotal: fromPiasters(order.subtotal),
     shippingCost: fromPiasters(order.shippingCost),
+    discountTotal: fromPiasters(order.discountTotal),
     totalAmount: fromPiasters(order.totalAmount),
     items: order.items.map((item) => ({
       id: item.id,

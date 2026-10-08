@@ -28,6 +28,7 @@ it('rejects invalid runtime command statuses before loading a database', async (
 });
 it.each([
   { limit: 0 },
+  { limit: 101 },
   { offset: -1 },
   { startDate: new Date('invalid') },
   { startDate: new Date('2026-10-09'), endDate: new Date('2026-10-01') },

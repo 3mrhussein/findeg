@@ -28,6 +28,11 @@ import type {
   OrdersDependencies,
 } from './types';
 
+/** Escapes LIKE wildcards so user input is matched literally. */
+function escapeLike(value: string): string {
+  return value.replace(/[\\%_]/g, (char) => `\\${char}`);
+}
+
 function filterConditions(filters: OrderFilters) {
   const conditions = [];
   if (filters.status) conditions.push(eq(orders.status, filters.status));
@@ -36,10 +41,11 @@ function filterConditions(filters: OrderFilters) {
   if (filters.startDate) conditions.push(gte(orders.createdAt, filters.startDate));
   if (filters.endDate) conditions.push(lte(orders.createdAt, filters.endDate));
   if (filters.search) {
+    const pattern = `%${escapeLike(filters.search)}%`;
     const text = or(
-      ilike(orders.orderReference, `%${filters.search}%`),
-      ilike(orders.guestEmail, `%${filters.search}%`),
-      ilike(orders.trackingNumber, `%${filters.search}%`),
+      ilike(orders.orderReference, pattern),
+      ilike(orders.guestEmail, pattern),
+      ilike(orders.trackingNumber, pattern),
     );
     conditions.push(
       /^\d+$/.test(filters.search) && positiveId.safeParse(Number(filters.search)).success

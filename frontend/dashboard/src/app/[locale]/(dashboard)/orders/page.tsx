@@ -34,7 +34,8 @@ export default async function OrdersPage({
 
   const filters = {
     page: Number(query.page) > 0 ? Number(query.page) : 1,
-    limit: Number(query.limit) > 0 ? Number(query.limit) : 20,
+    limit:
+      Number(query.limit) > 0 ? Math.min(Math.max(1, Math.trunc(Number(query.limit))), 100) : 20,
     search: query.search?.trim() || '',
     status: query.status,
     paymentStatus: query.paymentStatus,

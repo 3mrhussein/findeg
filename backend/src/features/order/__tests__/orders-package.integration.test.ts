@@ -10,6 +10,7 @@ import {
   type OrderStaffActor,
 } from '@findeg/orders';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { toLegacyOrder } from '../legacy';
 
 vi.mock('@findeg/db/connection', () => {
   throw new Error('Injected Orders must never load default connection');
@@ -154,6 +155,10 @@ describe('public injected Orders package on PostgreSQL', () => {
     });
     expect(await api().latestShippingAddress(writer.userId)).toMatchObject({ city: 'Cairo' });
     expect((await api().list({ search: row.orderReference, limit: 1 })).total).toBe(1);
+    // `_` and `%` are matched literally, not as LIKE wildcards.
+    expect((await api().list({ search: row.orderReference.replace('-', '_') })).total).toBe(0);
+    expect((await api().list({ search: '%' })).total).toBe(0);
+    expect(detail && toLegacyOrder(detail.order)).toMatchObject({ discountTotal: 2.5 });
     expect(await api().listForCustomer(writer.userId)).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: row.id })]),
     );
