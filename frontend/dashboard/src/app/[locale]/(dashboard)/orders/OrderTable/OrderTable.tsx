@@ -42,12 +42,10 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
     if (nextPaymentStatus && nextPaymentStatus !== 'all')
       params.set('paymentStatus', nextPaymentStatus);
 
-    // Add date format if needed
-    if (next.startDate) params.set('startDate', next.startDate);
-    else if (filters.startDate) params.set('startDate', filters.startDate.toISOString());
-
-    if (next.endDate) params.set('endDate', next.endDate);
-    else if (filters.endDate) params.set('endDate', filters.endDate.toISOString());
+    const from = next.from ?? filters.from;
+    const to = next.to ?? filters.to;
+    if (from) params.set('from', from);
+    if (to) params.set('to', to);
 
     params.set('page', nextPage);
     params.set('limit', String(limit));
@@ -91,8 +89,8 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
             search: '',
             status: 'all',
             paymentStatus: 'all',
-            startDate: undefined,
-            endDate: undefined,
+            from: '',
+            to: '',
             page: '1',
           })
         }

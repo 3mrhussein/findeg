@@ -9,3 +9,9 @@
 export type { TranslationMap } from './domain/value-objects/Locale';
 export { TranslationMapSchema } from './domain/value-objects/Locale';
 export type { Locale } from './domain/value-objects/Locale';
+export {
+  OrderStatusSchema,
+  PaymentStatusSchema,
+  PaymentMethodSchema,
+  EmailSchema,
+} from './domain/types/common';

@@ -6,7 +6,7 @@ import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Printer, RefreshCcw } from 'lucide-react';
 import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
-import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
+import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@/data/orders/actions';
 
 import { useToast } from '@hooks/use-toast';
 

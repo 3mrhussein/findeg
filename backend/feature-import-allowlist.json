@@ -1,0 +1,279 @@
+{
+  "src/features/administration/application/dtos/CollectionInput.ts": [
+    "../../../core/domain/types/common"
+  ],
+  "src/features/administration/application/dtos/InventoryUpdate.ts": [
+    "../../../core/domain/types/common"
+  ],
+  "src/features/administration/application/dtos/TagInput.ts": [
+    "../../../catalog/domain/entities/Tag"
+  ],
+  "src/features/administration/application/dtos/VariantInput.ts": [
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/administration/application/interfaces/IAdminBrandService.ts": [
+    "@findeg/backend/features/catalog/domain/entities/Brand",
+    "../../../catalog/application/dtos/BrandInput"
+  ],
+  "src/features/administration/application/interfaces/IAdminCategoryService.ts": [
+    "@findeg/backend/features/catalog/domain/entities/Category",
+    "../../../catalog/application/dtos/CategoryInput",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/administration/application/interfaces/IAdminCollectionService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/catalog/domain/entities/Collection",
+    "@findeg/backend/features/catalog/domain/entities/Tag",
+    "@findeg/backend/features/catalog/application/dtos/CollectionInput"
+  ],
+  "src/features/administration/application/interfaces/IAdminDashboardService.ts": [
+    "@findeg/backend/features/catalog/application/dtos"
+  ],
+  "src/features/administration/application/interfaces/IAdminInventoryService.ts": [
+    "@findeg/backend/features/catalog/domain/entities/Product",
+    "@findeg/backend/features/catalog/application/dtos"
+  ],
+  "src/features/administration/application/interfaces/IAdminProductService.ts": [
+    "@findeg/backend/features/catalog/domain/entities/Product",
+    "@findeg/backend/features/core/domain/value-objects",
+    "@findeg/backend/features/catalog/application/dtos/VariantInput",
+    "@findeg/backend/features/catalog/domain/types/VariantDimension",
+    "@findeg/backend/features/catalog/domain/entities/Variant",
+    "@findeg/backend/features/catalog/domain/entities/Tag"
+  ],
+  "src/features/administration/application/interfaces/IAdminTagService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/catalog/domain/entities/Tag",
+    "@findeg/backend/features/catalog/application/dtos/TagInput"
+  ],
+  "src/features/administration/application/interfaces/IProductImportService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "../../../catalog/application/dtos/ProductInput"
+  ],
+  "src/features/administration/application/services/AdminBrandService.ts": [
+    "../../../core/domain/types/common",
+    "../../../catalog/domain/entities/Brand",
+    "../../../catalog/application/dtos/BrandInput",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/administration/application/services/AdminCategoryService.ts": [
+    "../../../core/domain/types/common",
+    "../../../catalog/domain/entities/Category",
+    "../../../catalog/application/dtos/CategoryInput",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/administration/application/services/AdminCollectionService.ts": [
+    "../../../core/domain/types/common",
+    "../../../catalog/domain/entities/Collection",
+    "../../../catalog/domain/entities/Tag",
+    "@findeg/backend/features/catalog/application/dtos/CollectionInput"
+  ],
+  "src/features/administration/application/services/AdminDashboardService.ts": [
+    "@findeg/backend/features/catalog/application/dtos",
+    "../../../core/domain/errors/QueryError"
+  ],
+  "src/features/administration/application/services/AdminInventoryService.ts": [
+    "../../../catalog/domain/entities/Product",
+    "@findeg/backend/features/catalog/application/dtos/InventoryUpdate"
+  ],
+  "src/features/administration/application/services/AdminProductMutationService.ts": [
+    "../../../core/domain/types/common",
+    "@findeg/backend/features/catalog/application/dtos/VariantInput"
+  ],
+  "src/features/administration/application/services/AdminProductReadService.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/administration/application/services/AdminProductService.ts": [
+    "../../../core/domain/types/common",
+    "../../../catalog/domain/entities/Product",
+    "../../../core/domain/value-objects",
+    "@findeg/backend/features/catalog/application/dtos/VariantInput",
+    "../../../catalog/domain/types/VariantDimension"
+  ],
+  "src/features/administration/application/services/AdminProductVariantService.ts": [
+    "@findeg/backend/features/catalog/application/dtos/VariantInput",
+    "../../../catalog/domain/types/VariantDimension"
+  ],
+  "src/features/administration/application/services/AdminTagService.ts": [
+    "../../../core/domain/types/common",
+    "../../../catalog/domain/entities/Tag",
+    "@findeg/backend/features/catalog/application/dtos/TagInput"
+  ],
+  "src/features/administration/application/services/ProductImportService.ts": [
+    "../../../core/domain/types/common"
+  ],
+  "src/features/administration/application/services/__tests__/AdminDashboardService.test.ts": [
+    "../../../../core/domain/errors/QueryError"
+  ],
+  "src/features/administration/application/services/helpers/admin-product.helpers.ts": [
+    "../../../../catalog/domain/types/VariantDimension",
+    "../../../../catalog/domain/value-objects/VariantKey",
+    "../../../../catalog/domain/value-objects/Sku"
+  ],
+  "src/features/administration/application/services/helpers/admin-product.validation.ts": [
+    "../../../../core/domain/types/common"
+  ],
+  "src/features/cart/application/interfaces/ICartService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/cart/domain/entities/Cart.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/cart/domain/schemas/AddCartItem.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/dtos/BrandInput.ts": ["../../../core/domain/types/common"],
+  "src/features/catalog/application/dtos/CategoryInput.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/catalog/application/dtos/CollectionInput.ts": ["../../../core/domain/types/common"],
+  "src/features/catalog/application/dtos/InventoryUpdate.ts": ["../../../core/domain/types/common"],
+  "src/features/catalog/application/dtos/ProductInput.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/catalog/application/dtos/VariantInput.ts": ["../../../core/domain/value-objects"],
+  "src/features/catalog/application/interfaces/IAttributeRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/interfaces/IBrandRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/IBrandService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/ICategoryRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/ICategoryService.ts": [
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/ICollectionRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/interfaces/IInventoryRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/interfaces/IProductService.ts": [
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/ISearchService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/interfaces/ITagRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/interfaces/ITagService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/interfaces/ProductFilters.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/services/BrandService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/services/CategoryService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/catalog/application/services/InventoryService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/application/services/ProductService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/catalog/application/services/SearchService.ts": [
+    "../../../core/domain/value-objects",
+    "../../../core/domain/types/common"
+  ],
+  "src/features/catalog/application/services/TagService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/catalog/domain/entities/Attribute.ts": ["../../../core/domain/types/common"],
+  "src/features/catalog/domain/entities/Brand.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/catalog/domain/entities/Category.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/catalog/domain/entities/Product.ts": ["../../../core/domain/value-objects"],
+  "src/features/catalog/domain/entities/Tag.ts": ["../../../core/domain/types/common"],
+  "src/features/catalog/domain/entities/Variant.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/identity/application/__tests__/build-current-session-payload.test.ts": [
+    "../../../core/domain/auth/authorization"
+  ],
+  "src/features/identity/application/__tests__/permission-service.test.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/identity/application/interfaces/IAuthService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/auth"
+  ],
+  "src/features/identity/application/interfaces/IPermissionService.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/value-objects"
+  ],
+  "src/features/identity/application/interfaces/IUserService.ts": [
+    "../../../catalog/domain/entities/Product"
+  ],
+  "src/features/identity/application/services/AuthService.ts": [
+    "../../../core/domain/auth",
+    "../../../core/domain/auth/authorization",
+    "../../../core/domain/errors"
+  ],
+  "src/features/identity/application/services/CurrentSessionIdentityResolver.ts": [
+    "../../../core/application/services/CurrentSessionProvider"
+  ],
+  "src/features/identity/application/services/PermissionService.ts": [
+    "../../../core/domain/types/common",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/identity/application/services/UserService.ts": [
+    "../../../core/domain/errors",
+    "../../../core/domain/value-objects"
+  ],
+  "src/features/identity/application/services/buildCurrentSessionPayload.ts": [
+    "../../../core/domain/auth",
+    "../../../core/domain/auth/authorization"
+  ],
+  "src/features/identity/domain/entities/PasswordCredentials.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/identity/domain/types/auth.ts": [
+    "@findeg/backend/features/core/domain/types/common",
+    "@findeg/backend/features/core/domain/auth"
+  ],
+  "src/features/media/application/services/MediaService.ts": [
+    "@findeg/backend/features/core/application/interfaces/IStorageProvider"
+  ],
+  "src/features/notifications/infrastructure/ResendEmailService.ts": [
+    "../../core/domain/value-objects"
+  ],
+  "src/features/review/application/interfaces/IReviewRepository.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/review/application/interfaces/IReviewService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/review/application/services/ReviewService.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ],
+  "src/features/review/domain/entities/Review.ts": [
+    "@findeg/backend/features/core/domain/types/common"
+  ]
+}

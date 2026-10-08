@@ -1,3 +1,4 @@
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
@@ -111,7 +112,7 @@ export default async function Page({ params, searchParams }: Props) {
                     </div>
                     <div className="mt-1 text-sm">
                       {t('Pages.MyAccount.OrderTotal')}: {order.currency || 'EGP'}{' '}
-                      {(order.totalAmount ?? order.total ?? 0).toFixed(2)}
+                      {piastersToDecimal(order.totalAmount)}
                     </div>
                   </Link>
                 ))}

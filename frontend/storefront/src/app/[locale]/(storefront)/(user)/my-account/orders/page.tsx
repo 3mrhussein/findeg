@@ -1,3 +1,4 @@
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
@@ -60,7 +61,7 @@ export default async function OrdersPage({ params }: Props) {
                     <div className="flex justify-between">
                       <span>{t('Pages.MyAccount.OrderTotal')}:</span>
                       <span className="text-foreground font-medium">
-                        {order.currency || 'EGP'} {(order.totalAmount ?? 0).toFixed(2)}
+                        {order.currency || 'EGP'} {piastersToDecimal(order.totalAmount)}
                       </span>
                     </div>
                   </div>

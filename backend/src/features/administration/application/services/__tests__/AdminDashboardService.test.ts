@@ -6,11 +6,6 @@ import {
   getCategoryCountRaw,
   getBrandCountRaw,
   getLowStockCountRaw,
-  getRevenueByPeriodRaw,
-  getTopProductsRaw,
-  getTotalOrderStatsRaw,
-  getOrderStatsRaw,
-  orderQueries,
 } from '@findeg/db/queries';
 import { AdminDashboardService } from '../AdminDashboardService';
 import { QueryError } from '../../../../core/domain/errors/QueryError';
@@ -22,25 +17,13 @@ vi.mock('@findeg/db/queries', () => ({
   getCategoryCountRaw: vi.fn(),
   getBrandCountRaw: vi.fn(),
   getLowStockCountRaw: vi.fn(),
-  getRevenueByPeriodRaw: vi.fn(),
-  getTopProductsRaw: vi.fn(),
-  getTotalOrderStatsRaw: vi.fn(),
-  getOrderStatsRaw: vi.fn(),
-  orderQueries: {
-    getRecent: vi.fn(),
-  },
 }));
 
-vi.mock('date-fns', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('date-fns')>();
+const { getStats, recent } = vi.hoisted(() => ({ getStats: vi.fn(), recent: vi.fn() }));
 
-  return {
-    ...actual,
-    startOfDay: vi.fn(() => new Date('2026-05-02T00:00:00.000Z')),
-    endOfDay: vi.fn(() => new Date('2026-05-02T23:59:59.999Z')),
-    subDays: vi.fn(() => new Date('2026-04-02T12:00:00.000Z')),
-  };
-});
+vi.mock('../../../../order', () => ({
+  createOrders: () => ({ getStats, recent }),
+}));
 
 describe('AdminDashboardService', () => {
   let service: AdminDashboardService;
@@ -50,51 +33,38 @@ describe('AdminDashboardService', () => {
     service = new AdminDashboardService();
   });
 
-  it('retrieves and aggregates dashboard statistics', async () => {
+  it('combines catalog metrics with exact Order statistics', async () => {
     vi.mocked(getProductCountRaw).mockResolvedValue(100);
     vi.mocked(getCategoryCountRaw).mockResolvedValue(10);
     vi.mocked(getBrandCountRaw).mockResolvedValue(5);
-    vi.mocked(getTotalOrderStatsRaw).mockResolvedValue({
-      totalOrders: 150,
-      totalRevenue: 5000,
-    });
-    vi.mocked(getOrderStatsRaw).mockResolvedValue({
-      totalOrders: 2,
-      totalRevenue: 200,
-    });
     vi.mocked(getLowStockCountRaw).mockResolvedValue(3);
-    vi.mocked(getRevenueByPeriodRaw).mockResolvedValue([
-      { period: '2026-05-01', revenue: 150 },
-      { period: '2026-05-02', revenue: 200 },
-    ]);
-    vi.mocked(getTopProductsRaw).mockResolvedValue([
-      { id: 1, name: 'Product 1', sold: 10, revenue: 1000 },
-    ]);
+    getStats.mockResolvedValue({
+      totalOrders: 150,
+      totalRevenue: 500001n,
+      todayOrders: 2,
+      todayRevenue: 20003n,
+      currency: 'EGP',
+      topProducts: [{ id: 1, name: 'Product 1', sold: 10, revenue: 100007n }],
+      revenueByPeriod: [
+        { date: '2026-05-01', revenue: 15001n },
+        { date: '2026-05-02', revenue: 20003n },
+      ],
+    });
 
-    const result = await service.getDashboardStats();
-
-    expect(getProductCountRaw).toHaveBeenCalledTimes(1);
-    expect(getCategoryCountRaw).toHaveBeenCalledTimes(1);
-    expect(getBrandCountRaw).toHaveBeenCalledTimes(1);
-    expect(getTotalOrderStatsRaw).toHaveBeenCalledTimes(1);
-    expect(getOrderStatsRaw).toHaveBeenCalled();
-    expect(getRevenueByPeriodRaw).toHaveBeenCalledTimes(1);
-    expect(getLowStockCountRaw).toHaveBeenCalledTimes(1);
-    expect(getTopProductsRaw).toHaveBeenCalledWith(5);
-    expect(result).toEqual({
+    expect(await service.getDashboardStats()).toEqual({
       totalProducts: 100,
       totalCategories: 10,
       totalBrands: 5,
       totalOrders: 150,
-      totalRevenue: 5000,
-      todayRevenue: 200,
+      totalRevenue: 500001n,
+      todayRevenue: 20003n,
       todayOrders: 2,
       currency: 'EGP',
       lowStockCount: 3,
-      topProducts: [{ id: 1, name: 'Product 1', sold: 10, revenue: 1000 }],
+      topProducts: [{ id: 1, name: 'Product 1', sold: 10, revenue: 100007n }],
       revenueByPeriod: [
-        { date: '2026-05-01', revenue: 150 },
-        { date: '2026-05-02', revenue: 200 },
+        { date: '2026-05-01', revenue: 15001n },
+        { date: '2026-05-02', revenue: 20003n },
       ],
     });
   });
@@ -155,23 +125,20 @@ describe('AdminDashboardService', () => {
     ]);
   });
 
-  it('delegates recent orders to the order queries', async () => {
-    vi.mocked(orderQueries.getRecent).mockResolvedValue([]);
+  it('retrieves recent Orders through the public module', async () => {
+    recent.mockResolvedValue([]);
 
     await service.getRecentOrders(7);
 
-    expect(vi.mocked(orderQueries.getRecent)).toHaveBeenCalledWith(7);
+    expect(recent).toHaveBeenCalledWith(7);
   });
 
   it('wraps dashboard stat failures in QueryError', async () => {
     vi.mocked(getProductCountRaw).mockRejectedValue(new Error('Count Failed'));
     vi.mocked(getCategoryCountRaw).mockResolvedValue(0);
     vi.mocked(getBrandCountRaw).mockResolvedValue(0);
-    vi.mocked(getTotalOrderStatsRaw).mockResolvedValue({ totalOrders: 0, totalRevenue: 0 });
-    vi.mocked(getOrderStatsRaw).mockResolvedValue({ totalOrders: 0, totalRevenue: 0 });
-    vi.mocked(getRevenueByPeriodRaw).mockResolvedValue([]);
     vi.mocked(getLowStockCountRaw).mockResolvedValue(0);
-    vi.mocked(getTopProductsRaw).mockResolvedValue([]);
+    getStats.mockResolvedValue({});
 
     await expect(service.getDashboardStats()).rejects.toThrow(QueryError);
     await expect(service.getDashboardStats()).rejects.toThrow(

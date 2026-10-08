@@ -30,6 +30,7 @@ export { PortalRoleSchema } from './domain/types/common';
 export type { PortalRole, OrderStatus, PaymentStatus } from './domain/types/common';
 export type { Notification } from './domain/types/Notification';
 export type { DomainError } from './domain/errors/DomainError';
+export { NotAuthorizedError } from './domain/errors';
 export type {
   ILoggerService,
   LogMetadata,
@@ -47,3 +48,5 @@ export type {
   ICurrentSessionIdentityResolver,
 } from './application/services/CurrentSessionProvider';
 export { createCookieSessionProvider } from './application/services/factory';
+
+export { toPiasters, piastersToDecimal, fromPiasters, piastersToEgp } from './money';

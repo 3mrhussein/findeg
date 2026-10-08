@@ -8,16 +8,16 @@ export interface OrderTableFiltersData {
   search?: string;
   status?: string;
   paymentStatus?: string;
-  startDate?: Date;
-  endDate?: Date;
+  from?: string;
+  to?: string;
 }
 
 export interface UpdateOrderQueryParams {
   search?: string;
   status?: string;
   paymentStatus?: string;
-  startDate?: string;
-  endDate?: string;
+  from?: string;
+  to?: string;
   page?: string;
 }
 

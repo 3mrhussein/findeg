@@ -18,7 +18,7 @@ import { userQueries } from '@findeg/db/queries';
 import { ResourceNotFoundError } from '../../../core/domain/errors';
 import { parse } from '../../../core/domain/value-objects';
 import { createProductService } from '../../../catalog';
-import { createOrderServices } from '../../../order';
+import { createOrders } from '../../../order';
 import {
   AdminUser,
   CreateAdminInput,
@@ -28,7 +28,7 @@ import {
   DashboardData,
 } from '../interfaces/IUserService';
 import { User } from '../../domain/entities/User';
-import { Order } from '../../../order/domain/entities/Order';
+import { Order } from '../../../order';
 
 export class UserService implements IUserService {
   constructor() {}
@@ -114,10 +114,10 @@ export class UserService implements IUserService {
    * Retrieves profile and order summary for "My Account".
    */
   async getProfileData(userId: number): Promise<{ user: User; orders: Order[] }> {
-    const { orders } = createOrderServices();
+    const orders = createOrders();
     const [user, userOrders] = await Promise.all([
       userQueries.getById(userId),
-      orders.getByUserId(userId),
+      orders.listForCustomer(userId),
     ]);
 
     if (!user) {
@@ -133,10 +133,10 @@ export class UserService implements IUserService {
   async getDashboardData(locale: string, userId: number): Promise<DashboardData> {
     const resolvedLocale = parse(locale);
     const products = createProductService();
-    const { orders } = createOrderServices();
+    const orders = createOrders();
     const [allProducts, userOrders, user] = await Promise.all([
       products.getAll(resolvedLocale),
-      orders.getByUserId(userId),
+      orders.listForCustomer(userId),
       this.getAdmin(userId),
     ]);
 

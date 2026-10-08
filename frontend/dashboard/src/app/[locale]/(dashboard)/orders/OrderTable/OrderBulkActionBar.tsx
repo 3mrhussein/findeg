@@ -7,7 +7,7 @@ import { Button } from '@findeg/ui';
 import { Check, Settings, Printer, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from '@i18n/navigation';
-import { bulkUpdateOrderStatusAction } from '@data/orders/actions';
+import { bulkUpdateOrderStatusAction } from '@/data/orders/actions';
 import type { OrderStatus } from '@findeg/backend/features/core';
 
 interface OrderBulkActionBarProps {

@@ -26,8 +26,10 @@ export function OrderTableFilters({
   total,
 }: OrderTableFiltersProps) {
   const hasActiveFilters =
-    Boolean(filters.search) || Boolean(filters.paymentStatus && filters.paymentStatus !== 'all');
-  // Add date checks here later if necessary
+    Boolean(filters.search) ||
+    Boolean(filters.paymentStatus && filters.paymentStatus !== 'all') ||
+    Boolean(filters.from) ||
+    Boolean(filters.to);
 
   return (
     <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">

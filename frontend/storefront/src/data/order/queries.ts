@@ -1,5 +1,5 @@
 import { getSession } from '@/lib/session';
-import { createOrderServices } from '@findeg/backend/features/order';
+import { createOrders } from '@findeg/backend/features/order';
 
 /**
  * Checkout prefill data shape
@@ -24,20 +24,7 @@ export async function getCheckoutPrefill(): Promise<CheckoutPrefillData | null> 
   const session = await getSession();
   if (!session?.userId) return null;
 
-  const { orders } = createOrderServices();
-
-  // Fetch user's orders to get the latest shipping address
-  // Note: We're using the session user data for initial prefill
-  const userOrders = await orders.getByUserId(Number(session.userId));
-
-  // Sort by date manually if the service doesn't
-  const latestOrder = [...userOrders].sort((a, b) => {
-    const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-    const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-    return bTime - aTime;
-  })[0];
-
-  const address = latestOrder?.shippingAddressSnapshot;
+  const address = await createOrders().latestShippingAddress(Number(session.userId));
   const user = session.user;
 
   return {

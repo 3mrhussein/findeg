@@ -13,7 +13,6 @@ import type { IAdminBrandService } from '../interfaces/IAdminBrandService';
 import type { IAdminTagService } from '../interfaces/IAdminTagService';
 import type { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
 import type { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
-import type { IAdminOrderService } from '../interfaces/IAdminOrderService';
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { IProductImportService } from '../interfaces/IProductImportService';
@@ -26,7 +25,6 @@ import { AdminBrandService } from './AdminBrandService';
 import { AdminTagService } from './AdminTagService';
 import { AdminCollectionService } from './AdminCollectionService';
 import { AdminInventoryService } from './AdminInventoryService';
-import { AdminOrderService } from './AdminOrderService';
 import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
 import { ProductImportService } from './ProductImportService';
@@ -82,7 +80,6 @@ export function createAdministrationServices(): AdministrationServices {
     tags: new AdminTagService(auditLogService),
     collections: new AdminCollectionService(auditLogService),
     inventory: new AdminInventoryService(auditLogService),
-    orders: new AdminOrderService(auditLogService),
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),
@@ -100,7 +97,6 @@ export interface AdministrationServices {
   tags: IAdminTagService;
   collections: IAdminCollectionService;
   inventory: IAdminInventoryService;
-  orders: IAdminOrderService;
   dashboard: IAdminDashboardService;
   auditLog: IAuditLogService;
   productImport: IProductImportService;

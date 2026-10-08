@@ -1,6 +1,6 @@
 // Backend package main entry point - re-exports all public interfaces and services
 import { createIdentityServices } from './features/identity/application/services/factory';
-import { createOrderServices } from './features/order/application/services/factory';
+import { createOrders } from './features/order';
 import { UpdateAdminInput } from './features/identity/application/interfaces/IUserService';
 
 // Core feature exports (shared types, domain models, errors)
@@ -55,8 +55,8 @@ export async function getMyAccountData(userId: number) {
 }
 
 export async function getMyOrderDetail(orderId: number) {
-  const { orders } = createOrderServices();
-  return orders.getById(orderId);
+  const orders = createOrders();
+  return orders.get(orderId);
 }
 
 export { MediaService } from './features/media/application/services';

@@ -30,7 +30,13 @@ const BARRELED_BACKEND_FEATURES = [
 // time). See docs/adr/0001-backend-feature-barrels.md.
 const SCHEMA_EXPORT_NAMES_BY_FEATURE = {
   catalog: ['BrandInputSchema', 'TagInputSchema', 'CollectionInputSchema'],
-  core: ['TranslationMapSchema'],
+  core: [
+    'TranslationMapSchema',
+    'OrderStatusSchema',
+    'PaymentStatusSchema',
+    'PaymentMethodSchema',
+    'EmailSchema',
+  ],
   order: ['ShippingAddressSchema', 'VariantSnapshotSchema', 'OrderStatusUpdateSchema'],
 };
 const FEATURES_WITH_CLIENT_SAFE_SCHEMAS = Object.keys(SCHEMA_EXPORT_NAMES_BY_FEATURE);
@@ -70,6 +76,12 @@ export const next = [
                 `@findeg/backend/features/${feature}/**`,
                 ...(FEATURES_WITH_CLIENT_SAFE_SCHEMAS.includes(feature)
                   ? [`!@findeg/backend/features/${feature}/schemas`]
+                  : []),
+                ...(feature === 'core'
+                  ? [
+                      '!@findeg/backend/features/core/money',
+                      '!@findeg/backend/features/core/errors',
+                    ]
                   : []),
                 ...(SERVER_ONLY_ENTRY_POINTS_BY_FEATURE[feature] ?? []).map(
                   (entry) => `!@findeg/backend/features/${feature}/${entry}`,

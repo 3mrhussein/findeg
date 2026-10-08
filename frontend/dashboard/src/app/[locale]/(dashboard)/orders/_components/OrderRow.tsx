@@ -1,5 +1,7 @@
 'use client';
 
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
+
 import { useState } from 'react';
 import { EnrichedTableRow } from '@/app/[locale]/_components/table/EnrichedTableRow';
 import { StatusBadge } from '@components/shared/StatusBadge';
@@ -22,7 +24,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
   const orderNumber = `#${order.id}`;
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
-  const totalAmount = `${order.currency || 'EGP'} ${order.totalAmount?.toFixed(2) || '0.00'}`;
+  const totalAmount = `${order.currency || 'EGP'} ${piastersToDecimal(order.totalAmount)}`;
   const timeAgo = order.createdAt
     ? formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })
     : 'Unknown';
@@ -86,12 +88,10 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
                       Variant: {item.variantSnapshot.label}
                     </div>
                   )}
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Qty: {item.quantity} {item.uomCode || 'unit'}
-                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">Qty: {item.quantity}</div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || 'EGP'} {item.totalPrice?.toFixed(2) || '0.00'}
+                  {order.currency || 'EGP'} {piastersToDecimal(item.lineTotal)}
                 </div>
               </div>
             ))}
@@ -102,13 +102,13 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {order.subtotal?.toFixed(2) || '0.00'}
+                {order.currency || 'EGP'} {piastersToDecimal(order.subtotal)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || 'EGP'} {order.shippingCost?.toFixed(2) || '0.00'}
+                {order.currency || 'EGP'} {piastersToDecimal(order.shippingCost)}
               </span>
             </div>
             <div className="flex justify-between font-semibold pt-1 border-t">

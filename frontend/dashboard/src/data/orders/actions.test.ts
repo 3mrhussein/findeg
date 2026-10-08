@@ -1,19 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { updateTag } from 'next/cache';
 import type { SessionPayload } from '@findeg/backend/features/core';
 
 const { getSession, orders } = vi.hoisted(() => ({
   getSession: vi.fn(),
-  orders: { updateStatus: vi.fn(), updatePaymentStatus: vi.fn() },
+  orders: { changeStatus: vi.fn(), changePaymentStatus: vi.fn() },
 }));
 
 vi.mock('@lib/session', () => ({ getSession }));
-vi.mock('next/cache', () => ({ revalidateTag: vi.fn() }));
-vi.mock('@findeg/backend/features/administration', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@findeg/backend/features/administration')>()),
-  createAdministrationServices: () => ({ orders }),
+vi.mock('next/cache', () => ({ updateTag: vi.fn() }));
+vi.mock('@findeg/backend/features/order', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@findeg/backend/features/order')>()),
+  createOrders: () => orders,
 }));
 
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from './order-actions';
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from './actions';
 
 const refused = { success: false, error: 'Not authorized to change orders' };
 
@@ -39,7 +40,7 @@ describe('Dashboard order server actions', () => {
     const result = await updateOrderStatusAction(7, { status: 'cancelled' });
 
     expect(result).toEqual(refused);
-    expect(orders.updateStatus).not.toHaveBeenCalled();
+    expect(orders.changeStatus).not.toHaveBeenCalled();
   });
 
   it('refuses a status change from Staff without order-write permission', async () => {
@@ -48,7 +49,7 @@ describe('Dashboard order server actions', () => {
     const result = await updateOrderStatusAction(7, { status: 'cancelled' });
 
     expect(result).toEqual(refused);
-    expect(orders.updateStatus).not.toHaveBeenCalled();
+    expect(orders.changeStatus).not.toHaveBeenCalled();
   });
 
   it('refuses a payment change without a session and never reaches the order service', async () => {
@@ -57,7 +58,7 @@ describe('Dashboard order server actions', () => {
     const result = await updateOrderPaymentStatusAction(7, 'paid');
 
     expect(result).toEqual(refused);
-    expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
+    expect(orders.changePaymentStatus).not.toHaveBeenCalled();
   });
 
   it('refuses a payment change from Staff without order-write permission', async () => {
@@ -66,7 +67,7 @@ describe('Dashboard order server actions', () => {
     const result = await updateOrderPaymentStatusAction(7, 'paid');
 
     expect(result).toEqual(refused);
-    expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
+    expect(orders.changePaymentStatus).not.toHaveBeenCalled();
   });
 
   it('refuses a signed-in Customer even when they hold order-write permission', async () => {
@@ -80,8 +81,16 @@ describe('Dashboard order server actions', () => {
 
     expect(statusResult).toEqual(refused);
     expect(paymentResult).toEqual(statusResult);
-    expect(orders.updateStatus).not.toHaveBeenCalled();
-    expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
+    expect(orders.changeStatus).not.toHaveBeenCalled();
+    expect(orders.changePaymentStatus).not.toHaveBeenCalled();
+  });
+
+  it('rejects an unknown lifecycle status before writing or invalidating caches', async () => {
+    getSession.mockResolvedValue(staffSession(['admin.orders.write']));
+    const result = await updateOrderStatusAction(7, { status: 'unknown' } as never);
+    expect(result.success).toBe(false);
+    expect(orders.changeStatus).not.toHaveBeenCalled();
+    expect(updateTag).not.toHaveBeenCalled();
   });
 
   it('passes the permitted Staff member to the order service as the actor', async () => {
@@ -89,8 +98,12 @@ describe('Dashboard order server actions', () => {
 
     await expect(updateOrderStatusAction(7, { status: 'confirmed' })).resolves.toEqual({
       success: true,
+      data: undefined,
     });
-    await expect(updateOrderPaymentStatusAction(7, 'paid')).resolves.toEqual({ success: true });
+    await expect(updateOrderPaymentStatusAction(7, 'paid')).resolves.toEqual({
+      success: true,
+      data: undefined,
+    });
 
     const actor = {
       kind: 'staff',
@@ -98,7 +111,10 @@ describe('Dashboard order server actions', () => {
       permissionCodes: ['admin.orders.write'],
       activeRoleIds: [],
     };
-    expect(orders.updateStatus).toHaveBeenCalledWith(actor, 7, { status: 'confirmed' });
-    expect(orders.updatePaymentStatus).toHaveBeenCalledWith(actor, 7, 'paid');
+    expect(orders.changeStatus).toHaveBeenCalledWith(actor, 7, { status: 'confirmed' });
+    expect(orders.changePaymentStatus).toHaveBeenCalledWith(actor, 7, 'paid');
+    expect(updateTag).toHaveBeenCalledWith('orders');
+    expect(updateTag).toHaveBeenCalledWith('dashboard');
+    expect(updateTag).toHaveBeenCalledWith('recent-orders');
   });
 });

@@ -2,7 +2,8 @@ import { Link } from '@i18n/navigation';
 import type { AuditLogEntry } from '@findeg/backend/features/administration';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { getOrderStatusLabel, normalizeOrderStatus } from '@findeg/backend/features/order';
+import { OrderStatusSchema } from '@findeg/backend/features/core/schemas';
+import { getOrderStatusLabel } from '@findeg/backend/features/order/schemas';
 
 interface OrderAuditTimelineProps {
   orderId: number | string;
@@ -32,7 +33,8 @@ function safeJson(value: unknown): string {
  */
 function maybeOrderStatus(value: unknown): string | undefined {
   if (typeof value !== 'string' || value.length === 0) return undefined;
-  return getOrderStatusLabel(normalizeOrderStatus(value));
+  const status = OrderStatusSchema.safeParse(value);
+  return status.success ? getOrderStatusLabel(status.data) : value;
 }
 
 /**

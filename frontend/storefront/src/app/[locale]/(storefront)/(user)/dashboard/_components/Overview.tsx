@@ -1,3 +1,4 @@
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { StatCard } from './StatCard';
@@ -22,8 +23,8 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
   const t = useTranslations();
 
   const totalRevenue = orders.reduce(
-    (sum, order) => (order.status !== 'cancelled' ? sum + (order.total ?? 0) : sum),
-    0,
+    (sum, order) => (order.status !== 'cancelled' ? sum + order.totalAmount : sum),
+    0n,
   );
   const totalOrders = orders.length;
   const totalProducts = products.length;
@@ -58,8 +59,8 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
         <StatCard
           title={t('Pages.Dashboard.TotalRevenue')}
-          value={totalRevenue}
-          prefix="$"
+          value={piastersToDecimal(totalRevenue)}
+          prefix="EGP "
           decimals={2}
           icon={<Icon name="dashboard" className="w-6 h-6" />}
         />

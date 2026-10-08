@@ -8,23 +8,8 @@ import type { CheckoutQuote } from '../schemas';
 
 const DECIMAL_PRICE = /^\d+(\.\d{1,2})?$/;
 
-/** Converts a catalog `decimal(12,2)` string such as "37.50" to piasters without floating point. */
-export function toPiasters(price: string): bigint {
-  const [whole, fraction = ''] = price.trim().split('.');
-  return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0').slice(0, 2));
-}
-
-/** `decimal(12,2)` string for the DB boundary, e.g. 3750n -> "37.50". */
-export function piastersToDecimal(piasters: bigint): string {
-  const sign = piasters < 0n ? '-' : '';
-  const abs = piasters < 0n ? -piasters : piasters;
-  return `${sign}${abs / 100n}.${(abs % 100n).toString().padStart(2, '0')}`;
-}
-
-/** Number form for the API response and the Confirmation digest: the nearest double to the decimal amount. */
-export function fromPiasters(piasters: bigint): number {
-  return Number(piastersToDecimal(piasters));
-}
+import { toPiasters, fromPiasters } from '../../core/money';
+export { toPiasters, piastersToDecimal, fromPiasters } from '../../core/money';
 
 /**
  * Converts the configured shipping fee (a number or an env string) to piasters once.

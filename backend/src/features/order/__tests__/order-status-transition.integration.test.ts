@@ -12,12 +12,9 @@ import {
   warehouses,
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../../checkout';
-import { createAdministrationServices } from '../../administration';
+import { createOrders, type OrderStaffActor, type OrderStatusUpdate } from '..';
 import { createOutbox, retryOutbox, type EmailProvider, type OutgoingEmail } from '../../outbox';
-import {
-  InvalidOrderStatusTransitionError,
-  transitionOrderStatus,
-} from '../application/services/transition-order-status';
+import { InvalidOrderStatusTransitionError } from '..';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 describe('transitionOrderStatus on real Postgres', () => {
@@ -25,8 +22,16 @@ describe('transitionOrderStatus on real Postgres', () => {
   let sequence = 0;
   const checkout = createCheckoutService({ shippingFee: 50 });
 
-  beforeAll(() => {
+  let writer: OrderStaffActor;
+  const transitionOrderStatus = (id: number, update: OrderStatusUpdate) =>
+    createOrders({ db: testDb.db }).changeStatus(writer, id, update);
+  beforeAll(async () => {
     testDb = connectToTestDatabase();
+    const [user] = await testDb.db
+      .insert(users)
+      .values({ email: 'transition-default-writer@example.com', portalRole: 'staff' })
+      .returning();
+    writer = { kind: 'staff', userId: user.id, activeRoleIds: ['system_admin'] };
   });
   afterAll(async () => testDb.close());
 
@@ -279,7 +284,7 @@ describe('transitionOrderStatus on real Postgres', () => {
 
   it('routes Admin status updates through the transition and retains the audit log', async () => {
     const { orderId } = await acceptOrder();
-    const administration = createAdministrationServices();
+    const orderModule = createOrders({ db: testDb.db });
     const [admin] = await testDb.db
       .insert(users)
       .values({ email: `transition-admin-${orderId}@example.com`, portalRole: 'staff' })
@@ -290,13 +295,13 @@ describe('transitionOrderStatus on real Postgres', () => {
       activeRoleIds: ['system_admin'],
     };
 
-    await administration.orders.updateStatus(systemAdministrator, orderId, {
+    await orderModule.changeStatus(systemAdministrator, orderId, {
       status: 'confirmed',
       adminNotes: 'Confirmed in the Dashboard',
     });
 
-    const order = await administration.orders.getById(orderId);
-    const auditEntries = await administration.auditLog.getEntityLogs('order', String(orderId));
+    const order = await orderModule.get(orderId);
+    const auditEntries = (await orderModule.detail(orderId))!.activity;
     expect(order).toMatchObject({
       status: 'confirmed',
       adminNotes: 'Confirmed in the Dashboard',
@@ -304,7 +309,7 @@ describe('transitionOrderStatus on real Postgres', () => {
     expect(auditEntries).toEqual([
       expect.objectContaining({
         action: 'update_status',
-        oldValues: { status: 'pending' },
+        oldValues: expect.objectContaining({ status: 'pending' }),
         newValues: expect.objectContaining({
           status: 'confirmed',
           adminNotes: 'Confirmed in the Dashboard',
@@ -315,9 +320,9 @@ describe('transitionOrderStatus on real Postgres', () => {
 
   it('finds an accepted Order by its Order Reference', async () => {
     const { orderId, orderReference } = await acceptOrder();
-    const administration = createAdministrationServices();
+    const orderModule = createOrders({ db: testDb.db });
 
-    const result = await administration.orders.getAll({ search: orderReference });
+    const result = await orderModule.list({ search: orderReference });
 
     expect(result.total).toBe(1);
     expect(result.orders).toEqual([expect.objectContaining({ id: orderId, orderReference })]);

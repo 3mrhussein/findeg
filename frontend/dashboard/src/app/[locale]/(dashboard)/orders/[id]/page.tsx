@@ -1,3 +1,4 @@
+import { getOrderDetail } from '@data/orders/queries';
 import { notFound } from 'next/navigation';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
@@ -17,11 +18,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const { id } = await params;
   const orderId = Number(id);
 
-  if (isNaN(orderId)) notFound();
+  if (!Number.isSafeInteger(orderId) || orderId <= 0) notFound();
 
-  // TODO: Replace with data layer queries from @data/orders/queries
-  const order = null as import('@findeg/backend/features/order').Order | null; // Stubbed - will trigger notFound()
-  const logs: React.ComponentProps<typeof OrderActivityLog>['logs'] = []; // Stubbed
+  const detail = await getOrderDetail(orderId);
+  const order = detail?.order;
+  const logs = detail?.activity ?? [];
 
   if (!order) notFound();
 

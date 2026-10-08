@@ -94,6 +94,18 @@ _Avoid_: Price token, checksum
 A percentage discount on one School Supply List, active for a time window, applied to every line of that list's selections.
 _Avoid_: List discount, coupon, promotion
 
+**Order**:
+The accepted record of a Customer’s purchase, preserving the agreed prices, purchased items and shipping details throughout fulfilment.
+_Avoid_: Purchase request, cart
+
+**Order Status**:
+An Order’s fulfilment stage: pending, confirmed, processing, shipped, delivered, cancelled or refunded.
+_Avoid_: Payment state
+
+**Payment Status**:
+Whether the full accepted Order total is unpaid, paid or refunded, recorded separately from Order Status.
+_Avoid_: Fulfilment status
+
 **Order Acceptance**:
 The single atomic moment an Order comes into existence: re-quoted, stock reserved, attribution snapshotted. Not an order status.
 _Avoid_: Order placement, order creation, confirmed order

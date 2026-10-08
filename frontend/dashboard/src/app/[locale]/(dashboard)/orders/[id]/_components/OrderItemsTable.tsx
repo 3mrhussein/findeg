@@ -1,21 +1,11 @@
 'use client';
 
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
 interface OrderItemsTableProps {
-  items: {
-    productNameSnapshot?: string;
-    productName?: string;
-    unitPriceSnapshot?: number;
-    unitPrice?: number;
-    totalPriceSnapshot?: number;
-    totalPrice?: number;
-    quantity: number;
-    skuSnapshot?: string;
-    sku?: string;
-    variantNameSnapshot?: string;
-    variantName?: string;
-  }[];
+  items: NonNullable<import('@findeg/backend/features/order').Order['items']>;
   currency: string;
 }
 
@@ -40,34 +30,35 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
         </TableHeader>
         <TableBody>
           {items.map((item, index) => {
-            // Mapping fields from snapshot data
-            const name = item.productNameSnapshot || item.productName || 'Product';
-            const price = Number(item.unitPriceSnapshot || item.unitPrice || 0);
-            const total = Number(item.totalPriceSnapshot || item.totalPrice || 0);
-            const qty = Number(item.quantity || 0);
-            const sku = item.skuSnapshot || item.sku || '-';
-            const variant = item.variantNameSnapshot || item.variantName || '';
+            const name = item.productNameSnapshot || 'Product';
+            const price = item.unitPrice;
+            const total = item.lineTotal;
+            const qty = item.quantity;
+            const sku = item.productSkuSnapshot || '-';
+            const variant = item.variantSnapshot?.en || item.variantSnapshot?.label;
 
             return (
               <TableRow key={index}>
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-medium">{name}</span>
-                    {variant && <span className="text-xs text-muted-foreground">{variant}</span>}
+                    {typeof variant === 'string' && variant && (
+                      <span className="text-xs text-muted-foreground">{variant}</span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell className="text-xs font-mono">{sku}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     <span>
-                      {currency} {price.toFixed(2)}
+                      {currency} {piastersToDecimal(price)}
                     </span>
                     {/* Placeholder for price change detection */}
                   </div>
                 </TableCell>
                 <TableCell className="text-right">{qty}</TableCell>
                 <TableCell className="text-right font-medium">
-                  {currency} {total.toFixed(2)}
+                  {currency} {piastersToDecimal(total)}
                 </TableCell>
               </TableRow>
             );

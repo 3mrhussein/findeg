@@ -4,7 +4,6 @@ import {
   CatalogHealthStats,
   CategoryProductDistribution,
 } from '@findeg/backend/features/catalog/application/dtos';
-import { Order } from '../../../order/domain/entities/Order';
 import {
   getCatalogHealthRaw,
   getCategoryDistributionRaw,
@@ -12,15 +11,9 @@ import {
   getCategoryCountRaw,
   getBrandCountRaw,
   getLowStockCountRaw,
-  getRevenueByPeriodRaw,
-  getTopProductsRaw,
-  getTotalOrderStatsRaw,
-  getOrderStatsRaw,
 } from '@findeg/db/queries';
 import { QueryError } from '../../../core/domain/errors/QueryError';
-import { endOfDay, startOfDay, subDays } from 'date-fns';
-import { ShippingAddress } from '../../../order/domain/value-objects';
-import { orderQueries } from '@findeg/db/queries';
+import { createOrders, type Order } from '../../../order';
 
 /**
  * Admin Dashboard Service
@@ -34,41 +27,6 @@ export class AdminDashboardService implements IAdminDashboardService {
    */
   constructor() {}
 
-  private mapToDomain(dbOrder: orderQueries.OrderRow, items: orderQueries.OrderItemRow[]): Order {
-    return {
-      id: dbOrder.id,
-      userId: dbOrder.userId || undefined,
-      guestEmail: dbOrder.guestEmail || undefined,
-      status: dbOrder.status,
-      paymentStatus: dbOrder.paymentStatus,
-      subtotal: Number(dbOrder.subtotal),
-      shippingCost: Number(dbOrder.shippingCost),
-      totalAmount: Number(dbOrder.totalAmount),
-      currency: dbOrder.currency,
-      paymentMethod: dbOrder.paymentMethod || undefined,
-      shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as ShippingAddress) || undefined,
-      trackingNumber: dbOrder.trackingNumber || undefined,
-      adminNotes: dbOrder.adminNotes || undefined,
-      createdAt: dbOrder.createdAt,
-      updatedAt: dbOrder.updatedAt,
-      customerName: dbOrder.customerName,
-      customerEmail: dbOrder.customerEmail,
-      items: items.map((item) => ({
-        id: item.id,
-        orderId: item.orderId,
-        productId: item.productId!,
-        variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
-        quantity: item.quantity,
-        uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
-        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
-        totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
-        productNameSnapshot: item.productNameSnapshot || undefined,
-        productSkuSnapshot: item.productSkuSnapshot || undefined,
-        variantSnapshot: (item.variantSnapshot as Record<string, unknown>) || undefined,
-      })),
-    };
-  }
-
   /**
    * Aggregates key performance indicators (KPIs) for the store dashboard.
    * Includes lifetime revenue, today's sales, and 30-day trends.
@@ -77,48 +35,28 @@ export class AdminDashboardService implements IAdminDashboardService {
    */
   async getDashboardStats(): Promise<DashboardStats> {
     try {
-      const now = new Date();
-      const todayStart = startOfDay(now);
-      const todayEnd = endOfDay(now);
-      const thirtyDaysAgo = subDays(now, 30);
-
-      // Orchestrate primitives in parallel
-      const [
-        productCount,
-        categoryCount,
-        brandCount,
-        totalStats,
-        todayStats,
-        lowStockCount,
-        topProducts,
-        revenueByPeriod,
-      ] = await Promise.all([
-        getProductCountRaw(),
-        getCategoryCountRaw(),
-        getBrandCountRaw(),
-        getTotalOrderStatsRaw(),
-        getOrderStatsRaw(todayStart, todayEnd),
-        getLowStockCountRaw(),
-        getTopProductsRaw(5),
-        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
-      ]);
+      const [productCount, categoryCount, brandCount, lowStockCount, orderStats] =
+        await Promise.all([
+          getProductCountRaw(),
+          getCategoryCountRaw(),
+          getBrandCountRaw(),
+          getLowStockCountRaw(),
+          createOrders().getStats(),
+        ]);
 
       // Map to output shape
       return {
         totalProducts: productCount,
         totalCategories: categoryCount,
         totalBrands: brandCount,
-        totalOrders: totalStats.totalOrders,
-        totalRevenue: totalStats.totalRevenue,
-        todayRevenue: todayStats.totalRevenue,
-        todayOrders: todayStats.totalOrders,
-        currency: 'EGP',
+        totalOrders: orderStats.totalOrders,
+        totalRevenue: orderStats.totalRevenue,
+        todayRevenue: orderStats.todayRevenue,
+        todayOrders: orderStats.todayOrders,
+        currency: orderStats.currency,
         lowStockCount,
-        topProducts,
-        revenueByPeriod: revenueByPeriod.map((entry) => ({
-          date: entry.period,
-          revenue: entry.revenue,
-        })),
+        topProducts: orderStats.topProducts,
+        revenueByPeriod: orderStats.revenueByPeriod,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -135,8 +73,7 @@ export class AdminDashboardService implements IAdminDashboardService {
    * @returns List of recent orders.
    */
   async getRecentOrders(limit: number = 5): Promise<Order[]> {
-    const results = await orderQueries.getRecent(limit);
-    return results.map((row) => this.mapToDomain(row.order, row.items));
+    return await createOrders().recent(limit);
   }
 
   /**

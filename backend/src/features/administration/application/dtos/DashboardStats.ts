@@ -3,19 +3,19 @@ export interface DashboardStats {
   totalCategories: number;
   totalOrders: number;
   totalBrands: number;
-  totalRevenue: number;
+  totalRevenue: bigint;
   currency: string;
   lowStockCount: number;
-  todayRevenue: number;
+  todayRevenue: bigint;
   todayOrders: number;
   topProducts: {
     id: number;
     name: string;
     sold: number;
-    revenue: number;
+    revenue: bigint;
   }[];
   revenueByPeriod: {
     date: string;
-    revenue: number;
+    revenue: bigint;
   }[];
 }

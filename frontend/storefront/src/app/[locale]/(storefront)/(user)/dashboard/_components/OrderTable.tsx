@@ -1,5 +1,7 @@
 'use client';
 
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
+
 import React from 'react';
 import type { Order } from '@findeg/backend/features/order';
 import { useTranslations } from 'next-intl';
@@ -47,9 +49,13 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
           <TableCell className="font-medium text-foreground">{order.id}</TableCell>
           <TableCell>{order.customerName}</TableCell>
           <TableCell>
-            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : order.date || '-'}
+            {order.createdAt
+              ? new Date(order.createdAt).toLocaleDateString()
+              : order.createdAt || '-'}
           </TableCell>
-          <TableCell>${(order.total ?? order.totalAmount ?? 0).toFixed(2)}</TableCell>
+          <TableCell>
+            {order.currency} {piastersToDecimal(order.totalAmount)}
+          </TableCell>
           <TableCell>
             <OrderStatusBadge status={order.status} />
           </TableCell>

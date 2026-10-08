@@ -1,11 +1,13 @@
 'use client';
 
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { IconTooltip } from '@findeg/ui';
 import { Order } from '@findeg/backend/features/order';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@actions/order-actions';
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@/data/orders/actions';
 import { useToast } from '@hooks/use-toast';
 import { useState } from 'react';
 import { Link } from '@i18n/navigation';
@@ -128,11 +130,11 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">#{order.id}</TableCell>
                   <TableCell>
-                    {order.date ? new Date(order.date).toLocaleDateString() : '-'}
+                    {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}
                   </TableCell>
                   <TableCell>{order.customerName}</TableCell>
                   <TableCell>
-                    {order.currency} {order.total}
+                    {order.currency} {piastersToDecimal(order.totalAmount)}
                   </TableCell>
                   <TableCell>
                     <Select

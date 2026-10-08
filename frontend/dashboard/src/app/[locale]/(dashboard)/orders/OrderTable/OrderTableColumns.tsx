@@ -1,5 +1,7 @@
 'use client';
 
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
+
 import { type ColumnDef } from '@tanstack/react-table';
 import { type Order } from '@findeg/backend/features/order';
 import { Checkbox } from '@findeg/ui';
@@ -181,7 +183,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         const currency = row.original.currency || 'EGP';
         return (
           <span className="font-medium">
-            {currency} {Number(total).toFixed(2)}
+            {currency} {piastersToDecimal(total)}
           </span>
         );
       },

@@ -24,8 +24,8 @@ export default async function OrdersPage({
     search?: string;
     status?: string;
     paymentStatus?: string;
-    startDate?: string;
-    endDate?: string;
+    from?: string;
+    to?: string;
   }>;
 }) {
   const { locale } = await params;
@@ -38,8 +38,8 @@ export default async function OrdersPage({
     search: query.search?.trim() || '',
     status: query.status,
     paymentStatus: query.paymentStatus,
-    startDate: query.startDate ? new Date(query.startDate) : undefined,
-    endDate: query.endDate ? new Date(query.endDate) : undefined,
+    from: query.from || undefined,
+    to: query.to || undefined,
   };
 
   return (

@@ -1,3 +1,4 @@
+import { piastersToDecimal } from '@findeg/backend/features/core/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -23,9 +24,9 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   const orderId = Number(idParam);
   if (!Number.isFinite(orderId)) notFound();
 
-  await requireAuth(locale);
+  const session = await requireAuth(locale);
   const order = await getMyOrderDetail(orderId);
-  if (!order) notFound();
+  if (!order || order.userId !== session.userId) notFound();
 
   return (
     <div className="space-y-4">
@@ -59,12 +60,11 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           {order.items?.map((item, index: number) => (
             <div key={`${item.productId}-${index}`} className="rounded-md border p-3">
               <div className="flex items-center justify-between">
-                <p className="font-medium">{item.productNameSnapshot || item.productName || '-'}</p>
+                <p className="font-medium">{item.productNameSnapshot || '-'}</p>
                 <p className="text-sm text-muted-foreground">x{item.quantity}</p>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                {order.currency || 'EGP'}{' '}
-                {(item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0).toFixed(2)}
+                {order.currency || 'EGP'} {piastersToDecimal(item.unitPrice)}
               </p>
             </div>
           ))}
@@ -72,7 +72,7 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           <div className="flex items-center justify-between font-semibold">
             <span>{t('Pages.MyAccount.OrderTotal')}</span>
             <span>
-              {order.currency || 'EGP'} {(order.totalAmount ?? order.total ?? 0).toFixed(2)}
+              {order.currency || 'EGP'} {piastersToDecimal(order.totalAmount)}
             </span>
           </div>
         </CardContent>
