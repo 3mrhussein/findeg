@@ -7,6 +7,11 @@ import { insertProductVariantInTx } from './insert-product-variant-in-tx';
 type LocalizedRecord = Record<string, string>;
 type ProductVariantMediaSet = (typeof productVariants.$inferInsert)['mediaSet'];
 
+/** Keeps `undefined` (leave unchanged) and `null` (clear) distinct from numeric values. */
+function toDecimalColumn(value: number | null | undefined): string | null | undefined {
+  return value == null ? value : String(value);
+}
+
 interface UpdateVariantMutationInput {
   id: number;
   sku?: string;
@@ -99,9 +104,8 @@ export async function updateProductWithVariantsInDb(
             isDefault: variant.isDefault,
             mediaSet: variant.mediaSet,
             basePrice: variant.basePrice !== undefined ? String(variant.basePrice) : undefined,
-            strikePrice:
-              variant.strikePrice !== undefined ? String(variant.strikePrice) : undefined,
-            costPrice: variant.costPrice !== undefined ? String(variant.costPrice) : undefined,
+            strikePrice: toDecimalColumn(variant.strikePrice),
+            costPrice: toDecimalColumn(variant.costPrice),
             weightGrams: variant.weightGrams ?? null,
             barcode: variant.barcode ?? null,
             sortOrder: variant.sortOrder,
