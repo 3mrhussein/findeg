@@ -54,9 +54,9 @@ export async function getMyAccountData(userId: number) {
   return userService.getProfileData(userId);
 }
 
-export async function getMyOrderDetail(orderId: number) {
+export async function getMyOrderDetail(userId: number, orderId: number) {
   const { orders } = createOrderServices();
-  return orders.getById(orderId);
+  return orders.getByIdForUser(userId, orderId);
 }
 
 export { MediaService } from './features/media/application/services';

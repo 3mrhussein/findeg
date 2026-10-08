@@ -18,6 +18,8 @@ export interface CheckoutPrefillData {
 export interface IOrderService {
   getAll(filters?: OrderFilters): Promise<{ orders: Order[]; total: number }>;
   getById(id: ID | string): Promise<Order | null>;
+  /** The order only when it belongs to `userId`, so one Customer cannot read another's. */
+  getByIdForUser(userId: ID, id: ID | string): Promise<Order | null>;
   getByUserId(userId: ID): Promise<Order[]>;
   getRecent(limit?: number): Promise<Order[]>;
   count(filters?: OrderFilters): Promise<number>;
