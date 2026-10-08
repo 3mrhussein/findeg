@@ -3,9 +3,14 @@
  * must not contain server-only infrastructure. Assertions fetch the actual
  * `/_next/static` chunks referenced by rendered pages and scan their contents.
  *
- * Static-import and bundle assertions may later move into the build
- * verification seam tracked by #347; until then they live here.
+ * Decision (#347): static-import and bundle assertions stay in this dashboard spec; they are
+ * not moved to a separate build-verification seam. The storefront's retained boundary
+ * scenarios remain quarantined (see frontend/storefront/cypress/README.md).
+ *
+ * Besides the public login pages, one backend-backed localized page (/en/products, behind
+ * sign-in) is scanned, since it is the page that actually pulls backend feature code.
  */
+import { signInToDashboard } from '../support/actions/dashboard-session.actions';
 
 const FORBIDDEN_IN_CLIENT_BUNDLES: Array<[label: string, pattern: RegExp]> = [
   ['postgres driver', /from\s*["']postgres["']|require\(["']postgres["']\)|node_modules\/postgres/],
@@ -16,7 +21,11 @@ const FORBIDDEN_IN_CLIENT_BUNDLES: Array<[label: string, pattern: RegExp]> = [
   ['@findeg/db', /@findeg\/db/],
 ];
 
-const PAGES = ['/en/login', '/ar/login'];
+const PAGES: Array<{ path: string; signedIn?: boolean }> = [
+  { path: '/en/login' },
+  { path: '/ar/login' },
+  { path: '/en/products', signedIn: true },
+];
 
 function collectClientChunkUrls(): Cypress.Chainable<string[]> {
   return cy.document().then((doc) => {
@@ -29,12 +38,13 @@ function collectClientChunkUrls(): Cypress.Chainable<string[]> {
 }
 
 describe('Dashboard client bundle boundaries', () => {
-  for (const page of PAGES) {
+  for (const { path: page, signedIn } of PAGES) {
     describe(`${page} client chunks`, () => {
       let chunkBodies: Array<{ url: string; body: string }> = [];
 
       before(() => {
         chunkBodies = [];
+        if (signedIn) signInToDashboard();
         cy.visit(page);
         collectClientChunkUrls().then((urls) => {
           expect(urls, 'client chunks referenced by the page').to.have.length.greaterThan(0);
@@ -55,7 +65,9 @@ describe('Dashboard client bundle boundaries', () => {
 
       for (const [label, pattern] of FORBIDDEN_IN_CLIENT_BUNDLES) {
         it(`does not bundle ${label}`, () => {
-          const offenders = chunkBodies.filter((chunk) => pattern.test(chunk.body)).map((chunk) => chunk.url);
+          const offenders = chunkBodies
+            .filter((chunk) => pattern.test(chunk.body))
+            .map((chunk) => chunk.url);
           expect(offenders, `chunks containing ${label}`).to.deep.eq([]);
         });
       }

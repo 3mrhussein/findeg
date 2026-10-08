@@ -6,6 +6,7 @@ import {
   inventoryBalances,
   products,
   productVariants,
+  stockReservations,
   warehouses,
 } from '@findeg/db/schema';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
@@ -21,6 +22,8 @@ describe('Catalog search on real Postgres', () => {
   });
   afterAll(async () => testDb.close());
   beforeEach(async () => {
+    // Reservations left by other test files reference variants and block the product delete.
+    await testDb.db.delete(stockReservations);
     // Cascades remove variants and inventory balances.
     await testDb.db.delete(products);
     await testDb.db.delete(categories);
@@ -204,6 +207,22 @@ describe('Catalog search on real Postgres', () => {
 
       const ar = await search.suggest('مقل', 'ar');
       expect(ar.products.map((s) => s.name)).toEqual(['مقلمة']);
+    });
+
+    it('excludes inactive products and inactive categories', async () => {
+      const active = await product({ name: { en: 'Marker Set' } });
+      await product({ name: { en: 'Marker Retired' }, isActive: false });
+      const activeCat = await category({ en: 'Markers' });
+      const inactiveCat = await category({ en: 'Markers Retired' });
+      await testDb.db
+        .update(categories)
+        .set({ isActive: false })
+        .where(eq(categories.id, inactiveCat.id));
+
+      const result = await search.suggest('mark', 'en');
+
+      expect(result.products.map((s) => s.id)).toEqual([active.id]);
+      expect(result.categories.map((s) => s.id)).toEqual([activeCat.id]);
     });
 
     it('returns nothing when no name matches', async () => {

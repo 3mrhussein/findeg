@@ -19,18 +19,18 @@ async function applyToEach(
   return failures.length > 0 ? { success: false, error: failures.join('; ') } : { success: true };
 }
 
-export async function duplicateProductAction(_id: number, _adminUserId?: number) {
+export async function duplicateProductAction(_id: number) {
   return { success: false, error: 'Not implemented - needs repository-based refactoring' };
 }
 
-export async function bulkActivateAction(ids: number[], _adminUserId?: number) {
+export async function bulkActivateAction(ids: number[]) {
   return applyToEach(ids, (id) => setProductStatus(id, true));
 }
 
-export async function bulkDeactivateAction(ids: number[], _adminUserId?: number) {
+export async function bulkDeactivateAction(ids: number[]) {
   return applyToEach(ids, (id) => setProductStatus(id, false));
 }
 
-export async function bulkDeleteAction(ids: number[], _adminUserId?: number) {
+export async function bulkDeleteAction(ids: number[]) {
   return applyToEach(ids, deleteProduct);
 }

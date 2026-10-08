@@ -171,15 +171,15 @@ export class SearchService implements ISearchService {
     }
 
     // Calculate pagination over the IDs
-    const total = allScoredResults.length;
+    const scoredTotal = allScoredResults.length;
     const pagedIds = allScoredResults.slice(offset, offset + limit).map((r) => r.productId);
 
-    // Hydrate the page of IDs into storefront-ready products (localized, with variants),
-    // keeping the order of `pagedIds` (relevance rank, or the scored order for other sorts).
-    const hydrated = await Promise.all(
-      pagedIds.map((id) => this.productService.getById(id, locale)),
-    );
-    const finalItems = hydrated.filter((product) => product !== null);
+    // Hydrate the page of IDs in one batch into storefront-ready products (localized, with
+    // variants), keeping the order of `pagedIds`. Ids that no longer exist (e.g. deleted between
+    // scoring and hydration) are dropped, and `total` is reduced by the same count so that
+    // total and items never disagree.
+    const finalItems = await this.productService.getByIds(pagedIds, locale);
+    const total = scoredTotal - (pagedIds.length - finalItems.length);
 
     this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
 

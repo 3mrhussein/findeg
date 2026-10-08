@@ -8,6 +8,12 @@ import {
   visitWhenServerRenders,
 } from '../../support/admin-dashboard/catalog.actions';
 
+const LOCALES = ['en', 'ar'] as const;
+
+/** Each list renders the record under the name of the active locale. */
+const localizedName = (name: { nameEn: string; nameAr: string }, locale: 'en' | 'ar') =>
+  locale === 'en' ? name.nameEn : name.nameAr;
+
 describe('Admin dashboard catalog management', () => {
   beforeEach(() => {
     signInToDashboard();
@@ -23,8 +29,12 @@ describe('Admin dashboard catalog management', () => {
     cy.get('input[placeholder="مثال: أدوات الكتابة"]').type(name.nameAr);
     cy.contains('button', 'Save Category').click();
 
+    for (const locale of LOCALES) {
+      const shown = localizedName(name, locale);
+      visitWhenServerRenders(`/${locale}/categories`, shown);
+      cy.contains('span', shown).should('be.visible');
+    }
     visitWhenServerRenders('/en/categories', name.nameEn);
-    cy.contains('span', name.nameEn).should('be.visible');
 
     clickWhenHydrated(
       cy.contains('span', name.nameEn).closest('div.group').find('button:has(svg.lucide-pencil)'),
@@ -54,8 +64,12 @@ describe('Admin dashboard catalog management', () => {
     cy.get('input[placeholder="مثلاً: فابر كاستل"]').type(name.nameAr);
     cy.contains('button', 'Save Brand').click();
 
+    for (const locale of LOCALES) {
+      const shown = localizedName(name, locale);
+      visitWhenServerRenders(`/${locale}/brands`, shown);
+      cy.contains(shown).should('be.visible');
+    }
     visitWhenServerRenders('/en/brands', name.nameEn);
-    cy.contains(name.nameEn).should('be.visible');
 
     clickWhenHydrated(cy.get(`button[aria-label="Edit ${name.nameEn}"]`));
     cy.get('input[placeholder="e.g. Faber-Castell"]').clear().type(renamed);
@@ -94,8 +108,12 @@ describe('Admin dashboard catalog management', () => {
     cy.location('pathname').should('match', /\/en\/products\/\d+\/edit$/);
 
     // Persisted creation: the list reflects the record through server-driven search.
+    for (const locale of LOCALES) {
+      const shown = localizedName(name, locale);
+      visitWhenServerRenders(`/${locale}/products?search=${sku}`, shown);
+      cy.contains('tbody tr', shown).should('be.visible');
+    }
     visitWhenServerRenders(listPath, name.nameEn);
-    cy.contains('tbody tr', name.nameEn).should('be.visible');
 
     // Status filter is applied by the server and reflected in the URL: the new product is active.
     clickWhenHydrated(cy.contains('button', 'Inactive'));

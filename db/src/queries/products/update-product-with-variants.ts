@@ -6,11 +6,12 @@ import { insertProductVariantInTx } from './insert-product-variant-in-tx';
 
 type LocalizedRecord = Record<string, string>;
 
+type ProductVariantMediaSet = (typeof productVariants.$inferInsert)['mediaSet'];
+
 /** Keep `undefined` (leave column untouched) and `null` (clear it) distinct from a real price. */
 function nullablePrice(value: number | null | undefined): string | null | undefined {
   return value == null ? value : String(value);
 }
-type ProductVariantMediaSet = (typeof productVariants.$inferInsert)['mediaSet'];
 
 interface UpdateVariantMutationInput {
   id: number;
