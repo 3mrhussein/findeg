@@ -5,7 +5,7 @@
  */
 'use server';
 
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type {
   CreateProductWithVariantsInput,
@@ -23,8 +23,9 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
 
-    // Invalidate product caches
-    revalidateTag('products', 'max');
+    // Invalidate product caches; the inventory list is built from products too.
+    updateTag('products');
+    updateTag('inventory');
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -43,7 +44,9 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
-    revalidateTag('products', 'max');
+    // The inventory list is built from products too.
+    updateTag('products');
+    updateTag('inventory');
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -62,7 +65,8 @@ export async function deleteProduct(id: number) {
     const { products } = createAdministrationServices();
     await products.deleteProduct(id);
 
-    revalidateTag('products', 'max');
+    updateTag('products');
+    updateTag('inventory');
 
     return { success: true };
   } catch (error: unknown) {
@@ -81,7 +85,7 @@ export async function importProducts(_csvFile: File) {
     createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
-    revalidateTag('products', 'max');
+    updateTag('products');
 
     return { success: true };
   } catch (error: unknown) {
@@ -100,7 +104,8 @@ export async function setProductStatus(id: number, isActive: boolean) {
     if (!existingProduct) return { success: false, error: 'Product not found' };
 
     await products.updateProduct(id, { isActive });
-    revalidateTag('products', 'max');
+    updateTag('products');
+    updateTag('inventory');
     return { success: true };
   } catch (error: unknown) {
     console.error('[setProductStatus]', error);
@@ -123,7 +128,8 @@ export async function generateVariants(
   try {
     const { products } = createAdministrationServices();
     await products.generateVariants(productId, dimensions, defaults);
-    revalidateTag('products', 'max');
+    updateTag('products');
+    updateTag('inventory');
     return { success: true };
   } catch (error: unknown) {
     console.error('[generateVariants]', error);

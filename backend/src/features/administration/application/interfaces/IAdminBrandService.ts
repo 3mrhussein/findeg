@@ -1,11 +1,12 @@
 import type { Brand } from '@findeg/backend/features/catalog/domain/entities/Brand';
 import type { BrandInput } from '../../../catalog/application/dtos/BrandInput';
+import type { Locale } from '../../../core/domain/types/common';
 
 export interface IAdminBrandService {
   /**
-   * Retrieves all brands.
+   * Retrieves all brands, with `name` and `description` in the given language.
    */
-  getAll(activeOnly?: boolean): Promise<Brand[]>;
+  getAll(activeOnly?: boolean, language?: Locale): Promise<Brand[]>;
 
   /**
    * Retrieves a single brand by ID.

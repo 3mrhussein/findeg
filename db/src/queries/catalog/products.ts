@@ -265,6 +265,25 @@ export async function getProductTags(productId: number): Promise<TagRow[]> {
 }
 
 /**
+ * Get tags for multiple products. Returns a map keyed by productId.
+ */
+export async function getProductTagsByProductIds(
+  productIds: number[],
+): Promise<Record<number, TagRow[]>> {
+  if (productIds.length === 0) return {};
+
+  const results = await db
+    .select({ productId: productTags.productId, tag: tags })
+    .from(productTags)
+    .innerJoin(tags, eq(tags.id, productTags.tagId))
+    .where(inArray(productTags.productId, productIds));
+
+  const map: Record<number, TagRow[]> = {};
+  for (const r of results) (map[r.productId] ??= []).push(r.tag);
+  return map;
+}
+
+/**
  * Get products by tag ID
  */
 export async function getProductsByTag(tagId: number): Promise<ProductRow[]> {
@@ -301,6 +320,37 @@ export async function getProductAttributes(productId: number): Promise<ProductAt
   }));
 }
 
+/**
+ * Get attributes for multiple products (from all variants). Returns a map keyed by productId.
+ */
+export async function getProductAttributesByProductIds(
+  productIds: number[],
+): Promise<Record<number, ProductAttributeValueRow[]>> {
+  if (productIds.length === 0) return {};
+
+  const results = await db
+    .select({
+      productId: productVariants.productId,
+      attributeId: attributeTable.id,
+      key: attributeTable.key,
+      valueText: variantAttributes.valueText,
+    })
+    .from(variantAttributes)
+    .innerJoin(attributeTable, eq(attributeTable.id, variantAttributes.attributeId))
+    .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))
+    .where(inArray(productVariants.productId, productIds));
+
+  const map: Record<number, ProductAttributeValueRow[]> = {};
+  for (const r of results) {
+    (map[r.productId] ??= []).push({
+      attributeId: r.attributeId,
+      key: r.key,
+      valueText: r.valueText || undefined,
+    });
+  }
+  return map;
+}
+
 // ─── Relationship Queries ────────────────────────────────────────────────────
 
 /**
@@ -334,6 +384,22 @@ export async function getByIdWithBrandAndCategory(
     .limit(1);
 
   return results.length === 0 ? null : results[0];
+}
+
+/**
+ * Batch variant of getByIdWithBrandAndCategory. Missing ids are simply absent from the result.
+ */
+export async function getByIdsWithBrandAndCategory(
+  ids: number[],
+): Promise<{ product: ProductRow; brand: BrandRow | null; category: CategoryRow | null }[]> {
+  if (ids.length === 0) return [];
+
+  return db
+    .select({ product: products, brand: brands, category: categories })
+    .from(products)
+    .leftJoin(brands, eq(brands.id, products.brandId))
+    .leftJoin(categories, eq(categories.id, products.categoryId))
+    .where(inArray(products.id, ids));
 }
 
 /**

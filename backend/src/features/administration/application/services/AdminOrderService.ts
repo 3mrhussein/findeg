@@ -1,6 +1,8 @@
 import {
   DashboardStats,
   IAdminOrderService,
+  type OrderActivityEntry,
+  type OrderDetail,
   type OrderStaffActor,
 } from '../interfaces/IAdminOrderService';
 import { assertCanWriteOrders } from '../../domain/orderWritePermission';
@@ -12,7 +14,37 @@ import { transitionPaymentStatus } from '../../../order/application/services/tra
 import { normalizePaymentStatus } from '../../../order/application/utils/order-payment-status-transitions';
 import { ShippingAddress } from '../../../order/domain/value-objects';
 import { type Order } from '../../../order/domain/entities/Order';
-import { orderQueries } from '@findeg/db/queries';
+import { auditLogQueries, orderQueries } from '@findeg/db/queries';
+
+type AuditRow = Awaited<ReturnType<typeof auditLogQueries.getByEntityWithAdmin>>[number];
+
+/**
+ * Maps one audit row to an Order activity entry, which shows a single old -> new value pair.
+ *
+ * Key-selection rule: audit rows can carry several fields (e.g. status + trackingNumber +
+ * adminNotes). The entry shows the first field present in BOTH oldValues and newValues, i.e.
+ * the field that actually changed; when none is shared (e.g. a create/delete row), it falls
+ * back to the first key of oldValues. Missing or null values map to undefined.
+ */
+export function toActivityEntry({
+  log,
+  adminFirstName,
+  adminLastName,
+}: AuditRow): OrderActivityEntry {
+  const oldValues = (log.oldValues ?? {}) as Record<string, unknown>;
+  const newValues = (log.newValues ?? {}) as Record<string, unknown>;
+  const key = Object.keys(newValues).find((k) => k in oldValues) ?? Object.keys(oldValues)[0];
+  const display = (v: unknown) => (v == null ? undefined : String(v));
+  return {
+    id: log.id,
+    action: log.action,
+    adminId: log.adminUserId ?? undefined,
+    adminName: [adminFirstName, adminLastName].filter(Boolean).join(' ') || undefined,
+    oldValue: key ? display(oldValues[key]) : undefined,
+    newValue: key ? display(newValues[key]) : undefined,
+    createdAt: log.createdAt,
+  };
+}
 
 /**
  * Admin Order Service
@@ -90,6 +122,20 @@ export class AdminOrderService implements IAdminOrderService {
     const result = await orderQueries.getById(id);
     if (!result) return null;
     return this.mapToDomain(result.order, result.items);
+  }
+
+  /**
+   * Retrieves an Order with its activity log (audit entries for the Order, newest first).
+   *
+   * @param id - The order ID.
+   * @returns The order and activity, or null when the order does not exist.
+   */
+  async getDetail(id: number): Promise<OrderDetail | null> {
+    const order = await this.getById(id);
+    if (!order) return null;
+    const rows = await auditLogQueries.getByEntityWithAdmin('order', String(id));
+    const activity = rows.map(toActivityEntry);
+    return { order, activity };
   }
 
   /**

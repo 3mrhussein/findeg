@@ -293,6 +293,9 @@ importers:
       postcss:
         specifier: ^8.5.28
         version: 8.5.29
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
       prettier:
         specifier: ^3.9.9
         version: 3.9.9
@@ -9319,7 +9322,7 @@ snapshots:
       obug: 2.2.1
       std-env: 4.3.0
       tinyrainbow: 3.2.0
-      vitest: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+      vitest: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@7.3.7(@types/node@25.9.9)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.15)(yaml@2.9.1))
 
   '@vitest/expect@4.1.11':
     dependencies:

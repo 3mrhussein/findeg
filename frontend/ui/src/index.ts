@@ -33,6 +33,7 @@ export * from './ui/tabs';
 export * from './ui/textarea';
 export * from './ui/toast';
 export * from './ui/toaster';
+export { useToast, toast } from './hooks/use-toast';
 export * from './ui/tooltip';
 
 // Shared components (truly independent, used in both apps)

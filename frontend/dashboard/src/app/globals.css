@@ -1,5 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+@import 'tailwindcss';
+/* The shared UI package lives outside this app, so Tailwind must be told to scan it. */
+@source "../../../ui/src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -241,15 +243,15 @@
     @apply border-border outline-ring/50;
   }
 
-  html[lang="ar"] {
+  html[lang='ar'] {
     --font-sans: var(--font-arabic);
   }
 
-  html[dir="ltr"] {
+  html[dir='ltr'] {
     direction: ltr;
   }
 
-  html[dir="rtl"] {
+  html[dir='rtl'] {
     direction: rtl;
   }
 
