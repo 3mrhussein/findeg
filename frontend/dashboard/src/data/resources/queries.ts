@@ -34,7 +34,7 @@ export async function getAllBrands(activeOnly: boolean = false, locale: Locale =
   cacheLife('hours');
 
   const { brands } = createAdministrationServices();
-  const allBrands = await brands.getAll?.();
+  const allBrands = await brands.getAll?.(activeOnly, locale);
 
   if (activeOnly && allBrands) {
     return allBrands.filter((b) => b.isActive);

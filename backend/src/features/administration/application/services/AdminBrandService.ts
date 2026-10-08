@@ -64,11 +64,12 @@ export class AdminBrandService implements IAdminBrandService {
    * Retrieves all brands.
    *
    * @param activeOnly - If true, filtering for only active brands.
+   * @param language - Language for the resolved `name` and `description`.
    * @returns List of brands.
    */
-  async getAll(_activeOnly: boolean = false): Promise<Brand[]> {
+  async getAll(_activeOnly: boolean = false, language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
     const brands = await getAllBrands();
-    return brands.map((b) => this.mapToDomain(b));
+    return brands.map((b) => this.mapToDomain(b, language));
   }
 
   /**
