@@ -23,6 +23,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@fin
 import { FilterPanel, type FilterPanelBrand } from './FilterPanel';
 import { ProductCard, type ProductCardBrand } from './ProductCard';
 import type { ShopPlpFilters, ShopPlpSort, ShopPlpViewModel } from '@data/catalog/types';
+import { SHOP_PLP_PAGE_SIZES } from '@data/catalog/plp-query';
 import { cn } from '@lib/utils';
 
 interface ShopPlpClientProps {
@@ -45,8 +46,6 @@ const SORT_OPTIONS: Array<{ value: ShopPlpSort; key: SortOptionMessageKey }> = [
   { value: 'price-high-low', key: 'SortPriceHighLow' },
   { value: 'rating', key: 'SortRating' },
 ];
-
-const PER_PAGE_OPTIONS = [24, 48, 96] as const;
 
 function getVisiblePages(currentPage: number, totalPages: number): Array<number | 'ellipsis'> {
   if (totalPages <= 7) {
@@ -464,7 +463,7 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {PER_PAGE_OPTIONS.map((option) => (
+                    {SHOP_PLP_PAGE_SIZES.map((option) => (
                       <SelectItem key={option} value={String(option)}>
                         {option}
                       </SelectItem>

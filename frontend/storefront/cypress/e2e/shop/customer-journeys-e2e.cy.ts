@@ -9,9 +9,12 @@ const card = 'main a[href*="/shop/products/"]';
 const drawer = '[data-testid="cart-drawer-content"]';
 const quantity = '[data-testid^="cart-quantity-"]';
 
-/** Adds an available seeded variant through the same UI a Customer uses. */
+/**
+ * Adds an available seeded variant through the same UI a Customer uses. Its own small
+ * category keeps the card on the first page whatever other specs add to the catalog.
+ */
 function addCartItem() {
-  cy.visit('/en/shop');
+  cy.visit('/en/shop/holders');
   cy.get('a[href="/en/shop/products/holders-241"]')
     .first()
     .closest('article')
@@ -149,6 +152,33 @@ describe('Customer storefront journeys', () => {
   it('registers a Customer and opens their account', () => {
     registerUserThroughUi(buildE2EUser());
     cy.contains('h1', /My Account|حسابي/).should('be.visible');
+  });
+
+  it("lists a signed-in Customer's order and keeps it private from other Customers", () => {
+    cy.intercept('POST', '/api/v1/checkout/order').as('accept');
+    registerUserThroughUi(buildE2EUser());
+    visitCheckoutWithItem();
+    fillCheckoutRequiredFields();
+    cy.get('button[type="submit"]').click();
+    cy.wait('@accept')
+      .its('response.body.data.order.id')
+      .then((orderId) => {
+        cy.visit('/en/my-account/orders');
+        cy.get(`a[href="/en/my-account/orders/${orderId}"]`)
+          .should('contain.text', `#${orderId}`)
+          .click();
+        cy.get('[data-testid="my-account-order-detail-heading"]').should(
+          'contain.text',
+          `#${orderId}`,
+        );
+
+        cy.clearCookies();
+        registerUserThroughUi(buildE2EUser());
+        // The account layout streams, so the not-found page arrives with a 200 status.
+        cy.visit(`/en/my-account/orders/${orderId}`, { failOnStatusCode: false });
+        cy.contains('h1', 'Page not found').should('be.visible');
+        cy.get('[data-testid="my-account-order-detail-heading"]').should('not.exist');
+      });
   });
 
   it('redirects a guest account request to login', () => {

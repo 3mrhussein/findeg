@@ -299,6 +299,10 @@ export class ProductService implements IProductService {
       isActive: filters.isActive,
       categoryId: filters.categoryId,
       brandId: filters.brandId,
+      brandIds: filters.brandIds,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      sort: filters.sort,
       offset: filters.offset,
       limit: filters.limit,
     });
