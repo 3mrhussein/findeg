@@ -19,7 +19,7 @@ export const CONVENTIONAL_COMMIT_TYPES = [
 export const BRANCH_ONLY_TYPES = ['hotfix'];
 
 /** Long-lived repository branches exempt from the branch naming rule. */
-export const EXEMPT_BRANCH_NAMES = ['main', 'develop'];
+export const EXEMPT_BRANCH_NAMES = ['main', 'develop', 'ci-evidence'];
 
 /** Branch name prefixes created by automated tooling rather than developers. */
 export const EXEMPT_BRANCH_PREFIXES = ['release-please--', 'dependabot/', 'worktree-'];

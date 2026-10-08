@@ -115,6 +115,21 @@ function guardTier({ event, target, tier, expectedTier }) {
 }
 
 /**
+ * A human sentence saying why a run got its tier, for the plan summary.
+ */
+function explainTier({ event, target, manual, producerPush, tier }) {
+  const subject =
+    event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
+  if (manual) return 'manual run: all packages with caches restored unless forced';
+  if (producerPush) return `${subject}: pre-production run from scratch`;
+  if (target === RELEASE_GATE_BRANCH) {
+    return `${subject}: release path, everything runs from scratch`;
+  }
+  if (tier === 'fast') return `${subject}: affected packages with caches restored`;
+  return `${subject}: no fast-tier branch pattern matches, so everything runs from scratch`;
+}
+
+/**
  * Decides how CI runs for a push, PR or manual event.
  * - Strict tier (Turbo --force, shallow clone, integration and E2E required, nothing restored):
  *   everything into the release gate branch, and pushes to the producer branch. The producer's
@@ -156,6 +171,7 @@ export function decidePlan({
   return {
     ...guardTier({ event, target, tier, expectedTier }),
     tier,
+    tierReason: explainTier({ event, target, manual, producerPush, tier }),
     turboFlags,
     fetchDepth: tier === 'strict' ? 1 : 0,
     restoreDeps: eligibleForFastTier && !forcedInstall,

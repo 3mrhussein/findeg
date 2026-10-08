@@ -57,6 +57,11 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **npm patch and minor updates share one group; major updates arrive as individual PRs.** Production and development dependencies use the same `chore(deps)` prefix; Actions use `ci(deps)`. These Conventional Commit types pass `PR title` and stay out of the release changelog.
 - **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `Fast / CI OK` before considering the live acceptance check complete.
 
+### Reporting
+
+- **Every run reports through shared templates.** The plan summary (tier, why, flags, cache decisions, force options) is written by `Plan`; E2E always writes a report with failed specs, log excerpts, evidence status and up to three screenshots; pushes to `develop` and `main` post a run-result card to Slack when the optional `SLACK_WEBHOOK_URL` secret exists. Templates, themes and tokens live in `.github/config/` and follow `docs/development/ci-workflow-standards.md`.
+- **The `ci-evidence` branch is exempt from branch policy**, for the opt-in screenshot publishing.
+
 ## Considered options
 
 - **Keep every PR on `main`, with one CI tier.** Rejected: features would wait on release-grade validation (E2E, no caches), or releases would ship with fast-tier checks only.

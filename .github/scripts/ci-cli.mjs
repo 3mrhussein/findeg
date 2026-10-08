@@ -8,8 +8,16 @@
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 
 import { appendFileSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import {
+  buildPlanTokens,
+  coreTokensFromEnv,
+  loadReportConfig,
+  renderTemplate,
+  resolveTheme,
+} from './ci-report.mjs';
 import { decideBranchName, decidePlan, decideReleaseSource, decideVerdict } from './ci-policy.mjs';
 
 function reportOutcome(title, { ok, reason }) {
@@ -41,6 +49,24 @@ function parseChangedPaths(filePath) {
     .filter(Boolean);
 }
 
+// The plan summary is a convenience: a report failure warns but never fails the plan.
+function writePlanSummary(decision, options) {
+  if (!process.env.GITHUB_STEP_SUMMARY) return;
+  try {
+    const config = loadReportConfig(join(dirname(fileURLToPath(import.meta.url)), '../config'));
+    const tokens = { ...coreTokensFromEnv(process.env), ...buildPlanTokens(decision, options) };
+    const status = decision.ok ? 'info' : 'failure';
+    const summary = renderTemplate({
+      template: config.templates['plan.md'],
+      theme: resolveTheme(config.themes, status),
+      tokens: { ...tokens, STATUS: status },
+    });
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
+  } catch (error) {
+    console.log(`::warning title=Plan summary::${error.message}`);
+  }
+}
+
 function executePlan({
   event,
   target,
@@ -61,6 +87,7 @@ function executePlan({
     forceInstall,
   });
   reportOutcome('Tier', decision);
+  writePlanSummary(decision, { forceBuild, forceInstall });
   if (!decision.ok) return 1;
 
   const outputs = {

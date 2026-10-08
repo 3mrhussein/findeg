@@ -146,17 +146,24 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 
 ## 8. This repo today
 
-| Standard                   | Here                                                    | Status                          |
-| -------------------------- | ------------------------------------------------------- | ------------------------------- |
-| Feature workflow           | `ci.yml`, `CI · Feature`, gate `Feature / CI OK`        | Done                            |
-| Release workflow           | `ci-release.yml`, `CI · Release`, gate `Strict / CI OK` | Done                            |
-| Reusable jobs              | `ci-jobs.yml`, `CI jobs`                                | Done                            |
-| Policy, CLI, config, tests | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`        | Done                            |
-| Dispatch checkboxes        | `force_build`, `force_install` on `CI · Feature`        | Done                            |
-| PR hygiene                 | `pr-conventions.yml`, `PR conventions`                  | Done                            |
-| Loop guard on bot commits  | none                                                    | Open: release-please pushes     |
-| Cache cleanup              | none                                                    | Deferred: PRs never save caches |
-| Forced-run cache delete    | none                                                    | Open                            |
-| Job summaries              | none                                                    | Open                            |
-| Config JSON directory      | none (config lives in `ci-config.mjs`)                  | Not needed until data tables    |
-| Nightly security scan      | none                                                    | Out of scope                    |
+| Standard                    | Here                                                         | Status                               |
+| --------------------------- | ------------------------------------------------------------ | ------------------------------------ |
+| Feature workflow            | `ci.yml`, `CI · Feature`, gate `Feature / CI OK`             | Done                                 |
+| Release workflow            | `ci-release.yml`, `CI · Release`, gate `Strict / CI OK`      | Done                                 |
+| Reusable jobs               | `ci-jobs.yml`, `CI jobs`                                     | Done                                 |
+| Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`             | Done                                 |
+| Dispatch checkboxes         | `force_build`, `force_install` on `CI · Feature`             | Done                                 |
+| PR hygiene                  | `pr-conventions.yml`, `PR conventions`                       | Done                                 |
+| Loop guard on bot commits   | none                                                         | Open: release-please pushes          |
+| Cache cleanup               | none                                                         | Deferred: PRs never save caches      |
+| Forced-run cache delete     | none                                                         | Open                                 |
+| Themes, templates, renderer | `.github/config/`, `ci-report.mjs`, `ci-e2e-report.mjs`      | Done                                 |
+| Plan and E2E job summaries  | `ci-cli.mjs plan`, `ci-e2e-cli.mjs report`                   | Done                                 |
+| Slack run-result card       | `Notify` job, secret `SLACK_WEBHOOK_URL` (optional)          | Done; needs the owner's webhook      |
+| E2E screenshots             | link mode (default); `pages` mode publishes to `ci-evidence` | Link mode is the fallback; see below |
+| Config JSON directory       | none (config lives in `ci-config.mjs`)                       | Not needed until data tables         |
+| Nightly security scan       | none                                                         | Out of scope                         |
+
+### Screenshot modes (verified state)
+
+`link` is the default: the summary lists the (up to 3) screenshots and links the run's artifact list, where the full `e2e-failure-evidence` artifact holds them. Per-file, non-zipped artifact uploads (individually viewable links) were **not** verified against the pinned upload action in the implementing session, since that needs a real run; if a run shows it works, point `screenshotUrlFor` in `ci-e2e-cli.mjs` at the per-file artifact links. `pages` mode (set `screenshot_mode` to `pages` in `.github/config/settings.json`, enable Pages on the `ci-evidence` branch) publishes screenshots from a separate `Publish evidence` job with `contents: write`, prunes run folders past `evidence_retention_days`, and lets you uncomment the inline-image block in `templates/e2e.md`. The repo is public, so published screenshots are world-readable. Neither the `pages` publish step nor the Slack post has run against GitHub or Slack yet.

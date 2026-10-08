@@ -2,7 +2,7 @@
 
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { decidePlan, decideVerdict } from './ci-policy.mjs';
+import { decideBranchName, decidePlan, decideVerdict } from './ci-policy.mjs';
 
 const codeChange = ['backend/src/index.ts'];
 
@@ -116,6 +116,33 @@ describe('decidePlan for a manual run', () => {
   });
 });
 
+describe('decidePlan tierReason', () => {
+  it('explains why each kind of run got its tier', () => {
+    assert.equal(
+      decidePlan({ event: 'push', target: 'develop' }).tierReason,
+      'push to develop: pre-production run from scratch',
+    );
+    assert.equal(
+      decidePlan({ event: 'pull_request', target: 'main', head: 'develop' }).tierReason,
+      'pull request into main: release path, everything runs from scratch',
+    );
+    assert.equal(
+      decidePlan(pullRequestIntoDevelop).tierReason,
+      'pull request into develop: affected packages with caches restored',
+    );
+    assert.equal(
+      decidePlan({ event: 'workflow_dispatch', target: 'feat/some-feature' }).tierReason,
+      'manual run: all packages with caches restored unless forced',
+    );
+  });
+
+  it('says so when no fast-tier branch pattern matches', () => {
+    const { tier, tierReason } = decidePlan({ event: 'pull_request', target: 'other', head: 'x' });
+    assert.equal(tier, 'strict');
+    assert.match(tierReason, /no fast-tier branch pattern/);
+  });
+});
+
 describe('decidePlan tier guard', () => {
   it('fails when a workflow expects the wrong tier', () => {
     assert.equal(decidePlan({ event: 'push', target: 'develop', expectedTier: 'fast' }).ok, false);
@@ -155,5 +182,11 @@ describe('decideVerdict', () => {
 
   it('passes a fast run with E2E skipped', () => {
     assert.equal(decideVerdict({ tier: 'fast', results: { ...passing, e2e: 'skipped' } }).ok, true);
+  });
+});
+
+describe('decideBranchName', () => {
+  it('exempts the CI evidence branch', () => {
+    assert.equal(decideBranchName({ head: 'ci-evidence' }).ok, true);
   });
 });

@@ -6,7 +6,8 @@ name: CI · Release
 # Only pushes to develop save caches (for the feature PRs), after the
 # from-scratch run. Jobs live in ci-jobs.yml.
 # Required check on PRs into main: `Strict / CI OK`.
-# No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
+# The only secret passed is the optional SLACK_WEBHOOK_URL, for the run-result card
+# after pushes to main and develop (GITHUB_TOKEN reaches the jobs anyway).
 on:
   pull_request:
     branches: [main]
@@ -28,3 +29,5 @@ jobs:
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: strict
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
