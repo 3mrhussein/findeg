@@ -6,9 +6,13 @@ name: CI jobs
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
 # comes from .github/scripts; this file only wires its outputs to jobs.
 #
-# - strict tier (PRs into / pushes to main): every job, Turbo forced, no caches.
-# - fast tier (PRs into / pushes to develop): affected packages only, caches
-#   restored; pushes to develop are the single cache producer.
+# - strict tier (PRs into / pushes to main, pushes to develop): every job,
+#   Turbo forced, E2E required, nothing restored. develop is pre-production,
+#   so what is merged there is verified from scratch; its pushes are still the
+#   single cache producer (they save, they never restore).
+# - fast tier (PRs into develop): affected packages only, caches restored.
+# - manual run (fast tier, `CI · Feature` → Run workflow): every code job on
+#   all packages, caches restored unless the force options say otherwise.
 #
 # The `github` context here is the caller's (its event, refs and SHAs).
 # Concurrency is set by the callers only: here `github.workflow` would name
@@ -23,6 +27,14 @@ on:
           can't run the wrong tier.
         type: string
         required: true
+      force_build:
+        description: 'Manual runs only, ignore the build caches and force Turbo.'
+        type: boolean
+        default: false
+      force_install:
+        description: 'Manual runs only, ignore the pnpm store cache.'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -36,7 +48,8 @@ jobs:
       tier: ${{ steps.plan.outputs.tier }}
       turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
       fetch_depth: ${{ steps.plan.outputs.fetch_depth }}
-      use_cache: ${{ steps.plan.outputs.use_cache }}
+      restore_deps: ${{ steps.plan.outputs.restore_deps }}
+      restore_build: ${{ steps.plan.outputs.restore_build }}
       save_cache: ${{ steps.plan.outputs.save_cache }}
       run_checks: ${{ steps.plan.outputs.run_checks }}
       run_integration: ${{ steps.plan.outputs.run_integration }}
@@ -72,6 +85,11 @@ jobs:
             cat "$RUNNER_TEMP/changed-paths.txt"
           fi
 
+      # The policy's behaviour is pinned by its tests; a regression fails here
+      # before the plan it would corrupt is used.
+      - name: Test the CI policy
+        run: node --test .github/scripts/ci-policy.test.mjs
+
       - name: Decide the CI plan
         id: plan
         env:
@@ -80,8 +98,12 @@ jobs:
           HEAD: ${{ github.head_ref }}
           EXPECTED_TIER: ${{ inputs.tier }}
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
+          FORCE_BUILD: ${{ inputs.force_build }}
+          FORCE_INSTALL: ${{ inputs.force_install }}
         run: >-
           node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
+          $([ "$FORCE_BUILD" = true ] && echo --force-build)
+          $([ "$FORCE_INSTALL" = true ] && echo --force-install)
           ${HEAD:+--head "$HEAD"}
           ${EXPECTED_TIER:+--expect-tier "$EXPECTED_TIER"}
           ${CHANGED_FILES:+--changed-files "$CHANGED_FILES"}
@@ -115,7 +137,8 @@ jobs:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
           turbo-cache-key: ${{ matrix.task }}
       - name: Workspace package ${{ matrix.task }}
         run: |
@@ -162,7 +185,8 @@ jobs:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
           turbo-cache-key: build
           next-cache: 'true'
       - name: Write root .env
@@ -214,7 +238,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
       - run: pnpm test:integration
       - if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
@@ -245,7 +270,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
-          cache: 'false'
+          restore-deps: 'false'
+          restore-build: 'false'
       # pnpm's allowBuilds disables Cypress's postinstall.
       - name: Install Cypress binary
         run: pnpm --filter @findeg/storefront exec cypress install

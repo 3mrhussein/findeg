@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 
 import { appendFileSync, readFileSync } from 'node:fs';
@@ -41,9 +41,25 @@ function parseChangedPaths(filePath) {
     .filter(Boolean);
 }
 
-function executePlan({ event, target, head, expectedTier, changedFiles }) {
+function executePlan({
+  event,
+  target,
+  head,
+  expectedTier,
+  changedFiles,
+  forceBuild,
+  forceInstall,
+}) {
   const changedPaths = parseChangedPaths(changedFiles);
-  const decision = decidePlan({ event, target, head, expectedTier, changedPaths });
+  const decision = decidePlan({
+    event,
+    target,
+    head,
+    expectedTier,
+    changedPaths,
+    forceBuild,
+    forceInstall,
+  });
   reportOutcome('Tier', decision);
   if (!decision.ok) return 1;
 
@@ -51,7 +67,8 @@ function executePlan({ event, target, head, expectedTier, changedFiles }) {
     tier: decision.tier,
     turbo_flags: decision.turboFlags,
     fetch_depth: decision.fetchDepth,
-    use_cache: decision.useCache,
+    restore_deps: decision.restoreDeps,
+    restore_build: decision.restoreBuild,
     save_cache: decision.saveCache,
     run_checks: decision.runChecks,
     run_integration: decision.runIntegration,
@@ -83,7 +100,7 @@ function executeVerdict({ needs, tier }) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]`;
 
 function main(argv) {
@@ -97,6 +114,8 @@ function main(argv) {
       target: { type: 'string' },
       'changed-files': { type: 'string' },
       'expect-tier': { type: 'string' },
+      'force-build': { type: 'boolean' },
+      'force-install': { type: 'boolean' },
       needs: { type: 'string' },
       tier: { type: 'string' },
     },
@@ -115,6 +134,8 @@ function main(argv) {
       head: values.head,
       expectedTier: values['expect-tier'],
       changedFiles: values['changed-files'],
+      forceBuild: values['force-build'],
+      forceInstall: values['force-install'],
     });
   }
 

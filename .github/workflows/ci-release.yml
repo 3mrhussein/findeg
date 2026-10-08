@@ -1,9 +1,11 @@
 name: CI · Release
 
-# Guards PRs targeting main and pushes to main (the strict tier).
-# Every job runs from scratch: Turbo --force, no cache restore/save,
-# integration tests always, E2E required. Jobs live in ci-jobs.yml.
-# Required check: `Strict / CI OK`.
+# Guards PRs targeting main, pushes to main and pushes to develop, the
+# pre-production branch (the strict tier). Every job runs from scratch:
+# Turbo --force, no cache restore, integration tests always, E2E required.
+# Only pushes to develop save caches (for the feature PRs), after the
+# from-scratch run. Jobs live in ci-jobs.yml.
+# Required check on PRs into main: `Strict / CI OK`.
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:
@@ -11,7 +13,7 @@ on:
     # A base-branch edit must start CI for the newly selected tier.
     types: [opened, synchronize, reopened, edited]
   push:
-    branches: [main]
+    branches: [main, develop]
 
 permissions:
   contents: read
