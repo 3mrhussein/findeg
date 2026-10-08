@@ -34,7 +34,13 @@ describe('Dashboard Order detail query', () => {
         shippingCost: '10.00',
         totalAmount: '100.00',
         paymentMethod: 'cod',
-        shippingAddressSnapshot: { fullName: 'Ahmed Hassan', phone: '01012345678', city: 'Cairo' },
+        shippingAddressSnapshot: {
+          fullName: 'Ahmed Hassan',
+          phone: '01012345678',
+          city: 'Cairo',
+          area: 'Nasr City',
+          street: 'Abbas El Akkad',
+        },
       })
       .returning();
     await testDb.db.insert(orderItems).values({
