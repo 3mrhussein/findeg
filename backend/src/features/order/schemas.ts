@@ -20,3 +20,4 @@ export {
   type OrderStatusUpdate,
 } from './application/dtos/OrderStatusUpdate';
 export { getAllowedOrderStatusTransitions } from './application/utils/order-status-transitions';
+export { getAllowedPaymentStatusTransitions } from './application/utils/order-payment-status-transitions';

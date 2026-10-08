@@ -16,11 +16,15 @@ vi.mock('@findeg/backend/features/administration', () => ({
   createAdministrationServices: () => ({ orders: { getDetail } }),
 }));
 vi.mock('@i18n/navigation', () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
 }));
-vi.mock('@actions/order-actions', () => ({ updateOrderStatusAction: vi.fn() }));
+vi.mock('@actions/order-actions', () => ({
+  updateOrderStatusAction: vi.fn(),
+  updateOrderPaymentStatusAction: vi.fn(),
+}));
 vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 
 import OrderDetailPage from './page';

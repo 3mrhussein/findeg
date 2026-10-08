@@ -4,6 +4,7 @@ import type { Order } from '@findeg/backend/features/order';
 import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
 
 vi.mock('@actions/order-actions', () => ({ updateOrderStatusAction: vi.fn() }));
+vi.mock('@i18n/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 
 import { OrderHeader } from './OrderHeader';
