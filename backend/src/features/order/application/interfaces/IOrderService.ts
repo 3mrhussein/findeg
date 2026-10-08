@@ -1,4 +1,4 @@
-import type { ID } from '../../../core/domain/types/common';
+import type { ID } from '@findeg/db/types';
 import type { Order } from '../../domain/entities/Order';
 import type { OrderFilters } from './IOrderRepository';
 

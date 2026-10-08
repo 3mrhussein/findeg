@@ -57,18 +57,20 @@ test('Orders has no Backend, app, or Next dependency, including type and dynamic
     "import type { Order } from '@findeg/backend/features/core';",
     "const app = import('@findeg/dashboard/server');",
     "type Page = import('next').Metadata;",
+    "import '../../../backend/src/features/core';",
+    "type Page = import('../../../frontend/dashboard/src/page').Page;",
   ]) {
     assert.ok((await lintAt('packages/orders/src/index.ts', code)).includes('forbidden'), code);
   }
 });
 
-test('the in-progress Backend Orders owner may use its existing internals during migration', async () => {
+test('Backend consumers cannot reach legacy Order internals after extraction', async () => {
   assert.deepEqual(
     await lintAt(
-      'backend/src/features/order/application/service.ts',
-      "import type { ID } from '@findeg/backend/features/core/domain/types/common';",
+      'backend/src/features/identity/application/service.ts',
+      "import '../../order/domain/entities/Order';",
     ),
-    [],
+    ['relative'],
   );
 });
 

@@ -40,18 +40,13 @@ export const GUEST_ACCESS_KIND = 'guest-access';
 /** Row id for a guest access code email: one per access request. */
 export const guestAccessId = (requestId: string) => `${GUEST_ACCESS_KIND}:${requestId}`;
 
-export const ORDER_STATUS_KIND = 'order-status';
-
-/** Statuses that notify the customer; one email per status per order. */
-export const NOTIFIED_ORDER_STATUSES = ['shipped', 'delivered', 'cancelled'] as const;
-export type NotifiedOrderStatus = (typeof NOTIFIED_ORDER_STATUSES)[number];
-
-export const isNotifiedOrderStatus = (status: string): status is NotifiedOrderStatus =>
-  (NOTIFIED_ORDER_STATUSES as readonly string[]).includes(status);
-
-/** Row id for a status email: one per Order Reference and status. */
-export const orderStatusId = (orderReference: string, status: NotifiedOrderStatus) =>
-  `${ORDER_STATUS_KIND}:${orderReference}:${status}`;
+export {
+  ORDER_STATUS_KIND,
+  NOTIFIED_ORDER_STATUSES,
+  isNotifiedOrderStatus,
+  orderStatusId,
+} from '@findeg/orders/events';
+export type { NotifiedOrderStatus } from '@findeg/orders/events';
 
 export const PARTNER_INVITATION_KIND = 'partner-invitation';
 

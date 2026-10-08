@@ -63,7 +63,8 @@
     "resend": "^4.0.2",
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@findeg/orders": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

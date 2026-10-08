@@ -1,118 +1,41 @@
-import { type ID } from '@findeg/backend/features/core/domain/types/common';
-import { type Order } from '../../domain/entities/Order';
-import { orderQueries, type OrderRow, type OrderItemRow } from '@findeg/db/queries';
-import { ShippingAddress } from '../../domain/value-objects';
+// Compatibility API for existing callers; removed by #368.
+import { createOrders } from '@findeg/orders';
 import type { IOrderService } from '../interfaces/IOrderService';
-
-/**
- * Order Service - Pure TypeScript
- *
- * Provides order query and retrieval functionality.
- * For admin operations (status updates), use AdminOrderService from administration feature.
- */
+import type { OrderFilters } from '../interfaces/IOrderRepository';
+import { toLegacyOrder } from '../../legacy';
 export class OrderService implements IOrderService {
-  constructor() {}
-
-  private mapToDomain(dbOrder: OrderRow, items: OrderItemRow[]): Order {
-    return {
-      id: dbOrder.id,
-      orderReference: dbOrder.orderReference || undefined,
-      userId: dbOrder.userId || undefined,
-      guestEmail: dbOrder.guestEmail || undefined,
-      status: dbOrder.status,
-      paymentStatus: dbOrder.paymentStatus,
-      subtotal: Number(dbOrder.subtotal),
-      shippingCost: Number(dbOrder.shippingCost),
-      totalAmount: Number(dbOrder.totalAmount),
-      currency: dbOrder.currency,
-      paymentMethod: dbOrder.paymentMethod || undefined,
-      shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as ShippingAddress) || undefined,
-      trackingNumber: dbOrder.trackingNumber || undefined,
-      adminNotes: dbOrder.adminNotes || undefined,
-      createdAt: dbOrder.createdAt,
-      updatedAt: dbOrder.updatedAt,
-      customerName: dbOrder.customerName,
-      customerEmail: dbOrder.customerEmail,
-      items: items.map((item) => ({
-        id: item.id,
-        orderId: item.orderId,
-        productId: item.productId!,
-        variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
-        quantity: item.quantity,
-        uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
-        unitPrice: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
-        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
-        totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
-        productNameSnapshot: item.productNameSnapshot || undefined,
-        productSkuSnapshot: item.productSkuSnapshot || undefined,
-        variantSnapshot: (item.variantSnapshot as Record<string, unknown>) || undefined,
-      })),
-    };
+  private orders = createOrders();
+  async getAll(filters?: OrderFilters) {
+    const result = await this.orders.list(filters);
+    return { orders: result.orders.map(toLegacyOrder), total: result.total };
   }
-
-  async getAll(
-    filters?: orderQueries.OrderFiltersInput,
-  ): Promise<{ orders: Order[]; total: number }> {
-    const result = await orderQueries.getFiltered(filters || {});
-    return {
-      orders: result.orders.map((row) => this.mapToDomain(row.order, row.items)),
-      total: result.total,
-    };
+  async getById(id: number | string) {
+    const order = await this.orders.get(id);
+    return order ? toLegacyOrder(order) : null;
   }
-
-  async getById(id: ID | string): Promise<Order | null> {
-    const result = await orderQueries.getById(id);
-    if (!result) return null;
-    return this.mapToDomain(result.order, result.items);
+  async getByIdForUser(userId: number, id: number | string) {
+    const order = await this.orders.get(id);
+    return order?.userId === userId ? toLegacyOrder(order) : null;
   }
-
-  async getByIdForUser(userId: ID, id: ID | string): Promise<Order | null> {
-    const order = await this.getById(id);
-    return order && String(order.userId) === String(userId) ? order : null;
+  async getByUserId(userId: number) {
+    return (await this.orders.listForCustomer(userId)).map(toLegacyOrder);
   }
-
-  async getByUserId(userId: ID): Promise<Order[]> {
-    const results = await orderQueries.getByUserId(userId);
-    return results.map((row) => this.mapToDomain(row.order, row.items));
+  async getRecent(limit?: number) {
+    return (await this.orders.recent(limit)).map(toLegacyOrder);
   }
-
-  async getRecent(limit?: number): Promise<Order[]> {
-    const results = await orderQueries.getRecent(limit);
-    return results.map((row) => this.mapToDomain(row.order, row.items));
+  async count(filters?: OrderFilters) {
+    return (await this.orders.list({ ...filters, limit: 1 })).total;
   }
-
-  async count(filters?: Parameters<typeof orderQueries.count>[0]): Promise<number> {
-    return orderQueries.count(filters);
-  }
-
-  /**
-   * Retrieves checkout prefill data based on the user's most recent order history.
-   *
-   * @param userId - ID of the user
-   * @param userProfile - Basic user profile info (email, names) to default to
-   */
   async getCheckoutPrefill(
-    userId: ID,
-    userProfile: { email: string; firstName?: string; lastName?: string; phone?: string },
+    userId: number,
+    profile: { email: string; firstName?: string; lastName?: string; phone?: string },
   ) {
-    const orders = await this.getByUserId(userId);
-
-    // Sort orders by date descending to find the latest with an address
-    const latestOrder = orders
-      .filter((o) => o.shippingAddressSnapshot)
-      .sort((a, b) => {
-        const timeA = a.createdAt?.getTime() || 0;
-        const timeB = b.createdAt?.getTime() || 0;
-        return timeB - timeA;
-      })[0];
-
-    const address = latestOrder?.shippingAddressSnapshot;
-    const fullName = [userProfile.firstName, userProfile.lastName].filter(Boolean).join(' ');
-
+    const address = await this.orders.latestShippingAddress(userId);
     return {
-      fullName: fullName || address?.fullName || '',
-      guestEmail: userProfile.email || '',
-      phone: userProfile.phone || address?.phone || '',
+      fullName:
+        [profile.firstName, profile.lastName].filter(Boolean).join(' ') || address?.fullName || '',
+      guestEmail: profile.email || '',
+      phone: profile.phone || address?.phone || '',
       city: address?.city || '',
       area: address?.area || '',
       street: address?.street || '',

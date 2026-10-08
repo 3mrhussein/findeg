@@ -5,8 +5,8 @@
 
 import { z } from 'zod';
 import { ShippingAddressSchema } from '../value-objects';
-import { EmailSchema } from '@findeg/backend/features/core/domain/types/common';
-import { PaymentMethodSchema } from '@findeg/backend/features/core/domain/types/common';
+import { EmailSchema } from '@findeg/db/types';
+import { PaymentMethodSchema } from '@findeg/db/types';
 
 export const CheckoutOrderSchema = z.object({
   address: ShippingAddressSchema,

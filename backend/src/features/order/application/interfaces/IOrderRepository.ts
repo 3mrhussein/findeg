@@ -1,4 +1,4 @@
-import { ID, OrderStatus, PaymentStatus } from '@findeg/backend/features/core/domain/types/common';
+import { ID, OrderStatus, PaymentStatus } from '@findeg/db/types';
 import { Order } from '../../domain/entities/Order';
 
 export interface OrderFilters {

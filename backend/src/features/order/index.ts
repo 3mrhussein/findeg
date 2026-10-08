@@ -21,7 +21,6 @@ export {
 export { createOrderServices, type OrderServices } from './application/services/factory';
 export {
   ORDER_STATUS_OPTIONS,
-  normalizeOrderStatus,
   getAllowedOrderStatusTransitions,
   canTransitionOrderStatus,
   getOrderStatusLabel,
@@ -29,8 +28,15 @@ export {
 export {
   PAYMENT_STATUS_OPTIONS,
   paymentStatus,
-  normalizePaymentStatus,
   getAllowedPaymentStatusTransitions,
   canTransitionPaymentStatus,
   getPaymentStatusLabel,
 } from './application/utils/order-payment-status-transitions';
+
+export { toLegacyOrder } from './legacy';
+export {
+  createOrders,
+  OrderNotFoundError,
+  InvalidOrderStatusTransitionError,
+  InvalidPaymentStatusTransitionError,
+} from '@findeg/orders';

@@ -1,6 +1,6 @@
 // Backend package main entry point - re-exports all public interfaces and services
 import { createIdentityServices } from './features/identity/application/services/factory';
-import { createOrderServices } from './features/order/application/services/factory';
+import { createOrderServices } from '@findeg/backend/features/order';
 import { UpdateAdminInput } from './features/identity/application/interfaces/IUserService';
 
 // Core feature exports (shared types, domain models, errors)

@@ -40,7 +40,7 @@ export const ordersBoundaryRule = {
     const filename = path.resolve(context.filename ?? context.getFilename());
     const packageOwner = path.join(repoRoot, 'packages/orders');
     const legacyOwner = path.join(repoRoot, 'backend/src/features/order');
-    const inOrders = inside(filename, packageOwner) || inside(filename, legacyOwner);
+    const inOrders = inside(filename, packageOwner);
     const currentDirectory = path.dirname(filename);
 
     function check(node, source) {
@@ -76,14 +76,20 @@ export const ordersBoundaryRule = {
       }
       if (!source.startsWith('.')) return;
       const resolved = path.resolve(currentDirectory, source);
+      if (
+        inOrders &&
+        ['backend', 'frontend'].some((directory) =>
+          inside(resolved, path.join(repoRoot, directory)),
+        )
+      ) {
+        context.report({ node, messageId: 'forbidden' });
+        return;
+      }
       const targetIsInternal = ordersRoots.some((root) => inside(resolved, root));
       const fromSameOwner = ordersRoots.some(
         (root) => inside(filename, root) && inside(resolved, root),
       );
-      const legacyBackendBridge =
-        inside(filename, path.join(repoRoot, 'backend/src')) &&
-        inside(resolved, path.join(repoRoot, 'backend/src/features/order'));
-      if (targetIsInternal && !fromSameOwner && !legacyBackendBridge) {
+      if (targetIsInternal && !fromSameOwner) {
         context.report({ node, messageId: 'relative' });
       }
     }
