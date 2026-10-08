@@ -19,7 +19,6 @@ export default defineConfig({
       'cypress/e2e/admin/admin-dashboard-e2e.cy.ts', // #342
       'cypress/e2e/cache-invalidation.cy.ts', // #343
       'cypress/e2e/orders/order-operations-phase-4.cy.ts', // #344
-      'cypress/e2e/architectural-boundaries.cy.ts', // #345
     ],
     supportFile: 'cypress/support/e2e.ts',
     video: true,
