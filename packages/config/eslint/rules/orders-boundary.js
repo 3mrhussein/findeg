@@ -17,6 +17,14 @@ function sourceFor(node) {
   return undefined;
 }
 
+function literalValue(node) {
+  if (node?.type === 'Literal') return node.value;
+  if (node?.type === 'TemplateLiteral' && node.expressions.length === 0) {
+    return node.quasis[0].value.cooked;
+  }
+  return undefined;
+}
+
 export const ordersBoundaryRule = {
   meta: {
     type: 'problem',
@@ -91,10 +99,10 @@ export const ordersBoundaryRule = {
         check(node, node.source.value);
       },
       ImportExpression(node) {
-        check(node, node.source.value);
+        check(node, literalValue(node.source));
       },
       'CallExpression[callee.name="require"]'(node) {
-        check(node, node.arguments[0]?.value);
+        check(node, literalValue(node.arguments[0]));
       },
       TSImportType(node) {
         check(node, sourceFor(node));
