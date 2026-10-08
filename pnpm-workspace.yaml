@@ -2,6 +2,7 @@ packages:
   - 'packages/config'
   - 'packages/env'
   - 'packages/money'
+  - 'packages/orders'
   - 'packages/domain-errors'
   - 'db'
   - 'backend'

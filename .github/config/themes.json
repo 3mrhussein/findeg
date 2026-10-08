@@ -1,0 +1,8 @@
+{
+  "success": { "emoji": "✅", "color": "2EA44F", "label": "Succeeded" },
+  "failure": { "emoji": "❌", "color": "CF222E", "label": "Failed" },
+  "warning": { "emoji": "⚠️", "color": "BF8700", "label": "Warning" },
+  "skipped": { "emoji": "⏭️", "color": "6E7781", "label": "Skipped" },
+  "running": { "emoji": "⏳", "color": "8250DF", "label": "Running" },
+  "info": { "emoji": "ℹ️", "color": "0969DA", "label": "Info" }
+}

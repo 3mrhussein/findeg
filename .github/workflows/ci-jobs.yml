@@ -6,9 +6,17 @@ name: CI jobs
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
 # comes from .github/scripts; this file only wires its outputs to jobs.
 #
-# - strict tier (PRs into / pushes to main): every job, Turbo forced, no caches.
-# - fast tier (PRs into / pushes to develop): affected packages only, caches
-#   restored; pushes to develop are the single cache producer.
+# - strict tier (PRs into / pushes to main, pushes to develop): every job,
+#   Turbo forced, E2E required, nothing restored. develop is pre-production,
+#   so what is merged there is verified from scratch; its pushes are still the
+#   single cache producer (they save, they never restore).
+# - fast tier (PRs into develop): affected packages only, caches restored.
+# - manual run (fast tier, `CI · Feature` → Run workflow): every code job on
+#   all packages, caches restored unless the force options say otherwise.
+#
+# Every caller must grant at least the highest permission a job here asks for
+# (`Publish evidence` needs `contents: write`), even a caller that never runs it:
+# GitHub rejects the workflow file otherwise.
 #
 # The `github` context here is the caller's (its event, refs and SHAs).
 # Concurrency is set by the callers only: here `github.workflow` would name
@@ -23,6 +31,18 @@ on:
           can't run the wrong tier.
         type: string
         required: true
+      force_build:
+        description: 'Manual runs only, ignore the build caches and force Turbo.'
+        type: boolean
+        default: false
+      force_install:
+        description: 'Manual runs only, ignore the pnpm store cache.'
+        type: boolean
+        default: false
+    secrets:
+      SLACK_WEBHOOK_URL:
+        description: 'Slack incoming webhook for the run-result card. Optional, without it no card is posted.'
+        required: false
 
 permissions:
   contents: read
@@ -36,7 +56,8 @@ jobs:
       tier: ${{ steps.plan.outputs.tier }}
       turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
       fetch_depth: ${{ steps.plan.outputs.fetch_depth }}
-      use_cache: ${{ steps.plan.outputs.use_cache }}
+      restore_deps: ${{ steps.plan.outputs.restore_deps }}
+      restore_build: ${{ steps.plan.outputs.restore_build }}
       save_cache: ${{ steps.plan.outputs.save_cache }}
       run_checks: ${{ steps.plan.outputs.run_checks }}
       run_integration: ${{ steps.plan.outputs.run_integration }}
@@ -45,7 +66,9 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 2
-          sparse-checkout: .github/scripts
+          sparse-checkout: |
+            .github/scripts
+            .github/config
       # A sparse checkout keeps the root files, so .nvmrc is there.
       - uses: actions/setup-node@v7
         with:
@@ -72,6 +95,11 @@ jobs:
             cat "$RUNNER_TEMP/changed-paths.txt"
           fi
 
+      # The policy's behaviour is pinned by its tests; a regression fails here
+      # before the plan it would corrupt is used.
+      - name: Test the CI policy
+        run: node --test .github/scripts/*.test.mjs
+
       - name: Decide the CI plan
         id: plan
         env:
@@ -80,11 +108,16 @@ jobs:
           HEAD: ${{ github.head_ref }}
           EXPECTED_TIER: ${{ inputs.tier }}
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
-        run: >-
-          node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
-          ${HEAD:+--head "$HEAD"}
-          ${EXPECTED_TIER:+--expect-tier "$EXPECTED_TIER"}
-          ${CHANGED_FILES:+--changed-files "$CHANGED_FILES"}
+          FORCE_BUILD: ${{ inputs.force_build }}
+          FORCE_INSTALL: ${{ inputs.force_install }}
+        run: |
+          args=(--event "$EVENT" --target "$TARGET")
+          if [ "$FORCE_BUILD" = true ]; then args+=(--force-build); fi
+          if [ "$FORCE_INSTALL" = true ]; then args+=(--force-install); fi
+          if [ -n "$HEAD" ]; then args+=(--head "$HEAD"); fi
+          if [ -n "$EXPECTED_TIER" ]; then args+=(--expect-tier "$EXPECTED_TIER"); fi
+          if [ -n "$CHANGED_FILES" ]; then args+=(--changed-files "$CHANGED_FILES"); fi
+          node .github/scripts/ci-cli.mjs plan "${args[@]}"
 
   # The code checks share one shape: a full-history checkout on the fast tier
   # (Turbo's --affected diffs against the PR base or the previous push), the
@@ -115,7 +148,8 @@ jobs:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
           turbo-cache-key: ${{ matrix.task }}
       - name: Workspace package ${{ matrix.task }}
         run: |
@@ -162,7 +196,8 @@ jobs:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
           turbo-cache-key: build
           next-cache: 'true'
       - name: Write root .env
@@ -214,7 +249,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
-          cache: ${{ needs.plan.outputs.use_cache }}
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: ${{ needs.plan.outputs.restore_build }}
       - run: pnpm test:integration
       - if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
@@ -227,6 +263,8 @@ jobs:
     if: needs.plan.outputs.run_e2e == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    outputs:
+      screenshot_mode: ${{ steps.report.outputs.screenshot_mode }}
     services:
       postgres:
         image: postgres:16-alpine
@@ -245,7 +283,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
-          cache: 'false'
+          restore-deps: 'false'
+          restore-build: 'false'
       # pnpm's allowBuilds disables Cypress's postinstall.
       - name: Install Cypress binary
         run: pnpm --filter @findeg/storefront exec cypress install
@@ -276,13 +315,15 @@ jobs:
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3000/en > /dev/null
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3001/en > /dev/null
       # Run E2E suites across all packages implementing the test:e2e contract.
-      # Continue-on-error runs every suite to collect complete failure evidence.
+      # Continue-on-error runs every suite to collect complete failure evidence;
+      # tee keeps the output for the report (pipefail keeps the exit status).
       - name: Execute E2E test suites
         id: e2e
         continue-on-error: true
+        shell: bash
         env:
           TEST_ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
-        run: pnpm test:e2e --continue
+        run: pnpm test:e2e --continue 2>&1 | tee "$RUNNER_TEMP/e2e-output.txt"
       - name: Upload E2E failure evidence
         if: failure() || steps.e2e.outcome == 'failure'
         uses: actions/upload-artifact@v7
@@ -292,9 +333,87 @@ jobs:
             ${{ runner.temp }}/artifacts
             ${{ runner.temp }}/*.log
           if-no-files-found: warn
+      # Always renders, even when the run crashed before writing any evidence.
+      - name: Report E2E results
+        id: report
+        if: always()
+        env:
+          OUTCOME: ${{ steps.e2e.outcome || 'skipped' }}
+          # Only pushes and manual runs may publish screenshots; PRs never get a write token.
+          CAN_WRITE: ${{ github.event_name != 'pull_request' && 'true' || '' }}
+        run: |
+          args=(--outcome "$OUTCOME"
+            --output-file "$RUNNER_TEMP/e2e-output.txt"
+            --storefront-log "$RUNNER_TEMP/storefront.log"
+            --dashboard-log "$RUNNER_TEMP/dashboard.log"
+            --evidence-dir "$RUNNER_TEMP/artifacts"
+            --artifact-name e2e-failure-evidence)
+          if [ -n "$CAN_WRITE" ]; then args+=(--can-write); fi
+          node .github/scripts/ci-e2e-cli.mjs report "${args[@]}"
       - name: Require E2E test suites to pass
         if: always()
         run: test "${{ steps.e2e.outcome }}" = success
+
+  # Opt-in (screenshot_mode "pages" in .github/config/settings.json): publishes
+  # failure screenshots to the ci-evidence branch, served by GitHub Pages, so the
+  # E2E report can embed them. Its own job so the E2E job, which runs the
+  # branch's code, never holds a write token.
+  publish-evidence:
+    name: Publish evidence
+    needs: e2e
+    if: always() && needs.e2e.outputs.screenshot_mode == 'pages' && needs.e2e.result == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: e2e-failure-evidence
+          path: evidence
+      - name: Publish screenshots and prune old runs
+        env:
+          RUN_ID: ${{ github.run_id }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
+          GH_TOKEN: ${{ github.token }}
+          # Environment identity covers the `site` repo created below; `git config`
+          # here would only set the checkout's.
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          git clone --quiet --branch ci-evidence --single-branch \
+            "https://x-access-token:${GH_TOKEN}@${REPO_URL#https://}" site 2>/dev/null \
+            || { git init --quiet site && git -C site checkout --quiet --orphan ci-evidence \
+              && git -C site remote add origin "https://x-access-token:${GH_TOKEN}@${REPO_URL#https://}"; }
+          mkdir -p "site/runs/$RUN_ID"
+          # The artifact holds runner.temp/artifacts, so copy from evidence/artifacts to
+          # publish paths relative to it, matching the URLs the E2E report builds.
+          if [ -d evidence/artifacts ]; then
+            (cd evidence/artifacts && find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) -print0 \
+              | xargs -0 -I{} cp --parents {} "../../site/runs/$RUN_ID/")
+          fi
+          touch site/.nojekyll
+          git -C site add -A
+          git -C site commit --quiet -m "evidence: run $RUN_ID" || true
+          if [ -d site/runs ]; then
+            for path in site/runs/*/; do
+              dir=$(basename "$path")
+              echo "$dir $(git -C site log -1 --format=%ct -- "runs/$dir")"
+            done | node .github/scripts/ci-e2e-cli.mjs prune | while read -r old; do
+              git -C site rm -rq "runs/$old"
+            done
+            git -C site commit --quiet -m "evidence: prune old runs" || true
+          fi
+          git -C site push --quiet origin ci-evidence
 
   # The only check a ruleset needs to require. It always runs, so skipped jobs
   # can't leave it pending; the policy decides whether the results pass.
@@ -317,3 +436,46 @@ jobs:
           NEEDS: ${{ toJSON(needs) }}
           TIER: ${{ needs.plan.outputs.tier }}
         run: node .github/scripts/ci-cli.mjs verdict --tier "$TIER" --needs "$NEEDS"
+
+  # Posts the run-result card to Slack after a push to develop or main. The card
+  # comes from .github/config/templates; without the webhook secret (forks, a
+  # repo that hasn't set it up) the job skips quietly instead of failing.
+  notify:
+    name: Notify
+    needs: [ci-ok]
+    if: always() && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      GATE_RESULT: ${{ needs.ci-ok.result }}
+    steps:
+      - name: Check for the Slack webhook
+        id: webhook
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No SLACK_WEBHOOK_URL secret: skipping the Slack card."
+          fi
+      - if: steps.webhook.outputs.present == 'true'
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github/scripts
+            .github/config
+      - if: steps.webhook.outputs.present == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Post the run-result card
+        if: steps.webhook.outputs.present == 'true'
+        run: |
+          status=failure
+          [ "$GATE_RESULT" = success ] && status=success
+          node .github/scripts/ci-report-cli.mjs render \
+            --template run-result.slack.json --status "$status" --env > "$RUNNER_TEMP/card.json"
+          curl --fail --silent --show-error --retry 3 --max-time 20 \
+            -H 'Content-Type: application/json' \
+            --data @"$RUNNER_TEMP/card.json" "$SLACK_WEBHOOK_URL"

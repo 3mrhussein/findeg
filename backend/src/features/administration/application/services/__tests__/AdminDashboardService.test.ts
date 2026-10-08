@@ -10,7 +10,6 @@ import {
   getTopProductsRaw,
   getTotalOrderStatsRaw,
   getOrderStatsRaw,
-  orderQueries,
 } from '@findeg/db/queries';
 import { AdminDashboardService } from '../AdminDashboardService';
 import { QueryError } from '../../../../core/domain/errors/QueryError';
@@ -153,14 +152,6 @@ describe('AdminDashboardService', () => {
         percentage: 60,
       },
     ]);
-  });
-
-  it('delegates recent orders to the order queries', async () => {
-    vi.mocked(orderQueries.getRecent).mockResolvedValue([]);
-
-    await service.getRecentOrders(7);
-
-    expect(vi.mocked(orderQueries.getRecent)).toHaveBeenCalledWith(7);
   });
 
   it('wraps dashboard stat failures in QueryError', async () => {

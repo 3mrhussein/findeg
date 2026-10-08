@@ -1,18 +1,28 @@
 name: CI · Feature
 
-# Guards feature → develop PRs and pushes (the fast tier).
+# Guards feature → develop PRs (the fast tier).
 # Affected packages only, caches restored, integration tests only on relevant
 # changes, no E2E. Jobs live in ci-jobs.yml.
 # Required check: `Feature / CI OK`.
-# PRs into main run CI · Release (ci-release.yml) instead.
+# Run workflow (manual): every code job on the chosen branch, caches restored
+# unless the checkboxes ask to ignore them.
+# Pushes to develop and everything into main run CI · Release (ci-release.yml).
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:
     branches: [develop]
     # A base-branch edit must start CI for the newly selected tier.
     types: [opened, synchronize, reopened, edited]
-  push:
-    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: Force build job (ignore build cache)
+        type: boolean
+        default: false
+      force_install:
+        description: Force clean install (ignore pnpm store cache)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -24,6 +34,14 @@ concurrency:
 jobs:
   feature:
     name: Feature
+    # GitHub checks nested jobs' permissions against the caller when it loads the
+    # workflow, so this must allow what ci-jobs.yml's `Publish evidence` asks for
+    # (write). That job only runs after a strict-tier E2E failure, never on this
+    # tier, and ci-jobs.yml keeps every other job at `contents: read`.
+    permissions:
+      contents: write
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: fast # policy tier stays "fast"; only the display name changes
+      force_build: ${{ inputs.force_build || false }}
+      force_install: ${{ inputs.force_install || false }}

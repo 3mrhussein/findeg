@@ -1,15 +1,16 @@
 import {
   ID,
-  Price,
   Sku,
   Quantity,
   Email,
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
-} from '@findeg/backend/features/core/domain/types/common';
-import type { CurrencyCode } from '@findeg/backend/features/core/domain/value-objects';
+} from '@findeg/db/types';
+import type { CurrencyCode } from '@findeg/db/types';
 import type { ShippingAddress, VariantSnapshot } from '../value-objects';
+
+type Price = number;
 
 /**
  * Order Item with product snapshots at time of purchase.
@@ -18,7 +19,7 @@ export interface OrderItem {
   id?: ID;
   orderId?: ID | string;
   /** Reference to the current product */
-  productId: ID;
+  productId: ID | null;
   /** The specific variant purchased */
   variantId?: ID;
   /** Units purchased */

@@ -19,7 +19,7 @@ export const CONVENTIONAL_COMMIT_TYPES = [
 export const BRANCH_ONLY_TYPES = ['hotfix'];
 
 /** Long-lived repository branches exempt from the branch naming rule. */
-export const EXEMPT_BRANCH_NAMES = ['main', 'develop'];
+export const EXEMPT_BRANCH_NAMES = ['main', 'develop', 'ci-evidence'];
 
 /** Branch name prefixes created by automated tooling rather than developers. */
 export const EXEMPT_BRANCH_PREFIXES = ['release-please--', 'dependabot/', 'worktree-'];
@@ -66,11 +66,11 @@ export const NON_CODE_PATH_PREFIXES = ['docs/', '.github/', '.claude/', '.agents
 export const NON_CODE_PATH_SUFFIXES = ['.md'];
 
 /**
- * RegExp pattern matchers for branches eligible for caching and the fast tier.
+ * RegExp pattern matchers for branches eligible for the fast tier (caches restored).
  * Matches against head or target branch names (e.g. '^develop$', '^docs:.*', '^feat/').
  * Branches NOT matching any pattern (e.g. 'main') run the strict tier from scratch without cache.
  */
-export const APPLY_CACHE_BRANCH_PATTERNS = [
+export const FAST_TIER_BRANCH_PATTERNS = [
   '^develop$',
   '^docs:.*',
   '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/',
@@ -95,7 +95,7 @@ export const ciConfig = {
   integrationTestTriggerPaths: INTEGRATION_TEST_TRIGGER_PATHS,
   nonCodePathPrefixes: NON_CODE_PATH_PREFIXES,
   nonCodePathSuffixes: NON_CODE_PATH_SUFFIXES,
-  applyCache: APPLY_CACHE_BRANCH_PATTERNS,
+  fastTierBranches: FAST_TIER_BRANCH_PATTERNS,
   releaseBranch: RELEASE_GATE_BRANCH,
   cacheProducerBranch: CACHE_PRODUCER_BRANCH,
 };

@@ -1,0 +1,32 @@
+{
+  "name": "@findeg/orders",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas.ts",
+    "./events": "./src/events.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest --run",
+    "clean": "rm -rf node_modules dist .turbo"
+  },
+  "devDependencies": {
+    "@findeg/config": "workspace:*",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.5",
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.11"
+  },
+  "dependencies": {
+    "@findeg/db": "workspace:*",
+    "@findeg/domain-errors": "workspace:*",
+    "@findeg/money": "workspace:*",
+    "drizzle-orm": "^0.45.3",
+    "zod": "^4.6.5"
+  }
+}

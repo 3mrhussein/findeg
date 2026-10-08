@@ -1,17 +1,20 @@
 name: CI · Release
 
-# Guards PRs targeting main and pushes to main (the strict tier).
-# Every job runs from scratch: Turbo --force, no cache restore/save,
-# integration tests always, E2E required. Jobs live in ci-jobs.yml.
-# Required check: `Strict / CI OK`.
-# No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
+# Guards PRs targeting main, pushes to main and pushes to develop, the
+# pre-production branch (the strict tier). Every job runs from scratch:
+# Turbo --force, no cache restore, integration tests always, E2E required.
+# Only pushes to develop save caches (for the feature PRs), after the
+# from-scratch run. Jobs live in ci-jobs.yml.
+# Required check on PRs into main: `Strict / CI OK`.
+# The only secret passed is the optional SLACK_WEBHOOK_URL, for the run-result card
+# after pushes to main and develop (GITHUB_TOKEN reaches the jobs anyway).
 on:
   pull_request:
     branches: [main]
     # A base-branch edit must start CI for the newly selected tier.
     types: [opened, synchronize, reopened, edited]
   push:
-    branches: [main]
+    branches: [main, develop]
 
 permissions:
   contents: read
@@ -23,6 +26,13 @@ concurrency:
 jobs:
   strict:
     name: Strict
+    # A called workflow can only narrow its caller's token, so the opt-in
+    # `Publish evidence` job (ci-jobs.yml) needs write here. ci-jobs.yml sets
+    # `contents: read` for every other job; PRs from forks still get a read token.
+    permissions:
+      contents: write
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: strict
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
