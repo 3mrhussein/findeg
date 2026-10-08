@@ -26,6 +26,11 @@ concurrency:
 jobs:
   strict:
     name: Strict
+    # A called workflow can only narrow its caller's token, so the opt-in
+    # `Publish evidence` job (ci-jobs.yml) needs write here. ci-jobs.yml sets
+    # `contents: read` for every other job; PRs from forks still get a read token.
+    permissions:
+      contents: write
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: strict
