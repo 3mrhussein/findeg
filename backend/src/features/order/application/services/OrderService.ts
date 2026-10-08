@@ -66,6 +66,11 @@ export class OrderService implements IOrderService {
     return this.mapToDomain(result.order, result.items);
   }
 
+  async getByIdForUser(userId: ID, id: ID | string): Promise<Order | null> {
+    const order = await this.getById(id);
+    return order && String(order.userId) === String(userId) ? order : null;
+  }
+
   async getByUserId(userId: ID): Promise<Order[]> {
     const results = await orderQueries.getByUserId(userId);
     return results.map((row) => this.mapToDomain(row.order, row.items));

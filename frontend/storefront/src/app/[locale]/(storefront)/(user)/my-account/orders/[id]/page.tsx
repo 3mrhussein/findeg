@@ -23,8 +23,8 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   const orderId = Number(idParam);
   if (!Number.isFinite(orderId)) notFound();
 
-  await requireAuth(locale);
-  const order = await getMyOrderDetail(orderId);
+  const session = await requireAuth(locale);
+  const order = await getMyOrderDetail(session.userId, orderId);
   if (!order) notFound();
 
   return (
