@@ -1,5 +1,5 @@
 import { PERMISSION_CODES, systemAdmin } from '@findeg/db';
-import { NotAuthorizedError } from '../../core/domain/errors';
+import { NotAuthorizedError } from '@findeg/domain-errors';
 import type { OrderStaffActor } from './OrderStaffActor';
 
 /**

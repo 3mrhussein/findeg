@@ -194,11 +194,12 @@ test('the fast tier runs Turbo on affected packages over full history; strict fo
 const FRONTEND_ONLY = ['frontend/storefront/src/app/page.tsx', 'frontend/ui/src/button.tsx'];
 const DOCS_ONLY = ['docs/adr/0014-develop-branch-flow.md', 'README.md'];
 
-test('on the fast tier, integration tests run when the backend, db, env package, root tooling or CI policy changed', () => {
+test('on the fast tier, integration tests run when the backend, db, a package backend imports, root tooling or CI policy changed', () => {
   for (const changedPaths of [
     BACKEND_ONLY,
     ['db/schema/orders.ts'],
     ['packages/env/src/core.ts'],
+    ['packages/domain-errors/src/DomainError.ts'],
     ['pnpm-lock.yaml'],
     ['package.json'],
     ['turbo.json'],
