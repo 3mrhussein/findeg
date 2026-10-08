@@ -23,15 +23,8 @@ export function backoffSeconds(attempts: number): number {
   return Math.min(BACKOFF_BASE_SECONDS * 2 ** exponent, BACKOFF_CAP_SECONDS);
 }
 
-/** Inserts the row on the caller's transaction; enqueueing an existing id is a no-op. */
-export async function enqueue(
-  tx: DbTransaction,
-  id: string,
-  kind: string,
-  payload: Record<string, unknown>,
-): Promise<void> {
-  await tx.insert(outbox).values({ id, kind, payload }).onConflictDoNothing();
-}
+/** The producer lives in the connection-free `@findeg/db/queries/outbox` entry. */
+export { enqueue } from '../outbox';
 
 export interface ClaimedOutboxRow {
   row: OutboxRow;

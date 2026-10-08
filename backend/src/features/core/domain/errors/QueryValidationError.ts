@@ -1,5 +1,5 @@
 import { ZodError, type ZodIssue } from 'zod';
-import { DomainError } from './DomainError';
+import { DomainError } from '@findeg/domain-errors';
 
 /**
  * Structured field error extracted from a Zod validation issue.

@@ -1,4 +1,4 @@
-import { DomainError } from './DomainError';
+import { DomainError } from '@findeg/domain-errors';
 
 /**
  * Thrown when a single input field fails validation.

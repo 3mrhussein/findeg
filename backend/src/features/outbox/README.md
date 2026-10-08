@@ -4,6 +4,9 @@ One general transactional outbox (`system.outbox`, ADR-0008). A feature writes a
 `enqueue(tx, id, kind, payload)` on its own transaction; `drainOutbox({ limit })` delivers it
 afterwards, at least once.
 
+- **Producers outside Backend** (e.g. `@findeg/orders`) call the same `enqueue` from
+  `@findeg/db/queries/outbox`, a connection-free entry that writes only on the caller's
+  transaction. Claiming, completion and retries stay in this feature and `outboxQueries`.
 - **Ids** come from the business fact (`order-accepted:<ref>`), so enqueueing twice is a no-op.
 - **Payloads** hold ids only (`{ orderId }`). The email is rendered when it is sent.
 - **Claiming** takes one due row `FOR UPDATE SKIP LOCKED` with a 60 second lease; completion is

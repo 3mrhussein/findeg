@@ -84,14 +84,16 @@ const CI_PATHS = [
   '.github/actions/',
 ];
 
-// Paths the Postgres-backed integration suite depends on, plus the CI
-// definition itself (this policy and the CI workflow files). The root files
+// Paths the Postgres-backed integration suite depends on (Backend and the
+// workspace packages it imports), plus the CI definition itself (this policy
+// and the CI workflow files). The root files
 // define how it runs: its script (package.json), Turbo's config, the Node
 // version and the local Postgres setup.
 const INTEGRATION_PATHS = [
   'backend/',
   'db/',
   'packages/env/',
+  'packages/domain-errors/',
   'pnpm-lock.yaml',
   'package.json',
   'turbo.json',
