@@ -3,13 +3,6 @@ interface SalesFigure {
   readonly chargedPiasters: bigint;
 }
 
-/** Exact piasters as EGP text, never through a JavaScript number. */
-export function piastersToEgp(piasters: bigint): string {
-  const sign = piasters < 0n ? '-' : '';
-  const absolute = piasters < 0n ? -piasters : piasters;
-  return `${sign}${absolute / 100n}.${(absolute % 100n).toString().padStart(2, '0')}`;
-}
-
 /** Totals shared by the Staff and Business Partner report projections. */
 export function sumSalesFigures(rows: readonly SalesFigure[]): SalesFigure {
   return rows.reduce(

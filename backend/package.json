@@ -50,6 +50,7 @@
   "dependencies": {
     "@findeg/db": "workspace:*",
     "@findeg/env": "workspace:*",
+    "@findeg/money": "workspace:*",
     "@react-email/components": "^1.0.12",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",

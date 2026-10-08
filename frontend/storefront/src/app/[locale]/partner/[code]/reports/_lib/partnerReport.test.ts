@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { PartnerReportView } from '@findeg/backend/features/partner-sales';
-import { piastersToEgp } from '@findeg/backend/features/partner-sales';
+import { piastersToEgp } from '@findeg/money';
 import { toPartnerReportProps } from './partnerReport';
 
 const view = (over: Partial<PartnerReportView> = {}): PartnerReportView => ({

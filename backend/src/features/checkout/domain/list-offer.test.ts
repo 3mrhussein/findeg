@@ -1,18 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { isOfferActive } from './list-offer';
-import { priceLine, toPiasters } from './piasters';
-
-describe('toPiasters', () => {
-  it.each([
-    ['37.50', 3750n],
-    ['25', 2500n],
-    ['0.05', 5n],
-    ['1234567890.99', 123456789099n],
-    ['10.5', 1050n],
-  ])('converts %s exactly', (price, piasters) => {
-    expect(toPiasters(price)).toBe(piasters);
-  });
-});
+import { priceLine } from './piasters';
 
 describe('priceLine rounding', () => {
   // gross (piasters) x (10000 - bps) / 10000, rounded half-up once per line

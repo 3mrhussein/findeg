@@ -38,6 +38,9 @@ importers:
       '@findeg/env':
         specifier: workspace:*
         version: link:../packages/env
+      '@findeg/money':
+        specifier: workspace:*
+        version: link:../packages/money
       '@react-email/components':
         specifier: ^1.0.12
         version: 1.0.12(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -175,6 +178,9 @@ importers:
       '@findeg/backend':
         specifier: workspace:*
         version: link:../../backend
+      '@findeg/money':
+        specifier: workspace:*
+        version: link:../../packages/money
       '@findeg/ui':
         specifier: workspace:*
         version: link:../ui
@@ -317,6 +323,9 @@ importers:
       '@findeg/backend':
         specifier: workspace:*
         version: link:../../backend
+      '@findeg/money':
+        specifier: workspace:*
+        version: link:../../packages/money
       '@findeg/ui':
         specifier: workspace:*
         version: link:../ui
@@ -625,6 +634,21 @@ importers:
         version: 25.9.9
       eslint:
         specifier: ^9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/money:
+    devDependencies:
+      '@findeg/config':
+        specifier: workspace:*
+        version: link:../config
+      eslint:
+        specifier: ^9.39.4
         version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
       typescript:
         specifier: ^5.7.3

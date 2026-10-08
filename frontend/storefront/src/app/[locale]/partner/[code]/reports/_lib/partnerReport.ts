@@ -1,8 +1,5 @@
-import {
-  piastersToEgp,
-  sumSalesFigures,
-  type PartnerReportView,
-} from '@findeg/backend/features/partner-sales';
+import { piastersToEgp } from '@findeg/money';
+import { sumSalesFigures, type PartnerReportView } from '@findeg/backend/features/partner-sales';
 
 export interface SalesFigureProps {
   readonly quantity: number;
