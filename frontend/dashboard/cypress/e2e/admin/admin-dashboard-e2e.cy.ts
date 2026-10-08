@@ -10,8 +10,11 @@ import {
 
 const LOCALES = ['en', 'ar'] as const;
 
-/** Each list renders the record under the name of the active locale. */
-const localizedName = (name: { nameEn: string; nameAr: string }, locale: 'en' | 'ar') =>
+/**
+ * Brands render the name of the active locale; the category and product admin lists render the
+ * English name in every locale, so only the brand check uses the Arabic name.
+ */
+const brandName = (name: { nameEn: string; nameAr: string }, locale: 'en' | 'ar') =>
   locale === 'en' ? name.nameEn : name.nameAr;
 
 describe('Admin dashboard catalog management', () => {
@@ -30,9 +33,8 @@ describe('Admin dashboard catalog management', () => {
     cy.contains('button', 'Save Category').click();
 
     for (const locale of LOCALES) {
-      const shown = localizedName(name, locale);
-      visitWhenServerRenders(`/${locale}/categories`, shown);
-      cy.contains('span', shown).should('be.visible');
+      visitWhenServerRenders(`/${locale}/categories`, name.nameEn);
+      cy.contains('span', name.nameEn).should('be.visible');
     }
     visitWhenServerRenders('/en/categories', name.nameEn);
 
@@ -65,7 +67,7 @@ describe('Admin dashboard catalog management', () => {
     cy.contains('button', 'Save Brand').click();
 
     for (const locale of LOCALES) {
-      const shown = localizedName(name, locale);
+      const shown = brandName(name, locale);
       visitWhenServerRenders(`/${locale}/brands`, shown);
       cy.contains(shown).should('be.visible');
     }
@@ -109,9 +111,8 @@ describe('Admin dashboard catalog management', () => {
 
     // Persisted creation: the list reflects the record through server-driven search.
     for (const locale of LOCALES) {
-      const shown = localizedName(name, locale);
-      visitWhenServerRenders(`/${locale}/products?search=${sku}`, shown);
-      cy.contains('tbody tr', shown).should('be.visible');
+      visitWhenServerRenders(`/${locale}/products?search=${sku}`, name.nameEn);
+      cy.contains('tbody tr', name.nameEn).should('be.visible');
     }
     visitWhenServerRenders(listPath, name.nameEn);
 

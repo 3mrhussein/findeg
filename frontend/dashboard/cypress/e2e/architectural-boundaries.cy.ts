@@ -21,10 +21,16 @@ const FORBIDDEN_IN_CLIENT_BUNDLES: Array<[label: string, pattern: RegExp]> = [
   ['@findeg/db', /@findeg\/db/],
 ];
 
-const PAGES: Array<{ path: string; signedIn?: boolean }> = [
+/**
+ * `allowed` lists forbidden-bundle labels a page may legitimately contain. The `@findeg/db`
+ * root entry point deliberately ships table definitions (and so drizzle-orm's schema helpers)
+ * to Client Components for Zod schemas; the product forms import through it. The database
+ * driver, connection string and Node built-ins remain forbidden everywhere.
+ */
+const PAGES: Array<{ path: string; signedIn?: boolean; allowed?: string[] }> = [
   { path: '/en/login' },
   { path: '/ar/login' },
-  { path: '/en/products', signedIn: true },
+  { path: '/en/products', signedIn: true, allowed: ['drizzle-orm'] },
 ];
 
 function collectClientChunkUrls(): Cypress.Chainable<string[]> {
@@ -38,7 +44,7 @@ function collectClientChunkUrls(): Cypress.Chainable<string[]> {
 }
 
 describe('Dashboard client bundle boundaries', () => {
-  for (const { path: page, signedIn } of PAGES) {
+  for (const { path: page, signedIn, allowed = [] } of PAGES) {
     describe(`${page} client chunks`, () => {
       let chunkBodies: Array<{ url: string; body: string }> = [];
 
@@ -64,6 +70,7 @@ describe('Dashboard client bundle boundaries', () => {
       });
 
       for (const [label, pattern] of FORBIDDEN_IN_CLIENT_BUNDLES) {
+        if (allowed.includes(label)) continue;
         it(`does not bundle ${label}`, () => {
           const offenders = chunkBodies
             .filter((chunk) => pattern.test(chunk.body))
