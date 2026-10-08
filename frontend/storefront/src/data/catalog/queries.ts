@@ -26,9 +26,9 @@ import type {
   Category,
   ProductDetailPageData,
   CollectionsPageData,
-  ShopPlpSort,
 } from './types';
 import { mapBrandOptions, mapCategoryOptions, mapProduct } from '../helpers/mappers';
+import { parseShopPlpQuery } from './plp-query';
 
 /**
  * Shop PLP Data
@@ -57,17 +57,25 @@ export async function getShopPlpViewModel(
       currentCategoryName = category.name;
     }
 
+    const listing = parseShopPlpQuery(query);
+    const offset = (listing.page - 1) * listing.perPage;
     const result = await productService.getFilteredProducts(
       {
-        limit: 20,
-        offset: 0,
+        limit: listing.perPage,
+        offset,
         isActive: true,
         categoryId: category?.id,
+        brandIds: listing.brandIds,
+        minPrice: listing.minPrice,
+        maxPrice: listing.maxPrice,
+        sort: listing.backendSort,
       },
       resolvedLocale,
     );
 
     const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
+    const minPriceBound = 0;
+    const maxPriceBound = 1000;
 
     return {
       products: mappedProducts,
@@ -82,8 +90,8 @@ export async function getShopPlpViewModel(
         await brandService.getAll(true, resolvedLocale),
         {}, // Empty counts for now
       ),
-      minPriceBound: 0,
-      maxPriceBound: 1000,
+      minPriceBound,
+      maxPriceBound,
       facetCounts: {
         categories: {},
         brands: {},
@@ -94,24 +102,22 @@ export async function getShopPlpViewModel(
         },
       },
       total: result.total,
-      totalPages: Math.ceil(result.total / 20),
-      page: 1,
-      perPage: 20,
-      from: 1,
-      to: Math.min(result.total, 20),
+      totalPages: Math.ceil(result.total / listing.perPage),
+      page: listing.page,
+      perPage: listing.perPage,
+      from: mappedProducts.length > 0 ? offset + 1 : 0,
+      to: mappedProducts.length > 0 ? offset + mappedProducts.length : 0,
       locale: resolvedLocale,
       query: String(query.q || '') || '',
       categorySlugPath: slug,
       filters: {
-        minPrice: Number(query.minPrice) || 0,
-        maxPrice: Number(query.maxPrice) || 1000,
-        brandIds: query.brandIds
-          ? String(query.brandIds).split(',').map(Number).filter(Boolean)
-          : [],
+        minPrice: listing.minPrice ?? minPriceBound,
+        maxPrice: listing.maxPrice ?? maxPriceBound,
+        brandIds: listing.brandIds,
         inStockOnly: query.inStock === 'true',
         discounts: [],
       },
-      sort: (query.sort as ShopPlpSort) || 'newest',
+      sort: listing.sort,
     };
   } catch (error) {
     console.error(`Failed to load shop PLP for locale ${locale}, slug ${slug.join('/')}:`, error);

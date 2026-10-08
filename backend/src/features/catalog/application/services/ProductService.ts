@@ -299,15 +299,21 @@ export class ProductService implements IProductService {
       isActive: filters.isActive,
       categoryId: filters.categoryId,
       brandId: filters.brandId,
+      brandIds: filters.brandIds,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      sort: filters.sort,
       offset: filters.offset,
       limit: filters.limit,
     });
 
     if (products.length === 0) return { products: [], total: 0 };
 
-    const all = await Promise.all(products.map((r) => this.getById(r.id, lang)));
     return {
-      products: all.filter((p): p is Product => p !== null),
+      products: await this.getByIds(
+        products.map((r) => r.id),
+        lang,
+      ),
       total,
     };
   }
