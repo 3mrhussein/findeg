@@ -106,13 +106,14 @@ jobs:
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
           FORCE_BUILD: ${{ inputs.force_build }}
           FORCE_INSTALL: ${{ inputs.force_install }}
-        run: >-
-          node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
-          $([ "$FORCE_BUILD" = true ] && echo --force-build)
-          $([ "$FORCE_INSTALL" = true ] && echo --force-install)
-          ${HEAD:+--head "$HEAD"}
-          ${EXPECTED_TIER:+--expect-tier "$EXPECTED_TIER"}
-          ${CHANGED_FILES:+--changed-files "$CHANGED_FILES"}
+        run: |
+          args=(--event "$EVENT" --target "$TARGET")
+          if [ "$FORCE_BUILD" = true ]; then args+=(--force-build); fi
+          if [ "$FORCE_INSTALL" = true ]; then args+=(--force-install); fi
+          if [ -n "$HEAD" ]; then args+=(--head "$HEAD"); fi
+          if [ -n "$EXPECTED_TIER" ]; then args+=(--expect-tier "$EXPECTED_TIER"); fi
+          if [ -n "$CHANGED_FILES" ]; then args+=(--changed-files "$CHANGED_FILES"); fi
+          node .github/scripts/ci-cli.mjs plan "${args[@]}"
 
   # The code checks share one shape: a full-history checkout on the fast tier
   # (Turbo's --affected diffs against the PR base or the previous push), the
@@ -335,14 +336,16 @@ jobs:
         env:
           OUTCOME: ${{ steps.e2e.outcome || 'skipped' }}
           # Only pushes and manual runs may publish screenshots; PRs never get a write token.
-          CAN_WRITE: ${{ github.event_name != 'pull_request' && '--can-write' || '' }}
-        run: >-
-          node .github/scripts/ci-e2e-cli.mjs report --outcome "$OUTCOME"
-          --output-file "$RUNNER_TEMP/e2e-output.txt"
-          --storefront-log "$RUNNER_TEMP/storefront.log"
-          --dashboard-log "$RUNNER_TEMP/dashboard.log"
-          --evidence-dir "$RUNNER_TEMP/artifacts"
-          --artifact-name e2e-failure-evidence $CAN_WRITE
+          CAN_WRITE: ${{ github.event_name != 'pull_request' && 'true' || '' }}
+        run: |
+          args=(--outcome "$OUTCOME"
+            --output-file "$RUNNER_TEMP/e2e-output.txt"
+            --storefront-log "$RUNNER_TEMP/storefront.log"
+            --dashboard-log "$RUNNER_TEMP/dashboard.log"
+            --evidence-dir "$RUNNER_TEMP/artifacts"
+            --artifact-name e2e-failure-evidence)
+          if [ -n "$CAN_WRITE" ]; then args+=(--can-write); fi
+          node .github/scripts/ci-e2e-cli.mjs report "${args[@]}"
       - name: Require E2E test suites to pass
         if: always()
         run: test "${{ steps.e2e.outcome }}" = success
@@ -386,13 +389,16 @@ jobs:
           mkdir -p "site/runs/$RUN_ID"
           # The artifact holds runner.temp/artifacts, so copy from evidence/artifacts to
           # publish paths relative to it, matching the URLs the E2E report builds.
-          (cd evidence/artifacts && find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) -print0 \
-            | xargs -0 -I{} cp --parents {} "../../site/runs/$RUN_ID/")
+          if [ -d evidence/artifacts ]; then
+            (cd evidence/artifacts && find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) -print0 \
+              | xargs -0 -I{} cp --parents {} "../../site/runs/$RUN_ID/")
+          fi
           touch site/.nojekyll
           git -C site add -A
           git -C site commit --quiet -m "evidence: run $RUN_ID" || true
           if [ -d site/runs ]; then
-            for dir in $(ls site/runs); do
+            for path in site/runs/*/; do
+              dir=$(basename "$path")
               echo "$dir $(git -C site log -1 --format=%ct -- "runs/$dir")"
             done | node .github/scripts/ci-e2e-cli.mjs prune | while read -r old; do
               git -C site rm -rq "runs/$old"
