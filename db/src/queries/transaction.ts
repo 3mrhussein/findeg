@@ -3,7 +3,7 @@
  * caller-owned transaction (e.g. Order Acceptance, ADR-0005).
  */
 
-import { db } from '../connection';
+import type { db } from '../connection';
 import type { DbTransaction } from './db-transaction';
 
 export type { DbTransaction };
@@ -23,5 +23,5 @@ export function withTransaction<T>(
   tx: DbTransaction | undefined,
   work: (executor: DbTransaction) => Promise<T>,
 ): Promise<T> {
-  return tx ? work(tx) : db.transaction(work);
+  return tx ? work(tx) : import('../connection').then(({ db }) => db.transaction(work));
 }

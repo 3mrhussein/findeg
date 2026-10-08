@@ -4,12 +4,20 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 
 import { appendFileSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import {
+  buildPlanTokens,
+  coreTokensFromEnv,
+  loadReportConfig,
+  renderTemplate,
+  resolveTheme,
+} from './ci-report.mjs';
 import { decideBranchName, decidePlan, decideReleaseSource, decideVerdict } from './ci-policy.mjs';
 
 function reportOutcome(title, { ok, reason }) {
@@ -41,17 +49,53 @@ function parseChangedPaths(filePath) {
     .filter(Boolean);
 }
 
-function executePlan({ event, target, head, expectedTier, changedFiles }) {
+// The plan summary is a convenience: a report failure warns but never fails the plan.
+function writePlanSummary(decision, options) {
+  if (!process.env.GITHUB_STEP_SUMMARY) return;
+  try {
+    const config = loadReportConfig(join(dirname(fileURLToPath(import.meta.url)), '../config'));
+    const tokens = { ...coreTokensFromEnv(process.env), ...buildPlanTokens(decision, options) };
+    const status = decision.ok ? 'info' : 'failure';
+    const summary = renderTemplate({
+      template: config.templates['plan.md'],
+      theme: resolveTheme(config.themes, status),
+      tokens: { ...tokens, STATUS: status },
+    });
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
+  } catch (error) {
+    console.log(`::warning title=Plan summary::${error.message}`);
+  }
+}
+
+function executePlan({
+  event,
+  target,
+  head,
+  expectedTier,
+  changedFiles,
+  forceBuild,
+  forceInstall,
+}) {
   const changedPaths = parseChangedPaths(changedFiles);
-  const decision = decidePlan({ event, target, head, expectedTier, changedPaths });
+  const decision = decidePlan({
+    event,
+    target,
+    head,
+    expectedTier,
+    changedPaths,
+    forceBuild,
+    forceInstall,
+  });
   reportOutcome('Tier', decision);
+  writePlanSummary(decision, { forceBuild, forceInstall });
   if (!decision.ok) return 1;
 
   const outputs = {
     tier: decision.tier,
     turbo_flags: decision.turboFlags,
     fetch_depth: decision.fetchDepth,
-    use_cache: decision.useCache,
+    restore_deps: decision.restoreDeps,
+    restore_build: decision.restoreBuild,
     save_cache: decision.saveCache,
     run_checks: decision.runChecks,
     run_integration: decision.runIntegration,
@@ -83,7 +127,7 @@ function executeVerdict({ needs, tier }) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]`;
 
 function main(argv) {
@@ -97,6 +141,8 @@ function main(argv) {
       target: { type: 'string' },
       'changed-files': { type: 'string' },
       'expect-tier': { type: 'string' },
+      'force-build': { type: 'boolean' },
+      'force-install': { type: 'boolean' },
       needs: { type: 'string' },
       tier: { type: 'string' },
     },
@@ -115,6 +161,8 @@ function main(argv) {
       head: values.head,
       expectedTier: values['expect-tier'],
       changedFiles: values['changed-files'],
+      forceBuild: values['force-build'],
+      forceInstall: values['force-install'],
     });
   }
 

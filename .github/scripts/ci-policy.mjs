@@ -2,7 +2,7 @@
 // No file I/O or environment manipulation occurs here. Callers pass plain inputs and act on outputs.
 
 import {
-  APPLY_CACHE_BRANCH_PATTERNS,
+  FAST_TIER_BRANCH_PATTERNS,
   ALLOWED_MAIN_TARGET_SOURCES,
   BRANCH_ONLY_TYPES,
   CACHE_PRODUCER_BRANCH,
@@ -115,30 +115,71 @@ function guardTier({ event, target, tier, expectedTier }) {
 }
 
 /**
- * Decides how CI runs for a push or PR event.
- * If head or target matches applyCache patterns, runs the fast tier with caching restored.
- * Otherwise runs the strict tier (cold build, Turbo --force, shallow clone, E2E required).
+ * A human sentence saying why a run got its tier, for the plan summary.
  */
-export function decidePlan({ event, target, head, expectedTier, changedPaths }) {
-  const eligibleForCache =
-    target !== RELEASE_GATE_BRANCH &&
-    (matchesAnyPattern(target, APPLY_CACHE_BRANCH_PATTERNS) ||
-      matchesAnyPattern(head, APPLY_CACHE_BRANCH_PATTERNS));
+function explainTier({ event, target, manual, producerPush, tier }) {
+  const subject =
+    event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
+  if (manual) return 'manual run: all packages with caches restored unless forced';
+  if (producerPush) return `${subject}: pre-production run from scratch`;
+  if (target === RELEASE_GATE_BRANCH) {
+    return `${subject}: release path, everything runs from scratch`;
+  }
+  if (tier === 'fast') return `${subject}: affected packages with caches restored`;
+  return `${subject}: no fast-tier branch pattern matches, so everything runs from scratch`;
+}
 
-  const tier = eligibleForCache ? 'fast' : 'strict';
+/**
+ * Decides how CI runs for a push, PR or manual event.
+ * - Strict tier (Turbo --force, shallow clone, integration and E2E required, nothing restored):
+ *   everything into the release gate branch, and pushes to the producer branch. The producer's
+ *   run is verified from scratch but still saves caches, so fast-tier runs restore warm ones.
+ * - Fast tier (affected packages only, caches restored): PRs into branches matching the
+ *   fast-tier patterns.
+ * - Manual run (fast tier, every code job on all packages, no E2E): restores caches unless
+ *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) say otherwise.
+ *   Only the force options of a manual run have any effect.
+ */
+export function decidePlan({
+  event,
+  target,
+  head,
+  expectedTier,
+  changedPaths,
+  forceBuild = false,
+  forceInstall = false,
+}) {
+  const manual = event === 'workflow_dispatch';
+  const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
+  const eligibleForFastTier =
+    manual ||
+    (target !== RELEASE_GATE_BRANCH &&
+      !producerPush &&
+      (matchesAnyPattern(target, FAST_TIER_BRANCH_PATTERNS) ||
+        matchesAnyPattern(head, FAST_TIER_BRANCH_PATTERNS)));
+
+  const tier = eligibleForFastTier ? 'fast' : 'strict';
   const knownChanges = Array.isArray(changedPaths);
-  const strictOrUnknown = tier === 'strict' || !knownChanges;
+  const runEverything = tier === 'strict' || manual || !knownChanges;
+  const forcedBuild = manual && forceBuild;
+  const forcedInstall = manual && forceInstall;
+
+  let turboFlags = '--affected';
+  if (tier === 'strict' || forcedBuild) turboFlags = '--force';
+  else if (manual) turboFlags = '';
 
   return {
     ...guardTier({ event, target, tier, expectedTier }),
     tier,
-    turboFlags: tier === 'strict' ? '--force' : '--affected',
+    tierReason: explainTier({ event, target, manual, producerPush, tier }),
+    turboFlags,
     fetchDepth: tier === 'strict' ? 1 : 0,
-    useCache: eligibleForCache,
-    saveCache: event === 'push' && target === CACHE_PRODUCER_BRANCH,
+    restoreDeps: eligibleForFastTier && !forcedInstall,
+    restoreBuild: eligibleForFastTier && !forcedBuild,
+    saveCache: target === CACHE_PRODUCER_BRANCH && (event === 'push' || manual),
     runE2e: tier === 'strict',
-    runChecks: strictOrUnknown || !changedPaths.every(isNonCodePath),
-    runIntegration: strictOrUnknown || touchesAnyPath(changedPaths, ALL_INTEGRATION_PATHS),
+    runChecks: runEverything || !changedPaths.every(isNonCodePath),
+    runIntegration: runEverything || touchesAnyPath(changedPaths, ALL_INTEGRATION_PATHS),
   };
 }
 

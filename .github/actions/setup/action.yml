@@ -1,15 +1,19 @@
 name: Setup
 description: >-
   Install pnpm (version from packageManager) and Node (from .nvmrc), restore
-  caches when asked, and run a frozen install. Pair with ./.github/actions/save-cache
+  caches when asked (the pnpm store and the build caches separately), and run
+  a frozen install. Pair with ./.github/actions/save-cache
   at the end of the job: composite actions have no post step, so saving is
   explicit and happens only in the plan's save_cache runs.
 
 inputs:
-  cache:
+  restore-deps:
+    description: "'true' restores the pnpm store. 'false' installs without it."
+    required: true
+  restore-build:
     description: >-
-      'true' restores the pnpm store, this job's Turbo cache and (with
-      next-cache) the Next.js build caches. 'false' restores nothing.
+      'true' restores this job's Turbo cache and (with next-cache) the Next.js
+      build caches. 'false' restores neither.
     required: true
   turbo-cache-key:
     description: Namespace for this job's Turbo cache, e.g. the job id. Empty means the job has no Turbo cache.
@@ -64,7 +68,7 @@ runs:
         } >> "$GITHUB_ENV"
 
     - name: Restore pnpm store
-      if: inputs.cache == 'true'
+      if: inputs.restore-deps == 'true'
       uses: actions/cache/restore@v6
       with:
         path: ${{ env.CI_PNPM_STORE }}
@@ -72,7 +76,7 @@ runs:
         restore-keys: ${{ env.CI_PNPM_PREFIX }}
 
     - name: Restore Turbo cache
-      if: inputs.cache == 'true' && env.CI_TURBO_KEY != ''
+      if: inputs.restore-build == 'true' && env.CI_TURBO_KEY != ''
       uses: actions/cache/restore@v6
       with:
         path: ${{ env.CI_TURBO_PATH }}
@@ -80,7 +84,7 @@ runs:
         restore-keys: ${{ env.CI_TURBO_PREFIX }}
 
     - name: Restore Next.js build cache
-      if: inputs.cache == 'true' && env.CI_NEXT_KEY != ''
+      if: inputs.restore-build == 'true' && env.CI_NEXT_KEY != ''
       uses: actions/cache/restore@v6
       with:
         path: ${{ env.CI_NEXT_PATHS }}

@@ -1,52 +1,37 @@
-# Order Feature
+# Order compatibility entry
 
-The **Order Feature** handles the critical path of transforming shopping carts into transactional, immutable historical records. It orchestrates checkout validation, fulfillment tracking, and pricing snapshots.
+The canonical server implementation is `@findeg/orders`. Its factory owns Order reads, exact bigint snapshots and atomic Staff-gated lifecycle changes. Checkout Acceptance and Quote pricing remain in Backend Checkout.
 
-## 🎯 Core Responsibilities
+This directory temporarily adapts existing consumers to the package with numeric legacy DTOs and `createOrderServices`. Dashboard moves to the package in #367; #368 removes this directory’s adapters and remaining legacy types. New callers must use `@findeg/orders`, `@findeg/orders/schemas` or `@findeg/orders/events`.
 
-- **Immutable Snapshots**: Freezing prices and metadata at checkout so downstream catalog edits do not corrupt historical financial ledgers.
-- **State Machine Engine**: Enforcing linear transition flows (`Pending` -> `Paid` -> `Processing` -> `Shipped`).
-- **Inventory Locking**: Triggering inventory hooks upon order commitment.
-- **Transaction Ledger**: Preparing aggregates for payment processing layers.
+```mermaid
+flowchart LR
+  Customer --> Read[Read Orders / shipping history]
+  Staff --> Read
+  Staff --> Change[Change status / payment]
+  Read --> Orders[Orders package]
+  Change --> Orders
+```
 
----
-
-## 🏗️ Domain Entities Map
-
-| Entity         | System Role                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------- |
-| `Order.ts`     | The aggregate root. Holds current state, total compute cache, and relational mapping to the user. |
-| `OrderItem.ts` | A strict JSONB-backed array containing the exact payload consumed by the user during purchase.    |
-
----
-
-## 🔄 Complete Checkout Orchestration Pipeline
+```mermaid
+classDiagram
+  IOrderService <|.. OrderService
+  OrderService --> Orders : compatibility adapter
+  Orders --> Order : canonical bigint snapshots
+```
 
 ```mermaid
 sequenceDiagram
-    participant SF as Storefront UI
-    participant OS as OrderService (App Layer)
-    participant Cat as CatalogService
-    participant DB as Postgres Transaction
-
-    SF->>OS: submitOrder(cartId, address)
-    OS->>Cat: fetchCurrentMatrix(variantIds)
-    Cat-->>OS: ServiceResult[Latest Prices]
-    OS->>OS: Validate cart requested price vs true price
-    OS->>DB: _repository.create(OrderData)
-    DB-->>OS: Ok<OrderRecord>
-    OS->>Cat: dispatch(SubtractInventory)
-    OS-->>SF: Ok<OrderSuccessDTO>
+  participant Caller
+  participant Adapter as Backend compatibility adapter
+  participant Orders as Orders package
+  participant DB as PostgreSQL
+  Caller->>Adapter: read / command
+  Adapter->>Orders: public factory method
+  Orders->>DB: read or atomic locked command
+  DB-->>Orders: rows / commit
+  Orders-->>Adapter: canonical result
+  Adapter-->>Caller: legacy DTO
 ```
 
----
-
-## 🔐 Boundaries & Validation Rules
-
-- **Snapshot Anti-Corruption**: NEVER reference `CatalogService.getProduct()` when rendering a historical order receipt in the Dashboard. The DB row for `OrderItem` contains the physical JSON values stored precisely when the transaction fired.
-- **Database Transactions**: Order creation utilizes Drizzle nested transactions. If inventory allocation fails, the entire order ledger is rolled back to prevent hanging fulfillment errors.
-- **Cross-Domain Limits**: Depends on `catalog` for inventory validation, and `identity` for user attribution.
-
----
-
-&copy; 2026 FindEg.com
+The remaining domain entities and interfaces describe the legacy consumer contract. The application adapter calls the public package and projects bigint money to numeric DTOs; it owns no database queries or lifecycle rules. The package handles persistence, mapping, authorization and transactions. Client schemas use the pure package entry; Checkout and notification delivery retain their own boundaries.

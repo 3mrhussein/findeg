@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import {
   categories,
   inventoryBalances,
@@ -16,17 +16,28 @@ import { createAdministrationServices } from '../../administration';
 import { createOutbox, retryOutbox, type EmailProvider, type OutgoingEmail } from '../../outbox';
 import {
   InvalidOrderStatusTransitionError,
-  transitionOrderStatus,
-} from '../application/services/transition-order-status';
+  createOrders,
+  type OrderStaffActor,
+} from '@findeg/orders';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 describe('transitionOrderStatus on real Postgres', () => {
   let testDb: TestDatabase;
   let sequence = 0;
+  let writer: OrderStaffActor;
+  const transitionOrderStatus = (
+    id: number,
+    update: Parameters<ReturnType<typeof createOrders>['changeStatus']>[2],
+  ) => createOrders({ db: testDb.db }).changeStatus(writer, id, update);
   const checkout = createCheckoutService({ shippingFee: 50 });
 
-  beforeAll(() => {
+  beforeAll(async () => {
     testDb = connectToTestDatabase();
+    const [staff] = await testDb.db
+      .insert(users)
+      .values({ email: 'transition-writer@example.com', portalRole: 'staff' })
+      .returning();
+    writer = { kind: 'staff', userId: staff.id, activeRoleIds: ['system_admin'] };
   });
   afterAll(async () => testDb.close());
 
@@ -304,7 +315,7 @@ describe('transitionOrderStatus on real Postgres', () => {
     expect(auditEntries).toEqual([
       expect.objectContaining({
         action: 'update_status',
-        oldValues: { status: 'pending' },
+        oldValues: expect.objectContaining({ status: 'pending', adminNotes: null }),
         newValues: expect.objectContaining({
           status: 'confirmed',
           adminNotes: 'Confirmed in the Dashboard',
@@ -322,6 +333,51 @@ describe('transitionOrderStatus on real Postgres', () => {
     expect(result.total).toBe(1);
     expect(result.orders).toEqual([expect.objectContaining({ id: orderId, orderReference })]);
   });
+  it('audit failure rolls back consumed stock, metadata, and the notification', async () => {
+    const { orderId, variantId, orderReference } = await acceptOrder();
+    const api = createOrders({ db: testDb.db });
+    for (const status of ['confirmed', 'processing', 'shipped'] as const) {
+      await api.changeStatus(writer, orderId, { status });
+    }
+    const before = await api.detail(orderId);
+    const stockBefore = await stockEffect(orderId, variantId);
+    await expect(
+      api.changeStatus({ ...writer, userId: 2_000_000_000 }, orderId, {
+        status: 'delivered',
+        trackingNumber: 'rolled-back',
+      }),
+    ).rejects.toThrow();
+    expect(await api.detail(orderId)).toEqual(before);
+    expect(await stockEffect(orderId, variantId)).toEqual(stockBefore);
+    expect(
+      await testDb.db
+        .select()
+        .from(outbox)
+        .where(eq(outbox.id, `order-status:${orderReference}:delivered`)),
+    ).toEqual([]);
+  });
+
+  it('enqueue failure rolls back the stock settlement and status', async () => {
+    const { orderId, variantId } = await acceptOrder();
+    const api = createOrders({ db: testDb.db });
+    const before = await api.detail(orderId);
+    const stockBefore = await stockEffect(orderId, variantId);
+    await testDb.db
+      .execute(sql`create function system.reject_test_status_email() returns trigger language plpgsql as $$
+      begin if NEW.kind = 'order-status' then raise exception 'test enqueue failure'; end if; return NEW; end; $$`);
+    await testDb.db
+      .execute(sql`create trigger reject_test_status_email before insert on system.outbox
+      for each row execute function system.reject_test_status_email()`);
+    try {
+      await expect(api.changeStatus(writer, orderId, { status: 'cancelled' })).rejects.toThrow();
+      expect(await api.detail(orderId)).toEqual(before);
+      expect(await stockEffect(orderId, variantId)).toEqual(stockBefore);
+    } finally {
+      await testDb.db.execute(sql`drop trigger reject_test_status_email on system.outbox`);
+      await testDb.db.execute(sql`drop function system.reject_test_status_email()`);
+    }
+  });
+
   describe('status emails', () => {
     class FakeEmailProvider implements EmailProvider {
       sent: OutgoingEmail[] = [];

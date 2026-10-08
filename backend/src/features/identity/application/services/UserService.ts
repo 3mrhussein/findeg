@@ -18,7 +18,7 @@ import { userQueries } from '@findeg/db/queries';
 import { ResourceNotFoundError } from '../../../core/domain/errors';
 import { parse } from '../../../core/domain/value-objects';
 import { createProductService } from '../../../catalog';
-import { createOrderServices } from '../../../order';
+import { createOrderServices } from '@findeg/backend/features/order';
 import {
   AdminUser,
   CreateAdminInput,
@@ -28,7 +28,7 @@ import {
   DashboardData,
 } from '../interfaces/IUserService';
 import { User } from '../../domain/entities/User';
-import { Order } from '../../../order/domain/entities/Order';
+import { Order } from '@findeg/backend/features/order';
 
 export class UserService implements IUserService {
   constructor() {}

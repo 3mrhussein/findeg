@@ -82,7 +82,7 @@ export function createAdministrationServices(): AdministrationServices {
     tags: new AdminTagService(auditLogService),
     collections: new AdminCollectionService(auditLogService),
     inventory: new AdminInventoryService(auditLogService),
-    orders: new AdminOrderService(auditLogService),
+    orders: new AdminOrderService(),
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),

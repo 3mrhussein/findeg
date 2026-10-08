@@ -6,7 +6,7 @@
  */
 
 import type { User } from '../../domain/entities/User';
-import type { Order } from '../../../order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 import type { Product } from '../../../catalog/domain/entities/Product';
 
 export interface AdminUser {
