@@ -15,7 +15,8 @@
     "./queries/school-supply-lists": "./src/queries/school-supply-lists/index.ts",
     "./queries/school-directory": "./src/queries/school-directory/index.ts",
     "./types": "./src/types/index.ts",
-    "./types/*": "./src/types/*.ts"
+    "./types/*": "./src/types/*.ts",
+    "./queries/stock-reservations": "./src/queries/inventory/stock-reservations.ts"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",

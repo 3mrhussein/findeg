@@ -21,7 +21,7 @@ afterwards, at least once.
 
 - `order-accepted:<ref>`: confirmation email, enqueued by checkout.
 - `order-status:<ref>:<status>`: `shipped`, `delivered` and `cancelled` emails, enqueued by
-  `transitionOrderStatus` in its own transaction. The id carries the status, so a repeated
+  `createOrders().changeStatus` in the same transaction as stock settlement and audit. The id carries the status, so a repeated
   transition sends nothing new.
 - `guest-access:<requestId>`: guest access code email.
 - `partner-invitation:<invitationId>:<delivery>`: Partner Invitation email, enqueued by the caller of

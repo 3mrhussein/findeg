@@ -19,7 +19,9 @@ The shared ESLint policy checks static imports, re-exports, dynamic imports, `re
 
 ## Migration phase
 
-At the time this ADR is introduced, Orders is still implemented at `backend/src/features/order`. Its current public Backend entry and internal imports are a temporary bridge while the dependent extraction issues land. The lint rule allows the existing Orders implementation to reference Backend internals and allows current Backend sources to use relative imports into the legacy Order tree during this phase; consumer deep imports remain rejected. Once #366 extracts Orders, the package owner is checked strictly and both bridge allowances are removed. The checked-in compatibility baseline may contain unrelated pre-existing Backend feature violations only; it must not contain Orders violations at completion. No unrelated features are migrated as part of #364.
+#366 extracts the server implementation to `packages/orders`. Public Backend Order entries and numeric DTO adapters remain temporarily for existing consumers, with one canonical package implementation. #367 migrates Dashboard, and #368 removes the remaining adapters, `createOrderServices`, and legacy types. Cross-feature relative access to the old Order tree is now rejected; callers must use a public entry. Orders has no Backend dependency or boundary exceptions.
+
+The factory resolves its default DB lazily; an injected DB never loads the default connection. Stock settlement uses a narrow DB producer entry with lazy optional-transaction plumbing, and Outbox enqueue uses the connection-free producer entry. Status/payment commands lock the Order and commit stock effects, deduplicated notification enqueue, metadata and actor audit atomically. Same-status calls are complete no-ops. One mapper reads canonical decimal snapshots as bigint piasters, preserving nullable product IDs. Complete Cairo statistics follow in #367.
 
 ## Consequences
 
