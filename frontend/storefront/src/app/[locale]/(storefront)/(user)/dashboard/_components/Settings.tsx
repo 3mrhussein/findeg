@@ -15,7 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@findeg/ui';
 import { Icon } from '@findeg/ui';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
 import { usePermissions } from '@providers/PermissionsProvider';
 // @ts-ignore
 import { useAdminRoles } from '@hooks/useAdminRoles';

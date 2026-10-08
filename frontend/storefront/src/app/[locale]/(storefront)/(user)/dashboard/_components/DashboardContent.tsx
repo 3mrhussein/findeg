@@ -28,7 +28,7 @@ import { DashboardHeader } from './DashboardHeader';
 import type { Product } from '@findeg/backend/features/catalog';
 import type { Order } from '@findeg/backend/features/order';
 import { usePermissions } from '@providers/PermissionsProvider';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
 
 interface DashboardContentProps {
   products: Product[];

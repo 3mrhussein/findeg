@@ -8,6 +8,7 @@
     // ----------------------------
     "build": {
       "dependsOn": ["^build", "type-check"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/architecture/**"],
       "outputs": [".next/**", "!.next/cache/**"],
       "cache": true
     },

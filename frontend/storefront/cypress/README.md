@@ -56,13 +56,19 @@ matches the category itself, not its descendants; in-stock, rating and discount
 filters are not applied by the PLP query and are not covered. Typo-tolerant search
 fallback is not supported (see `db/src/queries/catalog/search.ts`).
 
-One spec is retained under `quarantined/` with a `.quarantined.ts` name,
-explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
+Architecture coverage from [#347](https://github.com/3mrhussein/findeg/issues/347)
+lives at the lint and production-build seams, in `scripts/architecture/`:
 
-- `architectural-boundaries.quarantined.ts`: [#347](https://github.com/3mrhussein/findeg/issues/347)
-  tracks replacing log-only/inline-HTML architecture claims with meaningful static
-  build assertions. The obsolete `/products` index is replaced by live product slug
-  navigation in the Customer journeys.
+- `pnpm test:scripts` exercises the storefront's real ESLint configuration: backend
+  infrastructure and database imports fail; Client Components must import schema
+  values from the client-safe entry point. Server factories and type-only imports
+  remain allowed.
+- `pnpm --filter @findeg/storefront build` asserts that every emitted client JavaScript
+  chunk has module evidence and contains no database, backend infrastructure,
+  Node-only modules or server dependency packages. Maps are removed after inspection.
+  The unmapped browser polyfill must match the installed Next.js artifact byte for byte.
+  The existing CI Build and strict E2E builds both run this command through Turbo.
 
-Quarantine leaves this tracked coverage gap open. Remove the retained file once its
-follow-up restores meaningful coverage at the appropriate seam.
+The legacy architecture spec has been deleted, so no specs remain quarantined. The
+obsolete `/products` index is replaced by live product slug navigation in the
+Customer journeys.

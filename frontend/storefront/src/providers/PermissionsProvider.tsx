@@ -14,7 +14,7 @@ import {
   systemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
-} from '@findeg/backend/features/core';
+} from '@findeg/backend/features/core/schemas';
 import type { SessionPayload } from '@findeg/backend/features/core';
 import type { PermissionCode } from '@findeg/backend/features/core';
 
