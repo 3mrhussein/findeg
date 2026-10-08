@@ -53,12 +53,11 @@ explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
 - `shop-storefront-e2e.quarantined.ts`: [#346](https://github.com/3mrhussein/findeg/issues/346)
   tracks restoring PLP filters, sorting/pagination, typo fallback and signed-in order
   history after migrating removed REST catalog/cart endpoints and implementing
-  missing PLP query semantics. Live cart and checkout tests use the current UI.
+  missing PLP query semantics.
 - `architectural-boundaries.quarantined.ts`: [#347](https://github.com/3mrhussein/findeg/issues/347)
   tracks replacing log-only/inline-HTML architecture claims with meaningful static
   build assertions. The obsolete `/products` index is replaced by live product slug
   navigation in the Customer journeys.
-
 
 Quarantine leaves these tracked coverage gaps open. Remove each retained file once
 its follow-up restores meaningful coverage at the appropriate seam.
