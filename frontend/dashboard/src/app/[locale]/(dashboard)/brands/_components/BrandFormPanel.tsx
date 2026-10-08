@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -68,8 +68,12 @@ export function BrandFormPanel({
         },
   });
 
+  // Keep the slug in sync with the English name until the user edits the slug directly.
+  const slugEditedManually = useRef(false);
+
   // Reset form when brand increases or changes
   useEffect(() => {
+    slugEditedManually.current = false;
     if (brand) {
       reset({
         slug: brand.slug,
@@ -103,13 +107,8 @@ export function BrandFormPanel({
     setDebouncedSlug(debouncedValue);
   }, [debouncedValue]);
 
-  // Auto-generate slug from English name
-  useEffect(() => {
-    if (!brand && nameEn && !slug) {
-      const generated = slugify(nameEn);
-      setValue('slug', generated, { shouldValidate: true });
-    }
-  }, [nameEn, brand, setValue, slug]);
+  const nameEnField = register('nameEn');
+  const slugField = register('slug');
 
   // Check slug availability
   useEffect(() => {
@@ -262,7 +261,13 @@ export function BrandFormPanel({
               </span>
             </Label>
             <Input
-              {...register('nameEn')}
+              {...nameEnField}
+              onChange={(event) => {
+                void nameEnField.onChange(event);
+                if (!brand && !slugEditedManually.current) {
+                  setValue('slug', slugify(event.target.value), { shouldValidate: true });
+                }
+              }}
               placeholder="e.g. Faber-Castell"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-11 focus:ring-indigo-500"
             />
@@ -294,7 +299,11 @@ export function BrandFormPanel({
           </Label>
           <div className="relative">
             <Input
-              {...register('slug')}
+              {...slugField}
+              onChange={(event) => {
+                slugEditedManually.current = true;
+                void slugField.onChange(event);
+              }}
               placeholder="brand-slug"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-10 pr-24 font-mono text-sm tracking-tight"
             />

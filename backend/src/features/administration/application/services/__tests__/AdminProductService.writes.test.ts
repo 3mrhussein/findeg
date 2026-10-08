@@ -330,6 +330,23 @@ describe('AdminProductService writes', () => {
     );
   });
 
+  it('deletes a single product and logs the action', async () => {
+    vi.mocked(getProductById).mockResolvedValue({ id: 9 } as never);
+    vi.mocked(bulkDeleteProducts).mockResolvedValue(undefined);
+
+    await service.deleteProduct(9, 23);
+
+    expect(bulkDeleteProducts).toHaveBeenCalledWith([9]);
+    expect(auditLogService.logAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entityType: 'product',
+        entityId: '9',
+        action: 'delete',
+        adminUserId: 23,
+      }),
+    );
+  });
+
   it('delegates bulk deletion and logs the action', async () => {
     vi.mocked(bulkDeleteProducts).mockResolvedValue(undefined);
 

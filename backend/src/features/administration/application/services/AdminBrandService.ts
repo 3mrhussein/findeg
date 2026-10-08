@@ -125,6 +125,7 @@ export class AdminBrandService implements IAdminBrandService {
     const brand = await updateBrand(id as number, {
       slug: input.slug as Slug,
       logoUrl: input.logoUrl,
+      isActive: input.isActive,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
