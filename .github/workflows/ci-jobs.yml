@@ -384,8 +384,10 @@ jobs:
             || { git init --quiet site && git -C site checkout --quiet --orphan ci-evidence \
               && git -C site remote add origin "https://x-access-token:${GH_TOKEN}@${REPO_URL#https://}"; }
           mkdir -p "site/runs/$RUN_ID"
-          (cd evidence && find . -type f \( -name '*.png' -o -name '*.jpg' \) -print0 \
-            | xargs -0 -I{} cp --parents {} "../site/runs/$RUN_ID/")
+          # The artifact holds runner.temp/artifacts, so copy from evidence/artifacts to
+          # publish paths relative to it, matching the URLs the E2E report builds.
+          (cd evidence/artifacts && find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) -print0 \
+            | xargs -0 -I{} cp --parents {} "../../site/runs/$RUN_ID/")
           touch site/.nojekyll
           git -C site add -A
           git -C site commit --quiet -m "evidence: run $RUN_ID" || true
