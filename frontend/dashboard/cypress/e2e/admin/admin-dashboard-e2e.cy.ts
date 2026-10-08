@@ -6,7 +6,7 @@ import {
   shouldReflectDeletedProductFromAdminInShop,
   shouldReflectNewlyCreatedProductFromAdminInShop,
   shouldReflectUpdatedProductFromAdminInShop,
-} from '../../support/scenario/admin';
+} from '../../support/scenarios/admin';
 
 describe('Admin Dashboard E2E', () => {
   it('should let admin create a product and expose it to shoppers in catalog flows', () => {
