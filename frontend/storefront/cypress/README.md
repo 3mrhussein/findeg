@@ -6,6 +6,7 @@ This project uses a layered Cypress structure so tests stay maintainable as UI e
 
 - `cypress/e2e/shop/customer-journeys-e2e.cy.ts`: current Customer storefront journeys
 - `cypress/e2e/partner/invitation-acceptance.cy.ts`: Partner invitation registration and acceptance
+- `cypress/e2e/shop/catalog-search-e2e.cy.ts`: keyword search and empty results (no typo tolerance; see `db/src/queries/catalog/search.ts`)
 - `cypress/e2e/shop/school-list-completeness.cy.ts`: published and archived List selections
 - `cypress/quarantined/**`: retained legacy scenarios with tracked follow-ups
 - `cypress/support/selectors/**`: stable selector contracts for UI elements
@@ -46,7 +47,7 @@ navigation, variant cart operations and persistence, checkout validation,
 real COD Quote/Order Acceptance, acceptance failure, registration and guest account
 protection. Runtime exceptions fail these tests.
 
-Three specs are retained under `quarantined/` with `.quarantined.ts` names,
+Two specs are retained under `quarantined/` with `.quarantined.ts` names,
 explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
 
 - `shop-storefront-e2e.quarantined.ts`: [#346](https://github.com/3mrhussein/findeg/issues/346)
@@ -58,9 +59,6 @@ explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
   build assertions. The obsolete `/products` index is replaced by live product slug
   navigation in the Customer journeys.
 
-- `catalog-search.quarantined.ts`: [#348](https://github.com/3mrhussein/findeg/issues/348)
-  tracks SearchService SQL still using removed translation tables and legacy columns.
-  Search result assertions remain quarantined until the current schema is supported.
 
 Quarantine leaves these tracked coverage gaps open. Remove each retained file once
 its follow-up restores meaningful coverage at the appropriate seam.
