@@ -106,6 +106,17 @@ describe('Catalog search on real Postgres', () => {
       expect(result.total).toBe(2);
     });
 
+    it('returns storefront-ready products: localized name and priced variants', async () => {
+      await product({ name: { en: 'Keychains', ar: 'ميدالية' }, price: '12.50' });
+
+      const en = await search.search({ query: 'keychains', locale: 'en' });
+      expect(en.items[0]).toMatchObject({ name: 'Keychains' });
+      expect(Number(en.items[0].variants?.[0]?.basePrice)).toBe(12.5);
+
+      const ar = await search.search({ query: 'ميدالية', locale: 'ar' });
+      expect(ar.items[0]).toMatchObject({ name: 'ميدالية' });
+    });
+
     it('finds products by Arabic name with letter-variant normalization', async () => {
       const pen = await product({ name: { en: 'Pen', ar: 'قلم أزرق' } });
       await product({ name: { en: 'Notebook', ar: 'دفتر' } });
