@@ -162,7 +162,8 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
           <Select
             disabled={isPending || !hasSelectableTarget}
             onValueChange={handleStatusChange}
-            defaultValue={order.status}
+            // Controlled by the persisted status: a rejected update snaps back, a refresh follows.
+            value={order.status}
           >
             <SelectTrigger className="w-full" data-testid="order-status-select">
               <SelectValue placeholder="Select status" />
