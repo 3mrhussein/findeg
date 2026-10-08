@@ -113,8 +113,8 @@ export async function executeCatalogScoredSearchRaw(input: {
       WHERE p.is_active = true
         ${categoryId ? sql`AND c.path LIKE (SELECT path FROM catalog.categories WHERE id = ${categoryId}) || '%'` : sql``}
         ${brandId ? sql`AND p.brand_id = ${brandId}` : sql``}
-        ${minPrice ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price >= ${minPrice})` : sql``}
-        ${maxPrice ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price <= ${maxPrice})` : sql``}
+        ${minPrice != null ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price >= ${minPrice})` : sql``}
+        ${maxPrice != null ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price <= ${maxPrice})` : sql``}
         ${inStockOnly ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv JOIN inventory.inventory_balances ib ON ib.variant_id = pv.id WHERE pv.product_id = p.id AND (ib.on_hand - ib.reserved) > 0)` : sql``}
       GROUP BY p.id
       HAVING MAX(${scoreOf}) > 0
