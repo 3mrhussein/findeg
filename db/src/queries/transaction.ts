@@ -4,9 +4,16 @@
  */
 
 import { db } from '../connection';
+import type { DbTransaction } from './db-transaction';
 
-/** The transaction handle `db.transaction` passes to its callback. */
-export type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+export type { DbTransaction };
+
+// `db-transaction.ts` spells the type out without importing the connection; this fails to
+// compile if it ever drifts from the handle `db.transaction` actually passes.
+type ConnectionTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
+const sameTransactionType: Same<DbTransaction, ConnectionTransaction> = true;
+void sameTransactionType;
 
 /**
  * Runs `work` on `tx` when the caller supplied one, otherwise in a new

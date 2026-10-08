@@ -9,6 +9,7 @@
     "./connection": "./src/connection.ts",
     "./schema": "./src/schema/index.ts",
     "./queries": "./src/queries/index.ts",
+    "./queries/outbox": "./src/queries/outbox/index.ts",
     "./queries/partners": "./src/queries/partners/index.ts",
     "./queries/partner-sales": "./src/queries/partner-sales/index.ts",
     "./queries/school-supply-lists": "./src/queries/school-supply-lists/index.ts",
