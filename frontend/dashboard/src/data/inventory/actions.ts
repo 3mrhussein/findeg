@@ -17,8 +17,9 @@ export async function updateStock(input: { variantId: number; quantity: number }
     const { inventory } = createAdministrationServices();
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
-    // Invalidate inventory caches
+    // Invalidate inventory caches; the product list shows stock levels too.
     revalidateTag('inventory', 'max');
+    revalidateTag('products', 'max');
 
     return { success: true };
   } catch (error: unknown) {

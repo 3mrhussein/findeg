@@ -23,8 +23,9 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
 
-    // Invalidate product caches
+    // Invalidate product caches; the inventory list is built from products too.
     revalidateTag('products', 'max');
+    revalidateTag('inventory', 'max');
 
     return { success: true, data: result };
   } catch (error: unknown) {
