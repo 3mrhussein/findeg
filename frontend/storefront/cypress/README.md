@@ -47,17 +47,29 @@ navigation, variant cart operations and persistence, checkout validation,
 real COD Quote/Order Acceptance, acceptance failure, registration and guest account
 protection. Runtime exceptions fail these tests.
 
-Two specs are retained under `quarantined/` with `.quarantined.ts` names,
+One spec is retained under `quarantined/` with a `.quarantined.ts` name,
 explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
 
 - `shop-storefront-e2e.quarantined.ts`: [#346](https://github.com/3mrhussein/findeg/issues/346)
   tracks restoring PLP filters, sorting/pagination, typo fallback and signed-in order
   history after migrating removed REST catalog/cart endpoints and implementing
   missing PLP query semantics.
-- `architectural-boundaries.quarantined.ts`: [#347](https://github.com/3mrhussein/findeg/issues/347)
-  tracks replacing log-only/inline-HTML architecture claims with meaningful static
-  build assertions. The obsolete `/products` index is replaced by live product slug
-  navigation in the Customer journeys.
+
+Architecture coverage from [#347](https://github.com/3mrhussein/findeg/issues/347)
+lives at the lint and production-build seams, in `scripts/architecture/`:
+
+- `pnpm test:scripts` exercises the storefront's real ESLint configuration: backend
+  infrastructure and database imports fail; Client Components must import schema
+  values from the client-safe entry point. Server factories and type-only imports
+  remain allowed.
+- `pnpm --filter @findeg/storefront build` asserts that every emitted client JavaScript
+  chunk has module evidence and contains no database, backend infrastructure,
+  Node-only modules or server dependency packages. Maps are removed after inspection.
+  The unmapped browser polyfill must match the installed Next.js artifact byte for byte.
+  The existing CI Build and strict E2E builds both run this command through Turbo.
+
+The legacy architecture spec has been deleted. Live English/Arabic Customer journeys
+continue to verify product slug navigation and the other current storefront routes.
 
 Quarantine leaves these tracked coverage gaps open. Remove each retained file once
 its follow-up restores meaningful coverage at the appropriate seam.

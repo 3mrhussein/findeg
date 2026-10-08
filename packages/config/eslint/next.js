@@ -64,7 +64,7 @@ export const next = [
         'error',
         {
           patterns: [
-            { group: ['@findeg/db/**'] },
+            { group: ['@findeg/db', '@findeg/db/**'] },
             ...BARRELED_BACKEND_FEATURES.map((feature) => ({
               group: [
                 `@findeg/backend/features/${feature}/**`,

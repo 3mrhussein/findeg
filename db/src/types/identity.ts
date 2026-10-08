@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { EmailSchema } from './common';
-import { actorTypeEnum, portalRoleEnum } from '../schema/enums';
+import { ACTOR_TYPE_VALUES, PORTAL_ROLE_VALUES } from './enum-values';
 
 /**
  * Identity & Authorization Primitives for Database Layer
@@ -10,13 +10,13 @@ import { actorTypeEnum, portalRoleEnum } from '../schema/enums';
  * Actor categories that can hold a session.
  * Standardized on database enum values.
  */
-export const ActorTypeSchema = z.enum(actorTypeEnum.enumValues);
+export const ActorTypeSchema = z.enum(ACTOR_TYPE_VALUES);
 export type ActorType = z.infer<typeof ActorTypeSchema>;
 
 /**
  * Legacy Portal Roles for session classification.
  */
-export const PortalRoleSchema = z.enum(portalRoleEnum.enumValues);
+export const PortalRoleSchema = z.enum(PORTAL_ROLE_VALUES);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
 /**

@@ -24,7 +24,7 @@ import { Input } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Icon } from '@findeg/ui';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
 import { usePermissions } from '@providers/PermissionsProvider';
 // @ts-ignore
 import { useAdminUsers, type AdminUser } from '@hooks/useAdminUsers';
