@@ -137,3 +137,9 @@ _Avoid_: Dashboard, analytics, statement
 **Stock Reservation**:
 Units held for an accepted Order at a specific warehouse, from Order Acceptance until they are consumed at delivery or released on cancellation.
 _Avoid_: Allocation, hold
+
+### Package Boundaries
+
+**Package Boundary**:
+The public import surface and dependency direction of a workspace package. Consumers import only declared public entries; implementation files remain private, and package dependency edges stay acyclic.
+_Avoid_: Deep import, internal API

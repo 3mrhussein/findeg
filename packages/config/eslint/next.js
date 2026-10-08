@@ -2,6 +2,7 @@ import globals from 'globals';
 import { base } from './base.js';
 import { shared } from './shared.js';
 import { createNoFullBarrelImportInClientComponentsRule } from './rules/no-full-barrel-import-in-client-components.js';
+import { ordersBoundaryRule } from './rules/orders-boundary.js';
 
 // Feature names whose backend barrel (backend/src/features/<name>/index.ts)
 // is the only sanctioned import path. Add a feature here as its PR in the
@@ -48,6 +49,7 @@ export const next = [
     plugins: {
       local: {
         rules: {
+          'orders-boundary': ordersBoundaryRule,
           'no-full-barrel-import-in-client-components':
             createNoFullBarrelImportInClientComponentsRule(SCHEMA_EXPORT_NAMES_BY_FEATURE),
         },
@@ -81,6 +83,7 @@ export const next = [
         },
       ],
       'local/no-full-barrel-import-in-client-components': 'error',
+      'local/orders-boundary': 'error',
     },
   },
 

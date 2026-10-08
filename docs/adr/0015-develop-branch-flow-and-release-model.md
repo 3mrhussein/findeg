@@ -18,7 +18,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 - **Fast tier (PRs into and pushes to `develop`):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
 - **Strict tier (PRs into and pushes to `main`):** every job from scratch: Turbo `--force`, a shallow clone, no cache restore or save, integration tests always, plus E2E. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code into `main`.
-- **Every tier and gating decision lives in one tested module, `scripts/ci-policy/policy.mjs`.** The workflow YAML only passes its outputs on.
+- **Every tier and gating decision lives in one tested module, `.github/scripts/ci-policy.mjs`.** The workflow YAML only passes its outputs on.
 
 ### Two workflows, one job definition, one gate each
 
