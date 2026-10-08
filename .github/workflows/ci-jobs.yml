@@ -4,7 +4,7 @@ name: CI jobs
 # it and hold only their triggers: CI · Feature (develop, caller job `Feature`,
 # gate `Feature / CI OK`) and CI · Release (main, caller job `Strict`, gate
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
-# comes from scripts/ci-policy; this file only wires its outputs to jobs.
+# comes from .github/scripts; this file only wires its outputs to jobs.
 #
 # - strict tier (PRs into / pushes to main): every job, Turbo forced, no caches.
 # - fast tier (PRs into / pushes to develop): affected packages only, caches
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 2
-          sparse-checkout: scripts/ci-policy
+          sparse-checkout: .github/scripts
       # A sparse checkout keeps the root files, so .nvmrc is there.
       - uses: actions/setup-node@v7
         with:
@@ -77,11 +77,13 @@ jobs:
         env:
           EVENT: ${{ github.event_name }}
           TARGET: ${{ github.base_ref || github.ref_name }}
+          HEAD: ${{ github.head_ref }}
           EXPECTED_TIER: ${{ inputs.tier }}
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
         run: >-
-          node scripts/ci-policy/cli.mjs plan --event "$EVENT" --target "$TARGET"
-          --expect-tier "$EXPECTED_TIER"
+          node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
+          ${HEAD:+--head "$HEAD"}
+          ${EXPECTED_TIER:+--expect-tier "$EXPECTED_TIER"}
           ${CHANGED_FILES:+--changed-files "$CHANGED_FILES"}
 
   # The code checks share one shape: a full-history checkout on the fast tier
@@ -119,11 +121,6 @@ jobs:
         run: |
           read -ra flags <<< "$TURBO_FLAGS"
           pnpm exec turbo run "$TASK" "${flags[@]}"
-      # Root scripts (CI policy, agent identity) aren't a workspace package,
-      # so Turbo doesn't see them; they're quick, so they always run.
-      - name: Repo script tests
-        if: matrix.task == 'test'
-        run: pnpm test:scripts
       # Only the Lint leg saves the pnpm store: every job installs the same
       # lockfile, and a lockfile change always runs the code checks.
       - if: needs.plan.outputs.save_cache == 'true'
@@ -310,7 +307,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          sparse-checkout: scripts/ci-policy
+          sparse-checkout: .github/scripts
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
@@ -319,4 +316,4 @@ jobs:
         env:
           NEEDS: ${{ toJSON(needs) }}
           TIER: ${{ needs.plan.outputs.tier }}
-        run: node scripts/ci-policy/cli.mjs verdict --tier "$TIER" --needs "$NEEDS"
+        run: node .github/scripts/ci-cli.mjs verdict --tier "$TIER" --needs "$NEEDS"
