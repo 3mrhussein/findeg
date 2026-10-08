@@ -1,201 +1,181 @@
+import {
+  signInToDashboard,
+  signInToDashboardAsReadOnlyStaff,
+} from '../../support/actions/dashboard-session.actions';
+
+interface TestOrder {
+  id: number;
+  orderReference: string;
+}
+
+// Streaming SSR briefly holds a hidden copy of the page next to the live one, so only the
+// visible control counts.
+const statusSelect = '[data-testid="order-status-select"]:visible';
+const paymentBadge = '[data-testid="order-payment-badge"]:visible';
+
 /**
- * E2E Tests: Order Operations
- *
- * Validates that the refactored order feature works end-to-end:
- * - Order status updates are applied correctly
- * - Cache invalidation occurs after status changes
- * - Admin can update order payment status
+ * Opens an Order detail page and waits until React has hydrated it, so a click is never
+ * swallowed by server-rendered markup that has no handlers yet.
  */
-
-describe('Order Operations - Phase 4 Cache Revalidation', () => {
-  beforeEach(() => {
-    // Clear any existing state
-    cy.clearCookies();
-
-    // Log in as admin first
-    cy.visit('/admin/login');
-    cy.get('input[name="email"]').type('admin@example.com');
-    cy.get('input[name="password"]').type('password123');
-    cy.get('button[type="submit"]').click();
-
-    // Wait for admin dashboard
-    cy.url().should('include', '/admin');
+function visitOrderDetail(path: string): void {
+  cy.visit(path);
+  cy.get(statusSelect).should(($el) => {
+    expect(Object.keys($el[0]).some((key) => key.startsWith('__reactProps'))).to.eq(true);
   });
+}
 
-  describe('T076: Order Status Update Flow', () => {
-    it('should successfully update order status and verify cache invalidation', () => {
-      // Navigate to orders list
-      cy.visit('/admin/orders');
+function chooseStatus(label: string): void {
+  cy.get(statusSelect).click();
+  // Radix also renders a hidden native <select> whose <option>s share the role; a listbox that
+  // is still closing after a refresh can briefly coexist with the new one, so take the open one.
+  cy.get('[role="listbox"][data-state="open"]').last().contains('[role="option"]', label).click();
+}
 
-      // Find an order in the list
-      cy.get('table tbody tr').first().click();
+function expectFailureToast(description: string | RegExp): void {
+  cy.contains('Update failed').should('be.visible');
+  cy.contains(description).should('be.visible');
+}
 
-      // Should navigate to order detail page
-      cy.url().should('match', /\/admin\/orders\/\d+$/);
+for (const locale of ['en', 'ar']) {
+  describe(`Order operations (${locale})`, () => {
+    let order: TestOrder;
+    const detailPath = () => `/${locale}/orders/${order.id}`;
 
-      // Find and click on status dropdown
-      cy.contains('Order Status').should('be.visible');
-      cy.get("select, [role='combobox']").first().click();
+    beforeEach(() => {
+      // Every test works on its own Order, never a seeded one.
+      cy.task<TestOrder>('createTestOrder').then((created) => {
+        order = created;
+      });
+    });
 
-      // Select a new status (e.g., "shipped")
-      cy.contains('Shipped').click();
-
-      // Enter tracking number (if applicable)
-      cy.get('input[placeholder*="tracking"], input[name*="tracking"]').then(($input) => {
-        if ($input.length > 0) {
-          cy.wrap($input).type('TRACK123456');
-        }
+    describe('as Staff with order-write access', () => {
+      beforeEach(() => {
+        signInToDashboard();
       });
 
-      // Submit the status update
-      cy.get('button:contains("Update"), button:contains("Save")').first().click();
+      it('updates the status, records it in the activity log and persists it', () => {
+        visitOrderDetail(detailPath());
+        cy.contains('h1', `Order #FE-${String(order.id).padStart(5, '0')}`).should('be.visible');
+        cy.contains('No recent activity found for this order.').should('be.visible');
 
-      // Verify success toast
-      cy.contains(/updated|success/i).should('be.visible');
+        chooseStatus('Confirmed');
 
-      // Verify the status changed on the page
-      cy.contains('shipped', { matchCase: false }).should('be.visible');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /confirmed/i).should('be.visible');
+        cy.contains('Update Status').should('be.visible');
+        cy.contains('Changed from').should('contain.text', 'pending');
+        cy.reload();
+        cy.contains('h1', /confirmed/i).should('be.visible');
+        cy.contains('Update Status').should('be.visible');
+      });
+
+      it('shows the new status in the Order list after the update', () => {
+        cy.visit(`/${locale}/orders?search=${order.orderReference}`);
+        cy.contains('tbody tr', order.orderReference).should('contain.text', 'pending');
+
+        cy.contains('tbody a', order.orderReference).click();
+        cy.location('pathname').should('eq', detailPath());
+        chooseStatus('Confirmed');
+        cy.contains('Order status updated').should('be.visible');
+
+        // Client-side navigation back to the list must not serve the pre-update row.
+        cy.contains('a', 'Back to Orders').click();
+        cy.location('pathname').should('eq', `/${locale}/orders`);
+        cy.get('[data-testid="admin-orders-filter-search"]')
+          .filter(':visible')
+          .clear()
+          .type(order.orderReference, { delay: 0 });
+        cy.contains('tbody tr', order.orderReference)
+          .should('contain.text', 'confirmed')
+          .and('not.contain.text', 'pending');
+      });
+
+      it('updates the payment status and records it in the activity log', () => {
+        visitOrderDetail(detailPath());
+        cy.get(paymentBadge).should('have.text', 'unpaid');
+
+        cy.contains('button:visible', 'Mark as paid').click();
+
+        cy.contains('Payment status updated').should('be.visible');
+        cy.get(paymentBadge).should('have.text', 'paid');
+        cy.contains('Update Payment Status').should('be.visible');
+        cy.reload();
+        cy.get(paymentBadge).should('have.text', 'paid');
+
+        cy.visit(`/${locale}/orders?search=${order.orderReference}`);
+        cy.contains('tbody tr', order.orderReference).should('contain.text', 'paid');
+      });
+
+      it('rejects an invalid status transition and leaves the Order unchanged', () => {
+        visitOrderDetail(detailPath());
+        cy.get(statusSelect).should('be.visible');
+        // Another Staff session cancels the Order while this page still shows it as pending.
+        cy.task('setTestOrderStatus', { id: order.id, status: 'cancelled' });
+
+        chooseStatus('Confirmed');
+
+        expectFailureToast(/Invalid status transition from cancelled to confirmed/);
+        cy.reload();
+        cy.contains('h1', /cancelled/i).should('be.visible');
+      });
+
+      it('rejects an invalid payment transition and leaves the Order unchanged', () => {
+        visitOrderDetail(detailPath());
+        cy.contains('button:visible', 'Mark as paid').should('be.visible');
+        cy.task('setTestOrderPaymentStatus', { id: order.id, status: 'refunded' });
+
+        cy.contains('button:visible', 'Mark as paid').click();
+
+        expectFailureToast(/Invalid payment status transition from refunded to paid/);
+        cy.reload();
+        cy.get(paymentBadge).should('have.text', 'refunded');
+      });
+
+      it('reports a failed server action request instead of crashing the page', () => {
+        visitOrderDetail(detailPath());
+        cy.get(statusSelect).should('be.visible');
+        cy.intercept({ method: 'POST', url: `**/orders/${order.id}*` }, (req) => {
+          if (req.headers['next-action']) req.destroy();
+          else req.continue();
+        }).as('serverAction');
+
+        chooseStatus('Confirmed');
+
+        cy.wait('@serverAction');
+        expectFailureToast('The update request failed.');
+        cy.get(statusSelect).should('be.visible');
+        cy.reload();
+        cy.contains('h1', /pending/i).should('be.visible');
+      });
     });
 
-    it('should display error message for invalid status transition', () => {
-      cy.visit('/admin/orders');
+    describe('without order-write access', () => {
+      it('redirects an unauthenticated visitor to login', () => {
+        cy.visit(detailPath());
+        cy.location('pathname').should('eq', `/${locale}/login`);
+      });
 
-      // Try to find an order and update it
-      cy.get('table tbody tr').first().click();
+      it('refuses a status change from Staff who can only read Orders', () => {
+        signInToDashboardAsReadOnlyStaff();
+        visitOrderDetail(detailPath());
+        cy.contains('h1', /pending/i).should('be.visible');
 
-      // Get current status
-      let currentStatus = 'pending';
-      cy.get('table tbody tr')
-        .first()
-        .then(($row) => {
-          const statusText = $row.text();
-          if (statusText.includes('delivered')) {
-            currentStatus = 'delivered';
-          }
-        });
+        chooseStatus('Confirmed');
 
-      // Try to update to an invalid status (from delivered, you might not be able to go back)
-      if (currentStatus === 'delivered') {
-        cy.get("select, [role='combobox']").first().click();
-        cy.contains('Pending').click();
+        expectFailureToast('Not authorized to change orders');
+        cy.reload();
+        cy.contains('h1', /pending/i).should('be.visible');
+      });
 
-        cy.get('button:contains("Update"), button:contains("Save")').first().click();
+      it('refuses a payment change from Staff who can only read Orders', () => {
+        signInToDashboardAsReadOnlyStaff();
+        visitOrderDetail(detailPath());
 
-        // Should show error
-        cy.contains(/error|cannot|invalid/i).should('be.visible');
-      }
-    });
-  });
+        cy.contains('button:visible', 'Mark as paid').click();
 
-  describe('T076: Payment Status Update', () => {
-    it('should successfully update payment status', () => {
-      cy.visit('/admin/orders');
-
-      // Open order detail
-      cy.get('table tbody tr').first().click();
-      cy.url().should('match', /\/admin\/orders\/\d+$/);
-
-      // Find payment status section
-      cy.contains('Payment', { matchCase: false }).should('be.visible');
-
-      // Look for payment status button/dropdown
-      cy.get('button:contains("Payment"), select[name*="payment"]')
-        .first()
-        .then(($el) => {
-          if ($el.length > 0) {
-            cy.wrap($el).click();
-
-            // Select "Paid" status
-            cy.contains('Paid', { matchCase: false }).click();
-
-            // Submit
-            cy.get('button:contains("Update"), button:contains("Save")').first().click();
-
-            // Verify success
-            cy.contains(/updated|success/i).should('be.visible');
-          }
-        });
-    });
-  });
-
-  describe('T077: Cache Invalidation Verification', () => {
-    it('should revalidate /admin/orders list after status update', () => {
-      // Navigate to orders
-      cy.visit('/admin/orders');
-
-      // Open first order and update status
-      cy.get('table tbody tr').first().click();
-      cy.url().should('match', /\/admin\/orders\/\d+$/);
-
-      // Update status
-      cy.get("select, [role='combobox']").first().click();
-      cy.contains('Shipped', { matchCase: false }).click();
-      cy.get('button:contains("Update"), button:contains("Save")').first().click();
-
-      // Wait for success
-      cy.contains(/updated|success/i).should('be.visible');
-
-      // Navigate back to orders list
-      cy.visit('/admin/orders');
-
-      // Verify the order list is revalidated (page should be fresh)
-      // The updated order should show new status
-      cy.get('table tbody tr').first().should('contain', 'shipped');
-    });
-
-    it('should revalidate individual order detail page after update', () => {
-      // Get first order ID from URL after opening it
-      cy.visit('/admin/orders');
-
-      cy.get('table tbody tr')
-        .first()
-        .within(($row) => {
-          cy.wrap($row).click();
-        });
-
-      // Update order status
-      cy.get("select, [role='combobox']").first().click();
-      cy.contains('Processing').click();
-      cy.get('button:contains("Update"), button:contains("Save")').first().click();
-
-      // Verify success
-      cy.contains(/updated|success/i).should('be.visible');
-
-      // Reload the page
-      cy.reload();
-
-      // Verify the status persists (was actually updated in DB)
-      cy.contains('processing', { matchCase: false }).should('be.visible');
-    });
-  });
-
-  describe('Authorization & Error Handling', () => {
-    it('should prevent non-admin users from updating order status', () => {
-      // This test would require logging in as non-admin user
-      // For now, we verify that non-system-admin roles need specific permissions
-
-      cy.visit('/admin/orders');
-      cy.url().should('include', '/admin/orders');
-      // Admin is logged in, so update should work
-      cy.get('table tbody tr').first().click();
-      cy.contains('Order Status', { matchCase: false }).should('be.visible');
-    });
-
-    it('should handle network errors gracefully', () => {
-      // Simulate network error
-      cy.intercept('POST', '**/updateOrderStatus', { statusCode: 500 }).as('failedUpdate');
-
-      cy.visit('/admin/orders');
-      cy.get('table tbody tr').first().click();
-
-      cy.get("select, [role='combobox']").first().click();
-      cy.contains('Shipped').click();
-      cy.get('button:contains("Update"), button:contains("Save")').first().click();
-
-      cy.wait('@failedUpdate');
-
-      // Should show error message
-      cy.contains(/error|failed/i).should('be.visible');
+        expectFailureToast('Not authorized to change orders');
+        cy.get(paymentBadge).should('have.text', 'unpaid');
+      });
     });
   });
-});
+}
