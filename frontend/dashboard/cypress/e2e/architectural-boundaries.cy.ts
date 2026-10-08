@@ -1,177 +1,70 @@
 /**
- * Architectural Boundary Enforcement - E2E Tests
+ * Architectural boundaries: the production dashboard's real client bundles
+ * must not contain server-only infrastructure. Assertions fetch the actual
+ * `/_next/static` chunks referenced by rendered pages and scan their contents.
  *
- * End-to-end tests validating build success and bundle analysis.
- * These tests run against production builds to ensure:
- * - Apps build successfully without infrastructure code
- * - Client bundles don't contain Node.js-only modules
- * - Build completes within performance requirements
- *
- * Coverage: CHK036-CHK047 from test-strategy checklist
- *
- * Run with: pnpm --filter @dashboard test:e2e
+ * Static-import and bundle assertions may later move into the build
+ * verification seam tracked by #347; until then they live here.
  */
 
-describe('Architectural Boundary Enforcement - Build Validation', () => {
-  before(() => {
-    cy.log('Starting architectural boundary E2E tests');
+const FORBIDDEN_IN_CLIENT_BUNDLES: Array<[label: string, pattern: RegExp]> = [
+  ['postgres driver', /from\s*["']postgres["']|require\(["']postgres["']\)|node_modules\/postgres/],
+  ['drizzle-orm', /drizzle-orm/],
+  ['node:fs', /require\(["'](?:node:)?fs["']\)|from\s*["'](?:node:)?fs["']/],
+  ['node:net', /require\(["'](?:node:)?net["']\)|from\s*["'](?:node:)?net["']/],
+  ['node:tls', /require\(["'](?:node:)?tls["']\)|from\s*["'](?:node:)?tls["']/],
+  ['@findeg/db', /@findeg\/db/],
+];
+
+const PAGES = ['/en/login', '/ar/login'];
+
+function collectClientChunkUrls(): Cypress.Chainable<string[]> {
+  return cy.document().then((doc) => {
+    const urls = Array.from(doc.querySelectorAll<HTMLScriptElement>('script[src]'))
+      .map((script) => new URL(script.src, doc.baseURI))
+      .filter((url) => url.pathname.startsWith('/_next/static/') && url.pathname.endsWith('.js'))
+      .map((url) => url.pathname);
+    return Array.from(new Set(urls));
   });
+}
 
-  describe('Production Build Success (CHK036-CHK039, SC-002)', () => {
-    it('should build dashboard without module resolution errors', () => {
-      // This test runs in context of dashboard already built
-      // Verify no build errors by checking the app loads
-      cy.visit('/');
-      cy.get('body').should('exist');
-    });
+describe('Dashboard client bundle boundaries', () => {
+  for (const page of PAGES) {
+    describe(`${page} client chunks`, () => {
+      let chunkBodies: Array<{ url: string; body: string }> = [];
 
-    it('should build storefront without infrastructure leakage', () => {
-      // Visit storefront to verify it built successfully
-      // The fact that the build succeeded and we can visit proves no infrastructure bundling
-      cy.log('Storefront build verified via successful app initialization');
-    });
-  });
-
-  describe('Client Bundle Analysis (CHK040-CHK042, SC-004)', () => {
-    it('should not include postgres module in client bundle', () => {
-      cy.visit('/');
-
-      // Check that window object doesn't have postgres loaded
-      cy.window().then((win) => {
-        const hasPostgres = win.document.documentElement.innerHTML.includes('postgres');
-        const hasPostgresInScripts = Array.from(win.document.scripts).some((script) =>
-          script.innerHTML.includes('postgres'),
-        );
-
-        expect(hasPostgres).to.be.false;
-        expect(hasPostgresInScripts).to.be.false;
-      });
-    });
-
-    it('should not include drizzle-orm in client bundle', () => {
-      cy.visit('/');
-
-      cy.window().then((win) => {
-        const scriptContents = Array.from(win.document.scripts)
-          .map((s) => s.innerHTML)
-          .join('');
-
-        const hasDrizzle = scriptContents.includes('drizzle');
-        expect(hasDrizzle).to.be.false;
-      });
-    });
-
-    it('should not include Node.js fs module in client bundle', () => {
-      cy.visit('/');
-
-      cy.window().then((win) => {
-        // Check that fs module (Node.js built-in) isn't bundled
-        const scriptContents = Array.from(win.document.scripts)
-          .map((s) => s.innerHTML)
-          .join('');
-
-        expect(scriptContents.includes('require("fs")')).to.be.false;
-        cy.log('Verified Node.js fs module not in client bundle');
-      });
-    });
-
-    it('should not include net/tls modules in client bundle', () => {
-      cy.visit('/');
-
-      cy.window().then((win) => {
-        const scriptContents = Array.from(win.document.scripts)
-          .map((s) => s.innerHTML)
-          .join('');
-
-        const hasNet = scriptContents.includes("require('net')");
-        const hasTls = scriptContents.includes("require('tls')");
-
-        expect(hasNet).to.be.false;
-        expect(hasTls).to.be.false;
-      });
-    });
-  });
-
-  describe('Server/Client Boundary Validation (CHK048-CHK050)', () => {
-    it('should successfully load pages that use backend features', () => {
-      // Happy path: Server Components can use backend
-      cy.visit('/');
-
-      // If page loads, it means Server Components successfully imported from backend
-      cy.get('body').should('be.visible');
-    });
-
-    it('should handle data fetching through proper layers', () => {
-      // Visit a page that fetches data
-      cy.visit('/');
-
-      // Verify page renders (data was fetched server-side through proper channels)
-      cy.get('body').should('not.be.empty');
-    });
-  });
-
-  describe('Error Scenario Validation (CHK051)', () => {
-    it('should demonstrate build would fail if infrastructure was imported by client', () => {
-      // This is a negative test documenting expected failure behavior
-      // If a Client Component tried to import infrastructure, build would fail
-      // We can't test the actual failure in E2E (build already succeeded)
-      // But we can verify the guard is in place
-
-      cy.log('Build succeeded, proving no Client Components import infrastructure');
-      cy.log('Infrastructure imports would cause build failure before E2E runs');
-    });
-  });
-
-  describe('Real-World Usage Patterns (CHK048)', () => {
-    it('should support admin pages using backend features', () => {
-      cy.visit('/admin');
-
-      // Admin pages heavily use backend features
-      // Successful load proves proper import patterns
-      cy.get('body').should('exist');
-    });
-
-    it('should support authentication flows using backend identity features', () => {
-      cy.visit('/signin');
-
-      // Login page uses backend identity features
-      cy.get('body').should('exist');
-    });
-  });
-
-  describe('Performance Validation (CHK067)', () => {
-    it('should load pages efficiently without infrastructure overhead', () => {
-      // Since infrastructure isn't bundled, client bundles should be smaller/faster
-      cy.visit('/', {
-        onBeforeLoad: (win) => {
-          win.performance.mark('page-start');
-        },
+      before(() => {
+        chunkBodies = [];
+        cy.visit(page);
+        collectClientChunkUrls().then((urls) => {
+          expect(urls, 'client chunks referenced by the page').to.have.length.greaterThan(0);
+          urls.forEach((url) => {
+            cy.request(url).then((response) => {
+              expect(response.status).to.eq(200);
+              chunkBodies.push({ url, body: String(response.body) });
+            });
+          });
+        });
       });
 
-      cy.window().then((win) => {
-        win.performance.mark('page-loaded');
-        win.performance.measure('page-load', 'page-start', 'page-loaded');
-
-        const measure = win.performance.getEntriesByName('page-load')[0];
-        cy.log(`Page load time: ${measure.duration}ms`);
-
-        // Page should load reasonably fast
-        expect(measure.duration).to.be.lessThan(5000);
+      it('serves non-trivial client JavaScript to scan', () => {
+        const total = chunkBodies.reduce((sum, chunk) => sum + chunk.body.length, 0);
+        expect(total, 'bytes of client JavaScript scanned').to.be.greaterThan(10_000);
+        expect(chunkBodies.some((chunk) => /react/i.test(chunk.body))).to.eq(true);
       });
+
+      for (const [label, pattern] of FORBIDDEN_IN_CLIENT_BUNDLES) {
+        it(`does not bundle ${label}`, () => {
+          const offenders = chunkBodies.filter((chunk) => pattern.test(chunk.body)).map((chunk) => chunk.url);
+          expect(offenders, `chunks containing ${label}`).to.deep.eq([]);
+        });
+      }
     });
-  });
-});
+  }
 
-describe('CI/CD Pipeline Integration (CHK044-CHK047)', () => {
-  it('should verify E2E test pipeline can run successfully', () => {
-    // The fact that this test is running proves the pipeline works
-    cy.log('E2E pipeline operational');
-    expect(true).to.be.true;
-  });
-
-  it('should be runnable as a CI/CD gate', () => {
-    // Document that these tests serve as gates
-    cy.log('These tests act as architectural boundary enforcement gates in CI/CD');
-    cy.log('Build MUST pass before E2E runs, ensuring boundary violations caught early');
+  it('does not expose a database connection string in rendered HTML', () => {
+    cy.request('/en/login').then((response) => {
+      expect(String(response.body)).not.to.match(/postgres(?:ql)?:\/\//);
+    });
   });
 });

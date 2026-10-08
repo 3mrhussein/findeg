@@ -16,6 +16,7 @@ export default defineConfig({
       '@lib': path.resolve(__dirname, './src/lib'),
       '@actions': path.resolve(__dirname, './src/actions'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@i18n': path.resolve(__dirname, './src/i18n'),
       '@findeg/backend': path.resolve(__dirname, '../../backend/src'),
     },
   },

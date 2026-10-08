@@ -8,6 +8,8 @@ export type { IAdminInventoryService } from './application/interfaces/IAdminInve
 export type {
   IAdminOrderService,
   OrderStaffActor,
+  OrderDetail,
+  OrderActivityEntry,
 } from './application/interfaces/IAdminOrderService';
 export { assertCanWriteOrders } from './domain/orderWritePermission';
 export type {

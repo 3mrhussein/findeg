@@ -8,7 +8,7 @@
  */
 
 import { db } from '../../connection';
-import { auditLog } from '../../schema';
+import { auditLog, users } from '../../schema';
 import { eq, and, desc, count, gte, lte } from 'drizzle-orm';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -90,6 +90,22 @@ export async function getByEntity(entityType: string, entityId: string): Promise
     .from(auditLog)
     .where(and(eq(auditLog.entityType, entityType), eq(auditLog.entityId, entityId)))
     .orderBy(desc(auditLog.createdAt));
+}
+
+/**
+ * Get audit logs for a specific entity with the acting admin's name (newest first).
+ */
+export async function getByEntityWithAdmin(entityType: string, entityId: string) {
+  return db
+    .select({
+      log: auditLog,
+      adminFirstName: users.firstName,
+      adminLastName: users.lastName,
+    })
+    .from(auditLog)
+    .leftJoin(users, eq(auditLog.adminUserId, users.id))
+    .where(and(eq(auditLog.entityType, entityType), eq(auditLog.entityId, entityId)))
+    .orderBy(desc(auditLog.createdAt), desc(auditLog.id));
 }
 
 /**
