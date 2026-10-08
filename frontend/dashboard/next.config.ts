@@ -5,8 +5,8 @@ import path from 'path';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-  // Transpile workspace packages (UI only - backend should remain external)
-  transpilePackages: ['@findeg/ui'],
+  // Transpile (bundle) client-safe workspace packages; backend should remain external
+  transpilePackages: ['@findeg/ui', '@findeg/money'],
   // Prevent server-only packages from being bundled on the client
   serverExternalPackages: [
     '@findeg/backend', // Keep backend external to avoid bundling infrastructure

@@ -1,23 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { piastersToDecimal } from '@findeg/money';
 import { computeConfirmation } from './confirmation';
-import { fromPiasters, piastersToDecimal, shippingFeeToPiasters, sumQuote } from './piasters';
-
-describe('piastersToDecimal', () => {
-  it.each([
-    [3750n, '37.50'],
-    [5n, '0.05'],
-    [0n, '0.00'],
-    [123456789099n, '1234567890.99'],
-    [-250n, '-2.50'],
-  ])('renders %s as %s', (piasters, text) => {
-    expect(piastersToDecimal(piasters)).toBe(text);
-  });
-
-  it('gives the API number the same value as the decimal string', () => {
-    expect(fromPiasters(10n)).toBe(0.1);
-    expect(fromPiasters(3010n)).toBe(30.1);
-  });
-});
+import { shippingFeeToPiasters, sumQuote } from './piasters';
 
 describe('shippingFeeToPiasters', () => {
   it.each([

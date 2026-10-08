@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { StaffPartnerReportView } from '@findeg/backend/features/partner-sales';
-import { piastersToEgp } from '@findeg/backend/features/partner-sales';
+import { piastersToEgp } from '@findeg/money';
 import { toSalesReportProps } from './salesReport';
 
 const row = (over: Partial<StaffPartnerReportView['sales'][number]> = {}) => ({
