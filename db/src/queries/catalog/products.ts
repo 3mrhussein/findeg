@@ -267,7 +267,8 @@ export async function checkSlugAvailable(slug: string, excludeId?: number): Prom
 
 /**
  * Get variants for multiple products
- * Returns map keyed by productId
+ * Returns map keyed by productId, each list default first, then by sort order and id —
+ * the order `listingPrice` uses, so the first variant is the one a listing prices.
  */
 export async function getVariantsByProductIds(
   productIds: number[],
@@ -277,7 +278,12 @@ export async function getVariantsByProductIds(
   const rows = await db
     .select()
     .from(productVariants)
-    .where(inArray(productVariants.productId, productIds));
+    .where(inArray(productVariants.productId, productIds))
+    .orderBy(
+      desc(productVariants.isDefault),
+      asc(productVariants.sortOrder),
+      asc(productVariants.id),
+    );
 
   const map: Record<number, VariantRow[]> = {};
   for (const row of rows) {

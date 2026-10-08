@@ -309,9 +309,11 @@ export class ProductService implements IProductService {
 
     if (products.length === 0) return { products: [], total: 0 };
 
-    const all = await Promise.all(products.map((r) => this.getById(r.id, lang)));
     return {
-      products: all.filter((p): p is Product => p !== null),
+      products: await this.getByIds(
+        products.map((r) => r.id),
+        lang,
+      ),
       total,
     };
   }

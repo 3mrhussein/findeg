@@ -64,13 +64,7 @@ describe('Product listing (PLP) on real Postgres', () => {
         createdAt: input.createdAt,
       })
       .returning();
-    await testDb.db.insert(productVariants).values({
-      productId: row.id,
-      variantKey: 'default',
-      sku: `LISTING-${sequence}`,
-      basePrice: input.price,
-      isDefault: true,
-    });
+    // The extra variant gets the lower id, so only the default-first order can surface the default.
     if (input.extraVariantPrice) {
       await testDb.db.insert(productVariants).values({
         productId: row.id,
@@ -79,6 +73,13 @@ describe('Product listing (PLP) on real Postgres', () => {
         basePrice: input.extraVariantPrice,
       });
     }
+    await testDb.db.insert(productVariants).values({
+      productId: row.id,
+      variantKey: 'default',
+      sku: `LISTING-${sequence}`,
+      basePrice: input.price,
+      isDefault: true,
+    });
     return row;
   }
 
@@ -120,6 +121,8 @@ describe('Product listing (PLP) on real Postgres', () => {
 
     expect(ids(result)).toEqual([low.id, high.id]);
     expect(result.total).toBe(2);
+    // Hydrated variants lead with the variant the listing priced, as cards display it.
+    expect(Number(result.products[1].variants?.[0]?.basePrice)).toBe(20);
   });
 
   it('sorts by price, newest, rating and popularity', async () => {
