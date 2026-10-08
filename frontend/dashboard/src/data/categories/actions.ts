@@ -1,12 +1,12 @@
 /**
  * Category Actions (Dashboard Data Layer)
  *
- * Uses "use server" directive and revalidateTag(, "max") for cache invalidation.
+ * Uses "use server" directive and updateTag() for cache invalidation.
  * Wraps admin service factory calls with proper error handling.
  */
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { CategoryInput } from '@findeg/backend/features/catalog';
 import { getErrorMessage } from '@lib/type-guards';
@@ -23,7 +23,7 @@ export async function createCategoryAction(input: CategoryInput) {
     const result = await categories.create(input);
 
     // Invalidate all category caches
-    revalidateTag('categories', 'max');
+    updateTag('categories');
     revalidatePath('/categories');
 
     return { success: true, data: result };
@@ -46,8 +46,8 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
     const result = await categories.update(id, input);
 
     // Invalidate category detail and lists
-    revalidateTag('categories', 'max');
-    revalidateTag(`category-${id}`, 'max');
+    updateTag('categories');
+    updateTag(`category-${id}`);
     revalidatePath('/categories');
     revalidatePath(`/categories/${id}`);
 
@@ -70,8 +70,8 @@ export async function deleteCategoryAction(id: number) {
     await categories.delete(id);
 
     // Invalidate all category caches
-    revalidateTag('categories', 'max');
-    revalidateTag(`category-${id}`, 'max');
+    updateTag('categories');
+    updateTag(`category-${id}`);
     revalidatePath('/categories');
 
     return { success: true };
@@ -93,7 +93,7 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
     await categories.reorderCategories(items);
 
     // Invalidate all category caches
-    revalidateTag('categories', 'max');
+    updateTag('categories');
     revalidatePath('/categories');
 
     return { success: true };
@@ -110,7 +110,7 @@ export async function moveCategoryUpAction(id: number) {
   try {
     const { categories } = createAdministrationServices();
     await categories.moveCategoryUp(id);
-    revalidateTag('categories', 'max');
+    updateTag('categories');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -121,7 +121,7 @@ export async function moveCategoryDownAction(id: number) {
   try {
     const { categories } = createAdministrationServices();
     await categories.moveCategoryDown(id);
-    revalidateTag('categories', 'max');
+    updateTag('categories');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };

@@ -9,6 +9,24 @@ export interface DashboardStats {
   ordersByStatus: Partial<Record<OrderStatus, number>>;
 }
 
+/** One Dashboard activity-log entry on an Order, with display-ready change values. */
+export interface OrderActivityEntry {
+  id: number;
+  action: string;
+  adminId?: number;
+  adminName?: string;
+  oldValue?: string;
+  newValue?: string;
+  createdAt: Date;
+}
+
+/** An Order with its activity log, for the Dashboard Order detail page. */
+export interface OrderDetail {
+  order: Order;
+  /** Newest first. */
+  activity: OrderActivityEntry[];
+}
+
 export interface IAdminOrderService {
   /**
    * Retrieves a paginated list of orders matching the given filters.
@@ -19,6 +37,11 @@ export interface IAdminOrderService {
    * Retrieves a single order by ID including all line items.
    */
   getById(id: number): Promise<Order | null>;
+
+  /**
+   * Retrieves one Order with items and its activity log; null when it does not exist.
+   */
+  getDetail(id: number): Promise<OrderDetail | null>;
 
   /**
    * Updates the delivery or lifecycle status of an order.

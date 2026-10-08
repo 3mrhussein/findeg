@@ -16,9 +16,7 @@ export default defineConfig({
     specPattern: 'cypress/e2e/**/*.cy.{ts,tsx}',
     // Temporary quarantine: restore each spec through its tracked follow-up.
     excludeSpecPattern: [
-      'cypress/e2e/cache-invalidation.cy.ts', // #343
       'cypress/e2e/orders/order-operations-phase-4.cy.ts', // #344
-      'cypress/e2e/architectural-boundaries.cy.ts', // #345
     ],
     supportFile: 'cypress/support/e2e.ts',
     video: true,

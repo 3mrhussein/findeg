@@ -3,7 +3,6 @@ import {
   getCatalogSuggestionsRaw,
   logCatalogSearchRaw,
   getFilteredProducts,
-  getProductsByIds,
 } from '@findeg/db/queries';
 import {
   type ISearchService,
@@ -13,11 +12,12 @@ import {
   type ParsedQuery,
   type Suggestion,
 } from '../interfaces/ISearchService';
+import { ProductService } from './ProductService';
 import { type Locale } from '../../../core/domain/value-objects';
 import { type ID } from '../../../core/domain/types/common';
 
 export class SearchService implements ISearchService {
-  constructor() {}
+  private readonly productService = new ProductService();
 
   public parseQuery(query: string): ParsedQuery {
     const arabicRegex = /[\u0600-\u06FF]+/g;
@@ -174,23 +174,12 @@ export class SearchService implements ISearchService {
     const total = allScoredResults.length;
     const pagedIds = allScoredResults.slice(offset, offset + limit).map((r) => r.productId);
 
-    // Fetch the fully hydrated products by IDs
-    const hydratedProducts = await getProductsByIds(pagedIds);
-
-    // If sorting by relevance, ensure the fetched items match the scored order
-    const finalItems = hydratedProducts;
-    if (sort === 'relevance') {
-      const orderMap = new Map(pagedIds.map((id, index) => [id, index]));
-      finalItems.sort((a, b) => {
-        const indexA = orderMap.get(a.id as number) ?? 999;
-        const indexB = orderMap.get(b.id as number) ?? 999;
-        return indexA - indexB;
-      });
-    } else {
-      // Assume getFiltered handles sorting if not relevance.
-      // Wait, DrizzleProductRepository doesn't implement sort currently! It forces `orderBy(desc(products.createdAt))`.
-      // To implement sort options, I need to modify getFiltered, but for now we follow what's there and focus on relevance handling.
-    }
+    // Hydrate the page of IDs into storefront-ready products (localized, with variants),
+    // keeping the order of `pagedIds` (relevance rank, or the scored order for other sorts).
+    const hydrated = await Promise.all(
+      pagedIds.map((id) => this.productService.getById(id, locale)),
+    );
+    const finalItems = hydrated.filter((product) => product !== null);
 
     this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
 

@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@i18n/navigation';
@@ -13,17 +15,20 @@ import { OrderActivityLog } from './_components/OrderActivityLog';
 /**
  * Admin Order Detail Page
  */
-export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const orderId = Number(id);
+export default async function OrderDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale, id } = await params;
+  setRequestLocale(locale);
 
-  if (isNaN(orderId)) notFound();
+  // Order ids are positive 32-bit integers; anything else cannot name an Order.
+  if (!/^[1-9]\d{0,9}$/.test(id) || Number(id) > 2_147_483_647) notFound();
 
-  // TODO: Replace with data layer queries from @data/orders/queries
-  const order = null as import('@findeg/backend/features/order').Order | null; // Stubbed - will trigger notFound()
-  const logs: React.ComponentProps<typeof OrderActivityLog>['logs'] = []; // Stubbed
-
-  if (!order) notFound();
+  const detail = await createAdministrationServices().orders.getDetail(Number(id));
+  if (!detail) notFound();
+  const { order, activity: logs } = detail;
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6 pb-20">
