@@ -29,7 +29,7 @@ export type { PermissionCode } from './domain/value-objects/Identity';
 export { PortalRoleSchema } from './domain/types/common';
 export type { PortalRole, OrderStatus, PaymentStatus } from './domain/types/common';
 export type { Notification } from './domain/types/Notification';
-export type { DomainError } from './domain/errors/DomainError';
+export type { DomainError } from '@findeg/domain-errors';
 export type {
   ILoggerService,
   LogMetadata,
