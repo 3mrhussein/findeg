@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@findeg/db": "workspace:*",
+    "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
     "@findeg/money": "workspace:*",
     "@react-email/components": "^1.0.12",

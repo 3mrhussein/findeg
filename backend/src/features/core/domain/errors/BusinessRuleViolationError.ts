@@ -1,4 +1,4 @@
-import { DomainError } from './DomainError';
+import { DomainError } from '@findeg/domain-errors';
 
 /**
  * Thrown when an operation violates a business rule enforced by the domain model.

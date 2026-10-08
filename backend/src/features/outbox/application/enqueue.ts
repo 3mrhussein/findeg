@@ -1,4 +1,4 @@
-import { outboxQueries, type DbTransaction } from '@findeg/db/queries';
+import { enqueue as enqueueOnTransaction, type DbTransaction } from '@findeg/db/queries/outbox';
 
 /**
  * Writes an outbox message on the caller's transaction, so it commits or rolls back with the
@@ -11,5 +11,5 @@ export function enqueue(
   kind: string,
   payload: Record<string, unknown>,
 ): Promise<void> {
-  return outboxQueries.enqueue(tx, id, kind, payload);
+  return enqueueOnTransaction(tx, id, kind, payload);
 }

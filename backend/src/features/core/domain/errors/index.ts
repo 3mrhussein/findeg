@@ -1,7 +1,9 @@
 // Domain Errors - Base and Specific Error Types
-export { DomainError } from './DomainError';
+// DomainError and NotAuthorizedError are defined once in @findeg/domain-errors; this is a
+// temporary reexport of the same constructors, not a second implementation. Remove it when
+// the legacy Order seams are removed (#368) and importers use the package directly.
+export { DomainError, NotAuthorizedError } from '@findeg/domain-errors';
 export { NotAuthenticatedError } from './NotAuthenticatedError';
-export { NotAuthorizedError } from './NotAuthorizedError';
 export { ResourceNotFoundError } from './ResourceNotFoundError';
 export { ValidationError, ValidationErrors } from './ValidationError';
 export { ConflictError } from './ConflictError';

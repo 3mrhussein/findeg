@@ -1,4 +1,4 @@
-import { DomainError } from './DomainError';
+import { DomainError } from '@findeg/domain-errors';
 
 /**
  * Error thrown when a CQRS query fails to execute.

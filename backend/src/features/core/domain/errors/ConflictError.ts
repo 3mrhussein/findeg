@@ -1,4 +1,4 @@
-import { DomainError } from './DomainError';
+import { DomainError } from '@findeg/domain-errors';
 
 /**
  * Thrown when an operation creates a resource that already exists (conflict).
