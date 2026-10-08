@@ -3,7 +3,7 @@ name: PR conventions
 # Runs on every PR, whatever its base branch.
 # Required checks (by job name, referenced in both branch rulesets):
 #   `PR title`      — validates Conventional Commits format via amannn/action-semantic-pull-request
-#   `Branch policy` — validates branch name and release source via scripts/ci-policy
+#   `Branch policy` — validates branch name and release source via .github/scripts
 # Do NOT rename these jobs without updating the rulesets in Settings → Rules.
 #
 # `edited` also fires when the PR's base branch changes, so the branch policy
@@ -39,7 +39,7 @@ jobs:
             chore
             revert
 
-  # Same rules as the local pre-push hook: both call scripts/ci-policy.
+  # Same rules as the local pre-push hook: both call .github/scripts.
   branch-policy:
     name: Branch policy
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          sparse-checkout: scripts/ci-policy
+          sparse-checkout: .github/scripts
       # A sparse checkout keeps the root files, so .nvmrc is there.
       - uses: actions/setup-node@v7
         with:
@@ -57,4 +57,4 @@ jobs:
         env:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
-        run: node scripts/ci-policy/cli.mjs branch-policy --head "$HEAD_REF" --base "$BASE_REF"
+        run: node .github/scripts/ci-cli.mjs branch-policy --head "$HEAD_REF" --base "$BASE_REF"
