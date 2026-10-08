@@ -5,6 +5,8 @@ import path from 'path';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
+  // The build wrapper inspects emitted client modules, then removes these maps.
+  productionBrowserSourceMaps: process.env.VERIFY_CLIENT_BUNDLE === '1',
   // Transpile workspace packages (UI only - backend should remain external)
   transpilePackages: ['@findeg/ui'],
   // Prevent server-only packages from being bundled on the client

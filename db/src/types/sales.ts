@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../schema/enums';
+import { ORDER_STATUS_VALUES, PAYMENT_STATUS_VALUES, PAYMENT_METHOD_VALUES } from './enum-values';
 
 /**
  * Sales & Order Primitives for Database Layer
@@ -7,13 +7,13 @@ import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../schema
 
 // ─── Enum-derived Schemas ────────────────────────────────────────────────────
 
-export const OrderStatusSchema = z.enum(orderStatusEnum.enumValues);
+export const OrderStatusSchema = z.enum(ORDER_STATUS_VALUES);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
-export const PaymentStatusSchema = z.enum(paymentStatusEnum.enumValues);
+export const PaymentStatusSchema = z.enum(PAYMENT_STATUS_VALUES);
 export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 
-export const PaymentMethodSchema = z.enum(paymentMethodEnum.enumValues);
+export const PaymentMethodSchema = z.enum(PAYMENT_METHOD_VALUES);
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
 /** Egyptian mobile: 01[0125] + 8 digits (e.g. 01012345678) or +20 prefix */

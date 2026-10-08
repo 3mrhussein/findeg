@@ -1,4 +1,11 @@
 import { identitySchema, salesSchema } from './schemas';
+import {
+  PORTAL_ROLE_VALUES,
+  ACTOR_TYPE_VALUES,
+  ORDER_STATUS_VALUES,
+  PAYMENT_STATUS_VALUES,
+  PAYMENT_METHOD_VALUES,
+} from '../types/enum-values';
 
 /**
  * Shared Business Enums
@@ -9,24 +16,16 @@ import { identitySchema, salesSchema } from './schemas';
 
 // --- Identity Domain ---
 
-export const portalRoleEnum = identitySchema.enum('portal_role', ['customer', 'staff']);
+export const portalRoleEnum = identitySchema.enum('portal_role', PORTAL_ROLE_VALUES);
 
-export const actorTypeEnum = identitySchema.enum('actor_type', ['guest', 'user', 'service']);
+export const actorTypeEnum = identitySchema.enum('actor_type', ACTOR_TYPE_VALUES);
 
 // --- Sales Domain ---
 
-export const orderStatusEnum = salesSchema.enum('order_status', [
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled',
-  'refunded',
-]);
+export const orderStatusEnum = salesSchema.enum('order_status', ORDER_STATUS_VALUES);
 
-export const paymentStatusEnum = salesSchema.enum('payment_status', ['unpaid', 'paid', 'refunded']);
+export const paymentStatusEnum = salesSchema.enum('payment_status', PAYMENT_STATUS_VALUES);
 
-export const paymentMethodEnum = salesSchema.enum('payment_method', ['cod', 'card']);
+export const paymentMethodEnum = salesSchema.enum('payment_method', PAYMENT_METHOD_VALUES);
 
 // --- Catalog Domain ---

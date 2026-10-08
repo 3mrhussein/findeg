@@ -99,6 +99,21 @@ import { createStorefrontServices } from '@backend/features/catalog';
 import { DrizzleProductRepository } from '@backend/features/catalog/infrastructure/...';
 ```
 
-### 3. Bundling Optimization: `serverExternalPackages`
+### 3. Build Verification: Client Module Sources
 
-To completely insulate the client bundle from Node.js dependencies inherent to our infrastructure (like `postgres`, `drizzle-orm`, `jsonwebtoken`, `bcryptjs`), we define them as `serverExternalPackages` in our Next.js configuration. This serves as a fail-safe ensuring server-side modules never accidentally hydrate to the client.
+`serverExternalPackages` controls server bundling; it does not prevent an import from
+entering the client dependency graph. The storefront's `build` command therefore
+verifies source-map module paths for every emitted client JavaScript chunk. Database
+sources, backend infrastructure, native `node:` modules and server packages
+(`postgres`, `drizzle-orm`, `bcryptjs`, `jsonwebtoken`, `nodemailer`, `sharp`) fail the
+build. Pure DTOs under `db/src/types/` remain allowed; their enum literals are shared
+with PostgreSQL definitions without importing Drizzle. Storefront permission helpers
+use the core client-safe entry point. The unmapped browser polyfill must match the installed Next.js artifact byte
+for byte. Missing chunks or module evidence also fail. Verification maps are removed
+before the build command finishes, including on failure.
+
+`scripts/architecture/` runs at the existing lint/build seams rather than Cypress:
+`pnpm test:scripts` regression-checks the storefront ESLint import policy and the
+bundle verifier; `pnpm lint` checks actual imports; `pnpm type-check` verifies the
+TypeScript boundary. CI Build and strict E2E both invoke the verified storefront
+build through Turbo. Live English/Arabic Customer journeys remain in Cypress.
