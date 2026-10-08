@@ -49,7 +49,6 @@ source, and tracked individually:
 
 | Spec | Reason | Restore coverage |
 | --- | --- | --- |
-| `admin/admin-dashboard-e2e.cy.ts` | Uses retired `/admin` routes and dashboard CRUD APIs; shopper navigation belongs to the other app. | [#342](https://github.com/3mrhussein/findeg/issues/342) |
 | `orders/order-operations-phase-4.cy.ts` | Uses retired routes, assumed first-order state, and nonexistent mutation HTTP endpoints. | [#344](https://github.com/3mrhussein/findeg/issues/344) |
 
 Remove each exclusion when the replacement spec passes against a production build

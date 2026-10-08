@@ -47,6 +47,12 @@ export function mapAdminProductEditData(data: ProductEditRaw): ProductEditData {
   return {
     ...data,
     rating: Number(data.rating),
+    // The product form reads its bilingual fields from `localizedContent`.
+    localizedContent: {
+      name: data.localizedName,
+      description: data.localizedDescription,
+      longDescription: data.localizedLongDescription,
+    },
     variants: data.variants.map((variant) => ({
       ...variant,
       basePrice: Number(variant.basePrice),

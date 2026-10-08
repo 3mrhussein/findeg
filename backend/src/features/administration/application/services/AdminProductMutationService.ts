@@ -126,6 +126,8 @@ export class AdminProductMutationService {
   async deleteProduct(id: ID, adminUserId?: number): Promise<void> {
     await getExistingProductOrThrow(id);
 
+    await bulkDeleteProducts([id as number]);
+
     await this.dependencies.auditLogService?.logAction({
       entityType: 'product',
       entityId: String(id),

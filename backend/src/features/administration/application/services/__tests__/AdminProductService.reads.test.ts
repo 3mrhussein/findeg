@@ -173,6 +173,11 @@ describe('AdminProductService reads', () => {
     expect(result).toMatchObject({
       id: 5,
       rating: 4.5,
+      localizedContent: {
+        name: { en: 'Notebook', ar: 'دفتر' },
+        description: { en: 'Short', ar: 'قصير' },
+        longDescription: { en: 'Long', ar: 'طويل' },
+      },
       variants: [
         {
           id: 10,
