@@ -34,6 +34,12 @@ concurrency:
 jobs:
   feature:
     name: Feature
+    # GitHub checks nested jobs' permissions against the caller when it loads the
+    # workflow, so this must allow what ci-jobs.yml's `Publish evidence` asks for
+    # (write). That job only runs after a strict-tier E2E failure, never on this
+    # tier, and ci-jobs.yml keeps every other job at `contents: read`.
+    permissions:
+      contents: write
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: fast # policy tier stays "fast"; only the display name changes

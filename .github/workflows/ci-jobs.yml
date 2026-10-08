@@ -14,6 +14,10 @@ name: CI jobs
 # - manual run (fast tier, `CI · Feature` → Run workflow): every code job on
 #   all packages, caches restored unless the force options say otherwise.
 #
+# Every caller must grant at least the highest permission a job here asks for
+# (`Publish evidence` needs `contents: write`), even a caller that never runs it:
+# GitHub rejects the workflow file otherwise.
+#
 # The `github` context here is the caller's (its event, refs and SHAs).
 # Concurrency is set by the callers only: here `github.workflow` would name
 # the caller too, and a matching group would cancel or deadlock the caller.

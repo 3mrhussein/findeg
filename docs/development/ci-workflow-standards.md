@@ -31,7 +31,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 - **Every pipeline workflow has `workflow_dispatch`.** Inputs are booleans, `default: false`. Anything that makes a run slower or colder than normal is opt-in by checkbox, never the default.
 - **PRs run automatically.** Include `edited` in `pull_request` types when the base branch picks the tier, so retargeting reruns CI.
 - **Concurrency** is set only by the caller: `group: <workflow>-<pr number or ref>`, `cancel-in-progress: true` for PRs and `false` for pushes, so every merged commit gets a verdict.
-- **Permissions** default to `contents: read` at the top of the file; jobs ask for more only where needed.
+- **Permissions** default to `contents: read` at the top of the file; jobs ask for more only where needed. Every caller of a reusable workflow must grant at least the highest permission any nested job asks for, even if that job never runs for that caller, or GitHub rejects the caller file.
 - **A tier guard** (`expect-tier` in the plan) makes a mis-set trigger fail `plan` instead of silently running the wrong pipeline.
 
 ## 4. Tiers and caches
