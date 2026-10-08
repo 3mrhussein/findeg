@@ -8,15 +8,14 @@ import {
   InsufficientStockError,
   checkoutIdempotencyQueries,
 } from '@findeg/db/queries';
+import { piastersToDecimal, toPiasters } from '@findeg/money';
 import { computeConfirmation } from '../../domain/confirmation';
 import {
   lineDiscount,
-  piastersToDecimal,
   priceLine,
   shippingFeeToPiasters,
   sumQuote,
   toCheckoutQuote,
-  toPiasters,
   type PiasterQuote,
   type PiasterQuoteLine,
 } from '../../domain/piasters';

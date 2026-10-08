@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { fromPiasters } from './piasters';
+import { fromPiasters } from '@findeg/money';
 
 export interface QuoteConfirmationDiscount {
   source: string;

@@ -1,0 +1,22 @@
+{
+  "name": "@findeg/money",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest --run",
+    "clean": "rm -rf node_modules dist .turbo"
+  },
+  "devDependencies": {
+    "@findeg/config": "workspace:*",
+    "eslint": "^9.39.4",
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.11"
+  }
+}

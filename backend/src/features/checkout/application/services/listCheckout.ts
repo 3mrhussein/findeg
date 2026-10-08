@@ -11,12 +11,12 @@ import {
 import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
+import { toPiasters } from '@findeg/money';
 import { computeConfirmation } from '../../domain/confirmation';
 import { isOfferActive } from '../../domain/list-offer';
 import {
   priceLine,
   sumQuote,
-  toPiasters,
   type PiasterQuote,
   type PiasterQuoteLine,
 } from '../../domain/piasters';
