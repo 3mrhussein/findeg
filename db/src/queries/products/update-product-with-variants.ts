@@ -5,6 +5,11 @@ import type { InsertProductVariantInput } from './insert-product-variant-in-tx';
 import { insertProductVariantInTx } from './insert-product-variant-in-tx';
 
 type LocalizedRecord = Record<string, string>;
+
+/** Keep `undefined` (leave column untouched) and `null` (clear it) distinct from a real price. */
+function nullablePrice(value: number | null | undefined): string | null | undefined {
+  return value == null ? value : String(value);
+}
 type ProductVariantMediaSet = (typeof productVariants.$inferInsert)['mediaSet'];
 
 interface UpdateVariantMutationInput {
@@ -99,9 +104,8 @@ export async function updateProductWithVariantsInDb(
             isDefault: variant.isDefault,
             mediaSet: variant.mediaSet,
             basePrice: variant.basePrice !== undefined ? String(variant.basePrice) : undefined,
-            strikePrice:
-              variant.strikePrice !== undefined ? String(variant.strikePrice) : undefined,
-            costPrice: variant.costPrice !== undefined ? String(variant.costPrice) : undefined,
+            strikePrice: nullablePrice(variant.strikePrice),
+            costPrice: nullablePrice(variant.costPrice),
             weightGrams: variant.weightGrams ?? null,
             barcode: variant.barcode ?? null,
             sortOrder: variant.sortOrder,

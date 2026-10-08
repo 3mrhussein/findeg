@@ -50,7 +50,6 @@ source, and tracked individually:
 | Spec | Reason | Restore coverage |
 | --- | --- | --- |
 | `admin/admin-dashboard-e2e.cy.ts` | Uses retired `/admin` routes and dashboard CRUD APIs; shopper navigation belongs to the other app. | [#342](https://github.com/3mrhussein/findeg/issues/342) |
-| `cache-invalidation.cy.ts` | Uses removed catalog CRUD APIs and numeric catalog IDs; cache mutation assertions need current server actions. | [#343](https://github.com/3mrhussein/findeg/issues/343) |
 | `orders/order-operations-phase-4.cy.ts` | Uses retired routes, assumed first-order state, and nonexistent mutation HTTP endpoints. | [#344](https://github.com/3mrhussein/findeg/issues/344) |
 | `architectural-boundaries.cy.ts` | Retired routes and inline-script scans do not inspect actual bundles; several cases only log assertions. | [#345](https://github.com/3mrhussein/findeg/issues/345) |
 
