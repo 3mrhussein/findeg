@@ -18,7 +18,7 @@ import {
   attributes as attributeTable,
   variantAttributes,
 } from '../../schema';
-import { eq, and, inArray, count, sql, asc, desc } from 'drizzle-orm';
+import { eq, and, inArray, count, sql, asc, desc, type SQL } from 'drizzle-orm';
 import { TranslationMap, type ID } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -35,13 +35,21 @@ export interface ProductAttributeValueRow {
   valueText?: string;
 }
 
+export type ProductListingSort = 'newest' | 'price_asc' | 'price_desc' | 'rating' | 'popular';
+
 export interface ProductFiltersInput {
   isActive?: boolean;
   categoryId?: ID | number;
   brandId?: ID | number;
+  /** Matches products of any of these brands. */
+  brandIds?: (ID | number)[];
+  /** Inclusive bounds on the listing price (see `listingPrice`). */
+  minPrice?: number;
+  maxPrice?: number;
   offset?: number;
   limit?: number;
-  sort?: string;
+  /** Defaults to newest. */
+  sort?: ProductListingSort;
 }
 
 // ─── Single Product Queries ──────────────────────────────────────────────────
@@ -133,6 +141,15 @@ export async function getFiltered(
   if (filters.brandId !== undefined) {
     conditions.push(eq(products.brandId, Number(filters.brandId)));
   }
+  if (filters.brandIds && filters.brandIds.length > 0) {
+    conditions.push(inArray(products.brandId, filters.brandIds.map(Number)));
+  }
+  if (filters.minPrice !== undefined) {
+    conditions.push(sql`${listingPrice} >= ${filters.minPrice}`);
+  }
+  if (filters.maxPrice !== undefined) {
+    conditions.push(sql`${listingPrice} <= ${filters.maxPrice}`);
+  }
   const where = and(...conditions);
   // Get total count
   const [{ count: totalCount }] = await db.select({ count: count() }).from(products).where(where);
@@ -146,14 +163,50 @@ export async function getFiltered(
     .select()
     .from(products)
     .where(where)
+    .orderBy(...listingOrder(filters.sort))
     .offset(filters.offset || 0)
-    .limit(filters.limit || 20)
-    .orderBy(desc(products.id));
+    .limit(filters.limit || 20);
 
   return {
     products: productsList,
     total: totalCount,
   };
+}
+
+/**
+ * The price a listing shows: the default variant's base price, else the first
+ * variant's — the same variant `ProductEntity.getDefaultVariant` displays.
+ */
+const listingPrice = sql`(
+  SELECT ${productVariants.basePrice} FROM ${productVariants}
+  WHERE ${productVariants.productId} = ${products.id}
+  ORDER BY ${productVariants.isDefault} DESC, ${productVariants.sortOrder}, ${productVariants.id}
+  LIMIT 1
+)`;
+
+/** Every order ends on the id so pages never overlap or skip rows. */
+function listingOrder(sort: ProductListingSort = 'newest'): SQL[] {
+  switch (sort) {
+    case 'price_asc':
+      return [sql`${listingPrice} ASC NULLS LAST`, asc(products.id)];
+    case 'price_desc':
+      return [sql`${listingPrice} DESC NULLS LAST`, desc(products.id)];
+    case 'rating':
+      return [
+        sql`${products.rating} DESC NULLS LAST`,
+        sql`${products.reviewsCount} DESC NULLS LAST`,
+        desc(products.id),
+      ];
+    case 'popular':
+      return [
+        sql`${products.reviewsCount} DESC NULLS LAST`,
+        sql`${products.rating} DESC NULLS LAST`,
+        desc(products.id),
+      ];
+    case 'newest':
+    default:
+      return [desc(products.createdAt), desc(products.id)];
+  }
 }
 
 /**
@@ -214,7 +267,8 @@ export async function checkSlugAvailable(slug: string, excludeId?: number): Prom
 
 /**
  * Get variants for multiple products
- * Returns map keyed by productId
+ * Returns map keyed by productId, each list default first, then by sort order and id —
+ * the order `listingPrice` uses, so the first variant is the one a listing prices.
  */
 export async function getVariantsByProductIds(
   productIds: number[],
@@ -224,7 +278,12 @@ export async function getVariantsByProductIds(
   const rows = await db
     .select()
     .from(productVariants)
-    .where(inArray(productVariants.productId, productIds));
+    .where(inArray(productVariants.productId, productIds))
+    .orderBy(
+      desc(productVariants.isDefault),
+      asc(productVariants.sortOrder),
+      asc(productVariants.id),
+    );
 
   const map: Record<number, VariantRow[]> = {};
   for (const row of rows) {

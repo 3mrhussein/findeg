@@ -5,6 +5,7 @@ This project uses a layered Cypress structure so tests stay maintainable as UI e
 ## Directory layout
 
 - `cypress/e2e/shop/customer-journeys-e2e.cy.ts`: current Customer storefront journeys
+- `cypress/e2e/shop/product-listing-e2e.cy.ts`: PLP brand/price filters, sorting, pagination and empty state on isolated fixtures
 - `cypress/e2e/partner/invitation-acceptance.cy.ts`: Partner invitation registration and acceptance
 - `cypress/e2e/shop/catalog-search-e2e.cy.ts`: keyword search and empty results (no typo tolerance; see `db/src/queries/catalog/search.ts`)
 - `cypress/e2e/shop/school-list-completeness.cy.ts`: published and archived List selections
@@ -45,15 +46,15 @@ Configured in `cypress.config.ts` (override through CLI/CI env):
 real seeded PostgreSQL: English/Arabic catalog and school routes, product slug
 navigation, variant cart operations and persistence, checkout validation,
 real COD Quote/Order Acceptance, acceptance failure, registration and guest account
-protection. Runtime exceptions fail these tests.
+protection, and signed-in order history (including that one Customer cannot open
+another's order). Runtime exceptions fail these tests.
 
-One spec is retained under `quarantined/` with a `.quarantined.ts` name,
-explicitly outside the `e2e/**/*.cy.{ts,tsx}` pattern:
-
-- `shop-storefront-e2e.quarantined.ts`: [#346](https://github.com/3mrhussein/findeg/issues/346)
-  tracks restoring PLP filters, sorting/pagination, typo fallback and signed-in order
-  history after migrating removed REST catalog/cart endpoints and implementing
-  missing PLP query semantics.
+`e2e/shop/product-listing-e2e.cy.ts` creates its own category, brands and price
+ladder (the `createPlpCatalog` task) and asserts exact counts and order for brand and
+price filters, price sorting, pagination and the empty state. Category filtering
+matches the category itself, not its descendants; in-stock, rating and discount
+filters are not applied by the PLP query and are not covered. Typo-tolerant search
+fallback is not supported (see `db/src/queries/catalog/search.ts`).
 
 Architecture coverage from [#347](https://github.com/3mrhussein/findeg/issues/347)
 lives at the lint and production-build seams, in `scripts/architecture/`:
@@ -68,8 +69,6 @@ lives at the lint and production-build seams, in `scripts/architecture/`:
   The unmapped browser polyfill must match the installed Next.js artifact byte for byte.
   The existing CI Build and strict E2E builds both run this command through Turbo.
 
-The legacy architecture spec has been deleted. Live English/Arabic Customer journeys
-continue to verify product slug navigation and the other current storefront routes.
-
-Quarantine leaves these tracked coverage gaps open. Remove each retained file once
-its follow-up restores meaningful coverage at the appropriate seam.
+The legacy architecture spec has been deleted, so no specs remain quarantined. The
+obsolete `/products` index is replaced by live product slug navigation in the
+Customer journeys.

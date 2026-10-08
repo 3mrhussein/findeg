@@ -30,7 +30,7 @@ export {
   getFiltered as getFilteredProducts,
   countProducts,
 } from './products';
-export type { ProductRow, ProductFiltersInput } from './products';
+export type { ProductRow, ProductFiltersInput, ProductListingSort } from './products';
 
 export {
   executeCatalogScoredSearchRaw,

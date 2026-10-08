@@ -46,7 +46,8 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
   const primaryVariant = useMemo(() => {
     const variants = product.variants || [];
-    return variants.find((variant) => variant.variantKey === 'default') || variants[0];
+    // Variants arrive default first, matching the variant the listing filters and sorts by.
+    return variants.find((variant) => variant.isDefault) || variants[0];
   }, [product.variants]);
 
   const stockSnapshot = useMemo(() => {

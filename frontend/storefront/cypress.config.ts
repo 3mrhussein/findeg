@@ -23,6 +23,95 @@ export default defineConfig({
     downloadsFolder: path.join(artifactsBase, 'downloads'),
     setupNodeEvents(on, config) {
       on('task', {
+        /**
+         * Isolated PLP catalog: a category with two brands, a fixed price ladder and
+         * one inactive product, plus a 25-product category for pagination.
+         */
+        async createPlpCatalog() {
+          const { randomUUID } = await import('node:crypto');
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const suffix = randomUUID().slice(0, 8);
+          const brand = async (key: string) => {
+            const [row] = await db
+              .insert(schema.brands)
+              .values({
+                slug: `cypress-plp-${key}-${suffix}`,
+                localizedName: { en: `PLP ${key} ${suffix}`, ar: `PLP ${key} ${suffix}` },
+              })
+              .returning();
+            return row;
+          };
+          const category = async (key: string) => {
+            const [row] = await db
+              .insert(schema.categories)
+              .values({
+                slug: `cypress-plp-${key}-${suffix}`,
+                localizedName: { en: `PLP ${key} ${suffix}`, ar: `PLP ${key} ${suffix}` },
+              })
+              .returning();
+            return row;
+          };
+          const product = async (input: {
+            name: string;
+            categoryId: number;
+            price: number;
+            brandId?: number;
+            isActive?: boolean;
+          }) => {
+            const [row] = await db
+              .insert(schema.products)
+              .values({
+                slug: `cypress-plp-${input.name.toLowerCase()}-${suffix}`,
+                localizedName: { en: input.name, ar: input.name },
+                localizedDescription: { en: '' },
+                localizedLongDescription: { en: '' },
+                categoryId: input.categoryId,
+                brandId: input.brandId,
+                isActive: input.isActive ?? true,
+              })
+              .returning();
+            await db.insert(schema.productVariants).values({
+              productId: row.id,
+              variantKey: 'default',
+              sku: `CY-PLP-${input.name}-${suffix}`,
+              basePrice: input.price.toFixed(2),
+              isDefault: true,
+            });
+          };
+
+          const [alpha, beta] = [await brand('alpha'), await brand('beta')];
+          const listing = await category('listing');
+          for (const [name, price, brandId] of [
+            ['A10', 10, alpha.id],
+            ['B20', 20, beta.id],
+            ['A30', 30, alpha.id],
+            ['B40', 40, beta.id],
+            ['A50', 50, alpha.id],
+            ['N60', 60, undefined],
+          ] as const) {
+            await product({ name, price, brandId, categoryId: listing.id });
+          }
+          await product({ name: 'Inactive', price: 15, categoryId: listing.id, isActive: false });
+
+          const paged = await category('paged');
+          for (let price = 1; price <= 25; price += 1) {
+            await product({
+              name: `P${String(price).padStart(2, '0')}`,
+              price,
+              categoryId: paged.id,
+            });
+          }
+
+          return {
+            listingUrl: `/en/shop/${listing.slug}`,
+            pagedUrl: `/en/shop/${paged.slug}`,
+            alpha: { id: alpha.id, name: `PLP alpha ${suffix}` },
+            beta: { id: beta.id, name: `PLP beta ${suffix}` },
+          };
+        },
         async createSupplyLists() {
           const { randomUUID } = await import('node:crypto');
           const [{ db }, schema, { createSchoolSupplyListService }] = await Promise.all([
