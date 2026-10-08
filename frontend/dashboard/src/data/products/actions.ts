@@ -44,7 +44,9 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
+    // The inventory list is built from products too.
     updateTag('products');
+    updateTag('inventory');
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -64,6 +66,7 @@ export async function deleteProduct(id: number) {
     await products.deleteProduct(id);
 
     updateTag('products');
+    updateTag('inventory');
 
     return { success: true };
   } catch (error: unknown) {
@@ -102,6 +105,7 @@ export async function setProductStatus(id: number, isActive: boolean) {
 
     await products.updateProduct(id, { isActive });
     updateTag('products');
+    updateTag('inventory');
     return { success: true };
   } catch (error: unknown) {
     console.error('[setProductStatus]', error);
@@ -125,6 +129,7 @@ export async function generateVariants(
     const { products } = createAdministrationServices();
     await products.generateVariants(productId, dimensions, defaults);
     updateTag('products');
+    updateTag('inventory');
     return { success: true };
   } catch (error: unknown) {
     console.error('[generateVariants]', error);
