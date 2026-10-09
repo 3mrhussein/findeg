@@ -17,7 +17,6 @@ cypress/
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
-
 # Environment
 .env*
 *.local
@@ -28,3 +27,5 @@ yarn.lock
 
 # ESLint bulk-suppressions file: keep ESLint's own format so regenerating it is diff-stable
 **/eslint-suppressions.json
+
+*.md
