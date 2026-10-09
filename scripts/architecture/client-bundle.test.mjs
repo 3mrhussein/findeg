@@ -115,3 +115,23 @@ test('allows the exact framework polyfill but rejects unmapped modifications', a
     /Missing local source map/,
   );
 });
+
+test('accepts an empty map only for generated Turbopack export forwarders', async (t) => {
+  const build = await fixture(t, []);
+  const path = join(build, 'static/chunks/nested/cart.js');
+  // Real Dashboard production artifact: generated re-exports have no original sources.
+  const forwarders =
+    '(()=>{"use strict";(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,418391,t=>{var i=t.i(577686);t.s(["f",()=>i.f])},11450,t=>{var i=t.i(539476);t.s(["f",()=>i.f])}])})();';
+  await writeFile(path, `${forwarders}\n//# sourceMappingURL=cart.js.map`);
+  assert.equal(await verifyClientBundle(build), 1);
+  for (const code of [
+    forwarders.replace('var i=t.i(577686);', 'fetch("/secret");var i=t.i(577686);'),
+    `${forwarders}globalThis.secret="application code";`,
+    'console.log("application code");',
+  ]) {
+    await writeFile(path, `${code}\n//# sourceMappingURL=cart.js.map`);
+    await assert.rejects(verifyClientBundle(build), /no module sources/);
+  }
+  await writeFile(path, forwarders);
+  await assert.rejects(verifyClientBundle(build), /Missing local source map/);
+});
