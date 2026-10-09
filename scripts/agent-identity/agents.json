@@ -1,7 +1,11 @@
 {
-  "appNamePrefix": "findeg-",
+  "appNamePrefix": "",
   "agents": {
-    "claude": { "extraBots": [] },
-    "codex": { "extraBots": ["chatgpt-codex-connector[bot]"] }
+    "claude": {
+      "extraBots": []
+    },
+    "codex": {
+      "extraBots": ["chatgpt-codex-connector[bot]"]
+    }
   }
 }
