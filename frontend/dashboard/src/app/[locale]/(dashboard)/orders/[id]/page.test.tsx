@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { NextIntlClientProvider } from 'next-intl';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -31,7 +32,11 @@ vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 import OrderDetailPage from './page';
 
 const renderPage = async (id: string, locale = 'en') =>
-  render(await OrderDetailPage({ params: Promise.resolve({ locale, id }) }));
+  render(
+    <NextIntlClientProvider locale={locale} messages={{ Common: { Discount: 'Discount' } }}>
+      {await OrderDetailPage({ params: Promise.resolve({ locale, id }) })}
+    </NextIntlClientProvider>,
+  );
 
 describe('Order detail page', () => {
   beforeEach(() => {

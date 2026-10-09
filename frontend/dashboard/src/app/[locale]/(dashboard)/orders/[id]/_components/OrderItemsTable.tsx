@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { piastersToEgp } from '@findeg/money';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
@@ -12,6 +13,7 @@ interface OrderItemsTableProps {
  *
  */
 export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
+  const t = useTranslations('Common');
   return (
     <div className="rounded-md border bg-card">
       <div className="p-4 border-b">
@@ -24,6 +26,7 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
             <TableHead>SKU</TableHead>
             <TableHead className="text-right">Price</TableHead>
             <TableHead className="text-right">Qty</TableHead>
+            <TableHead className="text-right">{t('Discount')}</TableHead>
             <TableHead className="text-right">Total</TableHead>
           </TableRow>
         </TableHeader>
@@ -55,6 +58,9 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">{qty}</TableCell>
+                <TableCell className="text-right">
+                  {currency} {piastersToEgp(item.discountAmount)}
+                </TableCell>
                 <TableCell className="text-right font-medium">
                   {currency} {piastersToEgp(total)}
                 </TableCell>

@@ -9,7 +9,7 @@ describe('Staff Order snapshot totals', () => {
       <OrderTotals
         order={
           {
-            subtotal: 3750n,
+            subtotal: 3500n,
             shippingCost: 1000n,
             discountTotal: 250n,
             totalAmount: 4500n,
