@@ -12,7 +12,7 @@ interface OrderTotalsProps {
  */
 export function OrderTotals({ order }: OrderTotalsProps) {
   const currency = order.currency || 'EGP';
-  const subtotal = order.subtotal;
+  const subtotal = order.subtotal + order.discountTotal;
   const shippingTotal = order.shippingCost;
   const discountTotal = order.discountTotal;
   const totalAmount = order.totalAmount;

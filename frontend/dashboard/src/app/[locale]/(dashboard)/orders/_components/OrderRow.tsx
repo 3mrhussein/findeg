@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { piastersToEgp } from '@findeg/money';
 
 import { useState } from 'react';
@@ -24,6 +25,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
   const orderNumber = `#${order.id}`;
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
+  const t = useTranslations('Common');
   const totalAmount = `${order.currency || 'EGP'} ${piastersToEgp(order.totalAmount)}`;
   const timeAgo = order.createdAt
     ? formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })
@@ -104,7 +106,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.subtotal)}
+                {order.currency || 'EGP'} {piastersToEgp(order.subtotal + order.discountTotal)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
@@ -113,6 +115,14 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
                 {order.currency || 'EGP'} {piastersToEgp(order.shippingCost)}
               </span>
             </div>
+            {order.discountTotal > 0n && (
+              <div className="flex justify-between text-sm text-destructive">
+                <span>{t('Discount')}</span>
+                <span>
+                  -{order.currency} {piastersToEgp(order.discountTotal)}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between font-semibold pt-1 border-t">
               <span>Total:</span>
               <span>{totalAmount}</span>

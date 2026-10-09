@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { piastersToEgp } from '@findeg/money';
 
 import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
@@ -31,6 +32,7 @@ export function OrderDetailDrawer({
   const orderNumber = `#${order.id}`;
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
+  const t = useTranslations('Common');
   const totalAmount = `${order.currency || 'EGP'} ${piastersToEgp(order.totalAmount)}`;
 
   return (
@@ -134,7 +136,7 @@ export function OrderDetailDrawer({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.subtotal)}
+                {order.currency || 'EGP'} {piastersToEgp(order.subtotal + order.discountTotal)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
@@ -143,6 +145,14 @@ export function OrderDetailDrawer({
                 {order.currency || 'EGP'} {piastersToEgp(order.shippingCost)}
               </span>
             </div>
+            {order.discountTotal > 0n && (
+              <div className="flex justify-between text-sm text-destructive">
+                <span>{t('Discount')}</span>
+                <span>
+                  -{order.currency} {piastersToEgp(order.discountTotal)}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between font-semibold text-lg pt-2 border-t">
               <span>Total:</span>
               <span>{totalAmount}</span>
