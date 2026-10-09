@@ -50,3 +50,25 @@ test('server factories, client schemas and erased client types remain allowed', 
     assert.deepEqual(await boundaryMessages(code), []);
   }
 });
+
+test('client permission helpers must avoid the server Core factory barrel', async () => {
+  for (const helper of [
+    'hasPermission',
+    'hasAnyPermission',
+    'hasAllPermissions',
+    'systemAdmin',
+    'staffRole',
+  ]) {
+    const messages = await boundaryMessages(
+      `'use client'; import { ${helper} } from '@findeg/backend/features/core';`,
+    );
+    assert.equal(messages.length, 1, helper);
+    assert.equal(messages[0].ruleId, 'local/no-full-barrel-import-in-client-components');
+    assert.deepEqual(
+      await boundaryMessages(
+        `'use client'; import { ${helper} } from '@findeg/backend/features/core/schemas';`,
+      ),
+      [],
+    );
+  }
+});

@@ -1,18 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SessionPayload } from '@findeg/backend/features/core';
 
-const { getSession, orders } = vi.hoisted(() => ({
+const { getSession, orders, updateTag } = vi.hoisted(() => ({
   getSession: vi.fn(),
+  updateTag: vi.fn(),
   orders: { changeStatus: vi.fn(), changePaymentStatus: vi.fn() },
 }));
 
 vi.mock('@lib/session', () => ({ getSession }));
-vi.mock('next/cache', () => ({ updateTag: vi.fn() }));
+vi.mock('next/cache', () => ({ updateTag }));
 vi.mock('@findeg/orders', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@findeg/orders')>()),
   createOrders: () => orders,
 }));
 
+import {
+  InvalidOrderStatusTransitionError,
+  InvalidPaymentStatusTransitionError,
+} from '@findeg/orders';
 import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@data/orders/actions';
 
 const refused = { success: false, error: 'Not authorized to change orders' };
@@ -30,6 +35,8 @@ function staffSession(permissionCodes: string[]): SessionPayload {
 describe('Dashboard order server actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    orders.changeStatus.mockResolvedValue(undefined);
+    orders.changePaymentStatus.mockResolvedValue(undefined);
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
@@ -40,6 +47,7 @@ describe('Dashboard order server actions', () => {
 
     expect(result).toEqual(refused);
     expect(orders.changeStatus).not.toHaveBeenCalled();
+    expect(updateTag).not.toHaveBeenCalled();
   });
 
   it('refuses a status change from Staff without order-write permission', async () => {
@@ -102,5 +110,43 @@ describe('Dashboard order server actions', () => {
     };
     expect(orders.changeStatus).toHaveBeenCalledWith(actor, 7, { status: 'confirmed' });
     expect(orders.changePaymentStatus).toHaveBeenCalledWith(actor, 7, 'paid');
+  });
+});
+
+describe('stale Order reads after rejected concurrent changes', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    orders.changeStatus.mockResolvedValue(undefined);
+    orders.changePaymentStatus.mockResolvedValue(undefined);
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+  it('expires cached reads when the persisted status rejects a stale target', async () => {
+    getSession.mockResolvedValue(staffSession(['admin.orders.write']));
+    orders.changeStatus.mockRejectedValueOnce(
+      new InvalidOrderStatusTransitionError('cancelled', 'confirmed', []),
+    );
+
+    const result = await updateOrderStatusAction(7, { status: 'confirmed' });
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Invalid status transition from cancelled to confirmed. Allowed: none.',
+    });
+    expect(updateTag.mock.calls).toEqual([['orders'], ['dashboard']]);
+  });
+
+  it('expires cached reads when the persisted payment rejects a stale target', async () => {
+    getSession.mockResolvedValue(staffSession(['admin.orders.write']));
+    orders.changePaymentStatus.mockRejectedValueOnce(
+      new InvalidPaymentStatusTransitionError('refunded', 'paid', []),
+    );
+
+    const result = await updateOrderPaymentStatusAction(7, 'paid');
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Invalid payment status transition from refunded to paid. Allowed: none.',
+    });
+    expect(updateTag.mock.calls).toEqual([['orders'], ['dashboard']]);
   });
 });

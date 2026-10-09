@@ -14,9 +14,8 @@ import {
   systemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
-  SessionPayload,
-  PermissionCode,
-} from '@findeg/backend/features/core';
+} from '@findeg/backend/features/core/schemas';
+import type { SessionPayload, PermissionCode } from '@findeg/backend/features/core';
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.

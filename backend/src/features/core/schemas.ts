@@ -15,4 +15,5 @@ export {
   hasAnyPermission,
   hasAllPermissions,
   systemAdmin,
+  staffRole,
 } from '@findeg/db/types';

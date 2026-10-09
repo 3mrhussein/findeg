@@ -1,7 +1,7 @@
 /**
  * Order Actions (Dashboard Data Layer)
  *
- * Uses "use server" directive and revalidateTag() for cache invalidation.
+ * Uses "use server" directive and updateTag() for cache invalidation.
  * Apps own cache invalidation - backend stays pure TypeScript.
  */
 'use server';
@@ -22,10 +22,12 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
   try {
     const actor = await requireOrderWriteActor();
     const orders = createOrders();
-    const result = await orders.changeStatus(actor, id, input);
-
-    updateTag('orders');
-    updateTag('dashboard');
+    // A rejected transition can reveal state changed by another writer.
+    // Expire stale reads even when the authorized command fails.
+    const result = await orders.changeStatus(actor, id, input).finally(() => {
+      updateTag('orders');
+      updateTag('dashboard');
+    });
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -88,10 +90,10 @@ export async function updateOrderPaymentStatusAction(
   try {
     const actor = await requireOrderWriteActor();
     const orders = createOrders();
-    const result = await orders.changePaymentStatus(actor, id, paymentStatus);
-
-    updateTag('orders');
-    updateTag('dashboard');
+    const result = await orders.changePaymentStatus(actor, id, paymentStatus).finally(() => {
+      updateTag('orders');
+      updateTag('dashboard');
+    });
 
     return { success: true, data: result };
   } catch (error: unknown) {

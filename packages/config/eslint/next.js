@@ -31,7 +31,15 @@ const BARRELED_BACKEND_FEATURES = [
 // time). See docs/adr/0001-backend-feature-barrels.md.
 const SCHEMA_EXPORT_NAMES_BY_FEATURE = {
   catalog: ['BrandInputSchema', 'TagInputSchema', 'CollectionInputSchema'],
-  core: ['TranslationMapSchema'],
+  core: [
+    'TranslationMapSchema',
+    'PERMISSION_CODES',
+    'hasPermission',
+    'hasAnyPermission',
+    'hasAllPermissions',
+    'systemAdmin',
+    'staffRole',
+  ],
   order: ['ShippingAddressSchema', 'VariantSnapshotSchema', 'OrderStatusUpdateSchema'],
 };
 const FEATURES_WITH_CLIENT_SAFE_SCHEMAS = Object.keys(SCHEMA_EXPORT_NAMES_BY_FEATURE);
