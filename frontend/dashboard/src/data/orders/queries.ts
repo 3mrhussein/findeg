@@ -1,52 +1,30 @@
-/**
- * Order Queries (Dashboard Data Layer)
- *
- * Uses "use cache" directive to wrap backend service calls.
- */
+/** Cached public Orders reads shared by every Dashboard workflow. */
 'use cache';
-
 import { cacheLife, cacheTag } from 'next/cache';
-// Use AdminOrderService from administration feature
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createOrders, type OrderFilters, type OrderStatsOptions } from '@findeg/orders';
 
-/**
- * Get all orders with optional filters
- *
- * Cache: Shorter TTL (minutes) since orders change frequently
- */
-export async function getOrders(
-  filters?: Parameters<ReturnType<typeof createAdministrationServices>['orders']['getAll']>[0],
-) {
+export async function getOrders(filters?: OrderFilters) {
   cacheTag('orders');
   cacheLife('minutes');
-
-  const { orders } = createAdministrationServices();
-  return await orders.getAll(filters || {});
+  return createOrders().list(filters);
 }
-
-/**
- * Get order by ID
- *
- * Cache: Tagged with order ID
- */
 export async function getOrderById(id: number | string) {
   cacheTag('orders');
   cacheLife('minutes');
-
-  const { orders } = createAdministrationServices();
-  return await orders.getById(Number(id));
+  return createOrders().get(id);
 }
-
-/**
- * Get recent orders
- *
- * Cache: Short TTL for dashboard widgets
- */
-export async function getRecentOrders(limit: number = 10) {
+export async function getOrderDetail(id: number | string) {
   cacheTag('orders');
   cacheLife('minutes');
-
-  // Use dashboard service which has getRecentOrders method
-  const { dashboard } = createAdministrationServices();
-  return await dashboard.getRecentOrders(limit);
+  return createOrders().detail(id);
+}
+export async function getRecentOrders(limit = 5) {
+  cacheTag('orders');
+  cacheLife('minutes');
+  return createOrders().recent(limit);
+}
+export async function getOrderStats(options?: OrderStatsOptions) {
+  cacheTag('orders');
+  cacheLife('minutes');
+  return createOrders().getStats(options);
 }

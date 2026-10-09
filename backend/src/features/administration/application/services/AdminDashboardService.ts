@@ -4,7 +4,7 @@ import {
   CatalogHealthStats,
   CategoryProductDistribution,
 } from '@findeg/backend/features/catalog/application/dtos';
-import { Order } from '@findeg/backend/features/order';
+import type { Order } from '@findeg/orders';
 import {
   getCatalogHealthRaw,
   getCategoryDistributionRaw,
@@ -12,15 +12,9 @@ import {
   getCategoryCountRaw,
   getBrandCountRaw,
   getLowStockCountRaw,
-  getRevenueByPeriodRaw,
-  getTopProductsRaw,
-  getTotalOrderStatsRaw,
-  getOrderStatsRaw,
 } from '@findeg/db/queries';
 import { QueryError } from '../../../core/domain/errors/QueryError';
-import { endOfDay, startOfDay, subDays } from 'date-fns';
 import { createOrders } from '@findeg/orders';
-import { toLegacyOrder } from '@findeg/backend/features/order';
 
 /**
  * Admin Dashboard Service
@@ -42,30 +36,12 @@ export class AdminDashboardService implements IAdminDashboardService {
    */
   async getDashboardStats(): Promise<DashboardStats> {
     try {
-      const now = new Date();
-      const todayStart = startOfDay(now);
-      const todayEnd = endOfDay(now);
-      const thirtyDaysAgo = subDays(now, 30);
-
-      // Orchestrate primitives in parallel
-      const [
-        productCount,
-        categoryCount,
-        brandCount,
-        totalStats,
-        todayStats,
-        lowStockCount,
-        topProducts,
-        revenueByPeriod,
-      ] = await Promise.all([
+      const [productCount, categoryCount, brandCount, stats, lowStockCount] = await Promise.all([
         getProductCountRaw(),
         getCategoryCountRaw(),
         getBrandCountRaw(),
-        getTotalOrderStatsRaw(),
-        getOrderStatsRaw(todayStart, todayEnd),
+        createOrders().getStats(),
         getLowStockCountRaw(),
-        getTopProductsRaw(5),
-        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
       ]);
 
       // Map to output shape
@@ -73,17 +49,16 @@ export class AdminDashboardService implements IAdminDashboardService {
         totalProducts: productCount,
         totalCategories: categoryCount,
         totalBrands: brandCount,
-        totalOrders: totalStats.totalOrders,
-        totalRevenue: totalStats.totalRevenue,
-        todayRevenue: todayStats.totalRevenue,
-        todayOrders: todayStats.totalOrders,
+        totalOrders: stats.totalOrders,
+        totalRevenue: stats.totalRevenue,
+        todayRevenue: stats.todayRevenue,
+        todayOrders: stats.todayOrders,
         currency: 'EGP',
         lowStockCount,
-        topProducts,
-        revenueByPeriod: revenueByPeriod.map((entry) => ({
-          date: entry.period,
-          revenue: entry.revenue,
-        })),
+        timezone: stats.timezone,
+        ordersByStatus: stats.ordersByStatus,
+        topProducts: stats.topProducts,
+        revenueByPeriod: stats.revenueByPeriod,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -100,7 +75,7 @@ export class AdminDashboardService implements IAdminDashboardService {
    * @returns List of recent orders.
    */
   async getRecentOrders(limit: number = 5): Promise<Order[]> {
-    return (await createOrders().recent(limit)).map(toLegacyOrder);
+    return createOrders().recent(limit);
   }
 
   /**

@@ -187,6 +187,9 @@ importers:
       '@findeg/money':
         specifier: workspace:*
         version: link:../../packages/money
+      '@findeg/orders':
+        specifier: workspace:*
+        version: link:../../packages/orders
       '@findeg/ui':
         specifier: workspace:*
         version: link:../ui

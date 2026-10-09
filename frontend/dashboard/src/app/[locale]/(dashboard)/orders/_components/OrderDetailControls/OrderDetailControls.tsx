@@ -8,7 +8,7 @@ import { Input } from '@findeg/ui';
 import { Textarea } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@actions/order-actions';
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@data/orders/actions';
 import { useToast } from '@hooks/use-toast';
 
 /**
@@ -16,7 +16,7 @@ import { useToast } from '@hooks/use-toast';
  */
 type OrderStatus =
   'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-type PaymentStatus = import('@findeg/backend/features/core').PaymentStatus;
+type PaymentStatus = import('@findeg/orders/schemas').PaymentStatus;
 
 /**
  * Stub helper functions (to be reimplemented)

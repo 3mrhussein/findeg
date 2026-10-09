@@ -3,19 +3,21 @@ export interface DashboardStats {
   totalCategories: number;
   totalOrders: number;
   totalBrands: number;
-  totalRevenue: number;
-  currency: string;
+  totalRevenue: bigint;
+  currency: 'EGP';
+  timezone: 'Africa/Cairo';
+  ordersByStatus: Record<import('@findeg/orders/schemas').OrderStatus, number>;
   lowStockCount: number;
-  todayRevenue: number;
+  todayRevenue: bigint;
   todayOrders: number;
   topProducts: {
     id: number;
     name: string;
     sold: number;
-    revenue: number;
+    revenue: bigint;
   }[];
   revenueByPeriod: {
     date: string;
-    revenue: number;
+    revenue: bigint;
   }[];
 }

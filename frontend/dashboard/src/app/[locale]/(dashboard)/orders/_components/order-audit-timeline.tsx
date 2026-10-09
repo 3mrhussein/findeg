@@ -2,7 +2,7 @@ import { Link } from '@i18n/navigation';
 import type { AuditLogEntry } from '@findeg/backend/features/administration';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { getOrderStatusLabel, OrderStatusSchema } from '@findeg/backend/features/order/schemas';
+import { getOrderStatusLabel, OrderStatusSchema } from '@findeg/orders/schemas';
 
 interface OrderAuditTimelineProps {
   orderId: number | string;

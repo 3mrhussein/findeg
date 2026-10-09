@@ -7,12 +7,9 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
-import {
-  OrderStatusUpdateSchema,
-  type OrderStatusUpdate,
-} from '@findeg/backend/features/order/schemas';
-import type { OrderStatus } from '@findeg/backend/features/core';
+import { createOrders } from '@findeg/orders';
+import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders/schemas';
+import type { OrderStatus } from '@findeg/orders/schemas';
 import { getErrorMessage } from '@lib/type-guards';
 import { requireOrderWriteActor } from '@lib/order-write-access';
 
@@ -24,10 +21,11 @@ import { requireOrderWriteActor } from '@lib/order-write-access';
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
     const actor = await requireOrderWriteActor();
-    const { orders } = createAdministrationServices();
-    const result = await orders.updateStatus(actor, id, input);
+    const orders = createOrders();
+    const result = await orders.changeStatus(actor, id, input);
 
     updateTag('orders');
+    updateTag('dashboard');
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -38,7 +36,7 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
 
 /**
  * Apply one lifecycle target to selected Orders. Every row goes through
- * AdminOrderService, preserving transition validation, stock effects and audit logs.
+ * Orders, preserving transition validation, stock effects and audit logs.
  */
 export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderStatus) {
   try {
@@ -51,9 +49,9 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
       return { success: false, error: 'At least one valid Order ID is required.' };
     }
     const update = OrderStatusUpdateSchema.parse({ status });
-    const { orders } = createAdministrationServices();
+    const orders = createOrders();
     const settled = await Promise.allSettled(
-      ids.map((id) => orders.updateStatus(actor, id, update)),
+      ids.map((id) => orders.changeStatus(actor, id, update)),
     );
     const failures = settled.flatMap((result, index) =>
       result.status === 'rejected'
@@ -62,6 +60,7 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
     );
 
     updateTag('orders');
+    updateTag('dashboard');
     return {
       success: failures.length === 0,
       updatedCount: ids.length - failures.length,
@@ -88,10 +87,11 @@ export async function updateOrderPaymentStatusAction(
 ) {
   try {
     const actor = await requireOrderWriteActor();
-    const { orders } = createAdministrationServices();
-    const result = await orders.updatePaymentStatus(actor, id, paymentStatus);
+    const orders = createOrders();
+    const result = await orders.changePaymentStatus(actor, id, paymentStatus);
 
     updateTag('orders');
+    updateTag('dashboard');
 
     return { success: true, data: result };
   } catch (error: unknown) {

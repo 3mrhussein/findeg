@@ -11,11 +11,11 @@ import { Label } from '@findeg/ui';
 import {
   getAllowedOrderStatusTransitions,
   getAllowedPaymentStatusTransitions,
-} from '@findeg/backend/features/order/schemas';
+} from '@findeg/orders/schemas';
 import {
   updateOrderStatusAction as adminUpdateOrderStatusAction,
   updateOrderPaymentStatusAction,
-} from '@actions/order-actions';
+} from '@data/orders/actions';
 
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
@@ -29,7 +29,7 @@ type OrderStatus =
 type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
 
 interface OrderPaymentFulfillmentProps {
-  order: import('@findeg/backend/features/order').Order;
+  order: import('@findeg/orders').Order;
 }
 
 const STATUS_FLOW: { label: string; value: OrderStatus }[] = [
