@@ -5,7 +5,7 @@ import {
   type MediaAsset,
   ResponsiveMediaSetSchema,
   type ResponsiveMediaSet,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export {
   MediaVariantKeySchema,
