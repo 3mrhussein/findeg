@@ -41,7 +41,7 @@ sequenceDiagram
 
 - **Identity Dependency**: The `administration` layer deeply requires the `identity` module to provide the authenticated `ActorContext` (ID and Scope) before ANY action executes.
 - **The Audit Rule**: NEVER perform a DB `commit()` modifying Product, Order, or Staff entities without appending a synchronous `.createAuditLog()` transaction.
-- **Order writes are split across two checks**: `AdminOrderService.updateStatus` and `updatePaymentStatus` take an `OrderStaffActor` and refuse with `NotAuthorizedError` unless it holds `admin.orders.write` (`system_admin` bypasses), via `assertCanWriteOrders`. The backend checks the permission only. Staff-portal membership (`adminSession`) is enforced at the Dashboard edge, whose Server Actions build the actor from the session and call the same `assertCanWriteOrders`. The actor's `userId` is recorded on the Order's audit rows.
+- **Order writes and authorization**: Dashboard actions call `@findeg/orders` directly. The package checks Staff write permission before resolving or locking the DB and records actor audit in the same transaction. Administration only composes Orders statistics with other domains.
 
 ---
 

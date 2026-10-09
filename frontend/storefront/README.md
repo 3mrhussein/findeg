@@ -25,7 +25,7 @@ The storefront application orchestrates React components grouped into features t
 | --------------------------------------------------------- | ---------------------------------- | ----------------------------------- |
 | [**Catalog**](src/features/catalog/README.md)             | Browsing and searching items.      | `ProductCard`, `SearchFilters`      |
 | [**Cart**](src/features/cart/README.md)                   | Assembling order intents.          | `CartSidebar`, `CartSummary`        |
-| [**Order**](src/features/order/README.md)                 | Checkout and post-purchase ledger. | `CheckoutFlow`, `OrderHistoryTable` |
+| [**Order**](src/data/order/README.md)                 | Checkout and post-purchase ledger. | `CheckoutFlow`, `OrderHistoryTable` |
 | [**Review**](src/features/review/README.md)               | Displaying UGC ratings.            | `StarRating`, `ReviewList`          |
 | [**School**](src/features/school/README.md)               | B2B bundled procurement flows.     | `SchoolKitBundle`, `AccessGateway`  |
 | [**Notifications**](src/features/notifications/README.md) | Client-side toasts/websockets.     | `ToastProvider`, `InboxDropdown`    |

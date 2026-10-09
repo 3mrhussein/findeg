@@ -1,6 +1,5 @@
 // Backend package main entry point - re-exports all public interfaces and services
 import { createIdentityServices } from './features/identity/application/services/factory';
-import { createOrderServices } from '@findeg/backend/features/order';
 import { UpdateAdminInput } from './features/identity/application/interfaces/IUserService';
 
 // Core feature exports (shared types, domain models, errors)
@@ -52,11 +51,6 @@ export async function getDashboardData(locale: string, userId: number) {
 export async function getMyAccountData(userId: number) {
   const { userService } = createIdentityServices();
   return userService.getProfileData(userId);
-}
-
-export async function getMyOrderDetail(userId: number, orderId: number) {
-  const { orders } = createOrderServices();
-  return orders.getByIdForUser(userId, orderId);
 }
 
 export { MediaService } from './features/media/application/services';

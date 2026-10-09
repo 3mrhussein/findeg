@@ -1,3 +1,5 @@
+import { OrderSnapshotTotals } from '@components/orders/OrderSnapshotTotals';
+import { piastersToEgp } from '@findeg/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -5,7 +7,7 @@ import { Link } from '@i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Separator } from '@findeg/ui';
-import { getMyOrderDetail } from '@findeg/backend';
+import { createOrders } from '@findeg/orders';
 import { requireAuth } from '@lib/auth-guard';
 
 interface MyOrderDetailPageProps {
@@ -21,11 +23,11 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   const t = await getTranslations({ locale });
 
   const orderId = Number(idParam);
-  if (!Number.isFinite(orderId)) notFound();
+  if (!Number.isSafeInteger(orderId) || orderId <= 0) notFound();
 
   const session = await requireAuth(locale);
-  const order = await getMyOrderDetail(session.userId, orderId);
-  if (!order) notFound();
+  const order = await createOrders().get(orderId);
+  if (!order || order.userId !== session.userId) notFound();
 
   return (
     <div className="space-y-4">
@@ -59,22 +61,41 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           {order.items?.map((item, index: number) => (
             <div key={`${item.productId}-${index}`} className="rounded-md border p-3">
               <div className="flex items-center justify-between">
-                <p className="font-medium">{item.productNameSnapshot || item.productName || '-'}</p>
+                <p className="font-medium">{item.productNameSnapshot || '-'}</p>
                 <p className="text-sm text-muted-foreground">x{item.quantity}</p>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                {order.currency || 'EGP'}{' '}
-                {(item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0).toFixed(2)}
-              </p>
+              <dl className="mt-1 space-y-1 text-sm text-muted-foreground">
+                <div className="flex justify-between">
+                  <dt>{t('Pages.Checkout.UnitPrice')}</dt>
+                  <dd>
+                    {order.currency} {piastersToEgp(item.unitPrice)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>{t('Pages.Checkout.Discounts')}</dt>
+                  <dd>
+                    {order.currency} {piastersToEgp(item.discountAmount)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>{t('Pages.Checkout.LineTotal')}</dt>
+                  <dd>
+                    {order.currency} {piastersToEgp(item.lineTotal)}
+                  </dd>
+                </div>
+              </dl>
             </div>
           ))}
           <Separator />
-          <div className="flex items-center justify-between font-semibold">
-            <span>{t('Pages.MyAccount.OrderTotal')}</span>
-            <span>
-              {order.currency || 'EGP'} {(order.totalAmount ?? order.total ?? 0).toFixed(2)}
-            </span>
-          </div>
+          <OrderSnapshotTotals
+            {...order}
+            labels={{
+              subtotal: t('Pages.Checkout.Subtotal'),
+              discount: t('Pages.Checkout.Discounts'),
+              shipping: t('Pages.Checkout.Shipping'),
+              total: t('Pages.MyAccount.OrderTotal'),
+            }}
+          />
         </CardContent>
       </Card>
     </div>

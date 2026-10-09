@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { orders, orderItems, products } from '@findeg/db/schema';
 import { createOrders } from '@findeg/orders';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { connectToTestDatabase, type TestDatabase } from '../postgres';
 
 describe('Orders statistics through the public PostgreSQL API', () => {
   let database: TestDatabase;
@@ -13,7 +13,7 @@ describe('Orders statistics through the public PostgreSQL API', () => {
     const result = await createOrders({
       db: database.db,
       now: () => new Date('2026-04-24T12:00:00Z'),
-    }).getStats({ trendDays: 2 });
+    }).getStats({ from: '2026-04-23', to: '2026-04-24', trendDays: 2 });
     expect(result).toMatchObject({
       currency: 'EGP',
       timezone: 'Africa/Cairo',
@@ -124,7 +124,7 @@ describe('Orders statistics through the public PostgreSQL API', () => {
         orderReference: 'FE-STP001',
         subtotal: '50.37',
         totalAmount: '50.37',
-        createdAt: new Date('2026-10-09T08:00:00Z'),
+        createdAt: new Date('2025-02-19T08:00:00Z'),
       })
       .returning();
     await database.db.insert(orderItems).values([
@@ -148,13 +148,16 @@ describe('Orders statistics through the public PostgreSQL API', () => {
       { orderId: row.id, productId: deleted.id, quantity: 10, unitPrice: '0', lineTotal: '0' },
     ]);
     await database.sql`delete from catalog.products where id = ${deleted.id}`;
-    const api = createOrders({ db: database.db, now: () => new Date('2026-10-09T08:00:00Z') });
-    expect((await api.getStats({ from: '2026-10-09', to: '2026-10-09' })).topProducts).toEqual([
+    const api = createOrders({ db: database.db, now: () => new Date('2025-02-19T08:00:00Z') });
+    expect((await api.getStats({ from: '2025-02-19', to: '2025-02-19' })).topProducts).toEqual([
       { id: first.id, name: 'First', sold: 3, revenue: 2896n },
       { id: second.id, name: 'Second', sold: 3, revenue: 2141n },
     ]);
-    expect((await api.getStats({ topProductsLimit: 1 })).topProducts).toHaveLength(1);
-    expect((await api.getStats({ to: '2026-10-08' })).topProducts).toEqual([]);
+    expect(
+      (await api.getStats({ from: '2025-02-19', to: '2025-02-19', topProductsLimit: 1 }))
+        .topProducts,
+    ).toHaveLength(1);
+    expect((await api.getStats({ from: '2025-02-01', to: '2025-02-18' })).topProducts).toEqual([]);
   });
 
   it('handles the repeated Cairo hour at the autumn DST boundary', async () => {

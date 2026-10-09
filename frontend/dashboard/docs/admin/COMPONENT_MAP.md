@@ -298,7 +298,7 @@ Each section has corresponding server actions:
 |---------|----------|---------|
 | Products | `features/catalog/application/actions/product.ts` | create, update, delete, bulkUpdate |
 | Categories | `features/catalog/application/actions/category.ts` | create, update, delete, reorder |
-| Orders | `features/order/application/actions/order.ts` | updateStatus, updatePaymentStatus, addNote |
+| Orders | `src/data/orders/actions.ts` + `@findeg/orders` | updateStatus, updatePaymentStatus, addNote |
 
 **Usage Pattern:**
 ```typescript

@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { verifyClientBundle } from './client-bundle.mjs';
 
-// Run from the storefront package, just like `next build`. The flag is scoped
+// Run from either consuming Next app package, just like `next build`. The flag is scoped
 // to this child process; normal next dev/build invocations do not emit maps.
 const require = createRequire(resolve('package.json'));
 const build = spawnSync(process.execPath, [require.resolve('next/dist/bin/next'), 'build'], {
@@ -16,13 +16,13 @@ const build = spawnSync(process.execPath, [require.resolve('next/dist/bin/next')
 try {
   if (build.error) throw build.error;
   if (build.status !== 0)
-    throw new Error(`Storefront build failed (${build.signal ?? build.status})`);
+    throw new Error(`Next app build failed (${build.signal ?? build.status})`);
   const frameworkPolyfill = await readFile(
     require.resolve('next/dist/build/polyfills/polyfill-nomodule'),
     'utf8',
   );
   const count = await verifyClientBundle('.next', { frameworkPolyfill });
-  console.log(`Verified ${count} storefront client chunks: no server dependencies.`);
+  console.log(`Verified ${count} client chunks: no server dependencies.`);
 } finally {
   // Next serves browser maps when present. Remove verification evidence before
   // deployment or E2E startup, even if the assertion fails.

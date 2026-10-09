@@ -1,8 +1,9 @@
+import { piastersToEgp } from '@findeg/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
 import { Card, CardContent } from '@findeg/ui';
-import { getMyAccountData } from '@findeg/backend';
+import { createOrders } from '@findeg/orders';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 
@@ -18,7 +19,7 @@ export default async function OrdersPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const session = await requireAuth(locale);
-  const { orders } = await getMyAccountData(session.userId);
+  const orders = await createOrders().listForCustomer(session.userId);
 
   return (
     <div className="space-y-6">
@@ -60,7 +61,7 @@ export default async function OrdersPage({ params }: Props) {
                     <div className="flex justify-between">
                       <span>{t('Pages.MyAccount.OrderTotal')}:</span>
                       <span className="text-foreground font-medium">
-                        {order.currency || 'EGP'} {(order.totalAmount ?? 0).toFixed(2)}
+                        {order.currency || 'EGP'} {piastersToEgp(order.totalAmount)}
                       </span>
                     </div>
                   </div>

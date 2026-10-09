@@ -1,5 +1,6 @@
 import { getSession } from '@/lib/session';
-import { createOrderServices } from '@findeg/backend/features/order';
+import { createOrders } from '@findeg/orders';
+import { createIdentityServices } from '@findeg/backend/features/identity';
 
 /**
  * Checkout prefill data shape
@@ -24,29 +25,15 @@ export async function getCheckoutPrefill(): Promise<CheckoutPrefillData | null> 
   const session = await getSession();
   if (!session?.userId) return null;
 
-  const { orders } = createOrderServices();
-
-  // Fetch user's orders to get the latest shipping address
-  // Note: We're using the session user data for initial prefill
-  const userOrders = await orders.getByUserId(Number(session.userId));
-
-  // Sort by date manually if the service doesn't
-  const latestOrder = [...userOrders].sort((a, b) => {
-    const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-    const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-    return bTime - aTime;
-  })[0];
-
-  const address = latestOrder?.shippingAddressSnapshot;
-  const user = session.user;
+  const [address, user] = await Promise.all([
+    createOrders().latestShippingAddress(session.userId),
+    createIdentityServices().userService.getProfile(session.userId),
+  ]);
 
   return {
-    fullName:
-      user?.firstName && user?.lastName
-        ? `${user.firstName} ${user.lastName}`
-        : address?.fullName || '',
+    fullName: [user.firstName, user.lastName].filter(Boolean).join(' ') || address?.fullName || '',
     guestEmail: user?.email ?? '',
-    phone: address?.phone ?? '',
+    phone: user.phone || address?.phone || '',
     city: address?.city ?? '',
     area: address?.area ?? '',
     street: address?.street ?? '',

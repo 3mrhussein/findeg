@@ -1,13 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { orderItems, orders, users } from '@findeg/db/schema';
 import { PERMISSION_CODES } from '@findeg/db';
-import { createAdministrationServices, type OrderStaffActor } from '..';
+import { createOrders, type OrderStaffActor } from '@findeg/orders';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 describe('Dashboard Order detail query', () => {
   let testDb: TestDatabase;
   let staff: OrderStaffActor;
-  const { orders: adminOrders } = createAdministrationServices();
+  const adminOrders = () => createOrders({ db: testDb.db });
 
   beforeAll(async () => {
     testDb = connectToTestDatabase();
@@ -55,18 +55,18 @@ describe('Dashboard Order detail query', () => {
 
   it('returns the Order with items, totals, customer, payment and its activity', async () => {
     const id = await seedOrder();
-    await adminOrders.updatePaymentStatus(staff, id, 'paid');
+    await adminOrders().changePaymentStatus(staff, id, 'paid');
 
-    const detail = await adminOrders.getDetail(id);
+    const detail = await adminOrders().detail(id);
 
     expect(detail?.order).toMatchObject({
       id,
       orderReference: 'FE-DT0001',
       status: 'pending',
       paymentStatus: 'paid',
-      subtotal: 90,
-      shippingCost: 10,
-      totalAmount: 100,
+      subtotal: 9000n,
+      shippingCost: 1000n,
+      totalAmount: 10000n,
       customerName: 'Ahmed Hassan',
     });
     expect(detail?.order.items).toHaveLength(1);
@@ -82,6 +82,6 @@ describe('Dashboard Order detail query', () => {
   });
 
   it('returns null for an Order that does not exist', async () => {
-    expect(await adminOrders.getDetail(2_000_000_000)).toBeNull();
+    expect(await adminOrders().detail(2_000_000_000)).toBeNull();
   });
 });

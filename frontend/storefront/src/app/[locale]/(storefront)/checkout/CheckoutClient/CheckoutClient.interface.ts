@@ -2,7 +2,7 @@
  * CheckoutClient — shared types & interfaces
  */
 
-import { type CheckoutPrefillData } from '@findeg/backend/features/order';
+import { type CheckoutPrefillData } from '@/data/order/queries';
 import type { PublicSupplyList } from '@findeg/backend/features/school';
 
 export interface CheckoutTotals {

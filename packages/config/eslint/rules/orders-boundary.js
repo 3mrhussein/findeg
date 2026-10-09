@@ -39,7 +39,7 @@ export const ordersBoundaryRule = {
   create(context) {
     const filename = path.resolve(context.filename ?? context.getFilename());
     const packageOwner = path.join(repoRoot, 'packages/orders');
-    const legacyOwner = path.join(repoRoot, 'backend/src/features/order');
+
     const inOrders = inside(filename, packageOwner);
     const currentDirectory = path.dirname(filename);
 
@@ -57,11 +57,11 @@ export const ordersBoundaryRule = {
         context.report({ node, messageId: 'forbidden' });
         return;
       }
-      if (source.startsWith('@findeg/backend/features/order/')) {
-        if (source === '@findeg/backend/features/order/schemas') return;
-        const legacyInternal =
-          source.startsWith('@findeg/backend/features/order/') && inside(filename, legacyOwner);
-        if (!legacyInternal) context.report({ node, messageId: 'deep' });
+      if (
+        source === '@findeg/backend/features/order' ||
+        source.startsWith('@findeg/backend/features/order/')
+      ) {
+        context.report({ node, messageId: 'deep' });
         return;
       }
       if (

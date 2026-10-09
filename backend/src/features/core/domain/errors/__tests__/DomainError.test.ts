@@ -1,12 +1,7 @@
+import { DomainError, NotAuthorizedError } from '@findeg/domain-errors';
 import { describe, it, expect } from 'vitest';
 import {
-  DomainError as SharedDomainError,
-  NotAuthorizedError as SharedNotAuthorizedError,
-} from '@findeg/domain-errors';
-import {
-  DomainError,
   NotAuthenticatedError,
-  NotAuthorizedError,
   ResourceNotFoundError,
   ValidationError,
   ValidationErrors,
@@ -218,11 +213,6 @@ describe('Domain Errors', () => {
   });
 
   describe('Shared constructors (@findeg/domain-errors)', () => {
-    it('reexports the shared constructors rather than copies', () => {
-      expect(DomainError).toBe(SharedDomainError);
-      expect(NotAuthorizedError).toBe(SharedNotAuthorizedError);
-    });
-
     it('makes every Backend error an instance of the shared base', () => {
       const errors = [
         new NotAuthenticatedError(),
@@ -232,7 +222,7 @@ describe('Domain Errors', () => {
         new BusinessRuleViolationError('test'),
       ];
 
-      for (const error of errors) expect(error).toBeInstanceOf(SharedDomainError);
+      for (const error of errors) expect(error).toBeInstanceOf(DomainError);
     });
   });
 

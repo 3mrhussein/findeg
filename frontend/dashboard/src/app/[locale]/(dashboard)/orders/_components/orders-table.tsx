@@ -14,26 +14,26 @@ import { Link } from '@i18n/navigation';
 import { Eye } from 'lucide-react';
 import { useRouter } from '@i18n/navigation';
 
-/**
- * Local type definitions
- */
-type OrderStatus =
-  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-type PaymentStatus = import('@findeg/orders/schemas').PaymentStatus;
-
-/**
- * Stub helper functions (to be reimplemented)
- */
-const getAllowedOrderStatusTransitions = (_status: OrderStatus): OrderStatus[] => [];
-const getOrderStatusLabel = (status: OrderStatus): string => status;
-const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
-  (status as OrderStatus) || 'pending';
-const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
-const getAllowedPaymentStatusTransitions = (_status: PaymentStatus): PaymentStatus[] => [];
-const getPaymentStatusLabel = (status: PaymentStatus): string => status;
-const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
-  (status as PaymentStatus) || 'unpaid';
-const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
+import {
+  type OrderStatus,
+  type PaymentStatus,
+  ORDER_STATUS_OPTIONS as ORDER_STATUSES,
+  PAYMENT_STATUS_OPTIONS as PAYMENT_STATUSES,
+  OrderStatusSchema,
+  PaymentStatusSchema,
+  getAllowedOrderStatusTransitions,
+  getAllowedPaymentStatusTransitions,
+  getOrderStatusLabel,
+  getPaymentStatusLabel,
+} from '@findeg/orders/schemas';
+const ORDER_STATUS_OPTIONS = ORDER_STATUSES.map((value) => ({
+  value,
+  label: getOrderStatusLabel(value),
+}));
+const PAYMENT_STATUS_OPTIONS = PAYMENT_STATUSES.map((value) => ({
+  value,
+  label: getPaymentStatusLabel(value),
+}));
 
 interface OrdersTableProps {
   orders: Order[];
@@ -115,10 +115,10 @@ export function OrdersTable({ orders }: OrdersTableProps) {
           </TableHeader>
           <TableBody>
             {orders.map((order) => {
-              const currentStatus = normalizeOrderStatus(order.status);
+              const currentStatus = OrderStatusSchema.parse(order.status);
               const allowedTargets = getAllowedOrderStatusTransitions(currentStatus);
               const selectableStatuses = new Set<OrderStatus>([currentStatus, ...allowedTargets]);
-              const currentPaymentStatus = normalizePaymentStatus(order.paymentStatus);
+              const currentPaymentStatus = PaymentStatusSchema.parse(order.paymentStatus);
               const allowedPaymentTargets =
                 getAllowedPaymentStatusTransitions(currentPaymentStatus);
               const selectablePaymentStatuses = new Set<PaymentStatus>([
