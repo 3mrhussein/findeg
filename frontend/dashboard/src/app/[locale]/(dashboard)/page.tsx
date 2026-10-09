@@ -17,6 +17,7 @@ import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { requireAdmin } from '@lib/auth-guard';
 import {
+  OrdersDashboardSection,
   FastDashboardSection,
   MediumDashboardSection,
   SlowDashboardSection,
@@ -44,6 +45,10 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
           No skeleton needed - renders so fast user won't see loading state.
       */}
       <FastDashboardSection locale={locale} />
+
+      <Suspense fallback={<MediumDashboardMiniSkeleton />}>
+        <OrdersDashboardSection locale={locale} />
+      </Suspense>
 
       {/* ================================================
           SECTION 2: MEDIUM CONTENT (Catalog Board)

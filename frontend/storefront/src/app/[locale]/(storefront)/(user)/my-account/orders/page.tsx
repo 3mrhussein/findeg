@@ -3,7 +3,7 @@ import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
 import { Card, CardContent } from '@findeg/ui';
-import { createOrders } from '@findeg/orders';
+import { getCustomerOrders } from '@data/order/queries';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 
@@ -19,7 +19,7 @@ export default async function OrdersPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const session = await requireAuth(locale);
-  const orders = await createOrders().listForCustomer(session.userId);
+  const orders = await getCustomerOrders(session);
 
   return (
     <div className="space-y-6">

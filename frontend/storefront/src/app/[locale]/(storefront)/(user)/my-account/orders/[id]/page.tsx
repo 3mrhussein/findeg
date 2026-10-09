@@ -7,7 +7,7 @@ import { Link } from '@i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Separator } from '@findeg/ui';
-import { createOrders } from '@findeg/orders';
+import { getCustomerOrder } from '@data/order/queries';
 import { requireAuth } from '@lib/auth-guard';
 
 interface MyOrderDetailPageProps {
@@ -26,8 +26,8 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   if (!Number.isSafeInteger(orderId) || orderId <= 0) notFound();
 
   const session = await requireAuth(locale);
-  const order = await createOrders().get(orderId);
-  if (!order || order.userId !== session.userId) notFound();
+  const order = await getCustomerOrder(session, orderId);
+  if (!order) notFound();
 
   return (
     <div className="space-y-4">

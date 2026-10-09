@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { logoutAction } from '@data/auth/actions';
 import { updateProfileAction } from '@data/user/actions';
-import { createIdentityServices } from '@findeg/backend/features/identity';
-import { createOrders } from '@findeg/orders';
+import { getCustomerAccount } from '@data/order/queries';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 import { Input } from '@findeg/ui';
@@ -26,10 +25,7 @@ export default async function Page({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
   const session = await requireAuth(locale);
-  const [user, orders] = await Promise.all([
-    createIdentityServices().userService.getProfile(session.userId),
-    createOrders().listForCustomer(session.userId),
-  ]);
+  const { user, orders } = await getCustomerAccount(session);
 
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;

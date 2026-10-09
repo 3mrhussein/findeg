@@ -1,5 +1,6 @@
+'use client';
+
 import { piastersToEgp } from '@findeg/money';
-('use client');
 
 import React from 'react';
 import type { Order } from '@findeg/orders';

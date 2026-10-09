@@ -12,8 +12,8 @@ describe('Orders statistics through the public PostgreSQL API', () => {
   it('returns exact empty aggregates and a Cairo calendar trend', async () => {
     const result = await createOrders({
       db: database.db,
-      now: () => new Date('2026-04-24T12:00:00Z'),
-    }).getStats({ from: '2026-04-23', to: '2026-04-24', trendDays: 2 });
+      now: () => new Date('2027-04-30T12:00:00Z'),
+    }).getStats({ from: '2027-04-29', to: '2027-04-30', trendDays: 2 });
     expect(result).toMatchObject({
       currency: 'EGP',
       timezone: 'Africa/Cairo',
@@ -23,8 +23,8 @@ describe('Orders statistics through the public PostgreSQL API', () => {
       todayRevenue: 0n,
       topProducts: [],
       revenueByPeriod: [
-        { date: '2026-04-23', revenue: 0n },
-        { date: '2026-04-24', revenue: 0n },
+        { date: '2027-04-29', revenue: 0n },
+        { date: '2027-04-30', revenue: 0n },
       ],
     });
   });
@@ -46,33 +46,33 @@ describe('Orders statistics through the public PostgreSQL API', () => {
         shippingCost: '0.00',
         discountTotal: '0.00',
         totalAmount: '0.10',
-        createdAt: new Date('2026-04-23T22:00:00Z'),
+        createdAt: new Date('2027-04-29T22:00:00Z'),
       });
     }
-    // Cairo starts DST at local midnight on April 24: the day starts at 22:00 UTC,
+    // Cairo starts DST at local midnight on April 30: the day starts at 22:00 UTC,
     // and its next midnight is at 21:00 UTC. Both edges must use the local calendar.
     await database.db.insert(orders).values([
       {
         orderReference: 'FE-STE001',
         subtotal: '0.01',
         totalAmount: '0.01',
-        createdAt: new Date('2026-04-23T21:59:59Z'),
+        createdAt: new Date('2027-04-29T21:59:59Z'),
       },
       {
         orderReference: 'FE-STE002',
         subtotal: '0.02',
         totalAmount: '0.02',
-        createdAt: new Date('2026-04-24T20:59:59Z'),
+        createdAt: new Date('2027-04-30T20:59:59Z'),
       },
       {
         orderReference: 'FE-STE003',
         subtotal: '0.03',
         totalAmount: '0.03',
-        createdAt: new Date('2026-04-24T21:00:00Z'),
+        createdAt: new Date('2027-04-30T21:00:00Z'),
       },
     ]);
-    const api = createOrders({ db: database.db, now: () => new Date('2026-04-24T18:00:00Z') });
-    expect(await api.getStats({ from: '2026-04-24', to: '2026-04-24' })).toMatchObject({
+    const api = createOrders({ db: database.db, now: () => new Date('2027-04-30T18:00:00Z') });
+    expect(await api.getStats({ from: '2027-04-30', to: '2027-04-30' })).toMatchObject({
       totalOrders: 8,
       totalRevenue: 72n,
       todayOrders: 8,
@@ -86,16 +86,16 @@ describe('Orders statistics through the public PostgreSQL API', () => {
         cancelled: 1,
         refunded: 1,
       },
-      revenueByPeriod: [{ date: '2026-04-24', revenue: 72n }],
+      revenueByPeriod: [{ date: '2027-04-30', revenue: 72n }],
     });
-    expect(await api.getStats({ from: '2026-04-23', to: '2026-04-23' })).toMatchObject({
+    expect(await api.getStats({ from: '2027-04-29', to: '2027-04-29' })).toMatchObject({
       totalOrders: 1,
       totalRevenue: 1n,
       todayOrders: 0,
       todayRevenue: 0n,
-      revenueByPeriod: [{ date: '2026-04-23', revenue: 1n }],
+      revenueByPeriod: [{ date: '2027-04-29', revenue: 1n }],
     });
-    expect((await api.getStats({ from: '2026-05-01' })).revenueByPeriod).toEqual([]);
+    expect((await api.getStats({ from: '2027-05-01' })).revenueByPeriod).toEqual([]);
   });
   it('ranks current catalog products by units with ID ties and canonical line revenue', async () => {
     const [first, second, deleted] = await database.db
@@ -166,38 +166,38 @@ describe('Orders statistics through the public PostgreSQL API', () => {
         orderReference: 'FE-STF001',
         subtotal: '1.00',
         totalAmount: '1.00',
-        createdAt: new Date('2026-10-29T20:59:59Z'),
+        createdAt: new Date('2027-10-28T20:59:59Z'),
       },
       {
         orderReference: 'FE-STF002',
         subtotal: '2.00',
         totalAmount: '2.00',
-        createdAt: new Date('2026-10-29T21:00:00Z'),
+        createdAt: new Date('2027-10-28T21:00:00Z'),
       },
       {
         orderReference: 'FE-STF003',
         subtotal: '3.00',
         totalAmount: '3.00',
-        createdAt: new Date('2026-10-29T21:59:59Z'),
+        createdAt: new Date('2027-10-28T21:59:59Z'),
       },
       {
         orderReference: 'FE-STF004',
         subtotal: '4.00',
         totalAmount: '4.00',
-        createdAt: new Date('2026-10-29T22:00:00Z'),
+        createdAt: new Date('2027-10-28T22:00:00Z'),
       },
     ]);
-    const api = createOrders({ db: database.db, now: () => new Date('2026-10-30T12:00:00Z') });
+    const api = createOrders({ db: database.db, now: () => new Date('2027-10-29T12:00:00Z') });
     expect(
-      await api.getStats({ from: '2026-10-29', to: '2026-10-29', trendDays: 2 }),
+      await api.getStats({ from: '2027-10-28', to: '2027-10-28', trendDays: 2 }),
     ).toMatchObject({
       totalOrders: 3,
       totalRevenue: 600n,
       todayOrders: 0,
       todayRevenue: 0n,
-      revenueByPeriod: [{ date: '2026-10-29', revenue: 600n }],
+      revenueByPeriod: [{ date: '2027-10-28', revenue: 600n }],
     });
-    expect(await api.getStats({ from: '2026-10-30', to: '2026-10-30' })).toMatchObject({
+    expect(await api.getStats({ from: '2027-10-29', to: '2027-10-29' })).toMatchObject({
       totalOrders: 1,
       totalRevenue: 400n,
     });
