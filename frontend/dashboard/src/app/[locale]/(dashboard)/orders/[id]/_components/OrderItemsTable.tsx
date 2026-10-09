@@ -24,6 +24,7 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
             <TableHead>SKU</TableHead>
             <TableHead className="text-right">Price</TableHead>
             <TableHead className="text-right">Qty</TableHead>
+            <TableHead className="text-right">Discount</TableHead>
             <TableHead className="text-right">Total</TableHead>
           </TableRow>
         </TableHeader>
@@ -55,6 +56,9 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">{qty}</TableCell>
+                <TableCell className="text-right">
+                  {currency} {piastersToEgp(item.discountAmount)}
+                </TableCell>
                 <TableCell className="text-right font-medium">
                   {currency} {piastersToEgp(total)}
                 </TableCell>
