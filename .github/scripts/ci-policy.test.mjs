@@ -96,8 +96,9 @@ describe('decidePlan for a manual run', () => {
     assert.equal(plan.restoreBuild, true);
   });
 
-  it('runs everything when the changed paths are unknown', () => {
+  it('runs everything on all packages when the changed paths are unknown', () => {
     const plan = decidePlan(manual);
+    assert.equal(plan.turboFlags, '');
     assert.equal(plan.runChecks, true);
     assert.equal(plan.runIntegration, true);
   });
@@ -139,7 +140,11 @@ describe('decidePlan for a manual run', () => {
   });
 
   it('ignores the pnpm store alone when asked for a clean install', () => {
-    const plan = decidePlan({ ...manual, forceInstall: true });
+    const plan = decidePlan({
+      ...manual,
+      changedPaths: ['frontend/storefront/a.ts'],
+      forceInstall: true,
+    });
     assert.equal(plan.restoreDeps, false);
     assert.equal(plan.restoreBuild, true);
     assert.equal(plan.turboFlags, '--affected');
@@ -273,6 +278,21 @@ describe('decidePrTitleSuggestion', () => {
     assert.equal(decidePrTitleSuggestion({ head: 'feat/a-b', body: first.body }).body, first.body);
   });
 
+  it('replaces an existing override that does not fit the new title', () => {
+    const body = 'Hi\n<!--\nBEGIN_COMMIT_OVERRIDE\ndocs: old words\nEND_COMMIT_OVERRIDE\n-->';
+    const plan = decidePrTitleSuggestion({ head: 'feat/add-x', body });
+    assert.equal(
+      plan.body,
+      'Hi\n<!--\nBEGIN_COMMIT_OVERRIDE\nfeat: add x\nEND_COMMIT_OVERRIDE\n-->',
+    );
+    assert.equal(decidePrTitle(plan).ok, true);
+  });
+
+  it('keeps an existing override that fits the new title', () => {
+    const body = '<!--\nBEGIN_COMMIT_OVERRIDE\nfeat(ci)!: add x\nEND_COMMIT_OVERRIDE\n-->';
+    assert.equal(decidePrTitleSuggestion({ head: 'feat/add-x', body }).body, body);
+  });
+
   it('refuses branches without a type and slug', () => {
     assert.equal(decidePrTitleSuggestion({ head: 'develop' }).ok, false);
     assert.equal(decidePrTitleSuggestion({ head: 'dependabot/npm/x' }).ok, false);
@@ -290,6 +310,15 @@ describe('decidePrTitle', () => {
   it('rejects a pipe title without a matching override', () => {
     assert.equal(decidePrTitle({ title: 'Feature | Add dispatch button' }).ok, false);
     assert.equal(decidePrTitle({ title: 'Fix | Add dispatch button', body }).ok, false);
+  });
+
+  it('rejects an override whose subject no longer matches the title', () => {
+    assert.equal(decidePrTitle({ title: 'Feature | Remove dispatch button', body }).ok, false);
+  });
+
+  it('accepts a scoped or breaking override, and CRLF bodies', () => {
+    const scoped = body.replace('feat:', 'feat(ci)!:').replaceAll('\n', '\r\n');
+    assert.equal(decidePrTitle({ title: 'Feature | Add dispatch button', body: scoped }).ok, true);
   });
 
   it('accepts plain Conventional Commits for tooling PRs', () => {

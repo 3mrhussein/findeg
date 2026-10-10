@@ -162,8 +162,9 @@ export function decidePlan({
   const tier = eligibleForFastTier ? 'fast' : 'strict';
   const knownChanges = Array.isArray(changedPaths);
   // A manual run tests only what the branch touched (against develop) unless asked for
-  // the full suite; on the producer branch there is nothing to diff, so it runs everything.
-  const fullManual = manual && (fullTests || target === CACHE_PRODUCER_BRANCH);
+  // the full suite; on the producer branch, or when the diff could not be taken, there is
+  // nothing to compare with, so it runs everything.
+  const fullManual = manual && (fullTests || target === CACHE_PRODUCER_BRANCH || !knownChanges);
   const runEverything = tier === 'strict' || fullManual || !knownChanges;
   const forcedBuild = manual && forceBuild;
   const forcedInstall = manual && forceInstall;
@@ -281,15 +282,16 @@ export function decidePrTitleSuggestion({ head, body = '', issueTitle, commitSub
   );
   const label = PR_TITLE_LABELS[branch.type];
   const issue = branch.issueNumber ? ` | #${branch.issueNumber}` : '';
+  const title = `${label}${issue} | ${text}`;
   const commitType = COMMIT_TYPE_BY_LABEL[label];
   const override = `${commitType}: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
-  const block = `<!--\nBEGIN_COMMIT_OVERRIDE\n${override}\nEND_COMMIT_OVERRIDE\n-->`;
-  return {
-    ok: true,
-    reason: `Built from "${head}".`,
-    title: `${label}${issue} | ${text}`,
-    body: OVERRIDE_REGEXP.test(body) ? body : `${body.trimEnd()}\n\n${block}\n`.trimStart(),
-  };
+  const block = `BEGIN_COMMIT_OVERRIDE\n${override}\nEND_COMMIT_OVERRIDE`;
+  // An override already in the body is kept when it fits the new title (it may add a scope
+  // or `!`); one that does not is replaced, so the title check accepts the result.
+  let newBody = `${body.trimEnd()}\n\n<!--\n${block}\n-->\n`.trimStart();
+  if (decidePrTitle({ title, body }).ok) newBody = body;
+  else if (OVERRIDE_REGEXP.test(body)) newBody = body.replace(OVERRIDE_REGEXP, () => block);
+  return { ok: true, reason: `Built from "${head}".`, title, body: newBody };
 }
 
 /**
@@ -299,14 +301,17 @@ export function decidePrTitleSuggestion({ head, body = '', issueTitle, commitSub
 export function decidePrTitle({ title, body = '' }) {
   const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
   if (pipe) {
-    const override = OVERRIDE_REGEXP.exec(body)?.[1].split('\n')[0];
+    const override = OVERRIDE_REGEXP.exec(body)?.[1].split(/\r?\n/)[0].trim();
     const expected = COMMIT_TYPE_BY_LABEL[pipe[1]];
-    if (override && new RegExp(`^${expected}(\\([^)]+\\))?!?: \\S`).test(override)) {
+    // The override is what release-please reads, so its subject must still say what the
+    // title says (case aside): a title edited on its own would leave a stale changelog line.
+    const subject = new RegExp(`^${expected}(\\([^)]+\\))?!?: (\\S.*)$`).exec(override ?? '')?.[2];
+    if (subject?.toLowerCase() === pipe[2].trim().toLowerCase()) {
       return { ok: true, reason: `"${title}" is valid.` };
     }
     return {
       ok: false,
-      reason: `"${title}" needs a "${expected}: ..." line between BEGIN_COMMIT_OVERRIDE and END_COMMIT_OVERRIDE in the PR body, so release-please can read the squash commit.`,
+      reason: `"${title}" needs a "${expected}: ${pipe[2].trim()}" line (scope and "!" optional) between BEGIN_COMMIT_OVERRIDE and END_COMMIT_OVERRIDE in the PR body, so release-please reads the squash commit the title describes.`,
     };
   }
   if (CONVENTIONAL_TITLE_REGEXP.test(title ?? '')) {

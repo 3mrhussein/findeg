@@ -72,7 +72,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           # A manual run diffs against develop's merge-base, so it needs the history.
-          fetch-depth: ${{ github.event_name == 'workflow_dispatch' && 0 || 2 }}
+          # '0' is quoted: a bare 0 is falsy, so `&& 0 || 2` would always pick 2.
+          fetch-depth: ${{ github.event_name == 'workflow_dispatch' && '0' || '2' }}
           sparse-checkout: |
             .github/scripts
             .github/config
