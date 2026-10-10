@@ -1,10 +1,11 @@
 name: CI · Release
 
-# Guards PRs targeting main, pushes to main and pushes to develop, the
-# pre-production branch (the strict tier). Every job runs from scratch:
-# Turbo --force, no cache restore, integration tests always, E2E required.
-# Only pushes to develop save caches (for the feature PRs), after the
-# from-scratch run. Jobs live in ci-jobs.yml.
+# Guards PRs targeting main and pushes to main and develop. main is the strict
+# tier: every job from scratch (Turbo --force, no cache restore, integration
+# tests always, E2E required). A develop push that merges a PR runs the fast
+# tier (touched packages, caches restored); a direct push to develop (no merged
+# PR, e.g. a hotfix) runs strict. Every develop push saves the caches the
+# feature PRs restore. Jobs live in ci-jobs.yml.
 # Required check on PRs into main: `Strict / CI OK`.
 # The only secret passed is the optional SLACK_WEBHOOK_URL, for the run-result card
 # after pushes to main and develop (GITHUB_TOKEN reaches the jobs anyway).
@@ -31,8 +32,10 @@ jobs:
     # `contents: read` for every other job; PRs from forks still get a read token.
     permissions:
       contents: write
+      pull-requests: read
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: strict
+      # A develop push runs either tier (fast when it merges a PR), so the policy decides.
+      tier: ${{ github.event_name == 'push' && github.ref_name == 'develop' && 'any' || 'strict' }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

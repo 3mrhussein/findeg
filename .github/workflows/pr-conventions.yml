@@ -2,9 +2,14 @@ name: PR conventions
 
 # Runs on every PR, whatever its base branch.
 # Required checks (by job name, referenced in both branch rulesets):
-#   `PR title`      — validates Conventional Commits format via amannn/action-semantic-pull-request
+#   `PR title`      — validates `Feature | #122 | Add dispatch button` (or a Conventional Commit) via .github/scripts
 #   `Branch policy` — validates branch name and release source via .github/scripts
 # Do NOT rename these jobs without updating the rulesets in Settings → Rules.
+#
+# `PR autofill` retitles a new PR from its branch (feat/122-add-x -> `Feature | #122 | Add x`) and adds
+# the hidden commit override release-please reads from a squash-merged PR. A PR opened with a pipe
+# title already (the pre-push hook prints a link that prefills one) keeps it. It runs on `opened`
+# only, so a title edited by hand is never overwritten.
 #
 # `edited` also fires when the PR's base branch changes, so the branch policy
 # is re-judged against the new base.
@@ -16,28 +21,81 @@ permissions:
   contents: read
   pull-requests: read
 
+# The newest run judges the title: an edit (or the autofill's own) supersedes the run before it.
+concurrency:
+  group: pr-conventions-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
+  pr-autofill:
+    name: PR autofill
+    if: github.event.action == 'opened' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      # Exempt branches (develop, release-please, Dependabot) have no <type>/<slug>
+      # to build from, so they keep their title and the check accepts it as is.
+      - name: Retitle from the branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REF: ${{ github.head_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMITS: ${{ github.event.pull_request.commits }}
+        run: |
+          printf '%s' "$PR_BODY" > "$RUNNER_TEMP/body.md"
+          args=(--head "$HEAD_REF" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/body.md" --out "$RUNNER_TEMP/pr.json")
+          issue=$(node .github/scripts/ci-cli.mjs pr-title issue-number --head "$HEAD_REF")
+          if [ -n "$issue" ]; then
+            title=$(gh api "repos/$GITHUB_REPOSITORY/issues/$issue" --jq .title 2>/dev/null || true)
+            if [ -n "$title" ]; then args+=(--issue-title "$title"); fi
+          fi
+          if [ "$COMMITS" = 1 ]; then
+            subject=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/commits" --jq '.[0].commit.message | split("\n")[0]')
+            args+=(--commit-subject "$subject")
+          fi
+          node .github/scripts/ci-cli.mjs pr-title suggest "${args[@]}" || { echo "No title to build, keeping the current one."; exit 0; }
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" \
+            -f title="$(jq -r .title "$RUNNER_TEMP/pr.json")" \
+            -f body="$(jq -r .body "$RUNNER_TEMP/pr.json")" > /dev/null
+
+  # Runs after the autofill so it judges the retitled PR: it reads the title and body
+  # fresh, because the event payload still holds the old ones.
   pr-title:
     name: PR title
+    needs: pr-autofill
+    if: always() && needs.pr-autofill.result != 'cancelled'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: amannn/action-semantic-pull-request@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v7
         with:
-          types: |
-            feat
-            fix
-            docs
-            style
-            refactor
-            perf
-            test
-            build
-            ci
-            chore
-            revert
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Check the PR title
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" > "$RUNNER_TEMP/pr.json"
+          jq -r '.body // ""' "$RUNNER_TEMP/pr.json" > "$RUNNER_TEMP/body.md"
+          node .github/scripts/ci-cli.mjs pr-title check \
+            --title "$(jq -r .title "$RUNNER_TEMP/pr.json")" --body-file "$RUNNER_TEMP/body.md"
 
   # Same rules as the local pre-push hook: both call .github/scripts.
   branch-policy:
