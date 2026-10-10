@@ -45,6 +45,5 @@ jobs:
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: fast # policy tier stays "fast"; only the display name changes
-      force_build: ${{ inputs.no_cache || false }}
-      force_install: ${{ inputs.no_cache || false }}
+      no_cache: ${{ inputs.no_cache || false }}
       full_tests: ${{ inputs.full_tests || false }}

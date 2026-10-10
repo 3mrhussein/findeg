@@ -24,7 +24,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 - **Job ids** are lowercase, one word where possible (`plan`, `checks`, `build`, `integration`, `e2e`). The first job of a pipeline is `plan` and produces every output the others read.
 - **Inputs and outputs** use `snake_case`. Outputs are named after the decision (`restore_deps`, `run_e2e`), not the implementation.
 - **Env vars** in `UPPER_SNAKE`. Repeated ones go in the workflow-level `env:`.
-- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force build job (ignore build cache)`, `Force clean install (ignore pnpm store cache)`. The feature workflow's checkboxes are `Force disable cache (fresh build)` (`no_cache`) and `Force run full tests` (`full_tests`); both default to unchecked, and a manual run otherwise tests touched packages only with caches restored.
+- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force disable cache (fresh build)` (`no_cache`), `Force run full tests (default runs touched files only)` (`full_tests`). Both default to unchecked, and a manual run otherwise tests touched packages only with caches restored. The reusable workflow takes the same input ids, so the caller passes them straight through.
 
 ## 3. Triggers and runs
 
@@ -140,7 +140,7 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 
 1. Create the layout in section 1; add `ci-policy`, `ci-cli`, `ci-config` and the test file.
 2. Name workflows, jobs and the `CI OK` gate per section 2; require only the gate in rulesets.
-3. Add `workflow_dispatch` with `force_build` and `force_install` to the feature workflow.
+3. Add `workflow_dispatch` with `no_cache` and `full_tests` to the feature workflow.
 4. Set the tiers and the producer branch in config; write the first ADR for repo-specific choices.
 5. Copy `.github/config/` (themes, templates, settings) and the renderer, then add the reports the repo needs.
 
@@ -152,7 +152,7 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 | Release workflow            | `ci-release.yml`, `CI · Release`, gate `Strict / CI OK`      | Done                                 |
 | Reusable jobs               | `ci-jobs.yml`, `CI jobs`                                     | Done                                 |
 | Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`             | Done                                 |
-| Dispatch checkboxes         | `force_build`, `force_install` on `CI · Feature`             | Done                                 |
+| Dispatch checkboxes         | `no_cache`, `full_tests` on `CI · Feature`                   | Done                                 |
 | PR hygiene                  | `pr-conventions.yml`, `PR conventions`                       | Done                                 |
 | Loop guard on bot commits   | none                                                         | Open: release-please pushes          |
 | Cache cleanup               | none                                                         | Deferred: PRs never save caches      |

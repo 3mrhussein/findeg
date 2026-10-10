@@ -26,17 +26,13 @@ on:
     inputs:
       tier:
         description: >-
-          The tier the calling workflow runs, `fast` or `strict`. Plan fails when
-          the policy picks a different tier for the event, so a mis-set trigger
-          can't run the wrong tier.
+          The tier the calling workflow runs: `fast`, `strict`, or `any` when its
+          events may run either. Plan fails when the policy picks a different tier,
+          so a mis-set trigger can't run the wrong tier.
         type: string
         required: true
-      force_build:
-        description: 'Manual runs only, ignore the build caches and force Turbo.'
-        type: boolean
-        default: false
-      force_install:
-        description: 'Manual runs only, ignore the pnpm store cache.'
+      no_cache:
+        description: 'Manual runs only, ignore every cache (pnpm store, Turbo, Next.js) and force Turbo.'
         type: boolean
         default: false
       full_tests:
@@ -63,7 +59,9 @@ jobs:
       tier: ${{ steps.plan.outputs.tier }}
       turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
       fetch_depth: ${{ steps.plan.outputs.fetch_depth }}
-      base_sha: ${{ steps.changes.outputs.base_sha }}
+      # What Turbo's --affected diffs against: the PR base, the previous push, or
+      # (manual runs) the base the changed paths were taken from.
+      scm_base: ${{ github.event.pull_request.base.sha || github.event.before || steps.changes.outputs.base_sha }}
       restore_deps: ${{ steps.plan.outputs.restore_deps }}
       restore_build: ${{ steps.plan.outputs.restore_build }}
       save_cache: ${{ steps.plan.outputs.save_cache }}
@@ -136,20 +134,13 @@ jobs:
           HEAD: ${{ github.head_ref }}
           EXPECTED_TIER: ${{ inputs.tier }}
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
-          FORCE_BUILD: ${{ inputs.force_build }}
-          FORCE_INSTALL: ${{ inputs.force_install }}
+          NO_CACHE: ${{ inputs.no_cache }}
           FULL_TESTS: ${{ inputs.full_tests }}
           MERGED_PR: ${{ steps.merged.outputs.pr }}
-        run: |
-          args=(--event "$EVENT" --target "$TARGET")
-          if [ "$MERGED_PR" = true ]; then args+=(--merged-pr); fi
-          if [ "$FORCE_BUILD" = true ]; then args+=(--force-build); fi
-          if [ "$FORCE_INSTALL" = true ]; then args+=(--force-install); fi
-          if [ "$FULL_TESTS" = true ]; then args+=(--full-tests); fi
-          if [ -n "$HEAD" ]; then args+=(--head "$HEAD"); fi
-          if [ -n "$EXPECTED_TIER" ]; then args+=(--expect-tier "$EXPECTED_TIER"); fi
-          if [ -n "$CHANGED_FILES" ]; then args+=(--changed-files "$CHANGED_FILES"); fi
-          node .github/scripts/ci-cli.mjs plan "${args[@]}"
+        run: >-
+          node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
+          --head "$HEAD" --expect-tier "$EXPECTED_TIER" --changed-files "$CHANGED_FILES"
+          --no-cache "$NO_CACHE" --full-tests "$FULL_TESTS" --merged-pr "$MERGED_PR"
 
   # The code checks share one shape: a full-history checkout on the fast tier
   # (Turbo's --affected diffs against the PR base or the previous push), the
@@ -171,7 +162,7 @@ jobs:
           - { name: Unit tests, task: test }
     env:
       TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || needs.plan.outputs.base_sha }}
+      TURBO_SCM_BASE: ${{ needs.plan.outputs.scm_base }}
       TURBO_SCM_HEAD: ${{ github.sha }}
       TASK: ${{ matrix.task }}
     steps:
@@ -220,7 +211,7 @@ jobs:
           --health-retries 10
     env:
       TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || needs.plan.outputs.base_sha }}
+      TURBO_SCM_BASE: ${{ needs.plan.outputs.scm_base }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v7
@@ -481,28 +472,21 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       GATE_RESULT: ${{ needs.ci-ok.result }}
+    # Every step is skipped without the webhook secret.
     steps:
-      - name: Check for the Slack webhook
-        id: webhook
-        run: |
-          if [ -n "$SLACK_WEBHOOK_URL" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No SLACK_WEBHOOK_URL secret: skipping the Slack card."
-          fi
-      - if: steps.webhook.outputs.present == 'true'
+      - if: env.SLACK_WEBHOOK_URL != ''
         uses: actions/checkout@v7
         with:
           sparse-checkout: |
             .github/scripts
             .github/config
-      - if: steps.webhook.outputs.present == 'true'
+      - if: env.SLACK_WEBHOOK_URL != ''
         uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
       - name: Post the run-result card
-        if: steps.webhook.outputs.present == 'true'
+        if: env.SLACK_WEBHOOK_URL != ''
         run: |
           status=failure
           [ "$GATE_RESULT" = success ] && status=success

@@ -4,7 +4,9 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests] [--merged-pr]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-pr true]
+//     (the yes/no options take `true`; any other value, empty included, is no, so a workflow
+//     can pass its inputs straight through)
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 //   node .github/scripts/ci-cli.mjs pr-title <issue-number|suggest|check> ...
 
@@ -76,28 +78,24 @@ function writePlanSummary(decision, options) {
   }
 }
 
-function executePlan({
-  event,
-  target,
-  head,
-  expectedTier,
-  changedFiles,
-  forceBuild,
-  forceInstall,
-  fullTests,
-  mergedPr,
-}) {
-  const changedPaths = parseChangedPaths(changedFiles);
+function executePlan(values) {
+  const { event, target } = values;
+  const yes = (name) => values[name] === 'true';
+  // `no_cache` skips both caches: the build caches (with Turbo --force) and the pnpm store.
+  const forceBuild = yes('no-cache');
+  const forceInstall = forceBuild;
+  const fullTests = yes('full-tests');
+  const changedPaths = parseChangedPaths(values['changed-files']);
   const decision = decidePlan({
     event,
     target,
-    head,
-    expectedTier,
+    head: values.head,
+    expectedTier: values['expect-tier'],
     changedPaths,
     forceBuild,
     forceInstall,
     fullTests,
-    mergedPr,
+    mergedPr: yes('merged-pr'),
   });
   reportOutcome('Tier', decision);
   writePlanSummary(decision, { forceBuild, forceInstall, fullTests });
@@ -176,7 +174,7 @@ function executePrTitle(subcommand, values) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests] [--merged-pr]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-pr true]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
   ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
@@ -191,10 +189,9 @@ function main(argv) {
       target: { type: 'string' },
       'changed-files': { type: 'string' },
       'expect-tier': { type: 'string' },
-      'force-build': { type: 'boolean' },
-      'force-install': { type: 'boolean' },
-      'full-tests': { type: 'boolean' },
-      'merged-pr': { type: 'boolean' },
+      'no-cache': { type: 'string' },
+      'full-tests': { type: 'string' },
+      'merged-pr': { type: 'string' },
       needs: { type: 'string' },
       tier: { type: 'string' },
       title: { type: 'string' },
@@ -212,17 +209,7 @@ function main(argv) {
   }
 
   if (command === 'plan' && values.event && values.target) {
-    return executePlan({
-      event: values.event,
-      target: values.target,
-      head: values.head,
-      expectedTier: values['expect-tier'],
-      changedFiles: values['changed-files'],
-      forceBuild: values['force-build'],
-      forceInstall: values['force-install'],
-      fullTests: values['full-tests'],
-      mergedPr: values['merged-pr'],
-    });
+    return executePlan(values);
   }
 
   if (command === 'verdict' && values.needs) {
