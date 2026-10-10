@@ -3,6 +3,7 @@
  */
 'use cache';
 
+import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
 import { createCartServices } from '@findeg/backend/features/cart';
 

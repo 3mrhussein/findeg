@@ -1,5 +1,6 @@
 'use cache';
 
+import 'server-only';
 import { getSession } from '@lib/session';
 import { cacheLife, cacheTag } from 'next/cache';
 

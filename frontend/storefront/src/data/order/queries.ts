@@ -1,3 +1,4 @@
+import 'server-only';
 import { getSession } from '@/lib/session';
 import { createOrderServices } from '@findeg/backend/features/order';
 
