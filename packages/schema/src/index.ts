@@ -1,11 +1,13 @@
 /**
  * @findeg/schema: the workspace's single source of truth for the Business Domain Schema.
  *
- * Domain values are declared here once. db, packages and apps import them and derive their
- * own forms (pgEnum, zod, labels) from them; they never redeclare a value set.
+ * One folder per domain. Consumers import from the root or from a domain subpath, and never
+ * redeclare a value set.
  */
 export * from './common';
-export * from './identity';
-export * from './sales';
-export * from './school';
-export * from './system';
+export * from './customers';
+export * from './partners';
+export * from './school-lists';
+export * from './orders';
+export * from './inventory';
+export * from './outbox';

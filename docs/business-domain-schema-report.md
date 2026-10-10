@@ -53,7 +53,7 @@ Claims from the sub-agents that I did **not** re-verify: the dashboard stub orde
 ## Open decisions for you
 
 1. **`confirmed` order status.** The GLOSSARY says Order Acceptance is not a status, but the workflow uses `confirmed` as an operational step between `pending` and `processing`. Keep it (current behaviour, encoded), or remove it, which needs a migration?
-2. **`card` payment.** Dead code or planned? The database enum, the storefront and the shipping estimate all assume it. The schema encodes cash on delivery only.
+2. **`card` payment.** Owner decision: comment it out for now and design a payment option object `{type, allowed}` before adding card back. The schema encodes cash on delivery only, and `PaymentOption` is defined for the later design.
 3. **Governorates.** Is the 16-entry list intentionally partial? Egypt has 27.
 4. **Currency in the dashboard product table.** Change USD to EGP?
 5. **Shipping estimate.** Should the storefront show the backend's flat fee instead of 30 for card?
@@ -63,3 +63,63 @@ Claims from the sub-agents that I did **not** re-verify: the dashboard stub orde
 
 - Point db enums and checks at `@findeg/schema` (`inList`/`pgEnum` from the value arrays) once decisions 1 and 2 are settled, with a migration if values change.
 - Replace the duplicated literals in `packages/orders`, `backend` and both frontends with imports, and add a guard against redeclared value sets.
+
+## Schema structure (owner review)
+
+- One folder per domain: `src/<domain>/index.ts`. Domains: `common`, `customers`, `partners`, `school-lists`, `orders`, `inventory`, `outbox`. Single-file subfolders such as `sales/order.ts` were removed.
+- `actor-type` was removed: guest, user and service are subsets of the user concept.
+- `outbox` was kept: it is neither a duplicate nor a subset of a user.
+- Partner actor kinds (`staff`, `partner`, `self`) were removed with the audit detail. They are not needed for the value sets yet.
+- Entities and value objects were added for each domain (for example `BusinessPartner`, `PartnerSchoolProfile`, `SchoolSupplyList`, `Order`, `Quote`, `StockReservation`, `OutboxMessage`).
+
+## Sub-agent A: backend, db and packages
+
+**Picks**
+- Order status: keep the seven values in `db/src/types/enum-values.ts` as the only source.
+- `confirmed`: remove it, unless Staff need a verification step.
+- Order and payment `refunded`: keep both axes, and couple an order refund with payment refunded.
+- Payment method: `cod` for phase one. Card is commented out.
+- Partner status: `onboarding`, as in `partners.ts:16`.
+- School list status: draft, published and archived. Public readers reject non-published lists.
+- Money: bigint piasters. Retire `Money` as a number and `Price = number`.
+- Currency: one `DEFAULT_CURRENCY` constant.
+- Replacement: `replacesListId` for replacement, `sourceListId` for clone provenance.
+- Discounts: List Offer only.
+- Stock reservation state: derived from order status.
+
+**Doubts**
+1. What `confirmed` means for cash on delivery, and who sets it.
+2. Whether order `refunded` must set payment `refunded`.
+3. Whether card is planned. Owner: design the payment option first.
+4. Whether the Partner School profile is enforced in application code.
+5. The guest-access limit of 5 attempts has no enforcing code.
+6. Where the 7-day invitation expiry is set.
+7. Whether stock settlement stays idempotent after release.
+8. Whether the "parcel back in warehouse" rule is enforced.
+9. Whether `ADMIN_ROLE_IDS` matches the roles table.
+10. Frontend, docs and ADRs were out of scope for this agent.
+
+## Sub-agent B: frontends and docs
+
+**Picks**
+- Order status and labels from `enum-values.ts`, with labels and transitions from `packages/orders`.
+- Payment status shown as labels, not raw values.
+- Payment method: cash on delivery only.
+- Shipping: the backend's flat fee only.
+- Currency: EGP. The USD in the dashboard product table is wrong.
+- List status: draft, published and archived. Never "active" or "inactive".
+- Product status: keep the `isActive` boolean, labelled Active/Inactive. "Draft" is reserved for lists.
+- Membership status: active, suspended and ended. Hide Reactivate for ended.
+- Partner status and roles as in `partners.ts`.
+- Governorates, school types and academic systems: one backend source. Fix the lowercase fixtures.
+- Refund and cancelled: distinct labels and colours.
+
+**Doubts**
+1. Is `card` planned, or dead code?
+2. Are the dashboard stub components dead?
+3. Is the 16-governorate list intentionally partial? Egypt has 27.
+4. Do the lowercase fixture school types bypass validation?
+5. What does "Verified School" mean, and is a verification state planned?
+6. Does the footer "Partner Program" link point to a real page?
+7. Is the Draft label for inactive products intentional?
+8. Is the order reference format enforced in code?

@@ -7,10 +7,12 @@
   "exports": {
     ".": "./src/index.ts",
     "./common": "./src/common/index.ts",
-    "./identity": "./src/identity/index.ts",
-    "./sales": "./src/sales/index.ts",
-    "./school": "./src/school/index.ts",
-    "./system": "./src/system/index.ts"
+    "./customers": "./src/customers/index.ts",
+    "./partners": "./src/partners/index.ts",
+    "./school-lists": "./src/school-lists/index.ts",
+    "./orders": "./src/orders/index.ts",
+    "./inventory": "./src/inventory/index.ts",
+    "./outbox": "./src/outbox/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

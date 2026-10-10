@@ -7,3 +7,9 @@ export const OUTBOX_STATUSES = [
   'expired',
 ] as const;
 export type OutboxStatus = (typeof OUTBOX_STATUSES)[number];
+
+export interface OutboxMessage {
+  id: string;
+  kind: string;
+  status: OutboxStatus;
+}

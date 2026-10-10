@@ -48,7 +48,7 @@ describe('pinned business values', () => {
   it('money, locale and offers', () => {
     expect(schema.DEFAULT_CURRENCY).toBe('EGP');
     expect(schema.PIASTERS_PER_POUND).toBe(100);
-    expect(schema.SUPPORTED_LOCALES).toEqual(['en', 'ar']);
+    expect(schema.LOCALES).toEqual(['en', 'ar']);
     expect(schema.LIST_OFFER_MAX_BASIS_POINTS).toBe(10000);
   });
 });
