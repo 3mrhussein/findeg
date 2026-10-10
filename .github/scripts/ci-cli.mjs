@@ -6,8 +6,9 @@
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
 //   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
+//   node .github/scripts/ci-cli.mjs pr-title <issue-number|suggest|check> ...
 
-import { appendFileSync, readFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -18,7 +19,15 @@ import {
   renderTemplate,
   resolveTheme,
 } from './ci-report.mjs';
-import { decideBranchName, decidePlan, decideReleaseSource, decideVerdict } from './ci-policy.mjs';
+import {
+  decideBranchName,
+  decidePlan,
+  decidePrTitle,
+  decidePrTitleSuggestion,
+  decideReleaseSource,
+  decideVerdict,
+  issueNumberFromBranch,
+} from './ci-policy.mjs';
 
 function reportOutcome(title, { ok, reason }) {
   if (ok) {
@@ -127,10 +136,46 @@ function executeVerdict({ needs, tier }) {
   return decision.ok ? 0 : 1;
 }
 
+function readOptional(filePath) {
+  return filePath ? readFileSync(filePath, 'utf8') : '';
+}
+
+// pr-title issue-number --head <branch>       prints the issue the branch names, if any
+// pr-title suggest --head <branch> --body-file <f> --out <f> [--issue-title <t>] [--commit-subject <s>]
+// pr-title check --title <t> --body-file <f>
+function executePrTitle(subcommand, values) {
+  if (subcommand === 'issue-number' && values.head) {
+    console.log(issueNumberFromBranch(values.head) ?? '');
+    return 0;
+  }
+  if (subcommand === 'suggest' && values.head && values.out) {
+    const decision = decidePrTitleSuggestion({
+      head: values.head,
+      body: readOptional(values['body-file']),
+      issueTitle: values['issue-title'],
+      commitSubject: values['commit-subject'],
+    });
+    reportOutcome('PR title suggestion', decision);
+    if (!decision.ok) return 1;
+    writeFileSync(values.out, JSON.stringify({ title: decision.title, body: decision.body }));
+    return 0;
+  }
+  if (subcommand === 'check' && values.title !== undefined) {
+    const decision = decidePrTitle({
+      title: values.title,
+      body: readOptional(values['body-file']),
+    });
+    reportOutcome('PR title', decision);
+    return decision.ok ? 0 : 1;
+  }
+  return 2;
+}
+
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
   ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
-  ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]`;
+  ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
+  ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
 function main(argv) {
   const { positionals, values } = parseArgs({
@@ -148,10 +193,15 @@ function main(argv) {
       'full-tests': { type: 'boolean' },
       needs: { type: 'string' },
       tier: { type: 'string' },
+      title: { type: 'string' },
+      'body-file': { type: 'string' },
+      out: { type: 'string' },
+      'issue-title': { type: 'string' },
+      'commit-subject': { type: 'string' },
     },
   });
 
-  const [command] = positionals;
+  const [command, subcommand] = positionals;
 
   if (command === 'branch-policy' && values.head) {
     return checkBranchPolicy({ head: values.head, base: values.base }) ? 0 : 1;
@@ -172,6 +222,11 @@ function main(argv) {
 
   if (command === 'verdict' && values.needs) {
     return executeVerdict({ needs: values.needs, tier: values.tier });
+  }
+
+  if (command === 'pr-title') {
+    const code = executePrTitle(subcommand, values);
+    if (code !== 2) return code;
   }
 
   console.error(CLI_USAGE_HELP);

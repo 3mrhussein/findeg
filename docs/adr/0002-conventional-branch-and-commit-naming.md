@@ -28,3 +28,11 @@ The develop-branch flow (#312) sends feature PRs into `develop` and lets only re
 - **Exempt branches:** `main`, `develop`, `release-please--*`, `dependabot/*` and `worktree-*`. These are long-lived branches or are named by tooling, not chosen by a person. `master` is no longer exempt, since the repo has none.
 - **One rule, two callers.** The rules live in `.github/scripts/ci-policy.mjs`, a pure module. Both the pre-push hook and the `Branch policy` check call it, so local and CI enforcement can't drift apart. At push time no PR exists yet, so the hook can't know the base. It accepts `hotfix/*` and skips the release-source rule, and `Branch policy` enforces both once the PR is open. It re-runs when the PR's base is edited.
 - **The `PR conventions` workflow replaces "Branch and PR naming".** Its jobs are named `PR title` and `Branch policy`, matching the names the rulesets require. The PR-title check is unchanged.
+
+## Amendment: pipe-format PR titles
+
+PR titles read `Feature | #122 | Add dispatch button`: the capitalized branch type (`Feature`, `Fix`, `Doc`, `Style`, `Refactor`, `Perf`, `Test`, `Build`, `CI`, `Chore`, `Revert`, `Hotfix`), the issue number when the branch names one (`feat/122-add-dispatch-button`), then the issue title, the PR's only commit subject, or the branch slug, in that order.
+
+- **`PR autofill`** (in `PR conventions`) builds the title when a PR is opened, never afterwards, so a hand-edited title stays.
+- **Squash commits still need Conventional Commits.** ADR-0015 squashes with the PR title as the commit, and release-please parses it. A pipe title therefore carries a hidden `BEGIN_COMMIT_OVERRIDE` block in the PR body (release-please's override for squash-merged PRs) holding `feat: add dispatch button`. `PR title` requires that block to match the title's type.
+- **`PR title`** accepts the pipe format or a plain Conventional Commit, so release, sync and Dependabot PRs keep their titles. `amannn/action-semantic-pull-request` is gone; the rules live in `.github/scripts/ci-policy.mjs`.

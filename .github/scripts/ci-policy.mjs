@@ -213,3 +213,107 @@ export function decideVerdict({ tier, results }) {
     reason: `Every CI job passed or was skipped as irrelevant${tier ? ` (${tier} tier)` : ''}.`,
   };
 }
+
+// ── PR titles ────────────────────────────────────────────────────────────────
+// A feature PR is titled `Feature | #122 | Add dispatch button`, built from its branch
+// (`feat/122-add-dispatch-button`). Squash merges land the PR title as the commit, and
+// release-please reads commits as Conventional Commits, so a pipe title carries a hidden
+// BEGIN_COMMIT_OVERRIDE block in the PR body (release-please's own override mechanism)
+// holding the Conventional Commit it stands for.
+
+const PR_TITLE_LABELS = {
+  feat: 'Feature',
+  fix: 'Fix',
+  docs: 'Doc',
+  style: 'Style',
+  refactor: 'Refactor',
+  perf: 'Perf',
+  test: 'Test',
+  build: 'Build',
+  ci: 'CI',
+  chore: 'Chore',
+  revert: 'Revert',
+  hotfix: 'Hotfix',
+};
+const COMMIT_TYPE_BY_LABEL = Object.fromEntries(
+  Object.entries(PR_TITLE_LABELS).map(([type, label]) => [label, type === 'hotfix' ? 'fix' : type]),
+);
+const PIPE_TITLE_REGEXP = new RegExp(
+  `^(${Object.values(PR_TITLE_LABELS).join('|')}) \\| (?:#\\d+ \\| )?(\\S.*)$`,
+);
+const CONVENTIONAL_TITLE_REGEXP = new RegExp(
+  `^(${CONVENTIONAL_COMMIT_TYPES.join('|')})(\\([^)]+\\))?!?: \\S.*$`,
+);
+const OVERRIDE_REGEXP = /BEGIN_COMMIT_OVERRIDE\s*([\s\S]*?)\s*END_COMMIT_OVERRIDE/;
+
+const sentenceCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
+function parseBranch(head) {
+  const match = /^([a-z]+)\/(.+)$/.exec(head ?? '');
+  if (!match || !(match[1] in PR_TITLE_LABELS) || !BRANCH_NAME_REGEXP.test(head)) return undefined;
+  const issue = /^(\d+)-(.+)$/.exec(match[2]);
+  return {
+    type: match[1],
+    issueNumber: issue ? Number(issue[1]) : undefined,
+    slug: issue ? issue[2] : match[2],
+  };
+}
+
+/** The issue number a branch names (`feat/122-add-x`), if any. */
+export function issueNumberFromBranch(head) {
+  return parseBranch(head)?.issueNumber;
+}
+
+/**
+ * The title and body a new PR gets. The text comes from the issue title when the branch names
+ * an issue, else the subject of the PR's only commit, else the branch slug.
+ */
+export function decidePrTitleSuggestion({ head, body = '', issueTitle, commitSubject }) {
+  const branch = parseBranch(head);
+  if (!branch || isExemptBranch(head)) {
+    return { ok: false, reason: `"${head}" has no <type>/<slug> to build a title from.` };
+  }
+  const fromCommit = commitSubject?.replace(/^[a-z]+(\([^)]*\))?!?:\s*/i, '');
+  const text = sentenceCase(
+    [issueTitle, fromCommit, branch.slug.replaceAll('-', ' ')]
+      .map((candidate) => candidate?.replace(/\s+/g, ' ').trim())
+      .find(Boolean),
+  );
+  const label = PR_TITLE_LABELS[branch.type];
+  const issue = branch.issueNumber ? ` | #${branch.issueNumber}` : '';
+  const commitType = COMMIT_TYPE_BY_LABEL[label];
+  const override = `${commitType}: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+  const block = `<!--\nBEGIN_COMMIT_OVERRIDE\n${override}\nEND_COMMIT_OVERRIDE\n-->`;
+  return {
+    ok: true,
+    reason: `Built from "${head}".`,
+    title: `${label}${issue} | ${text}`,
+    body: OVERRIDE_REGEXP.test(body) ? body : `${body.trimEnd()}\n\n${block}\n`.trimStart(),
+  };
+}
+
+/**
+ * Validates a PR title: the pipe format (which must carry a matching commit override in the
+ * body) or a plain Conventional Commit, which tooling PRs (release, sync, Dependabot) use.
+ */
+export function decidePrTitle({ title, body = '' }) {
+  const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
+  if (pipe) {
+    const override = OVERRIDE_REGEXP.exec(body)?.[1].split('\n')[0];
+    const expected = COMMIT_TYPE_BY_LABEL[pipe[1]];
+    if (override && new RegExp(`^${expected}(\\([^)]+\\))?!?: \\S`).test(override)) {
+      return { ok: true, reason: `"${title}" is valid.` };
+    }
+    return {
+      ok: false,
+      reason: `"${title}" needs a "${expected}: ..." line between BEGIN_COMMIT_OVERRIDE and END_COMMIT_OVERRIDE in the PR body, so release-please can read the squash commit.`,
+    };
+  }
+  if (CONVENTIONAL_TITLE_REGEXP.test(title ?? '')) {
+    return { ok: true, reason: `"${title}" is a valid Conventional Commit.` };
+  }
+  return {
+    ok: false,
+    reason: `"${title}" must look like "Feature | #122 | Add dispatch button" (the issue is optional; labels: ${Object.values(PR_TITLE_LABELS).join(', ')}) or a Conventional Commit.`,
+  };
+}

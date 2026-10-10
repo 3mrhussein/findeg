@@ -2,7 +2,14 @@
 
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { decideBranchName, decidePlan, decideVerdict } from './ci-policy.mjs';
+import {
+  decideBranchName,
+  decidePlan,
+  decidePrTitle,
+  decidePrTitleSuggestion,
+  decideVerdict,
+  issueNumberFromBranch,
+} from './ci-policy.mjs';
 
 const codeChange = ['backend/src/index.ts'];
 
@@ -223,5 +230,70 @@ describe('decideVerdict', () => {
 describe('decideBranchName', () => {
   it('exempts the CI evidence branch', () => {
     assert.equal(decideBranchName({ head: 'ci-evidence' }).ok, true);
+  });
+});
+
+describe('decidePrTitleSuggestion', () => {
+  it('builds the title from the branch slug', () => {
+    const plan = decidePrTitleSuggestion({ head: 'feat/add-dispatch-button' });
+    assert.equal(plan.title, 'Feature | Add dispatch button');
+    assert.match(
+      plan.body,
+      /BEGIN_COMMIT_OVERRIDE\nfeat: add dispatch button\nEND_COMMIT_OVERRIDE/,
+    );
+  });
+
+  it('adds the issue number a branch names and prefers the issue title', () => {
+    const plan = decidePrTitleSuggestion({
+      head: 'ci/122-dispatch-button',
+      issueTitle: 'Add dispatch button',
+    });
+    assert.equal(plan.title, 'CI | #122 | Add dispatch button');
+    assert.equal(issueNumberFromBranch('ci/122-dispatch-button'), 122);
+    assert.equal(issueNumberFromBranch('ci/dispatch-button'), undefined);
+  });
+
+  it('falls back to the commit subject, without its conventional prefix', () => {
+    const plan = decidePrTitleSuggestion({
+      head: 'docs/notes',
+      commitSubject: 'docs(ci): explain the cache tiers',
+    });
+    assert.equal(plan.title, 'Doc | Explain the cache tiers');
+  });
+
+  it('maps hotfix branches to a Fix commit', () => {
+    const plan = decidePrTitleSuggestion({ head: 'hotfix/stop-crash' });
+    assert.equal(plan.title, 'Hotfix | Stop crash');
+    assert.match(plan.body, /\nfix: stop crash\n/);
+  });
+
+  it('keeps the body and does not add a second override', () => {
+    const first = decidePrTitleSuggestion({ head: 'feat/a-b', body: '## Description\nHi' });
+    assert.match(first.body, /^## Description\nHi\n\n<!--/);
+    assert.equal(decidePrTitleSuggestion({ head: 'feat/a-b', body: first.body }).body, first.body);
+  });
+
+  it('refuses branches without a type and slug', () => {
+    assert.equal(decidePrTitleSuggestion({ head: 'develop' }).ok, false);
+    assert.equal(decidePrTitleSuggestion({ head: 'dependabot/npm/x' }).ok, false);
+  });
+});
+
+describe('decidePrTitle', () => {
+  const body = '<!--\nBEGIN_COMMIT_OVERRIDE\nfeat: add dispatch button\nEND_COMMIT_OVERRIDE\n-->';
+
+  it('accepts the pipe format with a matching override', () => {
+    assert.equal(decidePrTitle({ title: 'Feature | #122 | Add dispatch button', body }).ok, true);
+    assert.equal(decidePrTitle({ title: 'Feature | Add dispatch button', body }).ok, true);
+  });
+
+  it('rejects a pipe title without a matching override', () => {
+    assert.equal(decidePrTitle({ title: 'Feature | Add dispatch button' }).ok, false);
+    assert.equal(decidePrTitle({ title: 'Fix | Add dispatch button', body }).ok, false);
+  });
+
+  it('accepts plain Conventional Commits for tooling PRs', () => {
+    assert.equal(decidePrTitle({ title: 'chore(deps): bump x' }).ok, true);
+    assert.equal(decidePrTitle({ title: 'Add dispatch button' }).ok, false);
   });
 });
