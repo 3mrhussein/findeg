@@ -1,18 +1,28 @@
-import { describe, expect, it, vi } from 'vitest';
-
-// The producer entry must load without the application environment or the default
-// connection: Orders and other producers write on the caller's transaction only.
-vi.mock('../../../connection', () => {
-  throw new Error('the outbox producer entry must not load the default connection');
-});
-vi.mock('@findeg/env', () => {
-  throw new Error('the outbox producer entry must not load the application environment');
-});
-vi.mock('@findeg/env/database', () => {
-  throw new Error('the outbox producer entry must not load the application environment');
-});
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('@findeg/db/queries/outbox', () => {
+  beforeEach(() => {
+    vi.resetModules();
+
+    // The producer entry must load without the application environment or the default
+    // connection: Orders and other producers write on the caller's transaction only.
+    vi.doMock('../../../connection', () => {
+      throw new Error('the outbox producer entry must not load the default connection');
+    });
+    vi.doMock('@findeg/env', () => {
+      throw new Error('the outbox producer entry must not load the application environment');
+    });
+    vi.doMock('@findeg/env/database', () => {
+      throw new Error('the outbox producer entry must not load the application environment');
+    });
+  });
+
+  afterEach(() => {
+    vi.doUnmock('../../../connection');
+    vi.doUnmock('@findeg/env');
+    vi.doUnmock('@findeg/env/database');
+    vi.resetModules();
+  });
   it('imports without the application environment or the default connection', async () => {
     const entry = await import('@findeg/db/queries/outbox');
 

@@ -4,6 +4,7 @@ packages:
   - 'packages/money'
   - 'packages/orders'
   - 'packages/domain-errors'
+  - 'packages/schema'
   - 'db'
   - 'backend'
   - 'frontend/ui'
