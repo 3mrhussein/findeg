@@ -17,7 +17,7 @@ runs:
   steps:
     - name: Save pnpm store
       if: inputs.pnpm-store == 'true'
-      uses: actions/cache/save@v6
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ env.CI_PNPM_STORE }}
         key: ${{ env.CI_PNPM_KEY }}
@@ -36,14 +36,14 @@ runs:
 
     - name: Save Turbo cache
       if: env.CI_TURBO_KEY != ''
-      uses: actions/cache/save@v6
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ env.CI_TURBO_PATH }}
         key: ${{ env.CI_TURBO_KEY }}
 
     - name: Save Next.js build cache
       if: env.CI_NEXT_KEY != ''
-      uses: actions/cache/save@v6
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ env.CI_NEXT_PATHS }}
         key: ${{ env.CI_NEXT_KEY }}
