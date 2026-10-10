@@ -77,3 +77,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **Feature branches can't reach `main`.** A PR from one fails `Branch policy`; retarget it to `develop`.
 - **The first push to `develop` after a cache-key change runs cold**, and PRs opened before it finishes restore nothing.
 - **Adding a CI job means adding it to `CI jobs` and to `CI OK`'s `needs`.** No ruleset change is needed.
+
+## Amendment: develop merges run the fast tier
+
+A push to `develop` that merges a PR now runs the fast tier: only the packages the merge touched, caches restored, no E2E. That PR already passed `Feature / CI OK`, so a second from-scratch run mostly repeated it. A direct push to `develop` (no merged PR, such as a hotfix pushed straight to the branch) still runs strict, from scratch. The plan job finds the merged PR through the GitHub API, and a failed lookup counts as a direct push. Every `develop` push still saves the caches. Releases are unchanged: every PR into `main` runs strict, with E2E.

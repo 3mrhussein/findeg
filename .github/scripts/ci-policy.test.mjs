@@ -49,7 +49,7 @@ describe('decidePlan for a pull request into develop', () => {
   });
 });
 
-describe('decidePlan for a push to develop', () => {
+describe('decidePlan for a direct push to develop', () => {
   const plan = decidePlan({ event: 'push', target: 'develop', changedPaths: ['README.md'] });
 
   it('verifies from scratch like the release tier', () => {
@@ -66,6 +66,31 @@ describe('decidePlan for a push to develop', () => {
     assert.equal(plan.restoreDeps, false);
     assert.equal(plan.restoreBuild, false);
     assert.equal(plan.saveCache, true);
+  });
+});
+
+describe('decidePlan for a push to develop that merges a pull request', () => {
+  const merge = { event: 'push', target: 'develop', mergedPr: true };
+
+  it('runs the fast tier on the touched packages, with caches restored and saved', () => {
+    const plan = decidePlan({ ...merge, changedPaths: ['frontend/storefront/a.ts'] });
+    assert.equal(plan.tier, 'fast');
+    assert.equal(plan.turboFlags, '--affected');
+    assert.equal(plan.runChecks, true);
+    assert.equal(plan.runIntegration, false);
+    assert.equal(plan.runE2e, false);
+    assert.equal(plan.restoreDeps, true);
+    assert.equal(plan.restoreBuild, true);
+    assert.equal(plan.saveCache, true);
+  });
+
+  it('skips the code jobs for a docs-only merge', () => {
+    assert.equal(decidePlan({ ...merge, changedPaths: ['README.md'] }).runChecks, false);
+  });
+
+  it('ignores mergedPr everywhere but develop pushes', () => {
+    const plan = decidePlan({ event: 'push', target: 'main', mergedPr: true });
+    assert.equal(plan.tier, 'strict');
   });
 });
 
@@ -123,10 +148,14 @@ describe('decidePlan for a manual run', () => {
     assert.equal(plan.turboFlags, '--affected');
   });
 
-  it('runs everything on develop, where there is nothing to diff', () => {
-    const plan = decidePlan({ event: 'workflow_dispatch', target: 'develop', changedPaths: [] });
-    assert.equal(plan.runChecks, true);
-    assert.equal(plan.turboFlags, '');
+  it('tests only the touched packages on develop too', () => {
+    const plan = decidePlan({
+      event: 'workflow_dispatch',
+      target: 'develop',
+      changedPaths: ['frontend/storefront/a.ts'],
+    });
+    assert.equal(plan.turboFlags, '--affected');
+    assert.equal(plan.runIntegration, false);
   });
 
   it('ignores the build caches and forces Turbo when asked to force the build', () => {
@@ -168,7 +197,11 @@ describe('decidePlan tierReason', () => {
   it('explains why each kind of run got its tier', () => {
     assert.equal(
       decidePlan({ event: 'push', target: 'develop' }).tierReason,
-      'push to develop: pre-production run from scratch',
+      'push to develop: direct push (no merged pull request), run from scratch',
+    );
+    assert.equal(
+      decidePlan({ event: 'push', target: 'develop', mergedPr: true }).tierReason,
+      'push to develop: merged pull request, touched packages with caches restored',
     );
     assert.equal(
       decidePlan({ event: 'pull_request', target: 'main', head: 'develop' }).tierReason,
@@ -199,6 +232,13 @@ describe('decidePlan tier guard', () => {
       decidePlan({ event: 'workflow_dispatch', target: 'x/y', expectedTier: 'strict' }).ok,
       false,
     );
+  });
+
+  it('lets the policy decide when the caller accepts any tier', () => {
+    for (const mergedPr of [true, false]) {
+      const plan = decidePlan({ event: 'push', target: 'develop', mergedPr, expectedTier: 'any' });
+      assert.equal(plan.ok, true);
+    }
   });
 
   it('passes when the triggers match the tier', () => {

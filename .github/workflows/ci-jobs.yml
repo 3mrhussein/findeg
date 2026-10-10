@@ -6,14 +6,13 @@ name: CI jobs
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
 # comes from .github/scripts; this file only wires its outputs to jobs.
 #
-# - strict tier (PRs into / pushes to main, pushes to develop): every job,
-#   Turbo forced, E2E required, nothing restored. develop is pre-production,
-#   so what is merged there is verified from scratch; its pushes are still the
-#   single cache producer (they save, they never restore).
-# - fast tier (PRs into develop): affected packages only, caches restored.
+# - strict tier (PRs into / pushes to main, direct pushes to develop): every
+#   job, Turbo forced, E2E required, nothing restored.
+# - fast tier (PRs into develop, and develop pushes that merge one): affected
+#   packages only, caches restored. Every develop push saves the caches.
 # - manual run (fast tier, `CI · Feature` → Run workflow): touched packages
-#   only (against develop), caches restored unless the force options say
-#   otherwise; `full_tests` runs every code job on all packages.
+#   only (against develop; on develop, its latest commit), caches restored
+#   unless the checkboxes say otherwise; `full_tests` runs all packages.
 #
 # Every caller must grant at least the highest permission a job here asks for
 # (`Publish evidence` needs `contents: write`), even a caller that never runs it:
@@ -57,6 +56,9 @@ jobs:
     name: Plan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read # to find the PR a develop push merged
     outputs:
       tier: ${{ steps.plan.outputs.tier }}
       turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
@@ -95,7 +97,9 @@ jobs:
         run: |
           base=HEAD^1
           if [ "$EVENT" = workflow_dispatch ]; then
-            base=$(git merge-base origin/develop HEAD || true)
+            # On develop itself the merge-base is HEAD, so take what its latest commit touched.
+            if [ "$GITHUB_REF_NAME" = develop ]; then base=$(git rev-parse HEAD^1 || true)
+            else base=$(git merge-base origin/develop HEAD || true); fi
             [ -n "$base" ] && echo "base_sha=$base" >> "$GITHUB_OUTPUT"
           elif [ "$EVENT" = push ]; then
             base="$BEFORE"
@@ -105,6 +109,19 @@ jobs:
             echo "file=$RUNNER_TEMP/changed-paths.txt" >> "$GITHUB_OUTPUT"
             cat "$RUNNER_TEMP/changed-paths.txt"
           fi
+
+      # A push to develop that merges a PR was verified as that PR, so it runs the
+      # fast tier; any other push (a hotfix pushed straight to develop) runs from
+      # scratch. A failed lookup counts as a direct push, the safe side.
+      - name: Find the merged pull request
+        id: merged
+        if: github.event_name == 'push' && github.ref_name == 'develop'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          count=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" \
+            --jq '[.[] | select(.merged_at != null and .base.ref == "develop")] | length' || echo 0)
+          echo "pr=$([ "${count:-0}" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
       # The policy's behaviour is pinned by its tests; a regression fails here
       # before the plan it would corrupt is used.
@@ -122,8 +139,10 @@ jobs:
           FORCE_BUILD: ${{ inputs.force_build }}
           FORCE_INSTALL: ${{ inputs.force_install }}
           FULL_TESTS: ${{ inputs.full_tests }}
+          MERGED_PR: ${{ steps.merged.outputs.pr }}
         run: |
           args=(--event "$EVENT" --target "$TARGET")
+          if [ "$MERGED_PR" = true ]; then args+=(--merged-pr); fi
           if [ "$FORCE_BUILD" = true ]; then args+=(--force-build); fi
           if [ "$FORCE_INSTALL" = true ]; then args+=(--force-install); fi
           if [ "$FULL_TESTS" = true ]; then args+=(--full-tests); fi

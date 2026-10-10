@@ -105,7 +105,8 @@ export function decideReleaseSource({ head, base }) {
  */
 function guardTier({ event, target, tier, expectedTier }) {
   const description = `${event} to ${target} runs the ${tier} tier`;
-  if (expectedTier && expectedTier !== tier) {
+  // `any`: the caller hosts events of both tiers (develop pushes), so the policy alone decides.
+  if (expectedTier && expectedTier !== 'any' && expectedTier !== tier) {
     return {
       ok: false,
       reason: `${description}, but this workflow expects the ${expectedTier} tier. Check its triggers.`,
@@ -121,7 +122,10 @@ function explainTier({ event, target, manual, producerPush, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
   if (manual) return 'manual run: touched packages with caches restored unless forced';
-  if (producerPush) return `${subject}: pre-production run from scratch`;
+  if (producerPush && tier === 'fast') {
+    return `${subject}: merged pull request, touched packages with caches restored`;
+  }
+  if (producerPush) return `${subject}: direct push (no merged pull request), run from scratch`;
   if (target === RELEASE_GATE_BRANCH) {
     return `${subject}: release path, everything runs from scratch`;
   }
@@ -132,11 +136,13 @@ function explainTier({ event, target, manual, producerPush, tier }) {
 /**
  * Decides how CI runs for a push, PR or manual event.
  * - Strict tier (Turbo --force, shallow clone, integration and E2E required, nothing restored):
- *   everything into the release gate branch, and pushes to the producer branch. The producer's
- *   run is verified from scratch but still saves caches, so fast-tier runs restore warm ones.
+ *   everything into the release gate branch, and direct pushes to the producer branch (a push
+ *   that no merged PR carries, such as a hotfix pushed straight to develop).
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
- *   fast-tier patterns.
- * - Manual run (fast tier, no E2E): affected packages only and caches restored by default.
+ *   fast-tier patterns, and producer pushes that merge a PR (mergedPr), which were already
+ *   verified as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
+ * - Manual run (fast tier, no E2E): affected packages only and caches restored by default
+ *   (on the producer branch, what its latest commit touched).
  *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) bypass caches;
  *   fullTests runs every code job on all packages. Only a manual run honours these options.
  */
@@ -149,11 +155,13 @@ export function decidePlan({
   forceBuild = false,
   forceInstall = false,
   fullTests = false,
+  mergedPr = false,
 }) {
   const manual = event === 'workflow_dispatch';
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
   const eligibleForFastTier =
     manual ||
+    (producerPush && mergedPr) ||
     (target !== RELEASE_GATE_BRANCH &&
       !producerPush &&
       (matchesAnyPattern(target, FAST_TIER_BRANCH_PATTERNS) ||
@@ -161,10 +169,9 @@ export function decidePlan({
 
   const tier = eligibleForFastTier ? 'fast' : 'strict';
   const knownChanges = Array.isArray(changedPaths);
-  // A manual run tests only what the branch touched (against develop) unless asked for
-  // the full suite; on the producer branch, or when the diff could not be taken, there is
-  // nothing to compare with, so it runs everything.
-  const fullManual = manual && (fullTests || target === CACHE_PRODUCER_BRANCH || !knownChanges);
+  // A manual run tests only what the branch touched unless asked for the full suite; when
+  // the diff could not be taken there is nothing to compare with, so it runs everything.
+  const fullManual = manual && (fullTests || !knownChanges);
   const runEverything = tier === 'strict' || fullManual || !knownChanges;
   const forcedBuild = manual && forceBuild;
   const forcedInstall = manual && forceInstall;

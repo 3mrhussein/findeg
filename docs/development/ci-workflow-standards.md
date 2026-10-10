@@ -36,7 +36,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 
 ## 4. Tiers and caches
 
-- A repo has two tiers: **fast** (affected packages, caches restored) for feature PRs, **strict** (everything, forced, nothing restored, E2E required) for the release path and for pre-production branch pushes.
+- A repo has two tiers: **fast** (affected packages, caches restored) for feature PRs and for pre-production pushes that merge one, **strict** (everything, forced, nothing restored, E2E required) for the release path and for direct pushes to the pre-production branch.
 - **One cache producer branch**, saving after a from-scratch run. Everything else only restores. Restore and save are separate steps; restore is split into dependency store and build caches so either can be bypassed.
 - **Cache keys** that are content-hashed are immutable. A forced run on the producer branch deletes the matching caches before saving, so the save takes effect.
 - **A cleanup workflow** removes a PR's caches when it closes (`Cleanup caches by a branch`, trigger `pull_request: closed`, per-PR concurrency, `cancel-in-progress: false`). Needed only when PRs are allowed to save caches.

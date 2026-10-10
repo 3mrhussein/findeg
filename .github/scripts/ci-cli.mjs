@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests] [--merged-pr]
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 //   node .github/scripts/ci-cli.mjs pr-title <issue-number|suggest|check> ...
 
@@ -85,6 +85,7 @@ function executePlan({
   forceBuild,
   forceInstall,
   fullTests,
+  mergedPr,
 }) {
   const changedPaths = parseChangedPaths(changedFiles);
   const decision = decidePlan({
@@ -96,6 +97,7 @@ function executePlan({
     forceBuild,
     forceInstall,
     fullTests,
+    mergedPr,
   });
   reportOutcome('Tier', decision);
   writePlanSummary(decision, { forceBuild, forceInstall, fullTests });
@@ -174,7 +176,7 @@ function executePrTitle(subcommand, values) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests] [--merged-pr]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
   ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
@@ -192,6 +194,7 @@ function main(argv) {
       'force-build': { type: 'boolean' },
       'force-install': { type: 'boolean' },
       'full-tests': { type: 'boolean' },
+      'merged-pr': { type: 'boolean' },
       needs: { type: 'string' },
       tier: { type: 'string' },
       title: { type: 'string' },
@@ -218,6 +221,7 @@ function main(argv) {
       forceBuild: values['force-build'],
       forceInstall: values['force-install'],
       fullTests: values['full-tests'],
+      mergedPr: values['merged-pr'],
     });
   }
 
