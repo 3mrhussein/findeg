@@ -6,13 +6,15 @@ name: CI jobs
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
 # comes from .github/scripts; this file only wires its outputs to jobs.
 #
-# - strict tier (PRs into / pushes to main, direct pushes to develop): every
-#   job, Turbo forced, E2E required, nothing restored.
+# - strict tier (PRs into / pushes to main, and develop pushes that bring a
+#   hotfix: a direct push, or a merge from main or hotfix/*): every job, Turbo
+#   forced, E2E required, nothing restored.
 # - fast tier (PRs into develop, and develop pushes that merge one): affected
 #   packages only, caches restored. Every develop push saves the caches.
 # - manual run (fast tier, `CI · Feature` → Run workflow): touched packages
 #   only (against develop; on develop, its latest commit), caches restored
-#   unless the checkboxes say otherwise; `full_tests` runs all packages.
+#   unless the checkboxes say otherwise; `full_tests` runs the full suite
+#   (every package, plus E2E).
 #
 # Every caller must grant at least the highest permission a job here asks for
 # (`Publish evidence` needs `contents: write`), even a caller that never runs it:
@@ -36,7 +38,7 @@ on:
         type: boolean
         default: false
       full_tests:
-        description: 'Manual runs only, test every package instead of the touched ones.'
+        description: 'Manual runs only, run the full suite (every package, plus E2E) instead of the touched packages.'
         type: boolean
         default: false
     secrets:
@@ -108,18 +110,18 @@ jobs:
             cat "$RUNNER_TEMP/changed-paths.txt"
           fi
 
-      # A push to develop that merges a PR was verified as that PR, so it runs the
-      # fast tier; any other push (a hotfix pushed straight to develop) runs from
-      # scratch. A failed lookup counts as a direct push, the safe side.
+      # The head branch of the PR a develop push merged, if any: the policy runs a
+      # feature merge on the fast tier, and a direct push or a hotfix merge from
+      # scratch. A failed lookup reads as a direct push, the safe side.
       - name: Find the merged pull request
         id: merged
         if: github.event_name == 'push' && github.ref_name == 'develop'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          count=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" \
-            --jq '[.[] | select(.merged_at != null and .base.ref == "develop")] | length' || echo 0)
-          echo "pr=$([ "${count:-0}" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          head=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" \
+            --jq '[.[] | select(.merged_at != null and .base.ref == "develop")][0].head.ref // ""' || true)
+          echo "head=$head" >> "$GITHUB_OUTPUT"
 
       # The policy's behaviour is pinned by its tests; a regression fails here
       # before the plan it would corrupt is used.
@@ -136,11 +138,11 @@ jobs:
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
           NO_CACHE: ${{ inputs.no_cache }}
           FULL_TESTS: ${{ inputs.full_tests }}
-          MERGED_PR: ${{ steps.merged.outputs.pr }}
+          MERGED_HEAD: ${{ steps.merged.outputs.head }}
         run: >-
           node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
           --head "$HEAD" --expect-tier "$EXPECTED_TIER" --changed-files "$CHANGED_FILES"
-          --no-cache "$NO_CACHE" --full-tests "$FULL_TESTS" --merged-pr "$MERGED_PR"
+          --no-cache "$NO_CACHE" --full-tests "$FULL_TESTS" --merged-head "$MERGED_HEAD"
 
   # The code checks share one shape: a full-history checkout on the fast tier
   # (Turbo's --affected diffs against the PR base or the previous push), the

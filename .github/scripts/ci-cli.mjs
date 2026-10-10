@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-pr true]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
 //     (the yes/no options take `true`; any other value, empty included, is no, so a workflow
 //     can pass its inputs straight through)
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
@@ -95,7 +95,7 @@ function executePlan(values) {
     forceBuild,
     forceInstall,
     fullTests,
-    mergedPr: yes('merged-pr'),
+    mergedHead: values['merged-head'] || undefined,
   });
   reportOutcome('Tier', decision);
   writePlanSummary(decision, { forceBuild, forceInstall, fullTests });
@@ -174,7 +174,7 @@ function executePrTitle(subcommand, values) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-pr true]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
   ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
@@ -191,7 +191,7 @@ function main(argv) {
       'expect-tier': { type: 'string' },
       'no-cache': { type: 'string' },
       'full-tests': { type: 'string' },
-      'merged-pr': { type: 'string' },
+      'merged-head': { type: 'string' },
       needs: { type: 'string' },
       tier: { type: 'string' },
       title: { type: 'string' },

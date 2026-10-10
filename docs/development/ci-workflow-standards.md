@@ -24,7 +24,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 - **Job ids** are lowercase, one word where possible (`plan`, `checks`, `build`, `integration`, `e2e`). The first job of a pipeline is `plan` and produces every output the others read.
 - **Inputs and outputs** use `snake_case`. Outputs are named after the decision (`restore_deps`, `run_e2e`), not the implementation.
 - **Env vars** in `UPPER_SNAKE`. Repeated ones go in the workflow-level `env:`.
-- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force disable cache (fresh build)` (`no_cache`), `Force run full tests (default runs touched files only)` (`full_tests`). Both default to unchecked, and a manual run otherwise tests touched packages only with caches restored. The reusable workflow takes the same input ids, so the caller passes them straight through.
+- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force disable cache (fresh build)` (`no_cache`), `Run the full suite, E2E included (default runs touched packages only)` (`full_tests`). Both default to unchecked, and a manual run otherwise tests touched packages only with caches restored. The reusable workflow takes the same input ids, so the caller passes them straight through.
 
 ## 3. Triggers and runs
 
@@ -36,7 +36,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 
 ## 4. Tiers and caches
 
-- A repo has two tiers: **fast** (affected packages, caches restored) for feature PRs and for pre-production pushes that merge one, **strict** (everything, forced, nothing restored, E2E required) for the release path and for direct pushes to the pre-production branch.
+- A repo has two tiers: **fast** (affected packages, caches restored) for feature PRs and for pre-production pushes that merge one, **strict** (everything, forced, nothing restored, E2E required) for the release path and for pre-production pushes that bring a hotfix (a direct push, or a merge from the release branch or `hotfix/*`). A manual run with `full_tests` runs every package plus E2E.
 - **One cache producer branch**, saving after a from-scratch run. Everything else only restores. Restore and save are separate steps; restore is split into dependency store and build caches so either can be bypassed.
 - **Cache keys** that are content-hashed are immutable. A forced run on the producer branch deletes the matching caches before saving, so the save takes effect.
 - **A cleanup workflow** removes a PR's caches when it closes (`Cleanup caches by a branch`, trigger `pull_request: closed`, per-PR concurrency, `cancel-in-progress: false`). Needed only when PRs are allowed to save caches.

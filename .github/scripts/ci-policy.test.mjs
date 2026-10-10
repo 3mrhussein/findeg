@@ -70,7 +70,7 @@ describe('decidePlan for a direct push to develop', () => {
 });
 
 describe('decidePlan for a push to develop that merges a pull request', () => {
-  const merge = { event: 'push', target: 'develop', mergedPr: true };
+  const merge = { event: 'push', target: 'develop', mergedHead: 'feat/add-x' };
 
   it('runs the fast tier on the touched packages, with caches restored and saved', () => {
     const plan = decidePlan({ ...merge, changedPaths: ['frontend/storefront/a.ts'] });
@@ -88,8 +88,18 @@ describe('decidePlan for a push to develop that merges a pull request', () => {
     assert.equal(decidePlan({ ...merge, changedPaths: ['README.md'] }).runChecks, false);
   });
 
-  it('ignores mergedPr everywhere but develop pushes', () => {
-    const plan = decidePlan({ event: 'push', target: 'main', mergedPr: true });
+  it('runs the full suite from scratch when the merge brings a hotfix', () => {
+    for (const mergedHead of ['main', 'hotfix/stop-crash']) {
+      const plan = decidePlan({ ...merge, mergedHead, changedPaths: ['README.md'] });
+      assert.equal(plan.tier, 'strict');
+      assert.equal(plan.turboFlags, '--force');
+      assert.equal(plan.runChecks, true);
+      assert.equal(plan.runE2e, true);
+    }
+  });
+
+  it('ignores the merged PR everywhere but develop pushes', () => {
+    const plan = decidePlan({ event: 'push', target: 'main', mergedHead: 'feat/add-x' });
     assert.equal(plan.tier, 'strict');
   });
 });
@@ -129,11 +139,13 @@ describe('decidePlan for a manual run', () => {
     assert.equal(plan.runIntegration, true);
   });
 
-  it('runs all packages when asked for the full tests', () => {
+  it('runs the full suite, E2E included, when asked for the full tests', () => {
     const plan = decidePlan({ ...manual, changedPaths: ['docs/a.md'], fullTests: true });
     assert.equal(plan.turboFlags, '');
     assert.equal(plan.runChecks, true);
     assert.equal(plan.runIntegration, true);
+    assert.equal(plan.runE2e, true);
+    assert.equal(plan.tierReason, 'manual run: full suite (every package and E2E)');
     assert.equal(plan.restoreBuild, true);
   });
 
@@ -200,7 +212,7 @@ describe('decidePlan tierReason', () => {
       'push to develop: direct push (no merged pull request), run from scratch',
     );
     assert.equal(
-      decidePlan({ event: 'push', target: 'develop', mergedPr: true }).tierReason,
+      decidePlan({ event: 'push', target: 'develop', mergedHead: 'feat/x' }).tierReason,
       'push to develop: merged pull request, touched packages with caches restored',
     );
     assert.equal(
@@ -235,8 +247,13 @@ describe('decidePlan tier guard', () => {
   });
 
   it('lets the policy decide when the caller accepts any tier', () => {
-    for (const mergedPr of [true, false]) {
-      const plan = decidePlan({ event: 'push', target: 'develop', mergedPr, expectedTier: 'any' });
+    for (const mergedHead of ['feat/x', 'main', undefined]) {
+      const plan = decidePlan({
+        event: 'push',
+        target: 'develop',
+        mergedHead,
+        expectedTier: 'any',
+      });
       assert.equal(plan.ok, true);
     }
   });

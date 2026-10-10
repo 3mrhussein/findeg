@@ -118,12 +118,16 @@ function guardTier({ event, target, tier, expectedTier }) {
 /**
  * A human sentence saying why a run got its tier, for the plan summary.
  */
-function explainTier({ event, target, manual, producerPush, tier }) {
+function explainTier({ event, target, manual, fullTests, producerPush, mergedHead, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
+  if (manual && fullTests) return 'manual run: full suite (every package and E2E)';
   if (manual) return 'manual run: touched packages with caches restored unless forced';
   if (producerPush && tier === 'fast') {
     return `${subject}: merged pull request, touched packages with caches restored`;
+  }
+  if (producerPush && mergedHead) {
+    return `${subject}: merged ${mergedHead}, which carries hotfixes, so it runs from scratch`;
   }
   if (producerPush) return `${subject}: direct push (no merged pull request), run from scratch`;
   if (target === RELEASE_GATE_BRANCH) {
@@ -136,15 +140,15 @@ function explainTier({ event, target, manual, producerPush, tier }) {
 /**
  * Decides how CI runs for a push, PR or manual event.
  * - Strict tier (Turbo --force, shallow clone, integration and E2E required, nothing restored):
- *   everything into the release gate branch, and direct pushes to the producer branch (a push
- *   that no merged PR carries, such as a hotfix pushed straight to develop).
+ *   everything into the release gate branch, and producer pushes that bring a hotfix: a direct
+ *   push (no merged PR) or the merge of a PR from main or hotfix/* (mergedHead).
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
- *   fast-tier patterns, and producer pushes that merge a PR (mergedPr), which were already
- *   verified as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
- * - Manual run (fast tier, no E2E): affected packages only and caches restored by default
- *   (on the producer branch, what its latest commit touched).
- *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) bypass caches;
- *   fullTests runs every code job on all packages. Only a manual run honours these options.
+ *   fast-tier patterns, and producer pushes that merge any other PR, which was already verified
+ *   as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
+ * - Manual run (fast tier): affected packages only, no E2E, caches restored by default (on the
+ *   producer branch, what its latest commit touched). forceBuild (build caches, and Turbo
+ *   --force) or forceInstall (pnpm store) bypass caches; fullTests runs the full suite: every
+ *   code job on all packages, plus E2E. Only a manual run honours these options.
  */
 export function decidePlan({
   event,
@@ -155,13 +159,19 @@ export function decidePlan({
   forceBuild = false,
   forceInstall = false,
   fullTests = false,
-  mergedPr = false,
+  mergedHead,
 }) {
   const manual = event === 'workflow_dispatch';
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
+  // main and hotfix/* only reach develop carrying hotfixes, which get the full suite.
+  const mergedFeature =
+    producerPush &&
+    Boolean(mergedHead) &&
+    mergedHead !== RELEASE_GATE_BRANCH &&
+    !mergedHead.startsWith('hotfix/');
   const eligibleForFastTier =
     manual ||
-    (producerPush && mergedPr) ||
+    mergedFeature ||
     (target !== RELEASE_GATE_BRANCH &&
       !producerPush &&
       (matchesAnyPattern(target, FAST_TIER_BRANCH_PATTERNS) ||
@@ -184,13 +194,21 @@ export function decidePlan({
   return {
     ...guardTier({ event, target, tier, expectedTier }),
     tier,
-    tierReason: explainTier({ event, target, manual, producerPush, tier }),
+    tierReason: explainTier({
+      event,
+      target,
+      manual,
+      fullTests,
+      producerPush,
+      mergedHead,
+      tier,
+    }),
     turboFlags,
     fetchDepth: tier === 'strict' ? 1 : 0,
     restoreDeps: eligibleForFastTier && !forcedInstall,
     restoreBuild: eligibleForFastTier && !forcedBuild,
     saveCache: target === CACHE_PRODUCER_BRANCH && (event === 'push' || manual),
-    runE2e: tier === 'strict',
+    runE2e: tier === 'strict' || (manual && fullTests),
     runChecks: runEverything || !changedPaths.every(isNonCodePath),
     runIntegration: runEverything || touchesAnyPath(changedPaths, ALL_INTEGRATION_PATHS),
   };
