@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { importSourceVisitors } from './import-sources.js';
 
 const repoRoot = path.resolve(fileURLToPath(new URL('../../../..', import.meta.url)));
 const ordersRoots = [
@@ -7,23 +8,6 @@ const ordersRoots = [
   path.join(repoRoot, 'backend/src/features/order'),
 ];
 const inside = (file, root) => file === root || file.startsWith(`${root}${path.sep}`);
-
-function sourceFor(node) {
-  if (node.source?.type === 'Literal') return node.source.value;
-  if (node.source?.type === 'StringLiteral') return node.source.value;
-  if (node.source?.type === 'TSLiteralType' && node.source.literal?.type === 'Literal') {
-    return node.source.literal.value;
-  }
-  return undefined;
-}
-
-function literalValue(node) {
-  if (node?.type === 'Literal') return node.value;
-  if (node?.type === 'TemplateLiteral' && node.expressions.length === 0) {
-    return node.quasis[0].value.cooked;
-  }
-  return undefined;
-}
 
 export const ordersBoundaryRule = {
   meta: {
@@ -94,25 +78,6 @@ export const ordersBoundaryRule = {
       }
     }
 
-    return {
-      ImportDeclaration(node) {
-        check(node, node.source.value);
-      },
-      ExportNamedDeclaration(node) {
-        check(node, node.source?.value);
-      },
-      ExportAllDeclaration(node) {
-        check(node, node.source.value);
-      },
-      ImportExpression(node) {
-        check(node, literalValue(node.source));
-      },
-      'CallExpression[callee.name="require"]'(node) {
-        check(node, literalValue(node.arguments[0]));
-      },
-      TSImportType(node) {
-        check(node, sourceFor(node));
-      },
-    };
+    return importSourceVisitors(check);
   },
 };

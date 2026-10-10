@@ -10,7 +10,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "findeg-lint .",
     "test": "vitest --run --passWithNoTests",
     "clean": "rm -rf node_modules dist .turbo"
   },
