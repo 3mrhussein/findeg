@@ -1,2 +1,2 @@
-import { backend } from '@findeg/config/eslint/backend';
-export default backend;
+import { node } from '@findeg/config/eslint/node';
+export default node;
