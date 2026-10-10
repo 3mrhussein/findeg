@@ -119,8 +119,9 @@ jobs:
           reply "Auto review mode set to \`$MODE\` (was \`$CURRENT\`)."
 
   # ── claude ────────────────────────────────────────────────────────────────────
-  # Runs a Claude Code PR review. The `review:claude` request label is removed
-  # when the run starts, so it can be re-applied for another pass.
+  # Runs a Claude Code PR review. It tries to remove the `review:claude` request
+  # label before reviewing (a failed removal doesn't stop the run), so the
+  # label can be re-applied for another pass.
   claude:
     name: Claude review
     if: >-
