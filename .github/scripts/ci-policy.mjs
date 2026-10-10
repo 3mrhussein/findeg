@@ -105,7 +105,8 @@ export function decideReleaseSource({ head, base }) {
  */
 function guardTier({ event, target, tier, expectedTier }) {
   const description = `${event} to ${target} runs the ${tier} tier`;
-  if (expectedTier && expectedTier !== tier) {
+  // `any`: the caller hosts events of both tiers (develop pushes), so the policy alone decides.
+  if (expectedTier && expectedTier !== 'any' && expectedTier !== tier) {
     return {
       ok: false,
       reason: `${description}, but this workflow expects the ${expectedTier} tier. Check its triggers.`,
@@ -117,11 +118,18 @@ function guardTier({ event, target, tier, expectedTier }) {
 /**
  * A human sentence saying why a run got its tier, for the plan summary.
  */
-function explainTier({ event, target, manual, producerPush, tier }) {
+function explainTier({ event, target, manual, fullTests, producerPush, mergedHead, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
-  if (manual) return 'manual run: all packages with caches restored unless forced';
-  if (producerPush) return `${subject}: pre-production run from scratch`;
+  if (manual && fullTests) return 'manual run: full suite (every package and E2E)';
+  if (manual) return 'manual run: touched packages with caches restored unless forced';
+  if (producerPush && tier === 'fast') {
+    return `${subject}: merged pull request, touched packages with caches restored`;
+  }
+  if (producerPush && mergedHead) {
+    return `${subject}: merged ${mergedHead}, which carries hotfixes, so it runs from scratch`;
+  }
+  if (producerPush) return `${subject}: direct push (no merged pull request), run from scratch`;
   if (target === RELEASE_GATE_BRANCH) {
     return `${subject}: release path, everything runs from scratch`;
   }
@@ -132,13 +140,15 @@ function explainTier({ event, target, manual, producerPush, tier }) {
 /**
  * Decides how CI runs for a push, PR or manual event.
  * - Strict tier (Turbo --force, shallow clone, integration and E2E required, nothing restored):
- *   everything into the release gate branch, and pushes to the producer branch. The producer's
- *   run is verified from scratch but still saves caches, so fast-tier runs restore warm ones.
+ *   everything into the release gate branch, and producer pushes that bring a hotfix: a direct
+ *   push (no merged PR) or the merge of a PR from main or hotfix/* (mergedHead).
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
- *   fast-tier patterns.
- * - Manual run (fast tier, every code job on all packages, no E2E): restores caches unless
- *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) say otherwise.
- *   Only the force options of a manual run have any effect.
+ *   fast-tier patterns, and producer pushes that merge any other PR, which was already verified
+ *   as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
+ * - Manual run (fast tier): affected packages only, no E2E, caches restored by default (on the
+ *   producer branch, what its latest commit touched). forceBuild (build caches, and Turbo
+ *   --force) or forceInstall (pnpm store) bypass caches; fullTests runs the full suite: every
+ *   code job on all packages, plus E2E. Only a manual run honours these options.
  */
 export function decidePlan({
   event,
@@ -148,11 +158,20 @@ export function decidePlan({
   changedPaths,
   forceBuild = false,
   forceInstall = false,
+  fullTests = false,
+  mergedHead,
 }) {
   const manual = event === 'workflow_dispatch';
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
+  // main and hotfix/* only reach develop carrying hotfixes, which get the full suite.
+  const mergedFeature =
+    producerPush &&
+    Boolean(mergedHead) &&
+    mergedHead !== RELEASE_GATE_BRANCH &&
+    !mergedHead.startsWith('hotfix/');
   const eligibleForFastTier =
     manual ||
+    mergedFeature ||
     (target !== RELEASE_GATE_BRANCH &&
       !producerPush &&
       (matchesAnyPattern(target, FAST_TIER_BRANCH_PATTERNS) ||
@@ -160,24 +179,36 @@ export function decidePlan({
 
   const tier = eligibleForFastTier ? 'fast' : 'strict';
   const knownChanges = Array.isArray(changedPaths);
-  const runEverything = tier === 'strict' || manual || !knownChanges;
+  // A manual run tests only what the branch touched unless asked for the full suite; when
+  // the diff could not be taken there is nothing to compare with, so it runs everything.
+  const fullManual = manual && (fullTests || !knownChanges);
+  const runEverything = tier === 'strict' || fullManual || !knownChanges;
   const forcedBuild = manual && forceBuild;
   const forcedInstall = manual && forceInstall;
 
   let turboFlags = '--affected';
-  if (tier === 'strict' || forcedBuild) turboFlags = '--force';
-  else if (manual) turboFlags = '';
+  if (tier === 'strict') turboFlags = '--force';
+  else if (fullManual) turboFlags = forcedBuild ? '--force' : '';
+  else if (forcedBuild) turboFlags = '--force --affected';
 
   return {
     ...guardTier({ event, target, tier, expectedTier }),
     tier,
-    tierReason: explainTier({ event, target, manual, producerPush, tier }),
+    tierReason: explainTier({
+      event,
+      target,
+      manual,
+      fullTests,
+      producerPush,
+      mergedHead,
+      tier,
+    }),
     turboFlags,
     fetchDepth: tier === 'strict' ? 1 : 0,
     restoreDeps: eligibleForFastTier && !forcedInstall,
     restoreBuild: eligibleForFastTier && !forcedBuild,
     saveCache: target === CACHE_PRODUCER_BRANCH && (event === 'push' || manual),
-    runE2e: tier === 'strict',
+    runE2e: tier === 'strict' || (manual && fullTests),
     runChecks: runEverything || !changedPaths.every(isNonCodePath),
     runIntegration: runEverything || touchesAnyPath(changedPaths, ALL_INTEGRATION_PATHS),
   };
@@ -206,5 +237,142 @@ export function decideVerdict({ tier, results }) {
   return {
     ok: true,
     reason: `Every CI job passed or was skipped as irrelevant${tier ? ` (${tier} tier)` : ''}.`,
+  };
+}
+
+// ── PR titles ────────────────────────────────────────────────────────────────
+// A feature PR is titled `Feature | #122 | Add dispatch button`, built from its branch
+// (`feat/122-add-dispatch-button`). Squash merges land the PR title as the commit, and
+// release-please reads commits as Conventional Commits, so a pipe title carries a hidden
+// BEGIN_COMMIT_OVERRIDE block in the PR body (release-please's own override mechanism)
+// holding the Conventional Commit it stands for.
+
+const PR_TITLE_LABELS = {
+  feat: 'Feature',
+  fix: 'Fix',
+  docs: 'Doc',
+  style: 'Style',
+  refactor: 'Refactor',
+  perf: 'Perf',
+  test: 'Test',
+  build: 'Build',
+  ci: 'CI',
+  chore: 'Chore',
+  revert: 'Revert',
+  hotfix: 'Hotfix',
+};
+const COMMIT_TYPE_BY_LABEL = Object.fromEntries(
+  Object.entries(PR_TITLE_LABELS).map(([type, label]) => [label, type === 'hotfix' ? 'fix' : type]),
+);
+const PIPE_TITLE_REGEXP = new RegExp(
+  `^(${Object.values(PR_TITLE_LABELS).join('|')}) \\| (?:#\\d+ \\| )?(\\S.*)$`,
+);
+const CONVENTIONAL_TITLE_REGEXP = new RegExp(
+  `^(${CONVENTIONAL_COMMIT_TYPES.join('|')})(\\([^)]+\\))?!?: \\S.*$`,
+);
+const OVERRIDE_REGEXP = /BEGIN_COMMIT_OVERRIDE\s*([\s\S]*?)\s*END_COMMIT_OVERRIDE/;
+
+const sentenceCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
+function parseBranch(head) {
+  const match = /^([a-z]+)\/(.+)$/.exec(head ?? '');
+  if (!match || !(match[1] in PR_TITLE_LABELS) || !BRANCH_NAME_REGEXP.test(head)) return undefined;
+  const issue = /^(\d+)-(.+)$/.exec(match[2]);
+  return {
+    type: match[1],
+    issueNumber: issue ? Number(issue[1]) : undefined,
+    slug: issue ? issue[2] : match[2],
+  };
+}
+
+/** The issue number a branch names (`feat/122-add-x`), if any. */
+export function issueNumberFromBranch(head) {
+  return parseBranch(head)?.issueNumber;
+}
+
+/**
+ * The title and body a new PR gets. The text comes from the issue title when the branch names
+ * an issue, else the subject of the PR's only commit, else the branch slug. A PR opened with a
+ * pipe title already (from the prefilled link, or typed by hand) keeps it; only its override
+ * is added.
+ */
+export function decidePrTitleSuggestion({
+  head,
+  body = '',
+  issueTitle,
+  commitSubject,
+  currentTitle,
+}) {
+  const branch = parseBranch(head);
+  if (!branch || isExemptBranch(head)) {
+    return { ok: false, reason: `"${head}" has no <type>/<slug> to build a title from.` };
+  }
+  const fromCommit = commitSubject?.replace(/^[a-z]+(\([^)]*\))?!?:\s*/i, '');
+  const chosen = PIPE_TITLE_REGEXP.exec(currentTitle ?? '');
+  const text = chosen
+    ? chosen[2].trim()
+    : sentenceCase(
+        [issueTitle, fromCommit, branch.slug.replaceAll('-', ' ')]
+          .map((candidate) => candidate?.replace(/\s+/g, ' ').trim())
+          .find(Boolean),
+      );
+  const label = chosen ? chosen[1] : PR_TITLE_LABELS[branch.type];
+  const issue = branch.issueNumber ? ` | #${branch.issueNumber}` : '';
+  const title = chosen ? currentTitle : `${label}${issue} | ${text}`;
+  const commitType = COMMIT_TYPE_BY_LABEL[label];
+  const override = `${commitType}: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+  const block = `BEGIN_COMMIT_OVERRIDE\n${override}\nEND_COMMIT_OVERRIDE`;
+  // An override already in the body is kept when it fits the new title (it may add a scope
+  // or `!`); one that does not is replaced, so the title check accepts the result.
+  let newBody = `${body.trimEnd()}\n\n<!--\n${block}\n-->\n`.trimStart();
+  if (decidePrTitle({ title, body }).ok) newBody = body;
+  else if (OVERRIDE_REGEXP.test(body)) newBody = body.replace(OVERRIDE_REGEXP, () => block);
+  return { ok: true, reason: `Built from "${head}".`, title, body: newBody };
+}
+
+/** The branch a PR from `head` goes into: hotfixes into main, everything else into develop. */
+export function prBaseBranch(head) {
+  return head.startsWith('hotfix/') ? RELEASE_GATE_BRANCH : CACHE_PRODUCER_BRANCH;
+}
+
+/**
+ * The link that opens GitHub's new-PR form with the suggested title filled in, for the pre-push
+ * hook to print. GitHub's own "Compare & pull request" button can't be prefilled.
+ */
+export function prOpenUrl({ repoUrl, head, title }) {
+  const base = prBaseBranch(head);
+  const repo = repoUrl
+    .replace(/^git@([^:]+):/, 'https://$1/') // git@github.com:owner/repo
+    .replace(/^ssh:\/\/(?:[^@/]+@)?([^/:]+)(?::\d+)?\//, 'https://$1/') // ssh://git@github.com/owner/repo
+    .replace(/\.git$/, '');
+  return `${repo}/compare/${base}...${head}?quick_pull=1&title=${encodeURIComponent(title)}`;
+}
+
+/**
+ * Validates a PR title: the pipe format (which must carry a matching commit override in the
+ * body) or a plain Conventional Commit, which tooling PRs (release, sync, Dependabot) use.
+ */
+export function decidePrTitle({ title, body = '' }) {
+  const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
+  if (pipe) {
+    const override = OVERRIDE_REGEXP.exec(body)?.[1].split(/\r?\n/)[0].trim();
+    const expected = COMMIT_TYPE_BY_LABEL[pipe[1]];
+    // The override is what release-please reads, so its subject must still say what the
+    // title says (case aside): a title edited on its own would leave a stale changelog line.
+    const subject = new RegExp(`^${expected}(\\([^)]+\\))?!?: (\\S.*)$`).exec(override ?? '')?.[2];
+    if (subject?.toLowerCase() === pipe[2].trim().toLowerCase()) {
+      return { ok: true, reason: `"${title}" is valid.` };
+    }
+    return {
+      ok: false,
+      reason: `"${title}" needs a "${expected}: ${pipe[2].trim()}" line (scope and "!" optional) between BEGIN_COMMIT_OVERRIDE and END_COMMIT_OVERRIDE in the PR body, so release-please reads the squash commit the title describes.`,
+    };
+  }
+  if (CONVENTIONAL_TITLE_REGEXP.test(title ?? '')) {
+    return { ok: true, reason: `"${title}" is a valid Conventional Commit.` };
+  }
+  return {
+    ok: false,
+    reason: `"${title}" must look like "Feature | #122 | Add dispatch button" (the issue is optional; labels: ${Object.values(PR_TITLE_LABELS).join(', ')}) or a Conventional Commit.`,
   };
 }

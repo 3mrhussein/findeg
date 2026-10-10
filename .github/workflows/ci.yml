@@ -1,7 +1,13 @@
 name: CI
 
-# The fast tier, for develop. The jobs live in ci-jobs.yml; the required check
-# is `Fast / CI OK`. PRs into main run CI · Release (ci-release.yml) instead.
+# Guards feature → develop PRs (the fast tier).
+# Affected packages only, caches restored, integration tests only on relevant
+# changes, no E2E. Jobs live in ci-jobs.yml.
+# Required check: `Feature / CI OK`.
+# Run workflow (manual): like a PR into develop (touched packages only, caches
+# restored) on the chosen branch; the checkboxes opt out of the cache and/or
+# run the full suite (every package, plus E2E).
+# Pushes to develop and everything into main run CI · Release (ci-release.yml).
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:
