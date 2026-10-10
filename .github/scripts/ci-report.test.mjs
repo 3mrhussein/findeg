@@ -231,7 +231,7 @@ describe('buildPlanTokens', () => {
     });
     assert.deepEqual(buildPlanTokens(plan, { forceBuild: true, forceInstall: true }), {
       TIER: 'fast',
-      TIER_REASON: 'manual run: all packages with caches restored unless forced',
+      TIER_REASON: 'manual run: touched packages with caches restored unless forced',
       TURBO_FLAGS: '--force',
       RESTORE_DEPS: 'skipped (clean install forced)',
       RESTORE_BUILD: 'skipped (build forced)',
@@ -245,7 +245,7 @@ describe('buildPlanTokens', () => {
   });
 
   it('shows no flags for an unforced manual run', () => {
-    const plan = decidePlan({ event: 'workflow_dispatch', target: 'feat/x' });
+    const plan = decidePlan({ event: 'workflow_dispatch', target: 'feat/x', fullTests: true });
     assert.equal(buildPlanTokens(plan, {}).TURBO_FLAGS, 'none');
   });
 
