@@ -4,11 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./eslint/base": "./eslint/base.js",
-    "./eslint/backend": "./eslint/backend.js",
-    "./eslint/db": "./eslint/db.js",
-    "./eslint/ui": "./eslint/ui.js",
-    "./eslint/next": "./eslint/next.js"
+    "./eslint/isomorphic": "./eslint/profiles/isomorphic.js",
+    "./eslint/node": "./eslint/profiles/node.js",
+    "./eslint/react-ui": "./eslint/profiles/react-ui.js",
+    "./eslint/next": "./eslint/profiles/next.js"
   },
   "dependencies": {
     "@eslint/js": "^9.10.0",
@@ -19,5 +18,8 @@
     "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.13.0",
     "typescript-eslint": "^8.71.0"
+  },
+  "bin": {
+    "findeg-lint": "./bin/lint.mjs"
   }
 }

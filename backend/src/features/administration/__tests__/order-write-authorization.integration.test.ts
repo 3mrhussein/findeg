@@ -15,7 +15,7 @@ import {
 } from '@findeg/db/schema';
 import { PERMISSION_CODES } from '@findeg/db';
 import { createCheckoutService } from '../../checkout';
-import { createAdministrationServices, type OrderStaffActor } from '..';
+import { createOrders, type OrderStaffActor } from '@findeg/orders';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 const notAuthorized = { code: 'NOT_AUTHORIZED', message: 'Not authorized to change orders' };
@@ -148,7 +148,7 @@ describe('Staff authorization for Dashboard order writes', () => {
     const before = await orderFootprint(orderId, orderReference, variantId);
 
     await expect(
-      createAdministrationServices().orders.updateStatus(readOnlyStaff, orderId, {
+      createOrders({ db: testDb.db }).changeStatus(readOnlyStaff, orderId, {
         status: 'cancelled',
       }),
     ).rejects.toMatchObject(notAuthorized);
@@ -167,7 +167,7 @@ describe('Staff authorization for Dashboard order writes', () => {
     const before = await orderFootprint(orderId, orderReference, 0);
 
     await expect(
-      createAdministrationServices().orders.updateStatus(readOnlyStaff, orderId, {
+      createOrders({ db: testDb.db }).changeStatus(readOnlyStaff, orderId, {
         status: 'delivered',
       }),
     ).rejects.toMatchObject(notAuthorized);
@@ -184,7 +184,7 @@ describe('Staff authorization for Dashboard order writes', () => {
     const before = await orderFootprint(orderId, orderReference, 0);
 
     await expect(
-      createAdministrationServices().orders.updatePaymentStatus(readOnlyStaff, orderId, 'paid'),
+      createOrders({ db: testDb.db }).changePaymentStatus(readOnlyStaff, orderId, 'paid'),
     ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
@@ -199,7 +199,7 @@ describe('Staff authorization for Dashboard order writes', () => {
     const before = await orderFootprint(orderId, orderReference, 0);
 
     await expect(
-      createAdministrationServices().orders.updateStatus(undefined as never, orderId, {
+      createOrders({ db: testDb.db }).changeStatus(undefined as never, orderId, {
         status: 'delivered',
       }),
     ).rejects.toMatchObject(notAuthorized);
@@ -216,11 +216,7 @@ describe('Staff authorization for Dashboard order writes', () => {
     const before = await orderFootprint(orderId, orderReference, 0);
 
     await expect(
-      createAdministrationServices().orders.updatePaymentStatus(
-        undefined as never,
-        orderId,
-        'paid',
-      ),
+      createOrders({ db: testDb.db }).changePaymentStatus(undefined as never, orderId, 'paid'),
     ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
@@ -244,12 +240,12 @@ describe('Staff authorization for Dashboard order writes', () => {
   it('records the Staff member who changed the status on its audit row', async () => {
     const writer = await orderWriter();
     const { orderId } = await acceptOrder();
-    const administration = createAdministrationServices();
+    const ordersApi = createOrders({ db: testDb.db });
 
-    await administration.orders.updateStatus(writer, orderId, { status: 'confirmed' });
+    await ordersApi.changeStatus(writer, orderId, { status: 'confirmed' });
 
-    expect(await administration.auditLog.getEntityLogs('order', String(orderId))).toEqual([
-      expect.objectContaining({ action: 'update_status', adminUserId: writer.userId }),
+    expect((await ordersApi.detail(orderId))!.activity).toEqual([
+      expect.objectContaining({ action: 'update_status', adminId: writer.userId }),
     ]);
   });
 });

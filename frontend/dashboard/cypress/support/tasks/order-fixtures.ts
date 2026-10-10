@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import postgres from 'postgres';
-import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
+import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
 
 const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 

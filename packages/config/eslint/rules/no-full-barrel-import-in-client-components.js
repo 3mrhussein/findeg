@@ -57,7 +57,18 @@ export function createNoFullBarrelImportInClientComponentsRule(schemaExportNames
           const source = node.source.value;
           const schemaNames =
             typeof source === 'string' ? schemaNamesBySource.get(source) : undefined;
-          if (!schemaNames) return;
+          if (!schemaNames && source !== '@findeg/orders') return;
+          if (source === '@findeg/orders') {
+            for (const specifier of node.specifiers) {
+              if (specifier.importKind === 'type') continue;
+              context.report({
+                node: specifier,
+                messageId: 'useSchemasEntryPoint',
+                data: { imported: specifier.local.name, source },
+              });
+            }
+            return;
+          }
 
           for (const specifier of node.specifiers) {
             if (specifier.type !== 'ImportSpecifier') continue;

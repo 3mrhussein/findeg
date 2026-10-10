@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { getOrderDetail } from '@data/orders/queries';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@i18n/navigation';
@@ -26,7 +26,7 @@ export default async function OrderDetailPage({
   // Order ids are positive 32-bit integers; anything else cannot name an Order.
   if (!/^[1-9]\d{0,9}$/.test(id) || Number(id) > 2_147_483_647) notFound();
 
-  const detail = await createAdministrationServices().orders.getDetail(Number(id));
+  const detail = await getOrderDetail(Number(id));
   if (!detail) notFound();
   const { order, activity: logs } = detail;
 

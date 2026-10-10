@@ -1,3 +1,5 @@
+import { getOrderStats, getRecentOrders } from '@data/orders/queries';
+import { DashboardOrdersWidget } from './DashboardOrdersWidget';
 /**
  * Dashboard Widget Components for Nested Suspense
  *
@@ -166,5 +168,41 @@ export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
         <RecentActivityWidget logs={recentActivity} locale={locale} />
       </div>
     </>
+  );
+}
+
+/** Independent home Orders reads share the same invalidated data layer as Orders workflows. */
+export async function OrdersDashboardSection({ locale }: DashboardWidgetProps) {
+  const [stats, recentOrders, t] = await Promise.all([
+    getOrderStats(),
+    getRecentOrders(),
+    getTranslations({ locale }),
+  ]);
+  return (
+    <DashboardOrdersWidget
+      locale={locale}
+      stats={stats}
+      recentOrders={recentOrders}
+      labels={{
+        revenue: t('Administration.Dashboard.Kpi.TotalRevenue'),
+        orders: t('Administration.Dashboard.Kpi.TotalOrders'),
+        distribution: t('Administration.Dashboard.OrderStatusChart.Title'),
+        recent: t('Administration.Dashboard.RecentOrders.Title'),
+        viewAll: t('Administration.Dashboard.RecentOrders.ViewAll'),
+        empty: t('Administration.Shared.EmptyState.NoData'),
+        reference: t('Administration.Dashboard.RecentOrders.Order'),
+        total: t('Administration.Dashboard.RecentOrders.Total'),
+        status: t('Administration.Dashboard.RecentOrders.Status'),
+        statuses: {
+          pending: t('Administration.Shared.StatusBadge.Pending'),
+          confirmed: t('Administration.Shared.StatusBadge.Confirmed'),
+          processing: t('Administration.Shared.StatusBadge.Processing'),
+          shipped: t('Administration.Shared.StatusBadge.Shipped'),
+          delivered: t('Administration.Shared.StatusBadge.Delivered'),
+          cancelled: t('Administration.Shared.StatusBadge.Cancelled'),
+          refunded: t('Administration.Shared.StatusBadge.Refunded'),
+        },
+      }}
+    />
   );
 }

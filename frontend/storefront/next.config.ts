@@ -7,11 +7,10 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   // The build wrapper inspects emitted client modules, then removes these maps.
   productionBrowserSourceMaps: process.env.VERIFY_CLIENT_BUNDLE === '1',
-  // Transpile (bundle) client-safe workspace packages; backend should remain external
+  // Turbopack bundles TypeScript workspace packages automatically; pure Money/UI are client-safe.
   transpilePackages: ['@findeg/ui', '@findeg/money'],
-  // Prevent server-only packages from being bundled on the client
+  // Native third-party dependencies stay external on the server. Client entry lint and build checks protect browser bundles.
   serverExternalPackages: [
-    '@findeg/backend', // Keep backend external to avoid bundling infrastructure
     'postgres',
     'drizzle-orm',
     'bcryptjs',

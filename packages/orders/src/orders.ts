@@ -1,5 +1,5 @@
 import { and, count, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm';
-import { auditLog, orders, orderItems, users } from '@findeg/db/schema';
+import { auditLog, orders, orderItems, users, products } from '@findeg/db/schema';
 import { PaymentStatusSchema } from '@findeg/db/types';
 import { enqueue } from '@findeg/db/queries/outbox';
 import { consumeOrderStock, releaseOrderStock } from '@findeg/db/queries/stock-reservations';
@@ -18,7 +18,7 @@ import {
 } from './errors';
 import { isNotifiedOrderStatus, ORDER_STATUS_KIND, orderStatusId } from './events';
 import { mapOrder } from './mapper';
-import { filtersSchema, orderId, positiveId } from './validation';
+import { filtersSchema, orderId, positiveId, statsOptionsSchema } from './validation';
 import type {
   Order,
   OrderActivityEntry,
@@ -171,29 +171,79 @@ export function createOrders({
       });
       return { order, activity };
     },
-    // Complete Cairo/range/trend statistics are delivered in #367. Preserve exact base aggregates here.
-    async getStats() {
+    async getStats(input = {}) {
+      const options = statsOptionsSchema.parse(input);
+      const instant = now().toISOString();
       const db = await database();
+      // Stored timestamps are UTC without a timezone. PostgreSQL owns Cairo DST conversion.
+      const from = options.from ? sql`${options.from}::date` : sql`null::date`;
+      const to = options.to ? sql`${options.to}::date` : sql`null::date`;
+      const range = and(
+        options.from
+          ? sql`${orders.createdAt} >= ((${from}::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')`
+          : undefined,
+        options.to
+          ? sql`${orders.createdAt} < (((${to} + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')`
+          : undefined,
+      );
+      const day = sql`(${orders.createdAt} at time zone 'UTC' at time zone 'Africa/Cairo')::date`;
+      const today = sql`(${instant}::timestamptz at time zone 'Africa/Cairo')::date`;
       return db.transaction(
         async (tx) => {
           const [totals] = await tx
             .select({
               totalOrders: count(),
               revenue: sql<string>`coalesce(sum(${orders.totalAmount}), 0)::text`,
+              todayOrders: sql<number>`count(*) filter (where ${day} = ${today})::int`,
+              todayRevenue: sql<string>`coalesce(sum(${orders.totalAmount}) filter (where ${day} = ${today}), 0)::text`,
             })
-            .from(orders);
-          const rows = await tx
+            .from(orders)
+            .where(range);
+          const statuses = await tx
             .select({ status: orders.status, count: count() })
             .from(orders)
+            .where(range)
             .groupBy(orders.status);
           const ordersByStatus = Object.fromEntries(
             ORDER_STATUS_OPTIONS.map((status) => [status, 0]),
           ) as Record<(typeof ORDER_STATUS_OPTIONS)[number], number>;
-          for (const row of rows) ordersByStatus[row.status] = row.count;
+          for (const row of statuses) ordersByStatus[row.status] = row.count;
+          const trend = await tx.execute<{ date: string; revenue: string }>(sql`
+          with dates as (
+            select generate_series(greatest(${today} - (${options.trendDays}::int - 1), ${from})::timestamp, least(${today}, ${to})::timestamp, interval '1 day')::date as date
+          )
+          select dates.date::text as date, coalesce(sum(${orders.totalAmount}), 0)::text as revenue
+          from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+            and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+          group by dates.date order by dates.date
+        `);
+          const top = await tx
+            .select({
+              id: products.id,
+              name: sql<string>`coalesce(${products.localizedName}->>'en', 'Unknown Product')`,
+              sold: sql<number>`sum(${orderItems.quantity})::int`,
+              revenue: sql<string>`sum(${orderItems.lineTotal})::text`,
+            })
+            .from(orderItems)
+            .innerJoin(orders, eq(orderItems.orderId, orders.id))
+            .innerJoin(products, eq(orderItems.productId, products.id))
+            .where(range)
+            .groupBy(products.id, products.localizedName)
+            .orderBy(desc(sql`sum(${orderItems.quantity})`), products.id)
+            .limit(options.topProductsLimit);
           return {
+            currency: 'EGP' as const,
+            timezone: 'Africa/Cairo' as const,
             totalOrders: totals.totalOrders,
             totalRevenue: toPiasters(totals.revenue),
+            todayOrders: totals.todayOrders,
+            todayRevenue: toPiasters(totals.todayRevenue),
             ordersByStatus,
+            revenueByPeriod: Array.from(trend, (row) => ({
+              date: row.date,
+              revenue: toPiasters(row.revenue),
+            })),
+            topProducts: top.map((row) => ({ ...row, revenue: toPiasters(row.revenue) })),
           };
         },
         { isolationLevel: 'repeatable read', accessMode: 'read only' },

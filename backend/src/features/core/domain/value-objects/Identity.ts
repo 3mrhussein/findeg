@@ -19,7 +19,7 @@ import {
   type PaymentProvider,
   RoleGrantSchema,
   type RoleGrant,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export {
   ActorTypeSchema,

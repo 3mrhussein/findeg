@@ -69,19 +69,6 @@ export async function getDashboardData() {
 }
 
 /**
- * Get recent orders for dashboard widget
- *
- * Cache: Short TTL for real-time orders
- */
-export async function getRecentOrders(limit: number = 5) {
-  cacheLife('minutes');
-  cacheTag('dashboard', 'recent-orders');
-
-  const { dashboard } = createAdministrationServices();
-  return await dashboard.getRecentOrders(limit);
-}
-
-/**
  * Get paginated audit logs with filters
  *
  * Cache: Short TTL - audit logs are time-sensitive

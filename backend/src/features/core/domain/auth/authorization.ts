@@ -7,7 +7,7 @@ import {
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 /**
  * Global registry of permission strings used throughout the application.

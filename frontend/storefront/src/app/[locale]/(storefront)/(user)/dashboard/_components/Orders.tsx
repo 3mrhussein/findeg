@@ -2,7 +2,7 @@ import { usePagination } from '@hooks/usePagination';
 import { OrderTable } from './OrderTable';
 import { Pagination } from '@findeg/ui';
 import { Card, CardContent } from '@findeg/ui';
-import type { Order } from '@findeg/backend/features/order';
+import type { Order } from '@findeg/orders';
 
 interface OrdersProps {
   orders: Order[];
