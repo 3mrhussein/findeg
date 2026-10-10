@@ -1,28 +1,15 @@
-name: CI · Feature
+name: CI
 
-# Guards feature → develop PRs (the fast tier).
-# Affected packages only, caches restored, integration tests only on relevant
-# changes, no E2E. Jobs live in ci-jobs.yml.
-# Required check: `Feature / CI OK`.
-# Run workflow (manual): every code job on the chosen branch, caches restored
-# unless the checkboxes ask to ignore them.
-# Pushes to develop and everything into main run CI · Release (ci-release.yml).
+# The fast tier, for develop. The jobs live in ci-jobs.yml; the required check
+# is `Fast / CI OK`. PRs into main run CI · Release (ci-release.yml) instead.
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:
     branches: [develop]
     # A base-branch edit must start CI for the newly selected tier.
     types: [opened, synchronize, reopened, edited]
-  workflow_dispatch:
-    inputs:
-      force_build:
-        description: Force build job (ignore build cache)
-        type: boolean
-        default: false
-      force_install:
-        description: Force clean install (ignore pnpm store cache)
-        type: boolean
-        default: false
+  push:
+    branches: [develop]
 
 permissions:
   contents: read
@@ -32,16 +19,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  feature:
-    name: Feature
-    # GitHub checks nested jobs' permissions against the caller when it loads the
-    # workflow, so this must allow what ci-jobs.yml's `Publish evidence` asks for
-    # (write). That job only runs after a strict-tier E2E failure, never on this
-    # tier, and ci-jobs.yml keeps every other job at `contents: read`.
-    permissions:
-      contents: write
+  fast:
+    name: Fast
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: fast # policy tier stays "fast"; only the display name changes
-      force_build: ${{ inputs.force_build || false }}
-      force_install: ${{ inputs.force_install || false }}
+      tier: fast
