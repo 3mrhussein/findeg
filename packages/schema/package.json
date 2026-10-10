@@ -1,0 +1,33 @@
+{
+  "name": "@findeg/schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./common": "./src/common/index.ts",
+    "./customers": "./src/customers/index.ts",
+    "./partners": "./src/partners/index.ts",
+    "./school-lists": "./src/school-lists/index.ts",
+    "./orders": "./src/orders/index.ts",
+    "./inventory": "./src/inventory/index.ts",
+    "./outbox": "./src/outbox/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest --run",
+    "clean": "rm -rf node_modules dist .turbo"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@findeg/config": "workspace:*",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.5",
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.11"
+  }
+}
