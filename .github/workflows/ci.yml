@@ -1,4 +1,4 @@
-name: CI · Feature
+name: CI
 
 # Guards feature → develop PRs (the fast tier).
 # Affected packages only, caches restored, integration tests only on relevant
@@ -14,16 +14,8 @@ on:
     branches: [develop]
     # A base-branch edit must start CI for the newly selected tier.
     types: [opened, synchronize, reopened, edited]
-  workflow_dispatch:
-    inputs:
-      no_cache:
-        description: Force disable cache (fresh build)
-        type: boolean
-        default: false
-      full_tests:
-        description: Run the full suite, E2E included (default runs touched packages only)
-        type: boolean
-        default: false
+  push:
+    branches: [develop]
 
 permissions:
   contents: read
@@ -33,18 +25,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  feature:
-    name: Feature
-    # GitHub checks nested jobs' permissions against the caller when it loads the
-    # workflow, so this must allow what ci-jobs.yml's `Publish evidence` asks for
-    # (write). That job only runs after an E2E failure on a manual full-suite run
-    # (PRs never get a write token), and ci-jobs.yml keeps every other job at
-    # `contents: read`.
-    permissions:
-      contents: write
-      pull-requests: read
+  fast:
+    name: Fast
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: fast # policy tier stays "fast"; only the display name changes
-      no_cache: ${{ inputs.no_cache || false }}
-      full_tests: ${{ inputs.full_tests || false }}
+      tier: fast
