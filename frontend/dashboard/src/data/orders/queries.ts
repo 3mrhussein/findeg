@@ -1,5 +1,7 @@
 /** Cached public Orders reads shared by every Dashboard workflow. */
 'use cache';
+
+import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createOrders, type OrderFilters, type OrderStatsOptions } from '@findeg/orders';
 

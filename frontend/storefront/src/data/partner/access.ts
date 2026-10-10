@@ -1,3 +1,4 @@
+import 'server-only';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import type {
   PartnerAction,

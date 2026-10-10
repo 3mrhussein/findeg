@@ -5,6 +5,7 @@
  */
 'use cache';
 
+import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createCategoryService } from '@findeg/backend/features/catalog';
 import type { Locale } from '@findeg/backend/features/core';
