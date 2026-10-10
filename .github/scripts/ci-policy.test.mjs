@@ -78,20 +78,55 @@ describe('decidePlan for main', () => {
 describe('decidePlan for a manual run', () => {
   const manual = { event: 'workflow_dispatch', target: 'feat/some-feature' };
 
-  it('runs every code job on all packages with caches restored by default', () => {
-    const plan = decidePlan(manual);
+  it('tests touched packages only with caches restored by default', () => {
+    const plan = decidePlan({ ...manual, changedPaths: ['frontend/storefront/a.ts'] });
     assert.equal(plan.tier, 'fast');
-    assert.equal(plan.turboFlags, '');
+    assert.equal(plan.turboFlags, '--affected');
     assert.equal(plan.runChecks, true);
-    assert.equal(plan.runIntegration, true);
+    assert.equal(plan.runIntegration, false);
     assert.equal(plan.runE2e, false);
     assert.equal(plan.restoreDeps, true);
     assert.equal(plan.restoreBuild, true);
   });
 
+  it('runs everything when the changed paths are unknown', () => {
+    const plan = decidePlan(manual);
+    assert.equal(plan.runChecks, true);
+    assert.equal(plan.runIntegration, true);
+  });
+
+  it('runs all packages when asked for the full tests', () => {
+    const plan = decidePlan({ ...manual, changedPaths: ['docs/a.md'], fullTests: true });
+    assert.equal(plan.turboFlags, '');
+    assert.equal(plan.runChecks, true);
+    assert.equal(plan.runIntegration, true);
+    assert.equal(plan.restoreBuild, true);
+  });
+
+  it('ignores the full-tests option outside manual runs', () => {
+    const plan = decidePlan({
+      event: 'pull_request',
+      target: 'develop',
+      changedPaths: ['docs/a.md'],
+      fullTests: true,
+    });
+    assert.equal(plan.runChecks, false);
+    assert.equal(plan.turboFlags, '--affected');
+  });
+
+  it('runs everything on develop, where there is nothing to diff', () => {
+    const plan = decidePlan({ event: 'workflow_dispatch', target: 'develop', changedPaths: [] });
+    assert.equal(plan.runChecks, true);
+    assert.equal(plan.turboFlags, '');
+  });
+
   it('ignores the build caches and forces Turbo when asked to force the build', () => {
-    const plan = decidePlan({ ...manual, forceBuild: true });
-    assert.equal(plan.turboFlags, '--force');
+    const plan = decidePlan({
+      ...manual,
+      changedPaths: ['frontend/storefront/a.ts'],
+      forceBuild: true,
+    });
+    assert.equal(plan.turboFlags, '--force --affected');
     assert.equal(plan.restoreBuild, false);
     assert.equal(plan.restoreDeps, true);
   });
@@ -100,7 +135,7 @@ describe('decidePlan for a manual run', () => {
     const plan = decidePlan({ ...manual, forceInstall: true });
     assert.equal(plan.restoreDeps, false);
     assert.equal(plan.restoreBuild, true);
-    assert.equal(plan.turboFlags, '');
+    assert.equal(plan.turboFlags, '--affected');
   });
 
   it('ignores every cache when both are forced', () => {
@@ -132,7 +167,7 @@ describe('decidePlan tierReason', () => {
     );
     assert.equal(
       decidePlan({ event: 'workflow_dispatch', target: 'feat/some-feature' }).tierReason,
-      'manual run: all packages with caches restored unless forced',
+      'manual run: touched packages with caches restored unless forced',
     );
   });
 

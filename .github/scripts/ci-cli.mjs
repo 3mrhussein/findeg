@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 
 import { appendFileSync, readFileSync } from 'node:fs';
@@ -75,6 +75,7 @@ function executePlan({
   changedFiles,
   forceBuild,
   forceInstall,
+  fullTests,
 }) {
   const changedPaths = parseChangedPaths(changedFiles);
   const decision = decidePlan({
@@ -85,9 +86,10 @@ function executePlan({
     changedPaths,
     forceBuild,
     forceInstall,
+    fullTests,
   });
   reportOutcome('Tier', decision);
-  writePlanSummary(decision, { forceBuild, forceInstall });
+  writePlanSummary(decision, { forceBuild, forceInstall, fullTests });
   if (!decision.ok) return 1;
 
   const outputs = {
@@ -127,7 +129,7 @@ function executeVerdict({ needs, tier }) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict>] [--changed-files <file>] [--force-build] [--force-install] [--full-tests]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]`;
 
 function main(argv) {
@@ -143,6 +145,7 @@ function main(argv) {
       'expect-tier': { type: 'string' },
       'force-build': { type: 'boolean' },
       'force-install': { type: 'boolean' },
+      'full-tests': { type: 'boolean' },
       needs: { type: 'string' },
       tier: { type: 'string' },
     },
@@ -163,6 +166,7 @@ function main(argv) {
       changedFiles: values['changed-files'],
       forceBuild: values['force-build'],
       forceInstall: values['force-install'],
+      fullTests: values['full-tests'],
     });
   }
 

@@ -4,8 +4,9 @@ name: CI · Feature
 # Affected packages only, caches restored, integration tests only on relevant
 # changes, no E2E. Jobs live in ci-jobs.yml.
 # Required check: `Feature / CI OK`.
-# Run workflow (manual): every code job on the chosen branch, caches restored
-# unless the checkboxes ask to ignore them.
+# Run workflow (manual): like a PR into develop (touched packages only, caches
+# restored) on the chosen branch; the checkboxes opt out of the cache and/or
+# run the full test suite.
 # Pushes to develop and everything into main run CI · Release (ci-release.yml).
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
@@ -15,12 +16,12 @@ on:
     types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
     inputs:
-      force_build:
-        description: Force build job (ignore build cache)
+      no_cache:
+        description: Force disable cache (fresh build)
         type: boolean
         default: false
-      force_install:
-        description: Force clean install (ignore pnpm store cache)
+      full_tests:
+        description: Force run full tests (default runs touched files only)
         type: boolean
         default: false
 
@@ -43,5 +44,6 @@ jobs:
     uses: ./.github/workflows/ci-jobs.yml
     with:
       tier: fast # policy tier stays "fast"; only the display name changes
-      force_build: ${{ inputs.force_build || false }}
-      force_install: ${{ inputs.force_install || false }}
+      force_build: ${{ inputs.no_cache || false }}
+      force_install: ${{ inputs.no_cache || false }}
+      full_tests: ${{ inputs.full_tests || false }}

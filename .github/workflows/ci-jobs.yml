@@ -11,8 +11,9 @@ name: CI jobs
 #   so what is merged there is verified from scratch; its pushes are still the
 #   single cache producer (they save, they never restore).
 # - fast tier (PRs into develop): affected packages only, caches restored.
-# - manual run (fast tier, `CI · Feature` → Run workflow): every code job on
-#   all packages, caches restored unless the force options say otherwise.
+# - manual run (fast tier, `CI · Feature` → Run workflow): touched packages
+#   only (against develop), caches restored unless the force options say
+#   otherwise; `full_tests` runs every code job on all packages.
 #
 # Every caller must grant at least the highest permission a job here asks for
 # (`Publish evidence` needs `contents: write`), even a caller that never runs it:
@@ -39,6 +40,10 @@ on:
         description: 'Manual runs only, ignore the pnpm store cache.'
         type: boolean
         default: false
+      full_tests:
+        description: 'Manual runs only, test every package instead of the touched ones.'
+        type: boolean
+        default: false
     secrets:
       SLACK_WEBHOOK_URL:
         description: 'Slack incoming webhook for the run-result card. Optional, without it no card is posted.'
@@ -56,6 +61,7 @@ jobs:
       tier: ${{ steps.plan.outputs.tier }}
       turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
       fetch_depth: ${{ steps.plan.outputs.fetch_depth }}
+      base_sha: ${{ steps.changes.outputs.base_sha }}
       restore_deps: ${{ steps.plan.outputs.restore_deps }}
       restore_build: ${{ steps.plan.outputs.restore_build }}
       save_cache: ${{ steps.plan.outputs.save_cache }}
@@ -65,7 +71,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 2
+          # A manual run diffs against develop's merge-base, so it needs the history.
+          fetch-depth: ${{ github.event_name == 'workflow_dispatch' && 0 || 2 }}
           sparse-checkout: |
             .github/scripts
             .github/config
@@ -86,7 +93,10 @@ jobs:
           BEFORE: ${{ github.event.before }}
         run: |
           base=HEAD^1
-          if [ "$EVENT" = push ]; then
+          if [ "$EVENT" = workflow_dispatch ]; then
+            base=$(git merge-base origin/develop HEAD || true)
+            [ -n "$base" ] && echo "base_sha=$base" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT" = push ]; then
             base="$BEFORE"
             git fetch --quiet --depth=1 origin "$BEFORE" || base=
           fi
@@ -110,10 +120,12 @@ jobs:
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
           FORCE_BUILD: ${{ inputs.force_build }}
           FORCE_INSTALL: ${{ inputs.force_install }}
+          FULL_TESTS: ${{ inputs.full_tests }}
         run: |
           args=(--event "$EVENT" --target "$TARGET")
           if [ "$FORCE_BUILD" = true ]; then args+=(--force-build); fi
           if [ "$FORCE_INSTALL" = true ]; then args+=(--force-install); fi
+          if [ "$FULL_TESTS" = true ]; then args+=(--full-tests); fi
           if [ -n "$HEAD" ]; then args+=(--head "$HEAD"); fi
           if [ -n "$EXPECTED_TIER" ]; then args+=(--expect-tier "$EXPECTED_TIER"); fi
           if [ -n "$CHANGED_FILES" ]; then args+=(--changed-files "$CHANGED_FILES"); fi
@@ -139,7 +151,7 @@ jobs:
           - { name: Unit tests, task: test }
     env:
       TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || needs.plan.outputs.base_sha }}
       TURBO_SCM_HEAD: ${{ github.sha }}
       TASK: ${{ matrix.task }}
     steps:
@@ -188,7 +200,7 @@ jobs:
           --health-retries 10
     env:
       TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before || needs.plan.outputs.base_sha }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v7

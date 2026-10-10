@@ -120,7 +120,7 @@ function guardTier({ event, target, tier, expectedTier }) {
 function explainTier({ event, target, manual, producerPush, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
-  if (manual) return 'manual run: all packages with caches restored unless forced';
+  if (manual) return 'manual run: touched packages with caches restored unless forced';
   if (producerPush) return `${subject}: pre-production run from scratch`;
   if (target === RELEASE_GATE_BRANCH) {
     return `${subject}: release path, everything runs from scratch`;
@@ -136,9 +136,9 @@ function explainTier({ event, target, manual, producerPush, tier }) {
  *   run is verified from scratch but still saves caches, so fast-tier runs restore warm ones.
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
  *   fast-tier patterns.
- * - Manual run (fast tier, every code job on all packages, no E2E): restores caches unless
- *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) say otherwise.
- *   Only the force options of a manual run have any effect.
+ * - Manual run (fast tier, no E2E): affected packages only and caches restored by default.
+ *   forceBuild (build caches, and Turbo --force) or forceInstall (pnpm store) bypass caches;
+ *   fullTests runs every code job on all packages. Only a manual run honours these options.
  */
 export function decidePlan({
   event,
@@ -148,6 +148,7 @@ export function decidePlan({
   changedPaths,
   forceBuild = false,
   forceInstall = false,
+  fullTests = false,
 }) {
   const manual = event === 'workflow_dispatch';
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
@@ -160,13 +161,17 @@ export function decidePlan({
 
   const tier = eligibleForFastTier ? 'fast' : 'strict';
   const knownChanges = Array.isArray(changedPaths);
-  const runEverything = tier === 'strict' || manual || !knownChanges;
+  // A manual run tests only what the branch touched (against develop) unless asked for
+  // the full suite; on the producer branch there is nothing to diff, so it runs everything.
+  const fullManual = manual && (fullTests || target === CACHE_PRODUCER_BRANCH);
+  const runEverything = tier === 'strict' || fullManual || !knownChanges;
   const forcedBuild = manual && forceBuild;
   const forcedInstall = manual && forceInstall;
 
   let turboFlags = '--affected';
-  if (tier === 'strict' || forcedBuild) turboFlags = '--force';
-  else if (manual) turboFlags = '';
+  if (tier === 'strict') turboFlags = '--force';
+  else if (fullManual) turboFlags = forcedBuild ? '--force' : '';
+  else if (forcedBuild) turboFlags = '--force --affected';
 
   return {
     ...guardTier({ event, target, tier, expectedTier }),

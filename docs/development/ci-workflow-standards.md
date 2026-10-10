@@ -24,7 +24,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 - **Job ids** are lowercase, one word where possible (`plan`, `checks`, `build`, `integration`, `e2e`). The first job of a pipeline is `plan` and produces every output the others read.
 - **Inputs and outputs** use `snake_case`. Outputs are named after the decision (`restore_deps`, `run_e2e`), not the implementation.
 - **Env vars** in `UPPER_SNAKE`. Repeated ones go in the workflow-level `env:`.
-- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force build job (ignore build cache)`, `Force clean install (ignore pnpm store cache)`. Keep the same input ids across repos (`force_build`, `force_install`) so tooling and muscle memory carry over.
+- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force build job (ignore build cache)`, `Force clean install (ignore pnpm store cache)`. The feature workflow's checkboxes are `Force disable cache (fresh build)` (`no_cache`) and `Force run full tests` (`full_tests`); both default to unchecked, and a manual run otherwise tests touched packages only with caches restored.
 
 ## 3. Triggers and runs
 
