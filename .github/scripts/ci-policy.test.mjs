@@ -395,6 +395,15 @@ describe('prOpenUrl', () => {
     );
   });
 
+  it('turns ssh:// remotes into https links', () => {
+    const url = prOpenUrl({
+      repoUrl: 'ssh://git@github.com:22/acme/shop.git',
+      head: 'feat/x',
+      title: 'T',
+    });
+    assert.match(url, /^https:\/\/github\.com\/acme\/shop\/compare\//);
+  });
+
   it('sends hotfixes to main', () => {
     const url = prOpenUrl({
       repoUrl: 'https://github.com/acme/shop',

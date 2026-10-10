@@ -323,7 +323,10 @@ export function prBaseBranch(head) {
  */
 export function prOpenUrl({ repoUrl, head, title }) {
   const base = prBaseBranch(head);
-  const repo = repoUrl.replace(/^git@([^:]+):/, 'https://$1/').replace(/\.git$/, '');
+  const repo = repoUrl
+    .replace(/^git@([^:]+):/, 'https://$1/') // git@github.com:owner/repo
+    .replace(/^ssh:\/\/(?:[^@/]+@)?([^/:]+)(?::\d+)?\//, 'https://$1/') // ssh://git@github.com/owner/repo
+    .replace(/\.git$/, '');
   return `${repo}/compare/${base}...${head}?quick_pull=1&title=${encodeURIComponent(title)}`;
 }
 
