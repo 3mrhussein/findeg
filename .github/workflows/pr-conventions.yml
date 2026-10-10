@@ -7,8 +7,9 @@ name: PR conventions
 # Do NOT rename these jobs without updating the rulesets in Settings → Rules.
 #
 # `PR autofill` retitles a new PR from its branch (feat/122-add-x -> `Feature | #122 | Add x`) and adds
-# the hidden commit override release-please reads from a squash-merged PR. It runs on `opened` only,
-# so a title edited by hand is never overwritten.
+# the hidden commit override release-please reads from a squash-merged PR. A PR opened with a pipe
+# title already (the pre-push hook prints a link that prefills one) keeps it. It runs on `opened`
+# only, so a title edited by hand is never overwritten.
 #
 # `edited` also fires when the PR's base branch changes, so the branch policy
 # is re-judged against the new base.
@@ -49,12 +50,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_REF: ${{ github.head_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           COMMITS: ${{ github.event.pull_request.commits }}
         run: |
           printf '%s' "$PR_BODY" > "$RUNNER_TEMP/body.md"
-          args=(--head "$HEAD_REF" --body-file "$RUNNER_TEMP/body.md" --out "$RUNNER_TEMP/pr.json")
+          args=(--head "$HEAD_REF" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/body.md" --out "$RUNNER_TEMP/pr.json")
           issue=$(node .github/scripts/ci-cli.mjs pr-title issue-number --head "$HEAD_REF")
           if [ -n "$issue" ]; then
             title=$(gh api "repos/$GITHUB_REPOSITORY/issues/$issue" --jq .title 2>/dev/null || true)

@@ -141,7 +141,7 @@ function readOptional(filePath) {
 }
 
 // pr-title issue-number --head <branch>       prints the issue the branch names, if any
-// pr-title suggest --head <branch> --body-file <f> --out <f> [--issue-title <t>] [--commit-subject <s>]
+// pr-title suggest --head <branch> --body-file <f> --out <f> [--title <current>] [--issue-title <t>] [--commit-subject <s>]
 // pr-title check --title <t> --body-file <f>
 function executePrTitle(subcommand, values) {
   if (subcommand === 'issue-number' && values.head) {
@@ -154,6 +154,7 @@ function executePrTitle(subcommand, values) {
       body: readOptional(values['body-file']),
       issueTitle: values['issue-title'],
       commitSubject: values['commit-subject'],
+      currentTitle: values.title,
     });
     reportOutcome('PR title suggestion', decision);
     if (!decision.ok) return 1;

@@ -9,6 +9,7 @@ import {
   decidePrTitleSuggestion,
   decideVerdict,
   issueNumberFromBranch,
+  prOpenUrl,
 } from './ci-policy.mjs';
 
 const codeChange = ['backend/src/index.ts'];
@@ -293,6 +294,21 @@ describe('decidePrTitleSuggestion', () => {
     assert.equal(decidePrTitleSuggestion({ head: 'feat/add-x', body }).body, body);
   });
 
+  it('keeps a pipe title the PR was opened with and builds the override from it', () => {
+    const plan = decidePrTitleSuggestion({
+      head: 'feat/add-x',
+      currentTitle: 'Feature | #9 | Add the big X',
+    });
+    assert.equal(plan.title, 'Feature | #9 | Add the big X');
+    assert.match(plan.body, /\nfeat: add the big X\n/);
+    assert.equal(decidePrTitle(plan).ok, true);
+  });
+
+  it('replaces a title that is not in the pipe format', () => {
+    const plan = decidePrTitleSuggestion({ head: 'feat/add-x', currentTitle: 'Feat/add x' });
+    assert.equal(plan.title, 'Feature | Add x');
+  });
+
   it('refuses branches without a type and slug', () => {
     assert.equal(decidePrTitleSuggestion({ head: 'develop' }).ok, false);
     assert.equal(decidePrTitleSuggestion({ head: 'dependabot/npm/x' }).ok, false);
@@ -324,5 +340,27 @@ describe('decidePrTitle', () => {
   it('accepts plain Conventional Commits for tooling PRs', () => {
     assert.equal(decidePrTitle({ title: 'chore(deps): bump x' }).ok, true);
     assert.equal(decidePrTitle({ title: 'Add dispatch button' }).ok, false);
+  });
+});
+
+describe('prOpenUrl', () => {
+  it('links to the new-PR form into develop with the title filled in', () => {
+    assert.equal(
+      prOpenUrl({
+        repoUrl: 'git@github.com:acme/shop.git',
+        head: 'feat/122-add-x',
+        title: 'Feature | #122 | Add x',
+      }),
+      'https://github.com/acme/shop/compare/develop...feat/122-add-x?quick_pull=1&title=Feature%20%7C%20%23122%20%7C%20Add%20x',
+    );
+  });
+
+  it('sends hotfixes to main', () => {
+    const url = prOpenUrl({
+      repoUrl: 'https://github.com/acme/shop',
+      head: 'hotfix/x',
+      title: 'T',
+    });
+    assert.match(url, /\/compare\/main\.\.\.hotfix\/x\?/);
   });
 });

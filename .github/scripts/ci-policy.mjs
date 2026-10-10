@@ -267,22 +267,33 @@ export function issueNumberFromBranch(head) {
 
 /**
  * The title and body a new PR gets. The text comes from the issue title when the branch names
- * an issue, else the subject of the PR's only commit, else the branch slug.
+ * an issue, else the subject of the PR's only commit, else the branch slug. A PR opened with a
+ * pipe title already (from the prefilled link, or typed by hand) keeps it; only its override
+ * is added.
  */
-export function decidePrTitleSuggestion({ head, body = '', issueTitle, commitSubject }) {
+export function decidePrTitleSuggestion({
+  head,
+  body = '',
+  issueTitle,
+  commitSubject,
+  currentTitle,
+}) {
   const branch = parseBranch(head);
   if (!branch || isExemptBranch(head)) {
     return { ok: false, reason: `"${head}" has no <type>/<slug> to build a title from.` };
   }
   const fromCommit = commitSubject?.replace(/^[a-z]+(\([^)]*\))?!?:\s*/i, '');
-  const text = sentenceCase(
-    [issueTitle, fromCommit, branch.slug.replaceAll('-', ' ')]
-      .map((candidate) => candidate?.replace(/\s+/g, ' ').trim())
-      .find(Boolean),
-  );
-  const label = PR_TITLE_LABELS[branch.type];
+  const chosen = PIPE_TITLE_REGEXP.exec(currentTitle ?? '');
+  const text = chosen
+    ? chosen[2].trim()
+    : sentenceCase(
+        [issueTitle, fromCommit, branch.slug.replaceAll('-', ' ')]
+          .map((candidate) => candidate?.replace(/\s+/g, ' ').trim())
+          .find(Boolean),
+      );
+  const label = chosen ? chosen[1] : PR_TITLE_LABELS[branch.type];
   const issue = branch.issueNumber ? ` | #${branch.issueNumber}` : '';
-  const title = `${label}${issue} | ${text}`;
+  const title = chosen ? currentTitle : `${label}${issue} | ${text}`;
   const commitType = COMMIT_TYPE_BY_LABEL[label];
   const override = `${commitType}: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
   const block = `BEGIN_COMMIT_OVERRIDE\n${override}\nEND_COMMIT_OVERRIDE`;
@@ -292,6 +303,21 @@ export function decidePrTitleSuggestion({ head, body = '', issueTitle, commitSub
   if (decidePrTitle({ title, body }).ok) newBody = body;
   else if (OVERRIDE_REGEXP.test(body)) newBody = body.replace(OVERRIDE_REGEXP, () => block);
   return { ok: true, reason: `Built from "${head}".`, title, body: newBody };
+}
+
+/** The branch a PR from `head` goes into: hotfixes into main, everything else into develop. */
+export function prBaseBranch(head) {
+  return head.startsWith('hotfix/') ? RELEASE_GATE_BRANCH : CACHE_PRODUCER_BRANCH;
+}
+
+/**
+ * The link that opens GitHub's new-PR form with the suggested title filled in, for the pre-push
+ * hook to print. GitHub's own "Compare & pull request" button can't be prefilled.
+ */
+export function prOpenUrl({ repoUrl, head, title }) {
+  const base = prBaseBranch(head);
+  const repo = repoUrl.replace(/^git@([^:]+):/, 'https://$1/').replace(/\.git$/, '');
+  return `${repo}/compare/${base}...${head}?quick_pull=1&title=${encodeURIComponent(title)}`;
 }
 
 /**
