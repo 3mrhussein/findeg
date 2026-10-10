@@ -66,14 +66,12 @@ export const NON_CODE_PATH_PREFIXES = ['docs/', '.github/', '.claude/', '.agents
 export const NON_CODE_PATH_SUFFIXES = ['.md'];
 
 /**
- * RegExp pattern matchers for branches eligible for the fast tier (caches restored).
- * Matches against head or target branch names (e.g. '^develop$', '^docs:.*', '^feat/').
- * Branches NOT matching any pattern (e.g. 'main') run the strict tier from scratch without cache.
+ * Branches eligible for the fast tier (caches restored), matched against a PR's head or target:
+ * develop and conventional feature branches. Anything else (e.g. 'main') runs strict.
  */
 export const FAST_TIER_BRANCH_PATTERNS = [
   '^develop$',
-  '^docs:.*',
-  '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/',
+  `^(${CONVENTIONAL_COMMIT_TYPES.join('|')})/`,
 ];
 
 /** The production release gate branch. */
@@ -81,24 +79,3 @@ export const RELEASE_GATE_BRANCH = 'main';
 
 /** The branch designated as the single cache producer on push. */
 export const CACHE_PRODUCER_BRANCH = 'develop';
-
-/**
- * Centralized CI configuration object aggregating all constants.
- */
-export const ciConfig = {
-  conventionalCommitTypes: CONVENTIONAL_COMMIT_TYPES,
-  branchOnlyTypes: BRANCH_ONLY_TYPES,
-  exemptBranchNames: EXEMPT_BRANCH_NAMES,
-  exemptBranchPrefixes: EXEMPT_BRANCH_PREFIXES,
-  allowedMainTargetSources: ALLOWED_MAIN_TARGET_SOURCES,
-  ciWorkflowDefinitionPaths: CI_WORKFLOW_DEFINITION_PATHS,
-  integrationTestTriggerPaths: INTEGRATION_TEST_TRIGGER_PATHS,
-  nonCodePathPrefixes: NON_CODE_PATH_PREFIXES,
-  nonCodePathSuffixes: NON_CODE_PATH_SUFFIXES,
-  fastTierBranches: FAST_TIER_BRANCH_PATTERNS,
-  releaseBranch: RELEASE_GATE_BRANCH,
-  cacheProducerBranch: CACHE_PRODUCER_BRANCH,
-};
-
-// Backwards-compatible alias
-export const config = ciConfig;

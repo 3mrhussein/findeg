@@ -16,22 +16,22 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 ### Two CI tiers, chosen by the event
 
-- **Fast tier (PRs into `develop`):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
-- **Strict tier (PRs into and pushes to `main`, and pushes to `develop`):** every job from scratch: Turbo `--force`, a shallow clone, nothing restored, integration tests always, plus E2E. `develop` is pre-production, so what is merged there is verified from nothing before the release PR. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code through.
-- **Manual run (`CI · Feature` → Run workflow):** the fast tier on the chosen branch, but every code job on all packages (no `--affected`), no E2E. Two checkboxes, both unchecked by default: "Force build job (ignore build cache)" skips the Turbo and Next.js cache restore and forces Turbo; "Force clean install (ignore pnpm store cache)" skips the pnpm store restore. With neither checked, a manual run is a cached run.
+- **Fast tier (PRs into `develop`, and `develop` pushes that merge a feature PR):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
+- **Strict tier (PRs into and pushes to `main`, and `develop` pushes that bring a hotfix):** every job from scratch: Turbo `--force`, a shallow clone, nothing restored, integration tests always, plus E2E. A `develop` push brings a hotfix when it is a direct push (no merged PR) or merges a PR from `main` (the post-release sync) or `hotfix/*`; see the amendment below. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code through.
+- **Manual run (`CI · Feature` → Run workflow):** the fast tier on the chosen branch: the packages it touched against `develop` (on `develop` itself, what its latest commit touched), caches restored, no E2E. Two checkboxes, both unchecked by default: "Force disable cache (fresh build)" skips every cache restore and forces Turbo; "Run the full suite, E2E included" runs every package plus E2E.
 - **Every tier and gating decision lives in one tested module, `.github/scripts/ci-policy.mjs`** (tests in `ci-policy.test.mjs`, run by `Plan`). The workflow YAML only passes its outputs on.
 
 ### Two workflows, one job definition, one gate each
 
-- **`CI · Feature` (fast, PRs into `develop`, plus manual runs) and `CI · Release` (strict, `main` and pushes to `develop`) hold only their triggers.** Both call the reusable `CI jobs` workflow from a caller job named `Feature` or `Strict`, so every job is defined once and the strict run is the same steps, stricter.
+- **`CI · Feature` (fast, PRs into `develop`, plus manual runs) and `CI · Release` (`main`, strict; and pushes to `develop`, either tier) hold only their triggers.** Both call the reusable `CI jobs` workflow from a caller job named `Feature` or `Strict`, so every job is defined once and the strict run is the same steps, stricter.
 - **Each run feeds one aggregate `CI OK` job, reported as `Feature / CI OK` or `Strict / CI OK`.** These are the only code checks the rulesets require. Adding, splitting, renaming or skipping a job never touches a ruleset, and docs-only PRs pass because skipped jobs count as passing.
 - **A tier guard fails `Plan` when a workflow's triggers would run the other tier**, so a mis-set trigger can't run fast CI on a PR into `main`.
 - **`PR conventions`** runs `PR title` and `Branch policy` on every PR, whatever its base.
 
 ### Cache policy
 
-- **Pushes to `develop` are the single cache producer, saving after their from-scratch run (they never restore).** Pull requests only restore. A manual run saves only when it runs on `develop`. GitHub lets a PR restore caches saved on its base branch, but a cache saved by a PR is visible only to that PR, so PR saves would only fill the 10 GB quota.
-- **The strict tier never restores**, so what ships to `main` is built and verified from nothing. Only the `develop` push saves, after it has passed from scratch; `main` neither restores nor saves.
+- **Pushes to `develop` are the single cache producer: every one saves, after a fast run (which restores first) or a strict run (which doesn't).** Pull requests only restore. A manual run saves only when it runs on `develop`. GitHub lets a PR restore caches saved on its base branch, but a cache saved by a PR is visible only to that PR, so PR saves would only fill the 10 GB quota.
+- **The strict tier never restores**, so what ships to `main` is built and verified from nothing. `main` neither restores nor saves.
 - **Restore and save are separate steps** (`.github/actions/setup` and `.github/actions/save-cache`), and restore is two switches, the pnpm store and the build caches, so a manual run can bypass either. setup-node's built-in cache is off because its post step always saves.
 - **Keys:** the pnpm store is keyed by the lockfile and saved once per run. Each job's Turbo cache is keyed per commit, restored by prefix, and pruned of entries older than a week before saving. The Next.js build cache is keyed by the lockfile and sources.
 
@@ -77,3 +77,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **Feature branches can't reach `main`.** A PR from one fails `Branch policy`; retarget it to `develop`.
 - **The first push to `develop` after a cache-key change runs cold**, and PRs opened before it finishes restore nothing.
 - **Adding a CI job means adding it to `CI jobs` and to `CI OK`'s `needs`.** No ruleset change is needed.
+
+## Amendment: develop merges run the fast tier
+
+A push to `develop` that merges a PR now runs the fast tier: only the packages the merge touched, caches restored, no E2E. That PR already passed `Feature / CI OK`, so a second from-scratch run mostly repeated it. Pushes that bring a hotfix still run strict, the full suite from scratch: a direct push to `develop` (no merged PR), and the merge of a PR from `main` (the post-release sync) or `hotfix/*`. The plan job finds the merged PR and its head branch through the GitHub API, and a failed lookup counts as a direct push. A manual run with **full tests** ticked also runs the full suite, E2E included. Every `develop` push still saves the caches. Releases are unchanged: every PR into `main` runs strict, with E2E.
