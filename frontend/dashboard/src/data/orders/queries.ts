@@ -5,6 +5,7 @@
  */
 'use cache';
 
+import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 // Use AdminOrderService from administration feature
 import { createAdministrationServices } from '@findeg/backend/features/administration';

@@ -6,6 +6,7 @@
  */
 'use cache';
 
+import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { AuditLogEntry } from '@findeg/backend/features/administration';
