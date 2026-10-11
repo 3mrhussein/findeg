@@ -334,15 +334,18 @@ jobs:
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3000/en > /dev/null
           curl --fail --silent --show-error --location --retry 60 --retry-delay 2 --retry-all-errors --max-time 10 http://localhost:3001/en > /dev/null
       # Run E2E suites across all packages implementing the test:e2e contract.
-      # Continue-on-error runs every suite to collect complete failure evidence;
-      # tee keeps the output for the report (pipefail keeps the exit status).
+      # One suite at a time: each Cypress run starts its own Xvfb on display :99,
+      # so parallel suites race for it ("Display :99 is already in use"), and
+      # they share the seeded database. --continue runs every suite to collect
+      # complete failure evidence; tee keeps the output for the report
+      # (pipefail keeps the exit status).
       - name: Execute E2E test suites
         id: e2e
         continue-on-error: true
         shell: bash
         env:
           TEST_ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
-        run: pnpm test:e2e --continue 2>&1 | tee "$RUNNER_TEMP/e2e-output.txt"
+        run: pnpm test:e2e --continue --concurrency=1 2>&1 | tee "$RUNNER_TEMP/e2e-output.txt"
       - name: Upload E2E failure evidence
         if: failure() || steps.e2e.outcome == 'failure'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
