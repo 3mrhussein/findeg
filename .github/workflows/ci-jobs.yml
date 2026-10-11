@@ -52,7 +52,8 @@ jobs:
       run_integration: ${{ steps.plan.outputs.run_integration }}
       run_e2e: ${{ steps.plan.outputs.run_e2e }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out the CI scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # A manual run diffs against develop's merge-base, so it needs the history.
           # '0' is quoted: a bare 0 is falsy, so `&& 0 || 2` would always pick 2.
@@ -61,7 +62,8 @@ jobs:
             .github/scripts
             .github/config
       # A sparse checkout keeps the root files, so .nvmrc is there.
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
@@ -148,10 +150,12 @@ jobs:
       TURBO_SCM_HEAD: ${{ github.sha }}
       TASK: ${{ matrix.task }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
-      - uses: ./.github/actions/setup
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
         with:
           restore-deps: ${{ needs.plan.outputs.restore_deps }}
           restore-build: ${{ needs.plan.outputs.restore_build }}
@@ -162,7 +166,8 @@ jobs:
           pnpm exec turbo run "$TASK" "${flags[@]}"
       # Only the Lint leg saves the pnpm store: every job installs the same
       # lockfile, and a lockfile change always runs the code checks.
-      - if: needs.plan.outputs.save_cache == 'true'
+      - name: Save caches
+        if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
         with:
           pnpm-store: ${{ matrix.task == 'lint' }}
@@ -196,10 +201,12 @@ jobs:
       TURBO_SCM_BASE: ${{ needs.plan.outputs.scm_base }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
-      - uses: ./.github/actions/setup
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
         with:
           restore-deps: ${{ needs.plan.outputs.restore_deps }}
           restore-build: ${{ needs.plan.outputs.restore_build }}
@@ -223,7 +230,8 @@ jobs:
         run: |
           read -ra flags <<< "$TURBO_FLAGS"
           pnpm exec turbo run build --only "${flags[@]}"
-      - if: needs.plan.outputs.save_cache == 'true'
+      - name: Save caches
+        if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
 
   # The integration suite creates and migrates its own database on the
@@ -251,13 +259,17 @@ jobs:
     env:
       INTEGRATION_DATABASE_URL: postgres://findeg:findeg@localhost:5432/findeg
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
         with:
           restore-deps: ${{ needs.plan.outputs.restore_deps }}
           restore-build: ${{ needs.plan.outputs.restore_build }}
-      - run: pnpm test:integration
-      - if: needs.plan.outputs.save_cache == 'true'
+      - name: Run the integration tests
+        run: pnpm test:integration
+      - name: Save caches
+        if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
 
   # Strict E2E builds its own apps against a fresh database, without restoring
@@ -285,8 +297,10 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
         with:
           restore-deps: 'false'
           restore-build: 'false'
@@ -372,14 +386,17 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out the CI scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: .github/scripts
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+      - name: Download E2E failure evidence
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: e2e-failure-evidence
           path: evidence
@@ -388,37 +405,13 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
           GH_TOKEN: ${{ github.token }}
-          # Environment identity covers the `site` repo created below; `git config`
+          # Environment identity covers the `site` repo the script creates; `git config`
           # here would only set the checkout's.
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-        run: |
-          git clone --quiet --branch ci-evidence --single-branch \
-            "https://x-access-token:${GH_TOKEN}@${REPO_URL#https://}" site 2>/dev/null \
-            || { git init --quiet site && git -C site checkout --quiet --orphan ci-evidence \
-              && git -C site remote add origin "https://x-access-token:${GH_TOKEN}@${REPO_URL#https://}"; }
-          mkdir -p "site/runs/$RUN_ID"
-          # The artifact holds runner.temp/artifacts, so copy from evidence/artifacts to
-          # publish paths relative to it, matching the URLs the E2E report builds.
-          if [ -d evidence/artifacts ]; then
-            (cd evidence/artifacts && find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) -print0 \
-              | xargs -0 -I{} cp --parents {} "../../site/runs/$RUN_ID/")
-          fi
-          touch site/.nojekyll
-          git -C site add -A
-          git -C site commit --quiet -m "evidence: run $RUN_ID" || true
-          if [ -d site/runs ]; then
-            for path in site/runs/*/; do
-              dir=$(basename "$path")
-              echo "$dir $(git -C site log -1 --format=%ct -- "runs/$dir")"
-            done | node .github/scripts/ci-e2e-cli.mjs prune | while read -r old; do
-              git -C site rm -rq "runs/$old"
-            done
-            git -C site commit --quiet -m "evidence: prune old runs" || true
-          fi
-          git -C site push --quiet origin ci-evidence
+        run: .github/scripts/publish-evidence.sh evidence
 
   # The only check a ruleset needs to require. It always runs, so skipped jobs
   # can't leave it pending; the policy decides whether the results pass.
@@ -429,10 +422,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out the CI scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: .github/scripts
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
@@ -456,13 +451,15 @@ jobs:
       GATE_RESULT: ${{ needs.gate.result }}
     # Every step is skipped without the webhook secret.
     steps:
-      - if: env.SLACK_WEBHOOK_URL != ''
+      - name: Check out the CI scripts
+        if: env.SLACK_WEBHOOK_URL != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: |
             .github/scripts
             .github/config
-      - if: env.SLACK_WEBHOOK_URL != ''
+      - name: Set up Node
+        if: env.SLACK_WEBHOOK_URL != ''
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc

@@ -1,4 +1,4 @@
-name: Bots
+name: Review bots
 
 # Automated review bots. Stateless: no label lifecycle, no review state to keep
 # in sync. GitHub already tracks checks, conversations and commits; a human
@@ -48,6 +48,9 @@ on:
     types: [submitted]
   pull_request:
     types: [opened, ready_for_review, synchronize, labeled]
+
+# Every job grants itself only what it needs.
+permissions: {}
 
 env:
   GH_REPO: ${{ github.repository }}
@@ -150,7 +153,7 @@ jobs:
       actions: read
     steps:
       # The default branch only: PR code is never checked out in this privileged job.
-      - name: Checkout repository
+      - name: Check out the default branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
