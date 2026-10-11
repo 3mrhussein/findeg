@@ -112,8 +112,6 @@ describe('the real config files', () => {
   it('define the documented settings', () => {
     assert.deepEqual(settings, {
       max_log_lines: 50,
-      collapse_logs: true,
-      enable_error_analysis: true,
       screenshot_mode: 'link',
       max_screenshots: 3,
       evidence_retention_days: 14,

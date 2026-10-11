@@ -9,8 +9,10 @@ Conventions for structuring and naming GitHub Actions in this repo. They are wri
 | `.github/workflows/`           | One file per trigger family. Triggers and permissions only; no decisions                                   |
 | `.github/workflows/*-jobs.yml` | The reusable job definitions (`workflow_call`), written once and called by the trigger files               |
 | `.github/actions/<name>/`      | Composite actions for repeated step sequences (setup, save-cache)                                          |
-| `.github/scripts/`             | Pure decision logic and CLIs the workflows call (`*-policy`, `*-cli`, `*-config`), each with a `.test.mjs` |
+| `.github/scripts/`             | Entry points only: the CLIs and hooks that workflows and git call (`*-cli`, a `*-policy` barrel)            |
+| `.github/scripts/<concern>/`   | Pure modules, one decision per file (`policy/plan.mjs`), each with its `.test.mjs` beside it                 |
 | `.github/config/` (optional)   | Data the scripts read: tables of patterns, version lists, scopes. Use JSON, one concern per file           |
+| `.github/README.md`            | The map: what runs when, why, and where each rule lives. Update it with every workflow change              |
 | `docs/development/`            | This file. Per-repo decisions go in `docs/adr/`                                                            |
 
 Rule: **the YAML wires, the scripts decide.** Any branching on branch names, paths, tiers or job results lives in a script with tests, never in `if:` expressions spread across jobs.
@@ -38,7 +40,7 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 ## 4. Tiers and caches
 
 - A repo has two tiers: **fast** (affected packages, caches restored) for feature PRs and for pre-production pushes that merge one, **strict** (everything, forced, nothing restored, E2E required) for the release path and for pre-production pushes that bring a hotfix (a direct push, or a merge from the release branch or `hotfix/*`). A manual run with `full_tests` runs every package plus E2E.
-- **One cache producer branch**, saving after a from-scratch run. Everything else only restores. Restore and save are separate steps; restore is split into dependency store and build caches so either can be bypassed.
+- **One cache producer branch**, which saves after every push (fast merges included). Everything else only restores, and the release path neither restores nor saves. Restore and save are separate steps; restore is split into dependency store and build caches so either can be bypassed.
 - **Cache keys** that are content-hashed are immutable. A forced run on the producer branch deletes the matching caches before saving, so the save takes effect.
 - **A cleanup workflow** removes a PR's caches when it closes (`Cleanup caches by a branch`, trigger `pull_request: closed`, per-PR concurrency, `cancel-in-progress: false`). Needed only when PRs are allowed to save caches.
 
@@ -47,6 +49,9 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 - The first job guards against loops: skip runs for bot commits tagged `[release]` or `[ci skip]` where a bot pushes to a watched branch. The gate still reports, so required checks don't hang.
 - Skipped jobs count as passing in the gate; a **strict** gate additionally fails if E2E was skipped.
 - Workflows that need no secrets are passed none.
+- **Checkouts keep no credentials** (`persist-credentials: false`). A step that pushes builds its own authenticated URL from a token it was given explicitly.
+- **App tokens are narrowed** to the permissions the job uses (`permission-<name>:` on `create-github-app-token`), never the installation's full set.
+- **Expressions never go inline into `run:`**: event fields (titles, bodies, branch names) reach shell through `env:`.
 
 ## 6. Reporting: templates, themes and tokens
 
@@ -59,7 +64,7 @@ Every report a pipeline produces (job summary, chat card, PR comment) is **a tem
 | `themes.json`                     | One entry per status: `emoji`, `color` (hex, no `#`), `label`. The only place colors and emojis live            |
 | `templates/<name>.md`             | Job-summary templates in GitHub-flavoured Markdown                                                              |
 | `templates/<name>.<channel>.json` | Chat card templates, one file per report and channel (`.slack.json` first)                                      |
-| `settings.json`                   | Global switches: `max_log_lines` (50), `collapse_logs`, `enable_error_analysis`, which templates run on failure |
+| `settings.json`                   | Global switches: `max_log_lines` (50), `screenshot_mode`, `max_screenshots`, `evidence_retention_days`           |
 
 **Statuses** are a closed set shared by every template: `success`, `failure`, `warning`, `skipped`, `running`, `info`. A template never picks a color or emoji itself; it asks for the status token and the theme resolves it.
 
@@ -151,18 +156,18 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 | --------------------------- | ------------------------------------------------------------ | ------------------------------------ |
 | CI workflow                 | `ci.yml`, `CI`, gate `CI / Gate` (both tiers)                | Done                                 |
 | Reusable jobs               | `ci-jobs.yml`, `CI jobs`                                     | Done                                 |
-| Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`             | Done                                 |
+| Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `policy/*.mjs` and their tests   | Done                                 |
 | Dispatch checkboxes         | `no_cache`, `full_tests` on `CI`                             | Done                                 |
 | PR hygiene                  | `pr-conventions.yml`, `PR conventions`                       | Done                                 |
 | Release PR button           | `promote.yml`, `Promote to main` (needs develop's green Gate) | Done                                 |
 | Loop guard on bot commits   | none                                                         | Open: release-please pushes          |
 | Cache cleanup               | none                                                         | Deferred: PRs never save caches      |
 | Forced-run cache delete     | none                                                         | Open                                 |
-| Themes, templates, renderer | `.github/config/`, `ci-report.mjs`, `ci-e2e-report.mjs`      | Done                                 |
+| Themes, templates, renderer | `.github/config/`, `report/report.mjs`, `report/e2e-report.mjs` | Done                              |
 | Plan and E2E job summaries  | `ci-cli.mjs plan`, `ci-e2e-cli.mjs report`                   | Done                                 |
 | Slack run-result card       | `Notify` job, secret `SLACK_WEBHOOK_URL` (optional)          | Done; needs the owner's webhook      |
 | E2E screenshots             | link mode (default); `pages` mode publishes to `ci-evidence` | Link mode is the fallback; see below |
-| Config JSON directory       | none (config lives in `ci-config.mjs`)                       | Not needed until data tables         |
+| Config JSON directory       | none (config lives in `policy/config.mjs`)                   | Not needed until data tables         |
 | Nightly security scan       | none                                                         | Out of scope                         |
 
 ### Screenshot modes (verified state)

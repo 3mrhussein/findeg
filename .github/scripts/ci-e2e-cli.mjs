@@ -5,7 +5,7 @@
 //   node .github/scripts/ci-e2e-cli.mjs report --outcome <outcome> --output-file <file>
 //     [--storefront-log <file>] [--dashboard-log <file>] [--evidence-dir <dir>]
 //     [--artifact-name <name>] [--can-write] [--config <dir>]
-//   node .github/scripts/ci-e2e-cli.mjs prune --retention-days <n>   (stdin: "<folder> <commit epoch seconds>" lines)
+//   node .github/scripts/ci-e2e-cli.mjs prune [--retention-days <n>]   (stdin: "<folder> <commit epoch seconds>" lines)
 //
 // `report` appends the rendered report to $GITHUB_STEP_SUMMARY and writes `screenshot_mode` to
 // $GITHUB_OUTPUT. It never fails the job: a broken report only warns.
@@ -29,7 +29,7 @@ import {
 const DEFAULT_CONFIG_DIR = fileURLToPath(new URL('../config', import.meta.url));
 
 const CLI_USAGE_HELP = `Usage:
-  ci-e2e-cli.mjs prune --retention-days <n>   (reads "<folder> <commit epoch seconds>" lines on stdin, prints folders to delete)
+  ci-e2e-cli.mjs prune [--retention-days <n>]   (reads "<folder> <commit epoch seconds>" lines on stdin, prints folders to delete)
   ci-e2e-cli.mjs report --outcome <outcome> --output-file <file> [--storefront-log <file>] [--dashboard-log <file>] [--evidence-dir <dir>] [--artifact-name <name>] [--can-write] [--config <dir>]`;
 
 function readIfPresent(file) {
@@ -96,7 +96,11 @@ async function main(argv) {
       .map((line) => line.trim().split(/\s+/))
       .filter(([name, seconds]) => name && seconds)
       .map(([name, seconds]) => ({ name, committedMs: Number(seconds) * 1000 }));
-    const days = Number(values['retention-days'] || 14);
+    // The flag wins; otherwise the retention configured in settings.json.
+    const days = Number(
+      values['retention-days'] ||
+        loadReportConfig(values.config || DEFAULT_CONFIG_DIR).settings.evidence_retention_days,
+    );
     for (const name of planPrune(folders, Date.now(), days)) console.log(name);
     return 0;
   }

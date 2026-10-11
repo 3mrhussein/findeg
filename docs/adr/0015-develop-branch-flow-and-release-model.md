@@ -19,7 +19,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **Fast tier (PRs into `develop`, and `develop` pushes that merge a feature PR):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
 - **Strict tier (PRs into and pushes to `main`, and `develop` pushes that bring a hotfix):** every job from scratch: Turbo `--force`, a shallow clone, nothing restored, integration tests always, plus E2E. A `develop` push brings a hotfix when it is a direct push (no merged PR) or merges a PR from `main` (the post-release sync) or `hotfix/*`; see the amendment below. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code through.
 - **Manual run (`CI` → Run workflow):** the fast tier on the chosen branch: the packages it touched against `develop` (on `develop` itself, what its latest commit touched), caches restored, no E2E. Two checkboxes, both unchecked by default: "Skip every cache (fresh install and build)" skips every cache restore and forces Turbo; "Run the full suite, E2E included" runs every package plus E2E.
-- **Every tier and gating decision lives in one tested module, `.github/scripts/ci-policy.mjs`** (tests in `ci-policy.test.mjs`, run by `Plan`). The workflow YAML only passes its outputs on.
+- **Every tier and gating decision lives in one tested module, `.github/scripts/ci-policy.mjs`** (one module per decision under `.github/scripts/policy/`, each with its tests, run by `Plan`). The workflow YAML only passes its outputs on.
 
 ### One workflow, one job definition, one gate
 
@@ -64,7 +64,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 ## Considered options
 
 - **Keep every PR on `main`, with one CI tier.** Rejected: features would wait on release-grade validation (E2E, no caches), or releases would ship with fast-tier checks only.
-- **One CI workflow that switches tier by base branch.** Rejected: the release path would be indistinguishable in the Actions tab, and one check name would serve both branches. Separate workflows and gate names mean a fast result can never satisfy `main`.
+- **Two CI workflows, one per tier, with separate gate names.** Chosen at first, then replaced by one workflow (see the second amendment): the policy already picks the tier from the event, and a fast result can't satisfy `main` because every run into `main` is strict.
 - **Require each job by name.** Rejected: every rename or split meant a ruleset edit, and docs-only PRs blocked on checks that never report.
 - **Squash `develop → main`.** Rejected for the release-please and divergence reasons above.
 - **Let PRs save caches too.** Rejected: PR-scoped caches can't be read by other PRs, so they only fill the quota.
@@ -96,4 +96,4 @@ This is a standing rule, not a default: nothing that runs on or merges into `mai
 - **Every run on or into `main` is strict:** PRs into it from any branch, pushes to it, and now manual runs on it too, which used to run the fast tier with caches restored. A manual run on `main` ignores both checkboxes.
 - **A strict `CI / Gate` fails unless every job succeeded.** It used to fail only on a skipped E2E; a skipped check, build or integration job now fails it too, so a broken condition can't pass unverified code.
 - **`PR title` rejects skip-CI directives** (`[skip ci]`, `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`, `skip-checks: true`). Merge commits into `main` carry the PR title, and GitHub would skip the push run on `main` for such a message.
-- **Pinned by tests:** `ci-policy.test.mjs` walks every way into `main` (PRs from `develop`, `hotfix/*`, release-please and a feature branch, pushes, manual runs; docs-only, code and unknown diffs) and asserts strict, `--force`, nothing restored or saved, and every job run.
+- **Pinned by tests:** `policy/main-invariants.test.mjs` walks every way into `main` (PRs from `develop`, `hotfix/*`, release-please and a feature branch, pushes, manual runs; docs-only, code and unknown diffs) and asserts strict, `--force`, nothing restored or saved, and every job run.
