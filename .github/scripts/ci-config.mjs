@@ -36,7 +36,6 @@ export const ALLOWED_MAIN_TARGET_SOURCES = {
  */
 export const CI_WORKFLOW_DEFINITION_PATHS = [
   '.github/workflows/ci.yml',
-  '.github/workflows/ci-release.yml',
   '.github/workflows/ci-jobs.yml',
   '.github/workflows/pr-conventions.yml',
   '.github/actions/',

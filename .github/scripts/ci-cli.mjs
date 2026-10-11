@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node .github/scripts/ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
+//   node .github/scripts/ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
 //     (the yes/no options take `true`; any other value, empty included, is no, so a workflow
 //     can pass its inputs straight through)
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
@@ -90,7 +90,6 @@ function executePlan(values) {
     event,
     target,
     head: values.head,
-    expectedTier: values['expect-tier'],
     changedPaths,
     forceBuild,
     forceInstall,
@@ -132,7 +131,7 @@ function executeVerdict({ needs, tier }) {
     Object.entries(JSON.parse(needs)).map(([job, { result }]) => [job, result]),
   );
   const decision = decideVerdict({ tier: tier || undefined, results: jobResults });
-  reportOutcome('CI OK', decision);
+  reportOutcome('Gate', decision);
   return decision.ok ? 0 : 1;
 }
 
@@ -174,7 +173,7 @@ function executePrTitle(subcommand, values) {
 
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
-  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--expect-tier <fast|strict|any>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
+  ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
   ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
@@ -188,7 +187,6 @@ function main(argv) {
       event: { type: 'string' },
       target: { type: 'string' },
       'changed-files': { type: 'string' },
-      'expect-tier': { type: 'string' },
       'no-cache': { type: 'string' },
       'full-tests': { type: 'string' },
       'merged-head': { type: 'string' },

@@ -101,21 +101,6 @@ export function decideReleaseSource({ head, base }) {
 }
 
 /**
- * Guard to verify the caller workflow matches the planned tier, if expectedTier is provided.
- */
-function guardTier({ event, target, tier, expectedTier }) {
-  const description = `${event} to ${target} runs the ${tier} tier`;
-  // `any`: the caller hosts events of both tiers (develop pushes), so the policy alone decides.
-  if (expectedTier && expectedTier !== 'any' && expectedTier !== tier) {
-    return {
-      ok: false,
-      reason: `${description}, but this workflow expects the ${expectedTier} tier. Check its triggers.`,
-    };
-  }
-  return { ok: true, reason: `${description}${expectedTier ? ', as expected.' : '.'}` };
-}
-
-/**
  * A human sentence saying why a run got its tier, for the plan summary.
  */
 function explainTier({ event, target, manual, fullTests, producerPush, mergedHead, tier }) {
@@ -154,7 +139,6 @@ export function decidePlan({
   event,
   target,
   head,
-  expectedTier,
   changedPaths,
   forceBuild = false,
   forceInstall = false,
@@ -192,7 +176,8 @@ export function decidePlan({
   else if (forcedBuild) turboFlags = '--force --affected';
 
   return {
-    ...guardTier({ event, target, tier, expectedTier }),
+    ok: true,
+    reason: `${event} to ${target} runs the ${tier} tier.`,
     tier,
     tierReason: explainTier({
       event,
@@ -215,7 +200,7 @@ export function decidePlan({
 }
 
 /**
- * Evaluates all job results to decide the aggregate CI OK check verdict.
+ * Evaluates all job results to decide the verdict of the aggregate Gate check.
  */
 export function decideVerdict({ tier, results }) {
   if (results.plan !== 'success') {

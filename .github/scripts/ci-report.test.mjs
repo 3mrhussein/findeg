@@ -181,7 +181,7 @@ describe('the real config files', () => {
   it('render the Slack card as valid JSON, whatever characters the values hold', () => {
     const tokens = sampleTokens(CORE_TOKENS);
     tokens.CHANGELOG_SNIPPET = 'Fixed "quotes"\n- a line with \\ backslash';
-    tokens.WORKFLOW = 'CI · Strict';
+    tokens.WORKFLOW = 'CI';
     const output = renderTemplate({
       template: templates['run-result.slack.json'],
       theme: resolveTheme(themes, 'failure'),
@@ -191,7 +191,7 @@ describe('the real config files', () => {
     const card = JSON.parse(output);
     const [attachment] = card.attachments;
     assert.equal(attachment.color, '#CF222E');
-    assert.equal(attachment.blocks[0].text.text, '❌ CI · Strict Failed');
+    assert.equal(attachment.blocks[0].text.text, '❌ CI Failed');
     assert.equal(attachment.blocks[2].text.text, tokens.CHANGELOG_SNIPPET);
     const [runButton, changelogButton] = attachment.blocks[3].elements;
     assert.equal(runButton.url, tokens.RUN_URL);
@@ -368,7 +368,7 @@ describe('ci-report-cli render', () => {
 describe('coreTokensFromEnv', () => {
   const env = {
     GITHUB_REPOSITORY: 'acme/app',
-    GITHUB_WORKFLOW: 'CI · Feature',
+    GITHUB_WORKFLOW: 'CI',
     GITHUB_JOB: 'plan',
     GITHUB_REF_NAME: 'develop',
     GITHUB_HEAD_REF: 'feat/x',
@@ -381,7 +381,7 @@ describe('coreTokensFromEnv', () => {
   it('reads the run context from the Actions environment', () => {
     const tokens = coreTokensFromEnv(env, new Date('2026-10-08T12:00:00Z'));
     assert.equal(tokens.REPO_NAME, 'acme/app');
-    assert.equal(tokens.WORKFLOW, 'CI · Feature');
+    assert.equal(tokens.WORKFLOW, 'CI');
     assert.equal(tokens.SHA, '0123456');
     assert.equal(tokens.ACTOR, 'octo');
     assert.equal(tokens.TIME, '2026-10-08 12:00:00');

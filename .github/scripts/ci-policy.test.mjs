@@ -236,38 +236,6 @@ describe('decidePlan tierReason', () => {
   });
 });
 
-describe('decidePlan tier guard', () => {
-  it('fails when a workflow expects the wrong tier', () => {
-    assert.equal(decidePlan({ event: 'push', target: 'develop', expectedTier: 'fast' }).ok, false);
-    assert.equal(decidePlan({ ...pullRequestIntoDevelop, expectedTier: 'strict' }).ok, false);
-    assert.equal(
-      decidePlan({ event: 'workflow_dispatch', target: 'x/y', expectedTier: 'strict' }).ok,
-      false,
-    );
-  });
-
-  it('lets the policy decide when the caller accepts any tier', () => {
-    for (const mergedHead of ['feat/x', 'main', undefined]) {
-      const plan = decidePlan({
-        event: 'push',
-        target: 'develop',
-        mergedHead,
-        expectedTier: 'any',
-      });
-      assert.equal(plan.ok, true);
-    }
-  });
-
-  it('passes when the triggers match the tier', () => {
-    assert.equal(decidePlan({ event: 'push', target: 'develop', expectedTier: 'strict' }).ok, true);
-    assert.equal(decidePlan({ ...pullRequestIntoDevelop, expectedTier: 'fast' }).ok, true);
-    assert.equal(
-      decidePlan({ event: 'workflow_dispatch', target: 'x/y', expectedTier: 'fast' }).ok,
-      true,
-    );
-  });
-});
-
 describe('decideVerdict', () => {
   const passing = { plan: 'success', checks: 'success', build: 'success', integration: 'success' };
 
