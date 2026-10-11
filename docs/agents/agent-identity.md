@@ -20,7 +20,7 @@ The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Cla
 
 1. Commenting `@claude review` (only comments from the repository owner run);
 2. Adding label `review:claude` to the PR, whoever authored it, e.g. `gh pr create --label review:claude`;
-3. Clicking **Run workflow** in the Actions tab → Bots → action: `claude` (`workflow_dispatch`).
+3. Clicking **Run workflow** in the Actions tab → Review bots → action: `claude` (`workflow_dispatch`).
 
 Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). Change it any of these ways:
 
@@ -30,7 +30,7 @@ node scripts/auto-review-mode.mjs claude  # set (claude | codex | off)
 ```
 
 - the `/auto-review-mode [claude|codex|off]` agent skill;
-- **Actions → Bots → Run workflow → action: review-mode** (works from the GitHub mobile app);
+- **Actions → Review bots → Run workflow → action: review-mode** (works from the GitHub mobile app);
 - an owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode);
 - editing the variable under Settings → Secrets and variables → Actions → Variables.
 
@@ -93,7 +93,7 @@ node scripts/agent-identity/sync-authors.mjs            # sets CLAUDE_PR_AUTHORS
 node scripts/agent-identity/sync-authors.mjs --dry-run  # just print them
 ```
 
-Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agent's app, plus any `extraBots` listed for it. `bot-claude-review.yml` passes both variables to `allowed_bots`, so no bot name is hardcoded in the workflow.
+Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agent's app, plus any `extraBots` listed for it. `bots.yml` passes both variables to `allowed_bots`, so no bot name is hardcoded in the workflow.
 
 Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
 
@@ -102,7 +102,7 @@ Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
 
 To rename an existing app, change its name under GitHub → Settings → Developer settings → GitHub Apps, then re-run `sync-authors.mjs` (it also refreshes the stored git identity).
 
-The workflow needs `CLAUDE_CODE_OAUTH_TOKEN` configured in the repository (`bot-claude-review.yml`).
+The workflow needs `CLAUDE_CODE_OAUTH_TOKEN` configured in the repository (`bots.yml`).
 
 ### 3. Install the wrappers (each machine)
 

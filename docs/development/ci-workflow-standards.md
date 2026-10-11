@@ -17,22 +17,23 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 
 ## 2. Naming
 
-- **Workflow `name:`** is a short noun phrase in Title Case that says what it guards or does: `CI · Feature`, `CI · Release`, `Release`, `PR conventions`, `Bots`. Reusable files are named for what they hold (`CI jobs`). Scheduled or housekeeping workflows say so: `Nightly security scan`, `Cleanup caches by a branch`.
-- **Files** are kebab-case and match the name: `ci.yml`, `ci-release.yml`, `ci-jobs.yml`, `pr-conventions.yml`.
-- **Caller job ids** are the tier or purpose (`feature`, `strict`) with a Title Case `name:` (`Feature`, `Strict`).
-- **The gate job** is always `ci-ok`, named `CI OK`. Its check context is `<caller job> / CI OK` (`Feature / CI OK`, `Strict / CI OK`). Rulesets require only gates, never individual jobs.
+- **Workflow `name:`** is a short noun phrase in Title Case that says what it guards or does: `CI`, `Release`, `PR conventions`, `Review bots`. Reusable files are named for what they hold (`CI jobs`). Scheduled or housekeeping workflows say so: `Nightly security scan`, `Cleanup caches by a branch`.
+- **Files** are kebab-case and match the name: `ci.yml`, `ci-jobs.yml`, `pr-conventions.yml`, `bots.yml`, `release.yml`.
+- **One caller per pipeline.** Its job id is the pipeline (`ci`) with a Title Case `name:` (`CI`); the policy, not the caller, picks the tier.
+- **The gate job** is always `gate`, named `Gate`. Its check context is `<caller job> / Gate` (`CI / Gate`). Rulesets require only gates, never individual jobs.
+- **Steps** all have a `name:` that says what they do (`Check out the CI scripts`, `Set up Node`, `Save caches`). Shell longer than a screen moves to `.github/scripts/`.
+- **Actions** are pinned to a full commit SHA with the version in a comment (`actions/checkout@3d3c42e… # v7.0.1`); Dependabot updates them.
 - **Job ids** are lowercase, one word where possible (`plan`, `checks`, `build`, `integration`, `e2e`). The first job of a pipeline is `plan` and produces every output the others read.
 - **Inputs and outputs** use `snake_case`. Outputs are named after the decision (`restore_deps`, `run_e2e`), not the implementation.
 - **Env vars** in `UPPER_SNAKE`. Repeated ones go in the workflow-level `env:`.
-- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Force disable cache (fresh build)` (`no_cache`), `Run the full suite, E2E included (default runs touched packages only)` (`full_tests`). Both default to unchecked, and a manual run otherwise tests touched packages only with caches restored. The reusable workflow takes the same input ids, so the caller passes them straight through.
+- **Dispatch input labels** read as a sentence a person would click, with the effect in parentheses: `Skip every cache (fresh install and build)` (`no_cache`), `Run the full suite, E2E included (default runs touched packages only)` (`full_tests`). Both default to unchecked, and a manual run otherwise tests touched packages only with caches restored. The reusable workflow takes the same input ids, so the caller passes them straight through.
 
 ## 3. Triggers and runs
 
 - **Every pipeline workflow has `workflow_dispatch`.** Inputs are booleans, `default: false`. Anything that makes a run slower or colder than normal is opt-in by checkbox, never the default.
 - **PRs run automatically.** Include `edited` in `pull_request` types when the base branch picks the tier, so retargeting reruns CI.
-- **Concurrency** is set only by the caller: `group: <workflow>-<pr number or ref>`, `cancel-in-progress: true` for PRs and `false` for pushes, so every merged commit gets a verdict.
-- **Permissions** default to `contents: read` at the top of the file; jobs ask for more only where needed. Every caller of a reusable workflow must grant at least the highest permission any nested job asks for, even if that job never runs for that caller, or GitHub rejects the caller file.
-- **A tier guard** (`expect-tier` in the plan) makes a mis-set trigger fail `plan` instead of silently running the wrong pipeline.
+- **Concurrency** is set only by the caller: `group: <workflow>-<pr number or ref>`, `cancel-in-progress: true` for PRs and `false` for pushes, so every merged commit gets a verdict. A PR edit that doesn't change the base gets its own group and is skipped, so it never cancels the run checking the code.
+- **Permissions** default to `contents: read` (or `{}`) at the top of the file; jobs ask for more only where needed. Every caller of a reusable workflow must grant at least the highest permission any nested job asks for, even if that job never runs for that caller, or GitHub rejects the caller file.
 
 ## 4. Tiers and caches
 
@@ -139,8 +140,8 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 ## 7. Adopting this in another repo
 
 1. Create the layout in section 1; add `ci-policy`, `ci-cli`, `ci-config` and the test file.
-2. Name workflows, jobs and the `CI OK` gate per section 2; require only the gate in rulesets.
-3. Add `workflow_dispatch` with `no_cache` and `full_tests` to the feature workflow.
+2. Name workflows, jobs and the `Gate` job per section 2; require only the gate in rulesets.
+3. Add `workflow_dispatch` with `no_cache` and `full_tests` to the CI workflow.
 4. Set the tiers and the producer branch in config; write the first ADR for repo-specific choices.
 5. Copy `.github/config/` (themes, templates, settings) and the renderer, then add the reports the repo needs.
 
@@ -148,11 +149,10 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 
 | Standard                    | Here                                                         | Status                               |
 | --------------------------- | ------------------------------------------------------------ | ------------------------------------ |
-| Feature workflow            | `ci.yml`, `CI · Feature`, gate `Feature / CI OK`             | Done                                 |
-| Release workflow            | `ci-release.yml`, `CI · Release`, gate `Strict / CI OK`      | Done                                 |
+| CI workflow                 | `ci.yml`, `CI`, gate `CI / Gate` (both tiers)                | Done                                 |
 | Reusable jobs               | `ci-jobs.yml`, `CI jobs`                                     | Done                                 |
 | Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`             | Done                                 |
-| Dispatch checkboxes         | `no_cache`, `full_tests` on `CI · Feature`                   | Done                                 |
+| Dispatch checkboxes         | `no_cache`, `full_tests` on `CI`                             | Done                                 |
 | PR hygiene                  | `pr-conventions.yml`, `PR conventions`                       | Done                                 |
 | Loop guard on bot commits   | none                                                         | Open: release-please pushes          |
 | Cache cleanup               | none                                                         | Deferred: PRs never save caches      |
