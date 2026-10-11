@@ -141,7 +141,7 @@ function readOptional(filePath) {
 
 // pr-title issue-number --head <branch>       prints the issue the branch names, if any
 // pr-title suggest --head <branch> --body-file <f> --out <f> [--title <current>] [--issue-title <t>] [--commit-subject <s>]
-// pr-title check --title <t> --body-file <f>
+// pr-title check --title <t> --body-file <f> [--base <branch>]
 function executePrTitle(subcommand, values) {
   if (subcommand === 'issue-number' && values.head) {
     console.log(issueNumberFromBranch(values.head) ?? '');
@@ -164,6 +164,7 @@ function executePrTitle(subcommand, values) {
     const decision = decidePrTitle({
       title: values.title,
       body: readOptional(values['body-file']),
+      base: values.base,
     });
     reportOutcome('PR title', decision);
     return decision.ok ? 0 : 1;
@@ -175,7 +176,7 @@ const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
   ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
-  ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
+  ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--base <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
 
 function main(argv) {
   const { positionals, values } = parseArgs({

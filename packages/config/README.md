@@ -16,7 +16,7 @@ The lint standard for every package, as five layers composed into profiles. Noth
 
 | Profile | Import | Use for |
 | --- | --- | --- |
-| `isomorphic` | `@findeg/config/eslint/isomorphic` | Leaf packages shared by server and browser: `money`, `domain-errors` |
+| `isomorphic` | `@findeg/config/eslint/isomorphic` | Leaf packages shared by server and browser: `money`, `domain-errors`, `schema` |
 | `node` | `@findeg/config/eslint/node` | Server packages and services: `backend`, `db`, `env`, `orders` |
 | `react-ui` | `@findeg/config/eslint/react-ui` | Browser component libraries: `ui` |
 | `next` | `@findeg/config/eslint/next` | Next.js apps: `dashboard`, `storefront` |
