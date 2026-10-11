@@ -11,6 +11,10 @@ name: CI
 #   Run workflow (manual)       fast    touched packages on the chosen branch;
 #                                       the checkboxes skip caches and/or run
 #                                       the full suite (every package plus E2E)
+#   Run workflow on main        strict  always; the checkboxes are ignored
+#
+# Main never skips a test or restores a cache, in any of these: every run on or
+# into main is strict, and a strict Gate fails unless every job succeeded.
 #
 # Required check (develop and main rulesets): `CI / Gate`.
 on:

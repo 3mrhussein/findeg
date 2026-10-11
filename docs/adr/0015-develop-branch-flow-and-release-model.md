@@ -88,3 +88,12 @@ A push to `develop` that merges a PR now runs the fast tier: only the packages t
 ## Amendment: a promote button for develop → main
 
 Opening the `develop → main` PR is a button: **Actions → Promote to main → Run workflow**, from `develop` (`promote.yml`). It opens that PR, titled `Chore | Promote develop to main`, or refreshes the one already open, with the squash commits it ships listed in the body. GitHub can't disable a Run workflow button, so the run refuses instead, with the reason in its summary, unless `CI / Gate` passed on `develop`'s tip in that commit's push run; a run still in progress, failed, cancelled or missing all refuse, and so does a run from any other branch. It opens nothing when `main` already has every `develop` commit. The release-bot App opens the PR, so its CI and conventions checks run (a `GITHUB_TOKEN` PR triggers no workflows). It does not enable auto-merge: merging stays the one manual step, with a merge commit, after the strict run. The rules live in `decidePromotion` in `.github/scripts/ci-policy.mjs`. The title uses the pipe format, which `PR title` accepts on PRs into `main` without a commit override.
+
+## Amendment: main never skips a test or uses a cache
+
+This is a standing rule, not a default: nothing that runs on or merges into `main` restores a cache or skips a test, in any case.
+
+- **Every run on or into `main` is strict:** PRs into it from any branch, pushes to it, and now manual runs on it too, which used to run the fast tier with caches restored. A manual run on `main` ignores both checkboxes.
+- **A strict `CI / Gate` fails unless every job succeeded.** It used to fail only on a skipped E2E; a skipped check, build or integration job now fails it too, so a broken condition can't pass unverified code.
+- **`PR title` rejects skip-CI directives** (`[skip ci]`, `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`, `skip-checks: true`). Merge commits into `main` carry the PR title, and GitHub would skip the push run on `main` for such a message.
+- **Pinned by tests:** `ci-policy.test.mjs` walks every way into `main` (PRs from `develop`, `hotfix/*`, release-please and a feature branch, pushes, manual runs; docs-only, code and unknown diffs) and asserts strict, `--force`, nothing restored or saved, and every job run.

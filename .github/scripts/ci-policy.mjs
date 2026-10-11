@@ -106,6 +106,9 @@ export function decideReleaseSource({ head, base }) {
 function explainTier({ event, target, manual, fullTests, producerPush, mergedHead, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
+  if (event === 'workflow_dispatch' && target === RELEASE_GATE_BRANCH) {
+    return `manual run on ${target}: the release path always runs everything from scratch`;
+  }
   if (manual && fullTests) return 'manual run: full suite (every package and E2E)';
   if (manual) return 'manual run: touched packages with caches restored unless forced';
   if (producerPush && tier === 'fast') {
@@ -130,7 +133,8 @@ function explainTier({ event, target, manual, fullTests, producerPush, mergedHea
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
  *   fast-tier patterns, and producer pushes that merge any other PR, which was already verified
  *   as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
- * - Manual run (fast tier): affected packages only, no E2E, caches restored by default (on the
+ * - A manual run on the release gate branch is strict, whatever its checkboxes say.
+ * - Manual run (fast tier, any other branch): affected packages only, no E2E, caches restored by default (on the
  *   producer branch, what its latest commit touched). forceBuild (build caches, and Turbo
  *   --force) or forceInstall (pnpm store) bypass caches; fullTests runs the full suite: every
  *   code job on all packages, plus E2E. Only a manual run honours these options.
@@ -145,7 +149,9 @@ export function decidePlan({
   fullTests = false,
   mergedHead,
 }) {
-  const manual = event === 'workflow_dispatch';
+  // A manual run on the release gate branch is not a manual run: main is only ever verified
+  // from scratch with the full suite, whatever the checkboxes say.
+  const manual = event === 'workflow_dispatch' && target !== RELEASE_GATE_BRANCH;
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
   // main and hotfix/* only reach develop carrying hotfixes, which get the full suite.
   const mergedFeature =
@@ -212,6 +218,15 @@ export function decideVerdict({ tier, results }) {
   if (tier === 'strict' && results.e2e !== 'success') {
     return { ok: false, reason: `Strict CI requires e2e success (${results.e2e || 'no result'}).` };
   }
+  // The strict tier runs every job, so a skipped one means a broken condition, not an
+  // irrelevant change: it fails rather than letting unverified code through.
+  if (tier === 'strict') {
+    const notRun = Object.entries(results).filter(([, result]) => result !== 'success');
+    if (notRun.length > 0) {
+      const list = notRun.map(([job, result]) => `${job} (${result || 'no result'})`).join(', ');
+      return { ok: false, reason: `Strict CI requires every job to succeed: ${list}.` };
+    }
+  }
   const failedJobs = Object.entries(results).filter(
     ([, result]) => result !== 'success' && result !== 'skipped',
   );
@@ -256,6 +271,10 @@ const CONVENTIONAL_TITLE_REGEXP = new RegExp(
   `^(${CONVENTIONAL_COMMIT_TYPES.join('|')})(\\([^)]+\\))?!?: \\S.*$`,
 );
 const OVERRIDE_REGEXP = /BEGIN_COMMIT_OVERRIDE\s*([\s\S]*?)\s*END_COMMIT_OVERRIDE/;
+
+// GitHub skips push and pull_request runs whose commit message holds one of these. Main's merge
+// commits carry the PR title, so such a title would skip the push run on main.
+const SKIP_CI_REGEXP = /\[(skip ci|ci skip|no ci|skip actions|actions skip)\]|skip-checks:\s*true/i;
 
 const sentenceCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -338,6 +357,12 @@ export function prOpenUrl({ repoUrl, head, title }) {
  * body) or a plain Conventional Commit, which tooling PRs (release, sync, Dependabot) use.
  */
 export function decidePrTitle({ title, body = '', base }) {
+  if (SKIP_CI_REGEXP.test(title ?? '')) {
+    return {
+      ok: false,
+      reason: `"${title}" holds a skip-CI directive, which would skip CI on the merge commit; remove it.`,
+    };
+  }
   const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
   // A PR into the release gate lands as a merge commit that keeps every squash commit it
   // brings, so release-please never reads its title and no override is needed.
