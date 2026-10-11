@@ -59,9 +59,11 @@ jobs:
           # A manual run diffs against develop's merge-base, so it needs the history.
           # '0' is quoted: a bare 0 is falsy, so `&& 0 || 2` would always pick 2.
           fetch-depth: ${{ github.event_name == 'workflow_dispatch' && '0' || '2' }}
+          # workflows: the policy tests check that every job feeds the Gate.
           sparse-checkout: |
             .github/scripts
             .github/config
+            .github/workflows
       # A sparse checkout keeps the root files, so .nvmrc is there.
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
