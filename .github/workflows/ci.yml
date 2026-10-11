@@ -1,32 +1,61 @@
 name: CI
 
-# Guards feature → develop PRs (the fast tier).
-# Affected packages only, caches restored, integration tests only on relevant
-# changes, no E2E. Jobs live in ci-jobs.yml.
-# Required check: `Feature / CI OK`.
-# Run workflow (manual): like a PR into develop (touched packages only, caches
-# restored) on the chosen branch; the checkboxes opt out of the cache and/or
-# run the full suite (every package, plus E2E).
-# Pushes to develop and everything into main run CI · Release (ci-release.yml).
-# No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
+# The one CI workflow. Its jobs live in ci-jobs.yml and the policy in
+# .github/scripts picks the tier per event:
+#
+#   PR into develop             fast    affected packages, caches restored
+#   PR into main                strict  everything from scratch, E2E required
+#   push to develop, merged PR  fast    and saves the caches feature PRs restore
+#   push to develop, direct     strict  (also merges from main or hotfix/*)
+#   push to main                strict
+#   Run workflow (manual)       fast    touched packages on the chosen branch;
+#                                       the checkboxes skip caches and/or run
+#                                       the full suite (every package plus E2E)
+#
+# Required check (develop and main rulesets): `CI / Gate`.
 on:
   pull_request:
-    branches: [develop]
-    # A base-branch edit must start CI for the newly selected tier.
+    branches: [develop, main]
+    # `edited` re-plans after a base-branch change; other edits are skipped below.
     types: [opened, synchronize, reopened, edited]
   push:
-    branches: [develop]
+    branches: [develop, main]
+  workflow_dispatch:
+    inputs:
+      no_cache:
+        description: Skip every cache (fresh install and build)
+        type: boolean
+        default: false
+      full_tests:
+        description: Run the full suite, E2E included (default runs touched packages only)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
+# A title or body edit (a bot rewriting the PR description, say) gets its own
+# group, so it never cancels the run that is checking the code.
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  group: >-
+    ci-${{ github.event.pull_request.number || github.ref }}${{
+    github.event.action == 'edited' && !github.event.changes.base && '-edit' || '' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  fast:
-    name: Fast
+  ci:
+    name: CI
+    if: github.event.action != 'edited' || github.event.changes.base
+    # A called workflow can only narrow its caller's token, and GitHub checks
+    # the highest permission any job asks for when it loads the workflow:
+    # `Publish evidence` needs contents: write and the plan's merged-PR lookup
+    # needs pull-requests: read. Every other job narrows to contents: read.
+    permissions:
+      contents: write
+      pull-requests: read
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: fast
+      no_cache: ${{ inputs.no_cache || false }}
+      full_tests: ${{ inputs.full_tests || false }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

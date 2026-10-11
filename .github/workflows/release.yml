@@ -3,7 +3,7 @@ name: Release
 # Runs on every push to main. release-please either:
 #   1. Opens/updates a Release PR accumulating changelog + version bump from
 #      Conventional Commits on main since the last release, then auto-merges it
-#      once Strict / CI OK passes, or
+#      once `CI / Gate` passes, or
 #   2. When the Release PR merges, creates the vX.Y.Z tag and GitHub Release.
 # After a release is published, a sync PR (main → develop) is opened
 # automatically so develop gets the version bump and changelog.

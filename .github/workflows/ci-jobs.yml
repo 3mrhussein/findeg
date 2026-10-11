@@ -1,38 +1,19 @@
 name: CI jobs
 
-# Every CI job, defined once, behind one gate job: `CI OK`. Two workflows call
-# it and hold only their triggers: CI · Feature (develop, caller job `Feature`,
-# gate `Feature / CI OK`) and CI · Release (main, caller job `Strict`, gate
-# `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
-# comes from .github/scripts; this file only wires its outputs to jobs.
+# Every CI job, called by ci.yml. The plan job asks .github/scripts for the
+# tier and which jobs run; the others only carry out that plan, and the Gate
+# job turns their results into the one required check, `CI / Gate`.
 #
-# - strict tier (PRs into / pushes to main, and develop pushes that bring a
-#   hotfix: a direct push, or a merge from main or hotfix/*): every job, Turbo
-#   forced, E2E required, nothing restored.
-# - fast tier (PRs into develop, and develop pushes that merge one): affected
-#   packages only, caches restored. Every develop push saves the caches.
-# - manual run (fast tier, `CI · Feature` → Run workflow): touched packages
-#   only (against develop; on develop, its latest commit), caches restored
-#   unless the checkboxes say otherwise; `full_tests` runs the full suite
-#   (every package, plus E2E).
-#
-# Every caller must grant at least the highest permission a job here asks for
-# (`Publish evidence` needs `contents: write`), even a caller that never runs it:
-# GitHub rejects the workflow file otherwise.
+#   strict  every job from scratch: Turbo --force, nothing restored, E2E required
+#   fast    affected packages only, caches restored; develop pushes save the caches
+#   manual  fast, unless the checkboxes skip caches or ask for the full suite
 #
 # The `github` context here is the caller's (its event, refs and SHAs).
-# Concurrency is set by the callers only: here `github.workflow` would name
-# the caller too, and a matching group would cancel or deadlock the caller.
+# Concurrency is set by the caller only: here `github.workflow` would name the
+# caller too, and a matching group would cancel or deadlock it.
 on:
   workflow_call:
     inputs:
-      tier:
-        description: >-
-          The tier the calling workflow runs: `fast`, `strict`, or `any` when its
-          events may run either. Plan fails when the policy picks a different tier,
-          so a mis-set trigger can't run the wrong tier.
-        type: string
-        required: true
       no_cache:
         description: 'Manual runs only, ignore every cache (pnpm store, Turbo, Next.js) and force Turbo.'
         type: boolean
@@ -134,14 +115,13 @@ jobs:
           EVENT: ${{ github.event_name }}
           TARGET: ${{ github.base_ref || github.ref_name }}
           HEAD: ${{ github.head_ref }}
-          EXPECTED_TIER: ${{ inputs.tier }}
           CHANGED_FILES: ${{ steps.changes.outputs.file }}
           NO_CACHE: ${{ inputs.no_cache }}
           FULL_TESTS: ${{ inputs.full_tests }}
           MERGED_HEAD: ${{ steps.merged.outputs.head }}
         run: >-
           node .github/scripts/ci-cli.mjs plan --event "$EVENT" --target "$TARGET"
-          --head "$HEAD" --expect-tier "$EXPECTED_TIER" --changed-files "$CHANGED_FILES"
+          --head "$HEAD" --changed-files "$CHANGED_FILES"
           --no-cache "$NO_CACHE" --full-tests "$FULL_TESTS" --merged-head "$MERGED_HEAD"
 
   # The code checks share one shape: a full-history checkout on the fast tier
@@ -442,8 +422,8 @@ jobs:
 
   # The only check a ruleset needs to require. It always runs, so skipped jobs
   # can't leave it pending; the policy decides whether the results pass.
-  ci-ok:
-    name: CI OK
+  gate:
+    name: Gate
     needs: [plan, checks, build, integration, e2e]
     if: always()
     runs-on: ubuntu-latest
@@ -467,13 +447,13 @@ jobs:
   # repo that hasn't set it up) the job skips quietly instead of failing.
   notify:
     name: Notify
-    needs: [ci-ok]
+    needs: [gate]
     if: always() && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      GATE_RESULT: ${{ needs.ci-ok.result }}
+      GATE_RESULT: ${{ needs.gate.result }}
     # Every step is skipped without the webhook secret.
     steps:
       - if: env.SLACK_WEBHOOK_URL != ''
