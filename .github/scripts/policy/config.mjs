@@ -1,5 +1,5 @@
-// CI pipeline configuration: central definition of branch conventions,
-// file paths, and cache rules for all GitHub Actions workflows and local git hooks.
+// CI configuration: the data every policy reads (branch names, path groups, tier patterns).
+// Change behaviour here first; the policy modules only interpret these tables.
 
 export const CONVENTIONAL_COMMIT_TYPES = [
   'feat',

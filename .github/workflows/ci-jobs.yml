@@ -55,12 +55,15 @@ jobs:
       - name: Check out the CI scripts
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           # A manual run diffs against develop's merge-base, so it needs the history.
           # '0' is quoted: a bare 0 is falsy, so `&& 0 || 2` would always pick 2.
           fetch-depth: ${{ github.event_name == 'workflow_dispatch' && '0' || '2' }}
+          # workflows: the policy tests check that every job feeds the Gate.
           sparse-checkout: |
             .github/scripts
             .github/config
+            .github/workflows
       # A sparse checkout keeps the root files, so .nvmrc is there.
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -85,6 +88,8 @@ jobs:
             else base=$(git merge-base origin/develop HEAD || true); fi
             [ -n "$base" ] && echo "base_sha=$base" >> "$GITHUB_OUTPUT"
           elif [ "$EVENT" = push ]; then
+            # The checkout keeps no credentials: this fetch works anonymously on a
+            # public repo, and a failed fetch runs every job, the safe side.
             base="$BEFORE"
             git fetch --quiet --depth=1 origin "$BEFORE" || base=
           fi
@@ -106,10 +111,10 @@ jobs:
             --jq '[.[] | select(.merged_at != null and .base.ref == "develop")][0].head.ref // ""' || true)
           echo "head=$head" >> "$GITHUB_OUTPUT"
 
-      # The policy's behaviour is pinned by its tests; a regression fails here
-      # before the plan it would corrupt is used.
+      # The policy's behaviour is pinned by its tests (next to each module under
+      # .github/scripts); a regression fails here before the plan it would corrupt is used.
       - name: Test the CI policy
-        run: node --test .github/scripts/*.test.mjs
+        run: node --test '.github/scripts/**/*.test.mjs'
 
       - name: Decide the CI plan
         id: plan
@@ -153,6 +158,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - name: Set up pnpm, Node and caches
         uses: ./.github/actions/setup
@@ -171,6 +177,29 @@ jobs:
         uses: ./.github/actions/save-cache
         with:
           pnpm-store: ${{ matrix.task == 'lint' }}
+
+  # The architecture standard's own tests (scripts/architecture): import
+  # boundaries, client-bundle leaks and the lint ratchet, so a rule can't be
+  # loosened or go quiet with every other check still green. Plain Node tests,
+  # not a Turbo task, so there is no Turbo cache to restore or save.
+  architecture:
+    name: Architecture tests
+    needs: plan
+    if: needs.plan.outputs.run_checks == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
+        with:
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: 'false'
+      - name: Run the architecture tests
+        run: pnpm test:architecture
 
   # The Next.js builds prerender from the database, so Build needs a migrated,
   # seeded Postgres. Turbo's strict env mode strips job env from tasks, so the
@@ -204,6 +233,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - name: Set up pnpm, Node and caches
         uses: ./.github/actions/setup
@@ -261,6 +291,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Set up pnpm, Node and caches
         uses: ./.github/actions/setup
         with:
@@ -299,6 +331,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Set up pnpm, Node and caches
         uses: ./.github/actions/setup
         with:
@@ -392,6 +426,7 @@ jobs:
       - name: Check out the CI scripts
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout: .github/scripts
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -420,7 +455,7 @@ jobs:
   # can't leave it pending; the policy decides whether the results pass.
   gate:
     name: Gate
-    needs: [plan, checks, build, integration, e2e]
+    needs: [plan, checks, architecture, build, integration, e2e]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -428,6 +463,7 @@ jobs:
       - name: Check out the CI scripts
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout: .github/scripts
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -458,6 +494,7 @@ jobs:
         if: env.SLACK_WEBHOOK_URL != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout: |
             .github/scripts
             .github/config
