@@ -351,6 +351,15 @@ describe('decidePrTitle', () => {
   it('rejects a pipe title without a matching override', () => {
     assert.equal(decidePrTitle({ title: 'Feature | Add dispatch button' }).ok, false);
     assert.equal(decidePrTitle({ title: 'Fix | Add dispatch button', body }).ok, false);
+    assert.equal(
+      decidePrTitle({ title: 'Feature | Add dispatch button', base: 'develop' }).ok,
+      false,
+    );
+  });
+
+  it('needs no override on a PR into main, which merges with a merge commit', () => {
+    assert.equal(decidePrTitle({ title: 'CI | Fix pipeline issues', base: 'main' }).ok, true);
+    assert.equal(decidePrTitle({ title: 'not a valid title', base: 'main' }).ok, false);
   });
 
   it('rejects an override whose subject no longer matches the title', () => {

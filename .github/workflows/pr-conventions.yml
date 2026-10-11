@@ -99,7 +99,8 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" > "$RUNNER_TEMP/pr.json"
           jq -r '.body // ""' "$RUNNER_TEMP/pr.json" > "$RUNNER_TEMP/body.md"
           node .github/scripts/ci-cli.mjs pr-title check \
-            --title "$(jq -r .title "$RUNNER_TEMP/pr.json")" --body-file "$RUNNER_TEMP/body.md"
+            --title "$(jq -r .title "$RUNNER_TEMP/pr.json")" --body-file "$RUNNER_TEMP/body.md" \
+            --base "$(jq -r .base.ref "$RUNNER_TEMP/pr.json")"
 
   # Same rules as the local pre-push hook: both call .github/scripts.
   branch-policy:

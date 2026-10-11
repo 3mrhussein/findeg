@@ -337,8 +337,16 @@ export function prOpenUrl({ repoUrl, head, title }) {
  * Validates a PR title: the pipe format (which must carry a matching commit override in the
  * body) or a plain Conventional Commit, which tooling PRs (release, sync, Dependabot) use.
  */
-export function decidePrTitle({ title, body = '' }) {
+export function decidePrTitle({ title, body = '', base }) {
   const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
+  // A PR into the release gate lands as a merge commit that keeps every squash commit it
+  // brings, so release-please never reads its title and no override is needed.
+  if (pipe && base === RELEASE_GATE_BRANCH) {
+    return {
+      ok: true,
+      reason: `"${title}" is valid (PRs into ${RELEASE_GATE_BRANCH} merge with a merge commit).`,
+    };
+  }
   if (pipe) {
     const override = OVERRIDE_REGEXP.exec(body)?.[1].split(/\r?\n/)[0].trim();
     const expected = COMMIT_TYPE_BY_LABEL[pipe[1]];
