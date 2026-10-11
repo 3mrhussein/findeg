@@ -5,7 +5,7 @@ Implementation: [#322](https://github.com/3mrhussein/findeg/issues/322). Live fi
 
 ## Normal flow
 
-1. Merge `develop` into `main` with a merge commit after `CI / Gate`, `PR title` and `Branch policy` pass. The strict tier is shared by every PR into `main`, including Release PRs, and always requires E2E success.
+1. Open the `develop → main` PR with **Actions → Promote to main → Run workflow** (from `develop`). It refuses unless `CI / Gate` passed on `develop`'s tip, and titles the PR `Chore | Promote develop to main` (ADR-0015, promote-button amendment). Merge `develop` into `main` with a merge commit after `CI / Gate`, `PR title` and `Branch policy` pass. The strict tier is shared by every PR into `main`, including Release PRs, and always requires E2E success.
 2. `Release` runs on the push to `main`. It mints a repository-scoped installation token from `RELEASE_APP_ID` and `RELEASE_APP_PRIVATE_KEY`, then runs release-please in manifest mode against `main` (the repository default is `develop`). The token is revoked at job completion. It must have contents and pull requests write; PR labels use pull requests permission.
 3. release-please creates or updates its Release PR. The workflow enables auto-merge with a **merge commit**. Required checks and conversations still gate the merge; the bot has no ruleset bypass. `always-update` refreshes the Release PR even for hidden commit types, keeping it current with the strict up-to-date rule.
 4. The resulting push to `main` publishes the `vX.Y.Z` tag and GitHub Release. Only the release App can create `v*` tags; updates and deletions remain blocked.

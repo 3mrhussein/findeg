@@ -106,6 +106,9 @@ export function decideReleaseSource({ head, base }) {
 function explainTier({ event, target, manual, fullTests, producerPush, mergedHead, tier }) {
   const subject =
     event === 'pull_request' ? `pull request into ${target}` : `${event} to ${target}`;
+  if (event === 'workflow_dispatch' && target === RELEASE_GATE_BRANCH) {
+    return `manual run on ${target}: the release path always runs everything from scratch`;
+  }
   if (manual && fullTests) return 'manual run: full suite (every package and E2E)';
   if (manual) return 'manual run: touched packages with caches restored unless forced';
   if (producerPush && tier === 'fast') {
@@ -130,7 +133,8 @@ function explainTier({ event, target, manual, fullTests, producerPush, mergedHea
  * - Fast tier (affected packages only, caches restored): PRs into branches matching the
  *   fast-tier patterns, and producer pushes that merge any other PR, which was already verified
  *   as that PR. Every producer push saves caches, so fast-tier runs restore warm ones.
- * - Manual run (fast tier): affected packages only, no E2E, caches restored by default (on the
+ * - A manual run on the release gate branch is strict, whatever its checkboxes say.
+ * - Manual run (fast tier, any other branch): affected packages only, no E2E, caches restored by default (on the
  *   producer branch, what its latest commit touched). forceBuild (build caches, and Turbo
  *   --force) or forceInstall (pnpm store) bypass caches; fullTests runs the full suite: every
  *   code job on all packages, plus E2E. Only a manual run honours these options.
@@ -145,7 +149,9 @@ export function decidePlan({
   fullTests = false,
   mergedHead,
 }) {
-  const manual = event === 'workflow_dispatch';
+  // A manual run on the release gate branch is not a manual run: main is only ever verified
+  // from scratch with the full suite, whatever the checkboxes say.
+  const manual = event === 'workflow_dispatch' && target !== RELEASE_GATE_BRANCH;
   const producerPush = event === 'push' && target === CACHE_PRODUCER_BRANCH;
   // main and hotfix/* only reach develop carrying hotfixes, which get the full suite.
   const mergedFeature =
@@ -212,6 +218,15 @@ export function decideVerdict({ tier, results }) {
   if (tier === 'strict' && results.e2e !== 'success') {
     return { ok: false, reason: `Strict CI requires e2e success (${results.e2e || 'no result'}).` };
   }
+  // The strict tier runs every job, so a skipped one means a broken condition, not an
+  // irrelevant change: it fails rather than letting unverified code through.
+  if (tier === 'strict') {
+    const notRun = Object.entries(results).filter(([, result]) => result !== 'success');
+    if (notRun.length > 0) {
+      const list = notRun.map(([job, result]) => `${job} (${result || 'no result'})`).join(', ');
+      return { ok: false, reason: `Strict CI requires every job to succeed: ${list}.` };
+    }
+  }
   const failedJobs = Object.entries(results).filter(
     ([, result]) => result !== 'success' && result !== 'skipped',
   );
@@ -256,6 +271,10 @@ const CONVENTIONAL_TITLE_REGEXP = new RegExp(
   `^(${CONVENTIONAL_COMMIT_TYPES.join('|')})(\\([^)]+\\))?!?: \\S.*$`,
 );
 const OVERRIDE_REGEXP = /BEGIN_COMMIT_OVERRIDE\s*([\s\S]*?)\s*END_COMMIT_OVERRIDE/;
+
+// GitHub skips push and pull_request runs whose commit message holds one of these. Main's merge
+// commits carry the PR title, so such a title would skip the push run on main.
+const SKIP_CI_REGEXP = /\[(skip ci|ci skip|no ci|skip actions|actions skip)\]|skip-checks:\s*true/i;
 
 const sentenceCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -338,6 +357,12 @@ export function prOpenUrl({ repoUrl, head, title }) {
  * body) or a plain Conventional Commit, which tooling PRs (release, sync, Dependabot) use.
  */
 export function decidePrTitle({ title, body = '', base }) {
+  if (SKIP_CI_REGEXP.test(title ?? '')) {
+    return {
+      ok: false,
+      reason: `"${title}" holds a skip-CI directive, which would skip CI on the merge commit; remove it.`,
+    };
+  }
   const pipe = PIPE_TITLE_REGEXP.exec(title ?? '');
   // A PR into the release gate lands as a merge commit that keeps every squash commit it
   // brings, so release-please never reads its title and no override is needed.
@@ -368,4 +393,92 @@ export function decidePrTitle({ title, body = '', base }) {
     ok: false,
     reason: `"${title}" must look like "Feature | #122 | Add dispatch button" (the issue is optional; labels: ${Object.values(PR_TITLE_LABELS).join(', ')}) or a Conventional Commit.`,
   };
+}
+
+// ── Promotion (develop → main) ───────────────────────────────────────────────
+// The `Promote to main` workflow is a button that opens the release PR. GitHub can't grey out a
+// Run workflow button, so the run itself refuses unless develop's tip has a green `CI / Gate`
+// from its push run. The PR it opens carries a fixed title in the pipe format; PRs into main
+// merge with a merge commit, so the title needs no commit override (see decidePrTitle).
+
+export const PROMOTION_TITLE = `${PR_TITLE_LABELS.chore} | Promote ${CACHE_PRODUCER_BRANCH} to ${RELEASE_GATE_BRANCH}`;
+const PROMOTION_LIST_LIMIT = 50;
+
+/**
+ * Whether develop may be promoted now. `headSha` is the commit the run checked and `developTip`
+ * where develop points now; they must match. `ciRun` is the newest `CI` run for the push of
+ * `headSha` to develop: `{ status, gate, url }`, where `gate` is the `CI / Gate` job's conclusion.
+ * `aheadBy` is how many commits develop has that main does not.
+ */
+export function decidePromotion({ ref, headSha, developTip, ciRun, aheadBy }) {
+  const sha = (headSha ?? '').slice(0, 8) || 'its tip';
+  if (ref !== CACHE_PRODUCER_BRANCH) {
+    return {
+      ok: false,
+      reason: `Run it from ${CACHE_PRODUCER_BRANCH} (Use workflow from: ${CACHE_PRODUCER_BRANCH}), not "${ref}".`,
+    };
+  }
+  if (!ciRun) {
+    return {
+      ok: false,
+      reason: `${CACHE_PRODUCER_BRANCH} at ${sha} has no CI run from its push yet; wait for CI to start and finish.`,
+    };
+  }
+  if (ciRun.status !== 'completed') {
+    return {
+      ok: false,
+      reason: `CI on ${CACHE_PRODUCER_BRANCH} at ${sha} is still ${ciRun.status}; run this again once it passes.`,
+    };
+  }
+  if (ciRun.gate !== 'success') {
+    return {
+      ok: false,
+      reason: `CI / Gate on ${CACHE_PRODUCER_BRANCH} at ${sha} is ${ciRun.gate || 'missing'}; fix ${CACHE_PRODUCER_BRANCH} before promoting it.`,
+    };
+  }
+  // The PR's head is the develop branch, not a commit: if develop moved after the run started,
+  // the PR would carry commits whose CI was never checked here.
+  if (developTip !== headSha) {
+    return {
+      ok: false,
+      reason: `${CACHE_PRODUCER_BRANCH} moved from ${sha} to ${(developTip ?? '').slice(0, 8) || 'an unknown commit'} after this run started; wait for its CI and run this again.`,
+    };
+  }
+  if (!(Number(aheadBy) > 0)) {
+    return {
+      ok: true,
+      promote: false,
+      reason: `${RELEASE_GATE_BRANCH} already has every commit on ${CACHE_PRODUCER_BRANCH}; nothing to promote.`,
+    };
+  }
+  return {
+    ok: true,
+    promote: true,
+    reason: `CI / Gate passed on ${CACHE_PRODUCER_BRANCH} at ${sha}, which is ${aheadBy} commit(s) ahead of ${RELEASE_GATE_BRANCH}.`,
+    title: PROMOTION_TITLE,
+  };
+}
+
+/**
+ * The promotion PR's body: how to merge it, the CI run it was opened on, and the changes it
+ * ships. `commits` are `{ subject, parents }` for the commits develop has that main does not;
+ * merge commits (the post-release syncs, merged branches) are left out, so the list reads as
+ * the squashed feature PRs.
+ */
+export function buildPromotionBody({ headSha, ciRunUrl, commits = [] }) {
+  const changes = commits.filter((commit) => (commit.parents ?? 1) <= 1).map((c) => c.subject);
+  const shown = changes.slice(0, PROMOTION_LIST_LIMIT).map((subject) => `- ${subject}`);
+  if (changes.length > shown.length) shown.push(`- …and ${changes.length - shown.length} more`);
+  return [
+    `Promotes \`${CACHE_PRODUCER_BRANCH}\` to \`${RELEASE_GATE_BRANCH}\` (ADR-0015).`,
+    '',
+    `**Merge with a merge commit, never squash**: release-please reads the commits this brings, and a squash would make the branches diverge.`,
+    '',
+    `Opened after \`CI / Gate\` passed on \`${CACHE_PRODUCER_BRANCH}\` at \`${(headSha ?? '').slice(0, 8)}\`${ciRunUrl ? ` ([run](${ciRunUrl}))` : ''}. This PR still runs the strict tier, E2E included.`,
+    '',
+    '## Changes',
+    '',
+    ...(shown.length > 0 ? shown : ['- (no squash commits found)']),
+    '',
+  ].join('\n');
 }

@@ -3,10 +3,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  PROMOTION_TITLE,
+  buildPromotionBody,
   decideBranchName,
   decidePlan,
   decidePrTitle,
   decidePrTitleSuggestion,
+  decidePromotion,
   decideVerdict,
   issueNumberFromBranch,
   prOpenUrl,
@@ -405,5 +408,142 @@ describe('prOpenUrl', () => {
       title: 'T',
     });
     assert.match(url, /\/compare\/main\.\.\.hotfix\/x\?/);
+  });
+});
+
+describe('decidePromotion', () => {
+  const green = { status: 'completed', gate: 'success', url: 'https://example.test/run/1' };
+  const ready = {
+    ref: 'develop',
+    headSha: 'abcdef1234567890',
+    developTip: 'abcdef1234567890',
+    ciRun: green,
+    aheadBy: 3,
+  };
+
+  it('promotes develop when its push CI passed the gate and it is ahead of main', () => {
+    const decision = decidePromotion(ready);
+    assert.equal(decision.ok, true);
+    assert.equal(decision.promote, true);
+    assert.equal(decision.title, 'Chore | Promote develop to main');
+  });
+
+  it('refuses to run from any other branch', () => {
+    const decision = decidePromotion({ ...ready, ref: 'feat/x' });
+    assert.equal(decision.ok, false);
+    assert.match(decision.reason, /from develop/);
+  });
+
+  it('refuses while develop has no CI run, or it is still going', () => {
+    assert.equal(decidePromotion({ ...ready, ciRun: undefined }).ok, false);
+    const running = decidePromotion({ ...ready, ciRun: { status: 'in_progress' } });
+    assert.equal(running.ok, false);
+    assert.match(running.reason, /still in_progress/);
+  });
+
+  it('refuses when the gate failed, was cancelled or did not report', () => {
+    for (const gate of ['failure', 'cancelled', '', undefined]) {
+      const decision = decidePromotion({ ...ready, ciRun: { status: 'completed', gate } });
+      assert.equal(decision.ok, false, `gate ${gate}`);
+    }
+  });
+
+  it('refuses when develop moved past the commit whose CI was checked', () => {
+    const decision = decidePromotion({ ...ready, developTip: '9999999999999999' });
+    assert.equal(decision.ok, false);
+    assert.match(decision.reason, /moved from abcdef12 to 99999999/);
+    assert.equal(decidePromotion({ ...ready, developTip: undefined }).ok, false);
+  });
+
+  it('opens nothing when main already has every develop commit', () => {
+    const decision = decidePromotion({ ...ready, aheadBy: 0 });
+    assert.equal(decision.ok, true);
+    assert.equal(decision.promote, false);
+  });
+
+  it('gives a title the PR title check accepts on a PR into main', () => {
+    assert.equal(decidePrTitle({ title: PROMOTION_TITLE, body: '', base: 'main' }).ok, true);
+  });
+});
+
+describe('buildPromotionBody', () => {
+  it('lists the squash commits and leaves merge commits out', () => {
+    const body = buildPromotionBody({
+      headSha: 'abcdef1234567890',
+      ciRunUrl: 'https://example.test/run/1',
+      commits: [
+        { subject: 'Feature | #12 | Add x', parents: 1 },
+        { subject: 'Merge pull request #9 from acme/main', parents: 2 },
+        { subject: 'fix: y', parents: 1 },
+      ],
+    });
+    assert.match(body, /- Feature \| #12 \| Add x\n- fix: y\n/);
+    assert.doesNotMatch(body, /Merge pull request/);
+    assert.match(body, /`abcdef12` \(\[run\]\(https:\/\/example\.test\/run\/1\)\)/);
+    assert.match(body, /merge commit, never squash/);
+  });
+
+  it('caps a long list', () => {
+    const commits = Array.from({ length: 60 }, (_, i) => ({ subject: `fix: ${i}`, parents: 1 }));
+    assert.match(buildPromotionBody({ headSha: 'a', commits }), /…and 10 more/);
+  });
+});
+
+// The forever rule: nothing that reaches or runs on main skips a test or restores a cache.
+describe('main never skips a test or uses a cache', () => {
+  const docsOnly = ['docs/readme.md'];
+  const everyWayIntoMain = [
+    { event: 'pull_request', target: 'main', head: 'develop' },
+    { event: 'pull_request', target: 'main', head: 'hotfix/fix-x' },
+    { event: 'pull_request', target: 'main', head: 'release-please--branches--main' },
+    { event: 'pull_request', target: 'main', head: 'feat/sneaky' },
+    { event: 'push', target: 'main' },
+    { event: 'workflow_dispatch', target: 'main' },
+    { event: 'workflow_dispatch', target: 'main', forceBuild: false, fullTests: false },
+  ];
+
+  for (const input of everyWayIntoMain) {
+    for (const changedPaths of [docsOnly, codeChange, undefined]) {
+      it(`${input.event} into main from ${input.head ?? 'main'} (${changedPaths?.[0] ?? 'diff unknown'})`, () => {
+        const plan = decidePlan({ ...input, changedPaths });
+        assert.equal(plan.tier, 'strict');
+        assert.equal(plan.turboFlags, '--force');
+        assert.equal(plan.restoreDeps, false);
+        assert.equal(plan.restoreBuild, false);
+        assert.equal(plan.saveCache, false);
+        assert.equal(plan.runChecks, true);
+        assert.equal(plan.runIntegration, true);
+        assert.equal(plan.runE2e, true);
+      });
+    }
+  }
+
+  it('fails a strict run when any job was skipped, not only E2E', () => {
+    const all = {
+      plan: 'success',
+      checks: 'success',
+      build: 'success',
+      integration: 'success',
+      e2e: 'success',
+    };
+    for (const job of ['checks', 'build', 'integration', 'e2e']) {
+      const decision = decideVerdict({ tier: 'strict', results: { ...all, [job]: 'skipped' } });
+      assert.equal(decision.ok, false, `${job} skipped`);
+    }
+    assert.equal(decideVerdict({ tier: 'strict', results: all }).ok, true);
+  });
+
+  it('rejects PR titles that would make GitHub skip the push run on main', () => {
+    for (const title of [
+      'chore: promote develop to main [skip ci]',
+      'Chore | Promote [CI SKIP]',
+      'fix: x [no ci]',
+      'fix: x [skip actions]',
+      'fix: x [actions skip]',
+      'fix: x skip-checks: true',
+      'fix: x skip-checks:true',
+    ]) {
+      assert.equal(decidePrTitle({ title, base: 'main' }).ok, false, title);
+    }
   });
 });

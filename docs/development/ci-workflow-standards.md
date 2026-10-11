@@ -154,6 +154,7 @@ Other channels (Teams `MessageCard`, email) are added as further `<name>.<channe
 | Policy, CLI, config, tests  | `.github/scripts/ci-*.mjs`, `ci-policy.test.mjs`             | Done                                 |
 | Dispatch checkboxes         | `no_cache`, `full_tests` on `CI`                             | Done                                 |
 | PR hygiene                  | `pr-conventions.yml`, `PR conventions`                       | Done                                 |
+| Release PR button           | `promote.yml`, `Promote to main` (needs develop's green Gate) | Done                                 |
 | Loop guard on bot commits   | none                                                         | Open: release-please pushes          |
 | Cache cleanup               | none                                                         | Deferred: PRs never save caches      |
 | Forced-run cache delete     | none                                                         | Open                                 |
