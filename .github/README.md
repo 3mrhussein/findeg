@@ -52,7 +52,7 @@ event; the YAML only carries it out.
 | Manual run on any branch but `main`                     | fast       | Checkboxes: skip caches, or run the full suite with E2E       |
 | Manual run on `main`                                    | **strict** | Checkboxes ignored                                            |
 
-A strict `CI / Gate` fails unless **every** job succeeded, and a test pins that every test job feeds the Gate; a fast one accepts jobs skipped because
+A strict `CI / Gate` fails unless **every job in its `needs`** succeeded (the Slack card and evidence publishing only report, outside it), and a test pins that every test job feeds the Gate; a fast one accepts jobs skipped because
 the change didn't touch them (a docs-only PR skips the code checks).
 
 ## Required checks and rulesets

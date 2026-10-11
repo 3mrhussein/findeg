@@ -96,11 +96,16 @@ async function main(argv) {
       .map((line) => line.trim().split(/\s+/))
       .filter(([name, seconds]) => name && seconds)
       .map(([name, seconds]) => ({ name, committedMs: Number(seconds) * 1000 }));
-    // The flag wins; otherwise the retention configured in settings.json.
+    // The flag wins; otherwise the retention configured in settings.json. A value that is not a
+    // whole number of days fails loudly: NaN would keep every run, a negative one only the newest.
     const days = Number(
       values['retention-days'] ||
         loadReportConfig(values.config || DEFAULT_CONFIG_DIR).settings.evidence_retention_days,
     );
+    if (!Number.isInteger(days) || days < 0) {
+      console.error(`Retention must be a whole number of days, 0 or more (got "${days}").`);
+      return 1;
+    }
     for (const name of planPrune(folders, Date.now(), days)) console.log(name);
     return 0;
   }
