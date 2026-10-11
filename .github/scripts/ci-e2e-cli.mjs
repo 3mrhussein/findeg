@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// CLI entry point for the E2E failure report. All logic lives in ci-e2e-report.mjs and ci-report.mjs.
+// CLI entry point for the E2E failure report. All logic lives in report/e2e-report.mjs and report/report.mjs.
 //
 // Usage:
 //   node .github/scripts/ci-e2e-cli.mjs report --outcome <outcome> --output-file <file>
@@ -18,8 +18,13 @@ import {
   decideScreenshotMode,
   planPrune,
   readEvidenceDir,
-} from './ci-e2e-report.mjs';
-import { coreTokensFromEnv, loadReportConfig, renderTemplate, resolveTheme } from './ci-report.mjs';
+} from './report/e2e-report.mjs';
+import {
+  coreTokensFromEnv,
+  loadReportConfig,
+  renderTemplate,
+  resolveTheme,
+} from './report/report.mjs';
 
 const DEFAULT_CONFIG_DIR = fileURLToPath(new URL('../config', import.meta.url));
 

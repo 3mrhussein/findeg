@@ -106,10 +106,10 @@ jobs:
             --jq '[.[] | select(.merged_at != null and .base.ref == "develop")][0].head.ref // ""' || true)
           echo "head=$head" >> "$GITHUB_OUTPUT"
 
-      # The policy's behaviour is pinned by its tests; a regression fails here
-      # before the plan it would corrupt is used.
+      # The policy's behaviour is pinned by its tests (next to each module under
+      # .github/scripts); a regression fails here before the plan it would corrupt is used.
       - name: Test the CI policy
-        run: node --test .github/scripts/*.test.mjs
+        run: node --test '.github/scripts/**/*.test.mjs'
 
       - name: Decide the CI plan
         id: plan

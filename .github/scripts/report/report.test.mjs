@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { decidePlan } from './ci-policy.mjs';
+import { decidePlan } from '../ci-policy.mjs';
 import {
   coreTokensFromEnv,
   CORE_TOKENS,
@@ -18,10 +18,10 @@ import {
   renderTemplate,
   resolveTheme,
   tokensIn,
-} from './ci-report.mjs';
+} from './report.mjs';
 
-const configDir = fileURLToPath(new URL('../config', import.meta.url));
-const cliPath = fileURLToPath(new URL('./ci-report-cli.mjs', import.meta.url));
+const configDir = fileURLToPath(new URL('../../config', import.meta.url));
+const cliPath = fileURLToPath(new URL('../ci-report-cli.mjs', import.meta.url));
 const { themes, settings, templates } = loadReportConfig(configDir);
 
 const theme = { emoji: '✅', color: '2EA44F', label: 'Succeeded' };
