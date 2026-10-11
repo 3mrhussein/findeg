@@ -54,7 +54,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 - **Dependabot checks GitHub Actions and npm weekly, targeting `develop`.** `.github/dependabot.yml` covers Actions and the root pnpm workspace with its shared lockfile.
 - **npm patch and minor updates share one group; major updates arrive as individual PRs.** Production and development dependencies use the same `chore(deps)` prefix; Actions use `ci(deps)`. These Conventional Commit types pass `PR title` and stay out of the release changelog.
-- **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `Fast / CI OK` before considering the live acceptance check complete.
+- **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `CI / Gate` before considering the live acceptance check complete.
 
 ### Reporting
 
