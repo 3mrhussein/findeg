@@ -9,6 +9,7 @@
 //     can pass its inputs straight through)
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 //   node .github/scripts/ci-cli.mjs pr-title <issue-number|suggest|check> ...
+//   node .github/scripts/ci-cli.mjs promote --ref <branch> --sha <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]
 
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -22,10 +23,12 @@ import {
   resolveTheme,
 } from './ci-report.mjs';
 import {
+  buildPromotionBody,
   decideBranchName,
   decidePlan,
   decidePrTitle,
   decidePrTitleSuggestion,
+  decidePromotion,
   decideReleaseSource,
   decideVerdict,
   issueNumberFromBranch,
@@ -172,11 +175,51 @@ function executePrTitle(subcommand, values) {
   return 2;
 }
 
+function readJson(filePath, fallback) {
+  const text = filePath ? readFileSync(filePath, 'utf8').trim() : '';
+  return text ? JSON.parse(text) : fallback;
+}
+
+// Decides whether develop may be promoted to main and, when it may, writes the PR's title and
+// body to --out. `promote=true|false` goes to GITHUB_OUTPUT; a refusal exits 1 with the reason.
+//   --ci-run-file   {"status","gate","url"} of develop's newest push CI run; empty means none
+//   --commits-file  [{"subject","parents"}] of the commits develop has that main does not
+function executePromote(values) {
+  const ciRun = readJson(values['ci-run-file'], undefined);
+  const decision = decidePromotion({
+    ref: values.ref,
+    headSha: values.sha,
+    ciRun,
+    aheadBy: Number(values['ahead-by'] ?? 0),
+  });
+  reportOutcome('Promotion', decision);
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    appendFileSync(
+      process.env.GITHUB_STEP_SUMMARY,
+      `### ${decision.ok ? (decision.promote ? '✅' : 'ℹ️') : '❌'} Promote ${values.ref ?? ''}\n\n${decision.reason}\n`,
+    );
+  }
+  if (!decision.ok) return 1;
+  if (decision.promote) {
+    const body = buildPromotionBody({
+      headSha: values.sha,
+      ciRunUrl: ciRun?.url,
+      commits: readJson(values['commits-file'], []),
+    });
+    writeFileSync(values.out, JSON.stringify({ title: decision.title, body }));
+  }
+  if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(process.env.GITHUB_OUTPUT, `promote=${decision.promote}\n`);
+  }
+  return 0;
+}
+
 const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs branch-policy --head <branch> [--base <branch>]
   ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
-  ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--base <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]`;
+  ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--base <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]
+  ci-cli.mjs promote --ref <branch> --sha <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]`;
 
 function main(argv) {
   const { positionals, values } = parseArgs({
@@ -198,6 +241,11 @@ function main(argv) {
       out: { type: 'string' },
       'issue-title': { type: 'string' },
       'commit-subject': { type: 'string' },
+      ref: { type: 'string' },
+      sha: { type: 'string' },
+      'ahead-by': { type: 'string' },
+      'ci-run-file': { type: 'string' },
+      'commits-file': { type: 'string' },
     },
   });
 
@@ -218,6 +266,10 @@ function main(argv) {
   if (command === 'pr-title') {
     const code = executePrTitle(subcommand, values);
     if (code !== 2) return code;
+  }
+
+  if (command === 'promote' && values.ref && values.out) {
+    return executePromote(values);
   }
 
   console.error(CLI_USAGE_HELP);

@@ -1,0 +1,108 @@
+name: Promote to main
+
+# The release button: Actions → Promote to main → Run workflow (from develop).
+# Opens the develop → main PR, titled `Chore | Promote develop to main`, or
+# refreshes the one already open. Merging that PR is the one manual step of a
+# release (ADR-0015).
+#
+# GitHub can't grey out a Run workflow button, so the run refuses instead,
+# with the reason in its summary, unless develop's tip has a green
+# `CI / Gate` from its push run. Every rule lives in .github/scripts
+# (decidePromotion); this file only gathers the facts and opens the PR.
+#
+# The PR is opened with the release-bot App token: a PR opened with the
+# workflow's GITHUB_TOKEN triggers no workflows, so `CI / Gate`, `PR title`
+# and `Branch policy` would never report on it.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read # to read develop's CI run and its Gate job
+
+concurrency:
+  group: promote-to-main
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    name: Promote
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the CI scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: .github/scripts
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      # The newest CI run for the push of this exact commit to develop, and its
+      # Gate job's conclusion (the jobs API reports the latest attempt, so a
+      # re-run that went green counts). The Gate, not the whole run, decides:
+      # a failed Slack card must not block a release.
+      - name: Read develop's CI result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?branch=develop&event=push&head_sha=$SHA&per_page=1" \
+            --jq '.workflow_runs[0] // empty | {id, status, url: .html_url}')
+          if [ -z "$run" ]; then : > "$RUNNER_TEMP/ci-run.json"; exit 0; fi
+          gate=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$(jq -r .id <<< "$run")/jobs?per_page=100" \
+            --jq '[.jobs[] | select(.name == "CI / Gate")][0].conclusion // ""')
+          jq --arg gate "$gate" '. + {gate: $gate}' <<< "$run" > "$RUNNER_TEMP/ci-run.json"
+          cat "$RUNNER_TEMP/ci-run.json"
+
+      - name: List what develop would ship
+        id: compare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/compare/main...develop" \
+            --jq '{ahead_by, commits: [.commits[] | {subject: (.commit.message | split("\n")[0]), parents: (.parents | length)}]}' \
+            > "$RUNNER_TEMP/compare.json"
+          echo "ahead_by=$(jq -r .ahead_by "$RUNNER_TEMP/compare.json")" >> "$GITHUB_OUTPUT"
+          jq .commits "$RUNNER_TEMP/compare.json" > "$RUNNER_TEMP/commits.json"
+
+      - name: Decide whether develop can be promoted
+        id: decide
+        env:
+          SHA: ${{ github.sha }}
+          AHEAD_BY: ${{ steps.compare.outputs.ahead_by }}
+        run: >-
+          node .github/scripts/ci-cli.mjs promote --ref "$GITHUB_REF_NAME" --sha "$SHA"
+          --ahead-by "$AHEAD_BY" --ci-run-file "$RUNNER_TEMP/ci-run.json"
+          --commits-file "$RUNNER_TEMP/commits.json" --out "$RUNNER_TEMP/pr.json"
+
+      - name: Mint release-bot token
+        id: bot
+        if: steps.decide.outputs.promote == 'true'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      # No auto-merge: merging develop → main stays the owner's call.
+      - name: Open or update the develop to main PR
+        if: steps.decide.outputs.promote == 'true'
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          title=$(jq -r .title "$RUNNER_TEMP/pr.json")
+          jq -r .body "$RUNNER_TEMP/pr.json" > "$RUNNER_TEMP/body.md"
+          number=$(gh pr list --base main --head develop --state open --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            url=$(gh pr view "$number" --json url --jq .url)
+            verb=Updated
+          else
+            url=$(gh pr create --base main --head develop --title "$title" --body-file "$RUNNER_TEMP/body.md")
+            verb=Opened
+          fi
+          echo "$verb $url"
+          printf '\n%s [%s](%s)\n' "$verb" "$title" "$url" >> "$GITHUB_STEP_SUMMARY"
