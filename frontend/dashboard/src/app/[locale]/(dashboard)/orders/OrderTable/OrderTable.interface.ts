@@ -1,4 +1,4 @@
-import type { Order } from '@findeg/backend/features/order';
+import type { Order } from '@findeg/orders';
 
 /**
  * Local type definitions

@@ -1,7 +1,9 @@
 'use client';
 
+import { piastersToEgp } from '@findeg/money';
+
 import { type ColumnDef } from '@tanstack/react-table';
-import { type Order } from '@findeg/backend/features/order';
+import { type Order } from '@findeg/orders';
 import { Checkbox } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
@@ -181,7 +183,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         const currency = row.original.currency || 'EGP';
         return (
           <span className="font-medium">
-            {currency} {Number(total).toFixed(2)}
+            {currency} {piastersToEgp(total)}
           </span>
         );
       },

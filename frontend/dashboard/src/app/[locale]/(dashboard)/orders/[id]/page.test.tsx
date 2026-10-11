@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { NextIntlClientProvider } from 'next-intl';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -15,16 +16,14 @@ const setRequestLocale = vi.fn();
 vi.mock('next-intl/server', () => ({
   setRequestLocale: (locale: string) => setRequestLocale(locale),
 }));
-vi.mock('@findeg/backend/features/administration', () => ({
-  createAdministrationServices: () => ({ orders: { getDetail } }),
-}));
+vi.mock('@data/orders/queries', () => ({ getOrderDetail: (id: number) => getDetail(id) }));
 vi.mock('@i18n/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
 }));
-vi.mock('@actions/order-actions', () => ({
+vi.mock('@data/orders/actions', () => ({
   updateOrderStatusAction: vi.fn(),
   updateOrderPaymentStatusAction: vi.fn(),
 }));
@@ -33,7 +32,11 @@ vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 import OrderDetailPage from './page';
 
 const renderPage = async (id: string, locale = 'en') =>
-  render(await OrderDetailPage({ params: Promise.resolve({ locale, id }) }));
+  render(
+    <NextIntlClientProvider locale={locale} messages={{ Common: { Discount: 'Discount' } }}>
+      {await OrderDetailPage({ params: Promise.resolve({ locale, id }) })}
+    </NextIntlClientProvider>,
+  );
 
 describe('Order detail page', () => {
   beforeEach(() => {
@@ -61,7 +64,10 @@ describe('Order detail page', () => {
       orderReference: 'FE-AB12CD',
       status: 'pending',
       paymentStatus: 'paid',
-      totalAmount: 100,
+      subtotal: 10000n,
+      shippingCost: 0n,
+      discountTotal: 0n,
+      totalAmount: 10000n,
       currency: 'EGP',
       customerName: 'Ahmed Hassan',
       items: [],

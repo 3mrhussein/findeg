@@ -1,12 +1,12 @@
 'use client';
 
 import { useTransition } from 'react';
-import { type Order } from '@findeg/backend/features/order';
+import { type Order } from '@findeg/orders';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Printer, RefreshCcw } from 'lucide-react';
-import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
-import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
+import { getAllowedOrderStatusTransitions } from '@findeg/orders/schemas';
+import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@data/orders/actions';
 
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';

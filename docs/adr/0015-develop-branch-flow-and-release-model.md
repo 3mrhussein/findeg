@@ -16,29 +16,28 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 ### Two CI tiers, chosen by the event
 
-- **Fast tier (PRs into `develop`):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
-- **Strict tier (PRs into and pushes to `main`, and pushes to `develop`):** every job from scratch: Turbo `--force`, a shallow clone, nothing restored, integration tests always, plus E2E. `develop` is pre-production, so what is merged there is verified from nothing before the release PR. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code through.
-- **Manual run (`CI · Feature` → Run workflow):** the fast tier on the chosen branch, but every code job on all packages (no `--affected`), no E2E. Two checkboxes, both unchecked by default: "Force build job (ignore build cache)" skips the Turbo and Next.js cache restore and forces Turbo; "Force clean install (ignore pnpm store cache)" skips the pnpm store restore. With neither checked, a manual run is a cached run.
-- **Every tier and gating decision lives in one tested module, `.github/scripts/ci-policy.mjs`** (tests in `ci-policy.test.mjs`, run by `Plan`). The workflow YAML only passes its outputs on.
+- **Fast tier (PRs into `develop`, and `develop` pushes that merge a feature PR):** lint, type check, unit tests and build, run by Turbo on affected packages only, with caches restored. Integration tests run only when the backend, db, env package, lockfile, root tooling or the CI policy changed. Non-code changes (docs, `.github/`, agent tooling) skip the code checks. No E2E.
+- **Strict tier (PRs into and pushes to `main`, and `develop` pushes that bring a hotfix):** every job from scratch: Turbo `--force`, a shallow clone, nothing restored, integration tests always, plus E2E. A `develop` push brings a hotfix when it is a direct push (no merged PR) or merges a PR from `main` (the post-release sync) or `hotfix/*`; see the amendment below. A strict run whose E2E was skipped instead of passed fails its gate, so a wrong condition can't let unverified code through.
+- **Manual run (`CI` → Run workflow):** the fast tier on the chosen branch: the packages it touched against `develop` (on `develop` itself, what its latest commit touched), caches restored, no E2E. Two checkboxes, both unchecked by default: "Skip every cache (fresh install and build)" skips every cache restore and forces Turbo; "Run the full suite, E2E included" runs every package plus E2E.
+- **Every tier and gating decision lives in a tested module under `.github/scripts/policy/`**, one per decision (`plan.mjs`, `verdict.mjs`, `branches.mjs` and so on), each with its tests, run by `Plan`. `.github/scripts/ci-policy.mjs` re-exports them as the one import path. The workflow YAML only passes its outputs on.
 
-### Two workflows, one job definition, one gate each
+### One workflow, one job definition, one gate
 
-- **`CI · Feature` (fast, PRs into `develop`, plus manual runs) and `CI · Release` (strict, `main` and pushes to `develop`) hold only their triggers.** Both call the reusable `CI jobs` workflow from a caller job named `Feature` or `Strict`, so every job is defined once and the strict run is the same steps, stricter.
-- **Each run feeds one aggregate `CI OK` job, reported as `Feature / CI OK` or `Strict / CI OK`.** These are the only code checks the rulesets require. Adding, splitting, renaming or skipping a job never touches a ruleset, and docs-only PRs pass because skipped jobs count as passing.
-- **A tier guard fails `Plan` when a workflow's triggers would run the other tier**, so a mis-set trigger can't run fast CI on a PR into `main`.
+- **`CI` (`ci.yml`) is the only CI workflow.** It runs on PRs into and pushes to `develop` and `main`, plus manual runs, and calls the reusable `CI jobs` workflow from one caller job, `CI`. The policy picks the tier from the event, so every job is defined once and the strict run is the same steps, stricter. See the second amendment below.
+- **Every run feeds one aggregate `Gate` job, reported as `CI / Gate`.** It is the only code check the rulesets require. Adding, splitting, renaming or skipping a job never touches a ruleset, and docs-only PRs pass because skipped jobs count as passing.
 - **`PR conventions`** runs `PR title` and `Branch policy` on every PR, whatever its base.
 
 ### Cache policy
 
-- **Pushes to `develop` are the single cache producer, saving after their from-scratch run (they never restore).** Pull requests only restore. A manual run saves only when it runs on `develop`. GitHub lets a PR restore caches saved on its base branch, but a cache saved by a PR is visible only to that PR, so PR saves would only fill the 10 GB quota.
-- **The strict tier never restores**, so what ships to `main` is built and verified from nothing. Only the `develop` push saves, after it has passed from scratch; `main` neither restores nor saves.
+- **Pushes to `develop` are the single cache producer: every one saves, after a fast run (which restores first) or a strict run (which doesn't).** Pull requests only restore. A manual run saves only when it runs on `develop`. GitHub lets a PR restore caches saved on its base branch, but a cache saved by a PR is visible only to that PR, so PR saves would only fill the 10 GB quota.
+- **The strict tier never restores**, so what ships to `main` is built and verified from nothing. `main` neither restores nor saves.
 - **Restore and save are separate steps** (`.github/actions/setup` and `.github/actions/save-cache`), and restore is two switches, the pnpm store and the build caches, so a manual run can bypass either. setup-node's built-in cache is off because its post step always saves.
 - **Keys:** the pnpm store is keyed by the lockfile and saved once per run. Each job's Turbo cache is keyed per commit, restored by prefix, and pruned of entries older than a week before saving. The Next.js build cache is keyed by the lockfile and sources.
 
 ### Rulesets and merge methods
 
-- **`main`:** requires `Strict / CI OK`, `PR title` and `Branch policy` (GitHub Actions source), up to date before merging, resolved conversations, **merge commits only**, blocks force-push and deletion, and has no bypass actors.
-- **`develop`:** requires `Feature / CI OK`, `PR title` and `Branch policy`, not up to date (feature PRs merge without rebasing on each other), resolved conversations, squash and merge commits allowed, blocks force-push and deletion, and has no bypass actors.
+- **`main`:** requires `CI / Gate`, `PR title` and `Branch policy` (GitHub Actions source), up to date before merging, resolved conversations, **merge commits only**, blocks force-push and deletion, and has no bypass actors.
+- **`develop`:** requires `CI / Gate`, `PR title` and `Branch policy`, not up to date (feature PRs merge without rebasing on each other), resolved conversations, squash and merge commits allowed, blocks force-push and deletion, and has no bypass actors.
 - **Feature PRs into `develop` are squashed, and the squash commit's title is always the PR title.** The title `PR title` validated is what lands, and it is what release-please reads.
 - **`develop → main`, hotfix, release and sync PRs use merge commits.** This is load-bearing. A squash would hide the per-feature Conventional Commits from release-please. It would also put a commit on `main` that `develop` never has, so the branches would diverge on every release.
 
@@ -55,7 +54,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 - **Dependabot checks GitHub Actions and npm weekly, targeting `develop`.** `.github/dependabot.yml` covers Actions and the root pnpm workspace with its shared lockfile.
 - **npm patch and minor updates share one group; major updates arrive as individual PRs.** Production and development dependencies use the same `chore(deps)` prefix; Actions use `ci(deps)`. These Conventional Commit types pass `PR title` and stay out of the release changelog.
-- **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `Fast / CI OK` before considering the live acceptance check complete.
+- **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `CI / Gate` before considering the live acceptance check complete.
 
 ### Reporting
 
@@ -65,7 +64,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 ## Considered options
 
 - **Keep every PR on `main`, with one CI tier.** Rejected: features would wait on release-grade validation (E2E, no caches), or releases would ship with fast-tier checks only.
-- **One CI workflow that switches tier by base branch.** Rejected: the release path would be indistinguishable in the Actions tab, and one check name would serve both branches. Separate workflows and gate names mean a fast result can never satisfy `main`.
+- **Two CI workflows, one per tier, with separate gate names.** Chosen at first, then replaced by one workflow (see the second amendment): the policy already picks the tier from the event, and a fast result can't satisfy `main` because every run into `main` is strict.
 - **Require each job by name.** Rejected: every rename or split meant a ruleset edit, and docs-only PRs blocked on checks that never report.
 - **Squash `develop → main`.** Rejected for the release-please and divergence reasons above.
 - **Let PRs save caches too.** Rejected: PR-scoped caches can't be read by other PRs, so they only fill the quota.
@@ -76,4 +75,27 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **A release can't merge until E2E is green.** The Cypress suite has never run in CI, so specs that fail are fixed or quarantined before the first `develop → main` release.
 - **Feature branches can't reach `main`.** A PR from one fails `Branch policy`; retarget it to `develop`.
 - **The first push to `develop` after a cache-key change runs cold**, and PRs opened before it finishes restore nothing.
-- **Adding a CI job means adding it to `CI jobs` and to `CI OK`'s `needs`.** No ruleset change is needed.
+- **Adding a CI job means adding it to `CI jobs` and to `Gate`'s `needs`.** No ruleset change is needed.
+
+## Amendment: develop merges run the fast tier
+
+A push to `develop` that merges a PR now runs the fast tier: only the packages the merge touched, caches restored, no E2E. That PR already passed its own fast run, so a second from-scratch run mostly repeated it. Pushes that bring a hotfix still run strict, the full suite from scratch: a direct push to `develop` (no merged PR), and the merge of a PR from `main` (the post-release sync) or `hotfix/*`. The plan job finds the merged PR and its head branch through the GitHub API, and a failed lookup counts as a direct push. A manual run with **full tests** ticked also runs the full suite, E2E included. Every `develop` push still saves the caches. Releases are unchanged: every PR into `main` runs strict, with E2E.
+
+## Amendment: one CI workflow
+
+`CI · Feature` and `CI · Release` merged into one `CI` workflow with one gate, `CI / Gate`, required by both rulesets. Two callers duplicated triggers, permissions and concurrency around the same jobs, while the policy already chose the tier from the event; a merge had also left the feature caller out of date (no manual inputs, a renamed gate, a second develop-push run). With one caller there is no trigger that can run the wrong tier, so the tier guard (`expect-tier`) is gone. `CI` does not run on PR edits: an edit run that skips its jobs would still be the commit's newest run and hide `CI / Gate`. After retargeting a PR to the other base, push a commit or close and reopen it to run the new tier. Every action is pinned to a full commit SHA, as the repository's Actions policy requires.
+
+## Amendment: a promote button for develop → main
+
+Opening the `develop → main` PR is a button: **Actions → Promote to main → Run workflow**, from `develop` (`promote.yml`). It opens that PR, titled `Chore | Promote develop to main`, or refreshes the one already open, with the squash commits it ships listed in the body. GitHub can't disable a Run workflow button, so the run refuses instead, with the reason in its summary, unless `CI / Gate` passed on `develop`'s tip in that commit's push run; a run still in progress, failed, cancelled or missing all refuse, and so does a run from any other branch. It opens nothing when `main` already has every `develop` commit. The release-bot App opens the PR, so its CI and conventions checks run (a `GITHUB_TOKEN` PR triggers no workflows). It does not enable auto-merge: merging stays the one manual step, with a merge commit, after the strict run. The rules live in `decidePromotion` in `.github/scripts/ci-policy.mjs`. The title uses the pipe format, which `PR title` accepts on PRs into `main` without a commit override.
+
+## Amendment: main never skips a test or uses a cache
+
+This is a standing rule, not a default: nothing that runs on or merges into `main` restores a cache or skips a test, in any case.
+
+- **Every run on or into `main` is strict:** PRs into it from any branch, pushes to it, and now manual runs on it too, which used to run the fast tier with caches restored. A manual run on `main` ignores both checkboxes.
+- **A strict `CI / Gate` fails unless every job succeeded.** It used to fail only on a skipped E2E; a skipped check, build or integration job now fails it too, so a broken condition can't pass unverified code.
+- **The architecture standard's tests run in CI** (`Architecture tests`, `pnpm test:architecture`): they had never run outside a developer's machine. They run whenever the code checks do, so on every strict run.
+- **Every test job feeds `CI / Gate`.** A test reads `ci-jobs.yml` and fails if a job is missing from the Gate's `needs`, where its failure could never block a merge.
+- **`PR title` rejects skip-CI directives** (`[skip ci]`, `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`, `skip-checks: true`). Merge commits into `main` carry the PR title, and GitHub would skip the push run on `main` for such a message.
+- **Pinned by tests:** `policy/main-invariants.test.mjs` walks every way into `main` (PRs from `develop`, `hotfix/*`, release-please and a feature branch, pushes, manual runs; docs-only, code and unknown diffs) and asserts strict, `--force`, nothing restored or saved, and every job run.

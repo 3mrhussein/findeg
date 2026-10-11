@@ -1,5 +1,5 @@
 import { redirect } from '@i18n/navigation';
-import type { DomainError } from '@findeg/backend/features/core';
+import type { DomainError } from '@findeg/domain-errors';
 
 /**
  * Dashboard Error Handler Utilities

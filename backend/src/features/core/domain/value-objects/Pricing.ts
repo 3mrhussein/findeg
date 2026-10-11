@@ -9,7 +9,7 @@ import {
   type AppliedDiscount,
   ResolvedPricingSchema,
   type ResolvedPricing,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export {
   PersistedPricingSchema,

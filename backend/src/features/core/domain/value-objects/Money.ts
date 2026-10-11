@@ -6,7 +6,7 @@ import {
   type MoneyAmount,
   MoneySchema,
   type Money,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export {
   CurrencyCodeSchema,

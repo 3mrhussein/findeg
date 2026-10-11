@@ -1,2 +1,2 @@
-import { backend } from '@findeg/config/eslint/backend';
-export default backend;
+import { isomorphic } from '@findeg/config/eslint/isomorphic';
+export default isomorphic;

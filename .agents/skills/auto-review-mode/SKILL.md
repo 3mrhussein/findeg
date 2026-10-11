@@ -30,7 +30,7 @@ Report the printed result. If the user gave an argument other than `claude`, `co
 
 The same variable can be changed without a terminal:
 
-- The **Bots** workflow (Actions tab → Bots → Run workflow → `review-mode` action).
+- The **Review bots** workflow (Actions tab → Review bots → Run workflow → `review-mode` action).
 - An owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode).
 - Editing the variable under Settings → Secrets and variables → Actions → Variables.
 

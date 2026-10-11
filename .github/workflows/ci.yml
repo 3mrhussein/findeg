@@ -1,26 +1,40 @@
-name: CI · Feature
+name: CI
 
-# Guards feature → develop PRs (the fast tier).
-# Affected packages only, caches restored, integration tests only on relevant
-# changes, no E2E. Jobs live in ci-jobs.yml.
-# Required check: `Feature / CI OK`.
-# Run workflow (manual): every code job on the chosen branch, caches restored
-# unless the checkboxes ask to ignore them.
-# Pushes to develop and everything into main run CI · Release (ci-release.yml).
-# No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
+# The one CI workflow. Its jobs live in ci-jobs.yml and the policy in
+# .github/scripts picks the tier per event:
+#
+#   PR into develop             fast    affected packages, caches restored
+#   PR into main                strict  everything from scratch, E2E required
+#   push to develop, merged PR  fast    and saves the caches feature PRs restore
+#   push to develop, direct     strict  (also merges from main or hotfix/*)
+#   push to main                strict
+#   Run workflow (manual)       fast    touched packages on the chosen branch;
+#                                       the checkboxes skip caches and/or run
+#                                       the full suite (every package plus E2E)
+#   Run workflow on main        strict  always; the checkboxes are ignored
+#
+# Main never skips a test or restores a cache, in any of these: every run on or
+# into main is strict, and a strict Gate fails unless every job succeeded.
+#
+# Required check (develop and main rulesets): `CI / Gate`.
 on:
   pull_request:
-    branches: [develop]
-    # A base-branch edit must start CI for the newly selected tier.
-    types: [opened, synchronize, reopened, edited]
+    branches: [develop, main]
+    # No `edited`: a run that skips its jobs still becomes the commit's newest CI
+    # run and hides `CI / Gate` from the earlier one, so every title or body edit
+    # would leave the required check "Expected". After retargeting a PR to the
+    # other base, push a commit (or close and reopen it) to run the new tier.
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [develop, main]
   workflow_dispatch:
     inputs:
-      force_build:
-        description: Force build job (ignore build cache)
+      no_cache:
+        description: Skip every cache (fresh install and build)
         type: boolean
         default: false
-      force_install:
-        description: Force clean install (ignore pnpm store cache)
+      full_tests:
+        description: Run the full suite, E2E included (default runs touched packages only)
         type: boolean
         default: false
 
@@ -32,16 +46,18 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  feature:
-    name: Feature
-    # GitHub checks nested jobs' permissions against the caller when it loads the
-    # workflow, so this must allow what ci-jobs.yml's `Publish evidence` asks for
-    # (write). That job only runs after a strict-tier E2E failure, never on this
-    # tier, and ci-jobs.yml keeps every other job at `contents: read`.
+  ci:
+    name: CI
+    # A called workflow can only narrow its caller's token, and GitHub checks
+    # the highest permission any job asks for when it loads the workflow:
+    # `Publish evidence` needs contents: write and the plan's merged-PR lookup
+    # needs pull-requests: read. Every other job narrows to contents: read.
     permissions:
       contents: write
+      pull-requests: read
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: fast # policy tier stays "fast"; only the display name changes
-      force_build: ${{ inputs.force_build || false }}
-      force_install: ${{ inputs.force_install || false }}
+      no_cache: ${{ inputs.no_cache || false }}
+      full_tests: ${{ inputs.full_tests || false }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

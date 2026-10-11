@@ -6,7 +6,7 @@
  */
 
 import type { User } from '../../domain/entities/User';
-import type { Order } from '@findeg/backend/features/order';
+import type { Order } from '@findeg/orders';
 import type { Product } from '../../../catalog/domain/entities/Product';
 
 export interface AdminUser {
@@ -47,6 +47,8 @@ export interface DashboardData {
 }
 
 export interface IUserService {
+  /** Current Customer profile, without Order reads. */
+  getProfile(userId: number): Promise<User>;
   /** Returns all users assigned to at least one admin role */
   listAdmins(): Promise<AdminUser[]>;
   /** Returns a single admin user by ID, or null if not found */

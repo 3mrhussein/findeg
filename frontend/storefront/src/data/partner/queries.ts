@@ -1,3 +1,4 @@
+import 'server-only';
 import { cache } from 'react';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import type { PartnerSession } from '@findeg/backend/features/partner-membership';

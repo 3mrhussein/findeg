@@ -12,7 +12,7 @@
 import * as React from 'react';
 import { Badge } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { OrderStatus } from '@findeg/backend/features/core';
+import { OrderStatus } from '@findeg/orders/schemas';
 
 type ProductStatus = 'active' | 'draft' | 'inactive';
 type StockStatus = 'healthy' | 'low' | 'out';

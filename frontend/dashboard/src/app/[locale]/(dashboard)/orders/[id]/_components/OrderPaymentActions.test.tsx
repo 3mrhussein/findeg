@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Order } from '@findeg/backend/features/order';
-import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
+import type { Order } from '@findeg/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
 
 const { updateOrderStatusAction, updateOrderPaymentStatusAction, toast } = vi.hoisted(() => ({
   updateOrderStatusAction: vi.fn(),
@@ -9,7 +9,7 @@ const { updateOrderStatusAction, updateOrderPaymentStatusAction, toast } = vi.ho
   toast: vi.fn(),
 }));
 
-vi.mock('@actions/order-actions', () => ({
+vi.mock('@data/orders/actions', () => ({
   updateOrderStatusAction,
   updateOrderPaymentStatusAction,
 }));

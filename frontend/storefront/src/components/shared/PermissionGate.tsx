@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePermissions } from '@providers/PermissionsProvider';
-import { PermissionCode } from '@findeg/backend/features/core';
+import type { PermissionCode } from '@findeg/backend/features/core';
 
 interface PermissionGateProps {
   children: React.ReactNode;

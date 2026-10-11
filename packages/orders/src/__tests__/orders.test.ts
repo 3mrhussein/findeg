@@ -35,3 +35,14 @@ it.each([
 ])('rejects invalid list inputs before loading a database', async (filters) => {
   await expect(createOrders().list(filters)).rejects.toMatchObject({ name: 'ZodError' });
 });
+
+it.each([
+  { from: '2026-02-30' },
+  { to: 'bad' },
+  { from: '2026-10-09', to: '2026-10-01' },
+  { trendDays: 0 },
+  { trendDays: 367 },
+  { topProductsLimit: 101 },
+])('rejects invalid statistics options before resolving a database: %j', async (options) => {
+  await expect(createOrders().getStats(options)).rejects.toMatchObject({ name: 'ZodError' });
+});

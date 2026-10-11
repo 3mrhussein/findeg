@@ -4,6 +4,8 @@ export type {
   OrderDatabase,
   OrdersDependencies,
   OrderFilters,
+  OrderStatsOptions,
+  OrderStats,
   Order,
   OrderItem,
   OrderDetail,

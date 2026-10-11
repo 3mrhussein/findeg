@@ -143,3 +143,7 @@ _Avoid_: Allocation, hold
 **Package Boundary**:
 The public import surface and dependency direction of a workspace package. Consumers import only declared public entries; implementation files remain private, and package dependency edges stay acyclic.
 _Avoid_: Deep import, internal API
+
+**Business Domain Schema**:
+The single declared vocabulary of FindEg's business concepts (statuses, roles, closed lists, money and transition rules). Every other layer uses these values and derives its own forms from them; none redeclares them.
+_Avoid_: Shared types, enums file, constants

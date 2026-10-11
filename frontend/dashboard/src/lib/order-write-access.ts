@@ -1,8 +1,5 @@
 import { adminSession, type SessionPayload } from '@findeg/backend/features/core';
-import {
-  assertCanWriteOrders,
-  type OrderStaffActor,
-} from '@findeg/backend/features/administration';
+import { assertCanWriteOrders, type OrderStaffActor } from '@findeg/orders';
 import { getSession } from '@lib/session';
 
 function toOrderActor(session: SessionPayload): OrderStaffActor {

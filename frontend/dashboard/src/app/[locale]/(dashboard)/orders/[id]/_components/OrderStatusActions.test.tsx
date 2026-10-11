@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { Order } from '@findeg/backend/features/order';
-import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
+import type { Order } from '@findeg/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
 
-vi.mock('@actions/order-actions', () => ({ updateOrderStatusAction: vi.fn() }));
+vi.mock('@data/orders/actions', () => ({ updateOrderStatusAction: vi.fn() }));
 vi.mock('@i18n/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 

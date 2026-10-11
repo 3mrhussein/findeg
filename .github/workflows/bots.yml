@@ -1,4 +1,4 @@
-name: Bots
+name: Review bots
 
 # Automated review bots. Stateless: no label lifecycle, no review state to keep
 # in sync. GitHub already tracks checks, conversations and commits; a human
@@ -48,6 +48,9 @@ on:
     types: [submitted]
   pull_request:
     types: [opened, ready_for_review, synchronize, labeled]
+
+# Every job grants itself only what it needs.
+permissions: {}
 
 env:
   GH_REPO: ${{ github.repository }}
@@ -119,8 +122,9 @@ jobs:
           reply "Auto review mode set to \`$MODE\` (was \`$CURRENT\`)."
 
   # ── claude ────────────────────────────────────────────────────────────────────
-  # Runs a Claude Code PR review. Manages the full PR state label lifecycle:
-  #   review:queued → review:in-progress → reviewed:claude (or back to queued on failure).
+  # Runs a Claude Code PR review. It tries to remove the `review:claude` request
+  # label before reviewing (a failed removal doesn't stop the run), so the
+  # label can be re-applied for another pass.
   claude:
     name: Claude review
     if: >-
@@ -149,8 +153,8 @@ jobs:
       actions: read
     steps:
       # The default branch only: PR code is never checked out in this privileged job.
-      - name: Checkout repository
-        uses: actions/checkout@v7
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -174,7 +178,7 @@ jobs:
         # The review is advisory: a failed run (expired token, usage limit, outage)
         # is reported as a warning instead of failing the check.
         continue-on-error: true
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: ${{ steps.pr.outputs.prompt }}

@@ -1,2 +1,2 @@
-import { db } from '@findeg/config/eslint/db';
-export default db;
+import { node } from '@findeg/config/eslint/node';
+export default node;

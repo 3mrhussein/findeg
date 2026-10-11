@@ -5,4 +5,4 @@
  * Centralized in @findeg/db for cross-package sharing.
  */
 
-export { SessionPayloadSchema, type SessionPayload } from '@findeg/db';
+export { SessionPayloadSchema, type SessionPayload } from '@findeg/db/types';

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 
 interface StatCardProps {
   title: string;
-  value: number;
+  value: number | string;
   icon: React.ReactNode;
   prefix?: string;
   suffix?: string;
@@ -23,10 +23,13 @@ export const StatCard: React.FC<StatCardProps> = ({
   suffix = '',
   decimals = 0,
 }) => {
-  const formattedValue = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(value);
+  const formattedValue =
+    typeof value === 'string'
+      ? value
+      : new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(value);
 
   return (
     <Card className="transition-shadow duration-200 hover:shadow-md">

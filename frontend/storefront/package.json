@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "node ../../scripts/architecture/build-storefront.mjs",
+    "build": "node ../../scripts/architecture/build-next-app.mjs",
     "start": "next start --port 3000",
-    "lint": "eslint .",
+    "lint": "findeg-lint .",
     "type-check": "tsc --noEmit",
     "test": "vitest --run",
     "clean": " rm -rf node_modules dist .turbo .next cypress/coverage",
@@ -33,7 +33,9 @@
     "react-hook-form": "^7.89.0",
     "swr": "^2.4.1",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@findeg/orders": "workspace:*",
+    "@findeg/domain-errors": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

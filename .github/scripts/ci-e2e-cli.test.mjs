@@ -10,7 +10,7 @@ import { buildReport } from './ci-e2e-cli.mjs';
 
 const env = {
   GITHUB_REPOSITORY: 'acme/app',
-  GITHUB_WORKFLOW: 'CI · Release',
+  GITHUB_WORKFLOW: 'CI',
   GITHUB_JOB: 'e2e',
   GITHUB_REF_NAME: 'develop',
   GITHUB_SHA: '0123456789abcdef',

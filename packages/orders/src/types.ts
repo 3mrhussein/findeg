@@ -76,6 +76,23 @@ export interface OrderDetail {
   order: Order;
   activity: OrderActivityEntry[];
 }
+export interface OrderStatsOptions {
+  from?: string;
+  to?: string;
+  trendDays?: number;
+  topProductsLimit?: number;
+}
+export interface OrderStats {
+  currency: 'EGP';
+  timezone: 'Africa/Cairo';
+  totalOrders: number;
+  totalRevenue: bigint;
+  todayOrders: number;
+  todayRevenue: bigint;
+  ordersByStatus: Record<OrderStatus, number>;
+  revenueByPeriod: { date: string; revenue: bigint }[];
+  topProducts: { id: number; name: string; sold: number; revenue: bigint }[];
+}
 export interface Orders {
   get(id: number | string): Promise<Order | null>;
   list(filters?: OrderFilters): Promise<{ orders: Order[]; total: number }>;
@@ -83,11 +100,7 @@ export interface Orders {
   recent(limit?: number): Promise<Order[]>;
   detail(id: number | string): Promise<OrderDetail | null>;
   latestShippingAddress(userId: number): Promise<ShippingAddress | null>;
-  getStats(): Promise<{
-    totalOrders: number;
-    totalRevenue: bigint;
-    ordersByStatus: Record<OrderStatus, number>;
-  }>;
+  getStats(options?: OrderStatsOptions): Promise<OrderStats>;
   changeStatus(
     actor: OrderStaffActor,
     id: number,

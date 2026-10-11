@@ -1,0 +1,5 @@
+# The lint standard and the checks that prove it are owned by people. A feature change must
+# not loosen them; changes here need an owner's review. See packages/config/README.md.
+/.github/CODEOWNERS            @3mrhussein
+/packages/config/              @3mrhussein
+/scripts/architecture/         @3mrhussein

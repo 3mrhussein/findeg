@@ -1,11 +1,14 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+import { piastersToEgp } from '@findeg/money';
+
 import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
 import { StatusBadge } from '@components/shared/StatusBadge';
 import { OrderTimeline } from './OrderTimeline';
 import { Package, User, CreditCard, MapPin, FileText, Truck, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import type { Order } from '@findeg/backend/features/order';
+import type { Order } from '@findeg/orders';
 
 interface OrderDetailDrawerProps {
   order: Order | null;
@@ -29,7 +32,8 @@ export function OrderDetailDrawer({
   const orderNumber = `#${order.id}`;
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
-  const totalAmount = `${order.currency || 'EGP'} ${order.totalAmount?.toFixed(2) || '0.00'}`;
+  const t = useTranslations('Common');
+  const totalAmount = `${order.currency || 'EGP'} ${piastersToEgp(order.totalAmount)}`;
 
   return (
     <SlideOver
@@ -117,11 +121,11 @@ export function OrderDetailDrawer({
                   )}
                   <div className="text-xs text-muted-foreground">
                     {item.quantity} {item.uomCode || 'unit'} × {order.currency || 'EGP'}{' '}
-                    {item.unitPrice?.toFixed(2) || '0.00'}
+                    {piastersToEgp(item.unitPrice)}
                   </div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || 'EGP'} {item.totalPrice?.toFixed(2) || '0.00'}
+                  {order.currency || 'EGP'} {piastersToEgp(item.lineTotal)}
                 </div>
               </div>
             ))}
@@ -132,15 +136,23 @@ export function OrderDetailDrawer({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {order.subtotal?.toFixed(2) || '0.00'}
+                {order.currency || 'EGP'} {piastersToEgp(order.subtotal + order.discountTotal)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || 'EGP'} {order.shippingCost?.toFixed(2) || '0.00'}
+                {order.currency || 'EGP'} {piastersToEgp(order.shippingCost)}
               </span>
             </div>
+            {order.discountTotal > 0n && (
+              <div className="flex justify-between text-sm text-destructive">
+                <span>{t('Discount')}</span>
+                <span>
+                  -{order.currency} {piastersToEgp(order.discountTotal)}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between font-semibold text-lg pt-2 border-t">
               <span>Total:</span>
               <span>{totalAmount}</span>

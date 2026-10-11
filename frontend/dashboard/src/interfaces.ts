@@ -1,4 +1,5 @@
-import { PortalRole, TranslationMapSchema } from '@findeg/backend/features/core';
+import type { PortalRole } from '@findeg/backend/features/core';
+import { TranslationMapSchema } from '@findeg/backend/features/core/schemas';
 import { z } from 'zod';
 
 export interface NavItem {

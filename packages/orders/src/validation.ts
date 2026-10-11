@@ -24,3 +24,26 @@ export const filtersSchema = z
     offset: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).optional(),
   })
   .refine((f) => !f.startDate || !f.endDate || f.startDate <= f.endDate, 'Reversed date range');
+
+const calendarDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .refine((value) => {
+    const parsed = new Date(`${value}T00:00:00Z`);
+    return (
+      Number.isFinite(parsed.getTime()) &&
+      parsed.toISOString().slice(0, 10) === value &&
+      value >= '0001-01-01'
+    );
+  }, 'Invalid calendar date');
+export const statsOptionsSchema = z
+  .object({
+    from: calendarDate.optional(),
+    to: calendarDate.optional(),
+    trendDays: z.number().int().min(1).max(366).default(30),
+    topProductsLimit: z.number().int().min(1).max(100).default(5),
+  })
+  .refine(
+    (options) => !options.from || !options.to || options.from <= options.to,
+    'Reversed date range',
+  );

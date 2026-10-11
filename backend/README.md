@@ -178,7 +178,7 @@ The backend is composed of 10 rigidly bounded context modules:
 | ----------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------- |
 | [**Catalog**](src/features/catalog/README.md)               | Central PIM handling all discoverability.              | `Product`, `Category`, `Variant`, `Brand` |
 | [**Cart**](src/features/cart/README.md)                     | Ephemeral shopping session state.                      | `CartHeader`, `CartItem`                  |
-| [**Order**](src/features/order/README.md)                   | Checkout, fulfillment, and post-purchase ledger.       | `Order`, `OrderItem`, `Transaction`       |
+| [**Orders**](../packages/orders/README.md)                   | Workspace Order reads and lifecycle; Checkout owns Acceptance.       | `Order`, `OrderItem`, `Transaction`       |
 | [**Identity**](src/features/identity/README.md)             | Hardened auth, RBAC permissions, token vending.        | `User`, `Role`, `PasswordCredentials`     |
 | [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics.           | `AuditLog`, `DashboardMetric`             |
 | [**School**](src/features/school/README.md)                 | B2B2C School Supply Lists (secure gateways).           | `SchoolSupplyList`, `PartnerSchool`       |

@@ -15,7 +15,7 @@ The **Storefront Order Feature** surfaces the high-stakes checkout funnel. It pr
 
 - **`CheckoutStepper`**: Purely visual timeline sync hook utilizing Next.js `searchParams` for step isolation (`?step=shipping`).
 - **`AddressBookSelector`**: Client heavy component retrieving backend pre-saved addresses and injecting them into the form context.
-- **`PaymentPortal`**: Locked UI that acts as the final irreversible trigger to `@findeg/backend/features/order`.
+- **`PaymentPortal`**: Locked UI that acts as the final irreversible trigger to `@findeg/backend/features/checkout`.
 
 ---
 
@@ -25,7 +25,7 @@ The **Storefront Order Feature** surfaces the high-stakes checkout funnel. It pr
 sequenceDiagram
     participant ClientForm as CheckoutForm
     participant Action as commitOrderAction
-    participant OS as OrderService
+    participant OS as Orders package
     participant Redirect as Next.js Navigation
 
     ClientForm->>Action: onSubmit(addressPayload)
@@ -44,3 +44,5 @@ sequenceDiagram
 ---
 
 &copy; 2026 FindEg.com
+
+Authenticated Customer history and detail use `@findeg/orders`; detail checks ownership against the trusted session. Checkout prefill composes current Identity profile contacts with `latestShippingAddress`. Snapshot display uses bigint piasters and shared Money.

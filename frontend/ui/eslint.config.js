@@ -1,2 +1,2 @@
-import { ui } from '@findeg/config/eslint/ui';
-export default ui;
+import { reactUi } from '@findeg/config/eslint/react-ui';
+export default reactUi;

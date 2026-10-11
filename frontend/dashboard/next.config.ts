@@ -5,9 +5,11 @@ import path from 'path';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-  // Transpile (bundle) client-safe workspace packages; backend should remain external
+  productionBrowserSourceMaps: process.env.VERIFY_CLIENT_BUNDLE === '1',
+  // Turbopack bundles TypeScript workspace packages automatically; pure Money/UI are client-safe.
   transpilePackages: ['@findeg/ui', '@findeg/money'],
-  // Prevent server-only packages from being bundled on the client
+  // Orders stays bundled: its public exports are TypeScript source and its UI entry is pure.
+  // External packages use native server require; this setting does not enforce client safety.
   serverExternalPackages: [
     '@findeg/backend', // Keep backend external to avoid bundling infrastructure
     'postgres',

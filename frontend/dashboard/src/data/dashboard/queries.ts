@@ -5,6 +5,7 @@
  */
 'use cache';
 
+import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 
@@ -19,17 +20,4 @@ export async function getDashboardStats() {
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getDashboardStats();
-}
-
-/**
- * Get recent orders
- *
- * Cache: Short TTL for dashboard widget
- */
-export async function getRecentOrders(limit: number = 5) {
-  cacheTag('dashboard', 'recent-orders');
-  cacheLife('minutes');
-
-  const { dashboard } = createAdministrationServices();
-  return await dashboard.getRecentOrders(limit);
 }

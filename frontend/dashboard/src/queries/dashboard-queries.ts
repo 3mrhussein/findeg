@@ -8,7 +8,6 @@
 'use cache';
 
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import { createOrderServices } from '@findeg/backend/features/order';
 import { createIdentityServices } from '@findeg/backend/features/identity';
 import { cacheLife, cacheTag } from 'next/cache';
 
@@ -35,15 +34,4 @@ export async function getMyAccountDataQuery(userId: number) {
   const user = await adminUsers.getAdmin(userId);
 
   return user;
-}
-
-/**
- * Get order detail for authenticated user
- */
-export async function getMyOrderDetailQuery(orderId: number, _locale: string) {
-  cacheLife('minutes');
-  cacheTag(`order-${orderId}`);
-
-  const { orders } = createOrderServices();
-  return await orders.getById(orderId);
 }

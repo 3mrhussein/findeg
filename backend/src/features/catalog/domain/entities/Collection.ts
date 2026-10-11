@@ -7,7 +7,7 @@
 
 import { z } from 'zod';
 import { TagSchema } from './Tag';
-import { IdSchema, SlugSchema, TranslationMapSchema } from '@findeg/db';
+import { IdSchema, SlugSchema, TranslationMapSchema } from '@findeg/db/types';
 
 export const CollectionSchema = z.object({
   id: IdSchema,

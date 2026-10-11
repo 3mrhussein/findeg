@@ -74,13 +74,13 @@ test('Backend consumers cannot reach legacy Order internals after extraction', a
   );
 });
 
-test('the current public Orders compatibility entries remain usable until extraction', async () => {
+test('removed Backend Order entries cannot bypass the public package', async () => {
   assert.deepEqual(
     await lintAt(
       'frontend/dashboard/src/components/orders.tsx',
       "import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';",
     ),
-    [],
+    ['deep'],
   );
 });
 

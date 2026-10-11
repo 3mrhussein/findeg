@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { User, Phone, Mail, MapPin } from 'lucide-react';
 
 interface OrderCustomerInfoProps {
-  order: import('@findeg/backend/features/order').Order;
+  order: import('@findeg/orders').Order;
 }
 
 /**

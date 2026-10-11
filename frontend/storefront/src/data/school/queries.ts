@@ -6,6 +6,7 @@
  * Filter options are cached; search and the profile are not, because they embed
  * list status (publish/archive/replace) that must show immediately.
  */
+import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
 import { createSchoolDirectory, type SchoolSearchParams } from '@findeg/backend/features/school';
 
