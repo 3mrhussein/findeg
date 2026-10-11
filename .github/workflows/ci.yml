@@ -16,8 +16,11 @@ name: CI
 on:
   pull_request:
     branches: [develop, main]
-    # `edited` re-plans after a base-branch change; other edits are skipped below.
-    types: [opened, synchronize, reopened, edited]
+    # No `edited`: a run that skips its jobs still becomes the commit's newest CI
+    # run and hides `CI / Gate` from the earlier one, so every title or body edit
+    # would leave the required check "Expected". After retargeting a PR to the
+    # other base, push a commit (or close and reopen it) to run the new tier.
+    types: [opened, synchronize, reopened]
   push:
     branches: [develop, main]
   workflow_dispatch:
@@ -34,18 +37,13 @@ on:
 permissions:
   contents: read
 
-# A title or body edit (a bot rewriting the PR description, say) gets its own
-# group, so it never cancels the run that is checking the code.
 concurrency:
-  group: >-
-    ci-${{ github.event.pull_request.number || github.ref }}${{
-    github.event.action == 'edited' && !github.event.changes.base && '-edit' || '' }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   ci:
     name: CI
-    if: github.event.action != 'edited' || github.event.changes.base
     # A called workflow can only narrow its caller's token, and GitHub checks
     # the highest permission any job asks for when it loads the workflow:
     # `Publish evidence` needs contents: write and the plan's merged-PR lookup

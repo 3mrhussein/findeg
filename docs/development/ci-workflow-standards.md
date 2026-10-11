@@ -31,8 +31,8 @@ Rule: **the YAML wires, the scripts decide.** Any branching on branch names, pat
 ## 3. Triggers and runs
 
 - **Every pipeline workflow has `workflow_dispatch`.** Inputs are booleans, `default: false`. Anything that makes a run slower or colder than normal is opt-in by checkbox, never the default.
-- **PRs run automatically.** Include `edited` in `pull_request` types when the base branch picks the tier, so retargeting reruns CI.
-- **Concurrency** is set only by the caller: `group: <workflow>-<pr number or ref>`, `cancel-in-progress: true` for PRs and `false` for pushes, so every merged commit gets a verdict. A PR edit that doesn't change the base gets its own group and is skipped, so it never cancels the run checking the code.
+- **PRs run automatically** on `opened`, `synchronize` and `reopened`. Never add `edited` to a workflow that reports a required check: an edit run whose jobs are skipped is still the commit's newest run and hides the earlier result, leaving the check "Expected". After retargeting a PR, push a commit or close and reopen it to run the new base's tier.
+- **Concurrency** is set only by the caller: `group: <workflow>-<pr number or ref>`, `cancel-in-progress: true` for PRs and `false` for pushes, so every merged commit gets a verdict.
 - **Permissions** default to `contents: read` (or `{}`) at the top of the file; jobs ask for more only where needed. Every caller of a reusable workflow must grant at least the highest permission any nested job asks for, even if that job never runs for that caller, or GitHub rejects the caller file.
 
 ## 4. Tiers and caches
