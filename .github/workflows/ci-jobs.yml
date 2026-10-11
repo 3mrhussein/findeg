@@ -176,6 +176,29 @@ jobs:
         with:
           pnpm-store: ${{ matrix.task == 'lint' }}
 
+  # The architecture standard's own tests (scripts/architecture): import
+  # boundaries, client-bundle leaks and the lint ratchet, so a rule can't be
+  # loosened or go quiet with every other check still green. Plain Node tests,
+  # not a Turbo task, so there is no Turbo cache to restore or save.
+  architecture:
+    name: Architecture tests
+    needs: plan
+    if: needs.plan.outputs.run_checks == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm, Node and caches
+        uses: ./.github/actions/setup
+        with:
+          restore-deps: ${{ needs.plan.outputs.restore_deps }}
+          restore-build: 'false'
+      - name: Run the architecture tests
+        run: pnpm test:architecture
+
   # The Next.js builds prerender from the database, so Build needs a migrated,
   # seeded Postgres. Turbo's strict env mode strips job env from tasks, so the
   # database settings reach the build (and db:migrate/db:seed, which load
@@ -430,7 +453,7 @@ jobs:
   # can't leave it pending; the policy decides whether the results pass.
   gate:
     name: Gate
-    needs: [plan, checks, build, integration, e2e]
+    needs: [plan, checks, architecture, build, integration, e2e]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

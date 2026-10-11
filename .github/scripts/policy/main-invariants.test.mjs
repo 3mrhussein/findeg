@@ -2,6 +2,7 @@
 // plan, the verdict and PR titles, so it tests them together through ci-policy.mjs. Run with `node --test .github/scripts`.
 
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { decidePlan, decidePrTitle, decideVerdict } from '../ci-policy.mjs';
 
@@ -40,11 +41,12 @@ describe('main never skips a test or uses a cache', () => {
     const all = {
       plan: 'success',
       checks: 'success',
+      architecture: 'success',
       build: 'success',
       integration: 'success',
       e2e: 'success',
     };
-    for (const job of ['checks', 'build', 'integration', 'e2e']) {
+    for (const job of ['checks', 'architecture', 'build', 'integration', 'e2e']) {
       const decision = decideVerdict({ tier: 'strict', results: { ...all, [job]: 'skipped' } });
       assert.equal(decision.ok, false, `${job} skipped`);
     }
@@ -63,5 +65,19 @@ describe('main never skips a test or uses a cache', () => {
     ]) {
       assert.equal(decidePrTitle({ title, base: 'main' }).ok, false, title);
     }
+  });
+
+  // A job missing from the Gate's `needs` would be optional without anyone noticing: its
+  // failure could never fail `CI / Gate`. Only jobs that report on the Gate may stay out.
+  it('feeds every test job into the Gate', () => {
+    const workflow = readFileSync(new URL('../../workflows/ci-jobs.yml', import.meta.url), 'utf8');
+    const jobs = [...workflow.matchAll(/^ {2}([a-z][a-z0-9-]*):$/gm)].map((match) => match[1]);
+    const needs = /^ {2}gate:\n(?:.*\n)*? {4}needs: \[([^\]]+)\]/m
+      .exec(workflow)[1]
+      .split(',')
+      .map((job) => job.trim());
+    const reportOnly = ['gate', 'notify', 'publish-evidence'];
+    assert.ok(jobs.includes('architecture'));
+    assert.deepEqual(jobs.filter((job) => !reportOnly.includes(job)).sort(), [...needs].sort());
   });
 });

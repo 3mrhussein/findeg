@@ -95,5 +95,7 @@ This is a standing rule, not a default: nothing that runs on or merges into `mai
 
 - **Every run on or into `main` is strict:** PRs into it from any branch, pushes to it, and now manual runs on it too, which used to run the fast tier with caches restored. A manual run on `main` ignores both checkboxes.
 - **A strict `CI / Gate` fails unless every job succeeded.** It used to fail only on a skipped E2E; a skipped check, build or integration job now fails it too, so a broken condition can't pass unverified code.
+- **The architecture standard's tests run in CI** (`Architecture tests`, `pnpm test:architecture`): they had never run outside a developer's machine. They run whenever the code checks do, so on every strict run.
+- **Every test job feeds `CI / Gate`.** A test reads `ci-jobs.yml` and fails if a job is missing from the Gate's `needs`, where its failure could never block a merge.
 - **`PR title` rejects skip-CI directives** (`[skip ci]`, `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`, `skip-checks: true`). Merge commits into `main` carry the PR title, and GitHub would skip the push run on `main` for such a message.
 - **Pinned by tests:** `policy/main-invariants.test.mjs` walks every way into `main` (PRs from `develop`, `hotfix/*`, release-please and a feature branch, pushes, manual runs; docs-only, code and unknown diffs) and asserts strict, `--force`, nothing restored or saved, and every job run.

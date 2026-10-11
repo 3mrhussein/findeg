@@ -32,7 +32,7 @@ flowchart LR
 | File                 | Name             | Runs on                                       | Does                                                                                             |
 | -------------------- | ---------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `ci.yml`             | `CI`             | PRs into and pushes to `develop`/`main`, manual | Calls `ci-jobs.yml`; reports the one required code check, **`CI / Gate`**                       |
-| `ci-jobs.yml`        | `CI jobs`        | Called by `ci.yml` only                       | Plan → Lint, Type check, Unit tests, Build, Integration, E2E → Gate → Slack card                 |
+| `ci-jobs.yml`        | `CI jobs`        | Called by `ci.yml` only                       | Plan → Lint, Type check, Unit tests, Architecture, Build, Integration, E2E → Gate → Slack card                 |
 | `pr-conventions.yml` | `PR conventions` | Every PR (also on edits)                      | **`PR title`** and **`Branch policy`** (required); `PR autofill` titles a new PR from its branch |
 | `promote.yml`        | `Promote to main` | Manual, from `develop`                       | Opens or refreshes `Chore \| Promote develop to main`, only if `develop`'s tip has a green Gate  |
 | `release.yml`        | `Release`        | Pushes to `main`                              | release-please: Release PR, then tag and GitHub Release, then the `main → develop` sync PR       |
@@ -52,7 +52,7 @@ event; the YAML only carries it out.
 | Manual run on any branch but `main`                     | fast       | Checkboxes: skip caches, or run the full suite with E2E       |
 | Manual run on `main`                                    | **strict** | Checkboxes ignored                                            |
 
-A strict `CI / Gate` fails unless **every** job succeeded; a fast one accepts jobs skipped because
+A strict `CI / Gate` fails unless **every** job succeeded, and a test pins that every test job feeds the Gate; a fast one accepts jobs skipped because
 the change didn't touch them (a docs-only PR skips the code checks).
 
 ## Required checks and rulesets
@@ -66,7 +66,7 @@ deletion, with **no bypass actors**.
 - Tags `v*`: only the release-bot App creates them; nobody updates or deletes them.
 
 Renaming a required job (`Gate`, `PR title`, `Branch policy`) breaks merging until the ruleset
-is updated. Adding or renaming any other CI job only needs `ci-jobs.yml` and the Gate's `needs`.
+is updated. Adding or renaming any other CI job only needs `ci-jobs.yml` and the Gate's `needs` (`main-invariants.test.mjs` fails if a job is left out).
 
 ## Credentials
 
