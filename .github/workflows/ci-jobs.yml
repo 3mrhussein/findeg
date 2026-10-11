@@ -71,7 +71,7 @@ jobs:
       run_integration: ${{ steps.plan.outputs.run_integration }}
       run_e2e: ${{ steps.plan.outputs.run_e2e }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # A manual run diffs against develop's merge-base, so it needs the history.
           # '0' is quoted: a bare 0 is falsy, so `&& 0 || 2` would always pick 2.
@@ -80,7 +80,7 @@ jobs:
             .github/scripts
             .github/config
       # A sparse checkout keeps the root files, so .nvmrc is there.
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
@@ -168,7 +168,7 @@ jobs:
       TURBO_SCM_HEAD: ${{ github.sha }}
       TASK: ${{ matrix.task }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
@@ -216,7 +216,7 @@ jobs:
       TURBO_SCM_BASE: ${{ needs.plan.outputs.scm_base }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
@@ -271,7 +271,7 @@ jobs:
     env:
       INTEGRATION_DATABASE_URL: postgres://findeg:findeg@localhost:5432/findeg
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
         with:
           restore-deps: ${{ needs.plan.outputs.restore_deps }}
@@ -305,7 +305,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
         with:
           restore-deps: 'false'
@@ -351,7 +351,7 @@ jobs:
         run: pnpm test:e2e --continue 2>&1 | tee "$RUNNER_TEMP/e2e-output.txt"
       - name: Upload E2E failure evidence
         if: failure() || steps.e2e.outcome == 'failure'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: e2e-failure-evidence
           path: |
@@ -392,14 +392,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: .github/scripts
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: e2e-failure-evidence
           path: evidence
@@ -449,10 +449,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: .github/scripts
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
@@ -477,13 +477,13 @@ jobs:
     # Every step is skipped without the webhook secret.
     steps:
       - if: env.SLACK_WEBHOOK_URL != ''
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: |
             .github/scripts
             .github/config
       - if: env.SLACK_WEBHOOK_URL != ''
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
