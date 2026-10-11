@@ -413,7 +413,13 @@ describe('prOpenUrl', () => {
 
 describe('decidePromotion', () => {
   const green = { status: 'completed', gate: 'success', url: 'https://example.test/run/1' };
-  const ready = { ref: 'develop', headSha: 'abcdef1234567890', ciRun: green, aheadBy: 3 };
+  const ready = {
+    ref: 'develop',
+    headSha: 'abcdef1234567890',
+    developTip: 'abcdef1234567890',
+    ciRun: green,
+    aheadBy: 3,
+  };
 
   it('promotes develop when its push CI passed the gate and it is ahead of main', () => {
     const decision = decidePromotion(ready);
@@ -440,6 +446,13 @@ describe('decidePromotion', () => {
       const decision = decidePromotion({ ...ready, ciRun: { status: 'completed', gate } });
       assert.equal(decision.ok, false, `gate ${gate}`);
     }
+  });
+
+  it('refuses when develop moved past the commit whose CI was checked', () => {
+    const decision = decidePromotion({ ...ready, developTip: '9999999999999999' });
+    assert.equal(decision.ok, false);
+    assert.match(decision.reason, /moved from abcdef12 to 99999999/);
+    assert.equal(decidePromotion({ ...ready, developTip: undefined }).ok, false);
   });
 
   it('opens nothing when main already has every develop commit', () => {

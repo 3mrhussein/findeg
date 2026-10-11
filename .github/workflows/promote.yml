@@ -34,6 +34,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: .github/scripts
+          persist-credentials: false
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -57,12 +58,16 @@ jobs:
           jq --arg gate "$gate" '. + {gate: $gate}' <<< "$run" > "$RUNNER_TEMP/ci-run.json"
           cat "$RUNNER_TEMP/ci-run.json"
 
+      # Compared against the commit whose CI was read, not the moving develop
+      # branch, and develop's tip read again: the decision refuses if they differ.
       - name: List what develop would ship
         id: compare
         env:
           GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
         run: |
-          gh api "repos/$GITHUB_REPOSITORY/compare/main...develop" \
+          echo "develop_tip=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/develop" --jq .object.sha)" >> "$GITHUB_OUTPUT"
+          gh api "repos/$GITHUB_REPOSITORY/compare/main...$SHA" \
             --jq '{ahead_by, commits: [.commits[] | {subject: (.commit.message | split("\n")[0]), parents: (.parents | length)}]}' \
             > "$RUNNER_TEMP/compare.json"
           echo "ahead_by=$(jq -r .ahead_by "$RUNNER_TEMP/compare.json")" >> "$GITHUB_OUTPUT"
@@ -73,9 +78,10 @@ jobs:
         env:
           SHA: ${{ github.sha }}
           AHEAD_BY: ${{ steps.compare.outputs.ahead_by }}
+          DEVELOP_TIP: ${{ steps.compare.outputs.develop_tip }}
         run: >-
           node .github/scripts/ci-cli.mjs promote --ref "$GITHUB_REF_NAME" --sha "$SHA"
-          --ahead-by "$AHEAD_BY" --ci-run-file "$RUNNER_TEMP/ci-run.json"
+          --develop-tip "$DEVELOP_TIP" --ahead-by "$AHEAD_BY" --ci-run-file "$RUNNER_TEMP/ci-run.json"
           --commits-file "$RUNNER_TEMP/commits.json" --out "$RUNNER_TEMP/pr.json"
 
       - name: Mint release-bot token
@@ -85,14 +91,26 @@ jobs:
         with:
           app-id: ${{ secrets.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          # Only what opening and editing a PR needs, not every permission the
+          # App's installation holds.
+          permission-contents: read
+          permission-pull-requests: write
 
-      # No auto-merge: merging develop → main stays the owner's call.
+      # No auto-merge: merging develop → main stays the owner's call. develop's
+      # tip is checked once more right before the PR changes, closing the gap
+      # since the decision.
       - name: Open or update the develop to main PR
         if: steps.decide.outputs.promote == 'true'
         env:
           GH_TOKEN: ${{ steps.bot.outputs.token }}
           GH_REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
+          tip=$(gh api "repos/$GH_REPO/git/ref/heads/develop" --jq .object.sha)
+          if [ "$tip" != "$SHA" ]; then
+            echo "::error title=Promotion::develop moved from ${SHA:0:8} to ${tip:0:8}; wait for its CI and run this again."
+            exit 1
+          fi
           title=$(jq -r .title "$RUNNER_TEMP/pr.json")
           jq -r .body "$RUNNER_TEMP/pr.json" > "$RUNNER_TEMP/body.md"
           number=$(gh pr list --base main --head develop --state open --json number --jq '.[0].number // empty')

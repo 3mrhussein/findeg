@@ -405,11 +405,12 @@ export const PROMOTION_TITLE = `${PR_TITLE_LABELS.chore} | Promote ${CACHE_PRODU
 const PROMOTION_LIST_LIMIT = 50;
 
 /**
- * Whether develop may be promoted now. `ciRun` is the newest `CI` run for the push of `headSha`
- * to develop: `{ status, gate, url }`, where `gate` is the `CI / Gate` job's conclusion.
+ * Whether develop may be promoted now. `headSha` is the commit the run checked and `developTip`
+ * where develop points now; they must match. `ciRun` is the newest `CI` run for the push of
+ * `headSha` to develop: `{ status, gate, url }`, where `gate` is the `CI / Gate` job's conclusion.
  * `aheadBy` is how many commits develop has that main does not.
  */
-export function decidePromotion({ ref, headSha, ciRun, aheadBy }) {
+export function decidePromotion({ ref, headSha, developTip, ciRun, aheadBy }) {
   const sha = (headSha ?? '').slice(0, 8) || 'its tip';
   if (ref !== CACHE_PRODUCER_BRANCH) {
     return {
@@ -433,6 +434,14 @@ export function decidePromotion({ ref, headSha, ciRun, aheadBy }) {
     return {
       ok: false,
       reason: `CI / Gate on ${CACHE_PRODUCER_BRANCH} at ${sha} is ${ciRun.gate || 'missing'}; fix ${CACHE_PRODUCER_BRANCH} before promoting it.`,
+    };
+  }
+  // The PR's head is the develop branch, not a commit: if develop moved after the run started,
+  // the PR would carry commits whose CI was never checked here.
+  if (developTip !== headSha) {
+    return {
+      ok: false,
+      reason: `${CACHE_PRODUCER_BRANCH} moved from ${sha} to ${(developTip ?? '').slice(0, 8) || 'an unknown commit'} after this run started; wait for its CI and run this again.`,
     };
   }
   if (!(Number(aheadBy) > 0)) {

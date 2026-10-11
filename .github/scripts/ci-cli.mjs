@@ -9,7 +9,7 @@
 //     can pass its inputs straight through)
 //   node .github/scripts/ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
 //   node .github/scripts/ci-cli.mjs pr-title <issue-number|suggest|check> ...
-//   node .github/scripts/ci-cli.mjs promote --ref <branch> --sha <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]
+//   node .github/scripts/ci-cli.mjs promote --ref <branch> --sha <sha> --develop-tip <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]
 
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -189,6 +189,7 @@ function executePromote(values) {
   const decision = decidePromotion({
     ref: values.ref,
     headSha: values.sha,
+    developTip: values['develop-tip'],
     ciRun,
     aheadBy: Number(values['ahead-by'] ?? 0),
   });
@@ -219,7 +220,7 @@ const CLI_USAGE_HELP = `Usage:
   ci-cli.mjs plan --event <pull_request|push|workflow_dispatch> --target <branch> [--head <branch>] [--changed-files <file>] [--no-cache true] [--full-tests true] [--merged-head <branch>]
   ci-cli.mjs verdict --needs <json> [--tier <fast|strict>]
   ci-cli.mjs pr-title <issue-number|suggest|check> [--head <branch>] [--base <branch>] [--title <t>] [--body-file <f>] [--out <f>] [--issue-title <t>] [--commit-subject <s>]
-  ci-cli.mjs promote --ref <branch> --sha <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]`;
+  ci-cli.mjs promote --ref <branch> --sha <sha> --develop-tip <sha> --ahead-by <n> --out <f> [--ci-run-file <f>] [--commits-file <f>]`;
 
 function main(argv) {
   const { positionals, values } = parseArgs({
@@ -243,6 +244,7 @@ function main(argv) {
       'commit-subject': { type: 'string' },
       ref: { type: 'string' },
       sha: { type: 'string' },
+      'develop-tip': { type: 'string' },
       'ahead-by': { type: 'string' },
       'ci-run-file': { type: 'string' },
       'commits-file': { type: 'string' },
