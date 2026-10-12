@@ -137,7 +137,7 @@ sequenceDiagram
     participant DB as System Database
     participant Audit as Audit Log Store
 
-    Staff->>Guard: Perform Action (e.g. Move Order to Confirmed / Adjust Price)
+    Staff->>Guard: Perform Action (e.g. Move Order to Confirmed)
     Guard->>Guard: Check Staff Role & Required Permission
     alt Permission Denied
         Guard-->>Staff: 403 Forbidden: Insufficient Permissions (Blocked)
@@ -148,7 +148,7 @@ sequenceDiagram
         Core->>DB: Execute Order Mutation (Update Order Status)
         Core->>DB: INSERT INTO audit_logs in same tx (timestamp, staffId, role, entity='order', changeDiff)
         end
-        note over Core,DB: Proposed, pending the Audit Log scope decision: non-order mutations (Price, Partner) audited the same way
+        note over Core,DB: Proposed: atomic auditing for non-order mutations (Price, Partner), pending Audit Log scope decision
         Core-->>Staff: Success: Action Committed & Audited
     end
 ```
