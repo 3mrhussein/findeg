@@ -377,7 +377,7 @@ sequenceDiagram
         note over AuthService: Constant-Time Response (CO-15: Never reveal if order exists)
         alt Order Found
             AuthService->>AuthService: Generate cryptographically secure 6-digit OTP
-            AuthService->>DB: INSERT INTO guest_order_access (order_ref, email, otp_hash, expires_at=NOW()+15m, attempts=5)
+            AuthService->>DB: INSERT INTO guest_access_requests (order_ref, email, otp_hash, expires_at=NOW()+15m, attempts=0; at most 5 allowed)
             AuthService->>Outbox: INSERT INTO outbox_messages (template='guest_order_otp', payload={ otp })
         else Order Not Found
             AuthService->>AuthService: Perform dummy hash to equalize response timing
