@@ -9,7 +9,6 @@ import {
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
 } from '@data/catalog/queries';
-import { getSession } from '@lib/session';
 import { PageShell } from '../../../_components/PageShell';
 import { ProductDetailClient } from './_components/ProductDetailClient';
 
@@ -62,8 +61,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const { locale, slug } = await params;
   setRequestLocale(locale as Locale);
 
-  const session = await getSession();
-  const vm = await getProductPdp(locale, slug, session);
+  const vm = await getProductPdp(locale, slug);
   if (!vm) {
     notFound();
   }

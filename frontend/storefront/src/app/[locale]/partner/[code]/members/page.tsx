@@ -1,9 +1,6 @@
 import { Link } from '@i18n/navigation';
-import {
-  createPartnerMembershipServices,
-  PARTNER_ADMINISTRATOR,
-} from '@findeg/backend/features/partner-membership';
-import { notFound } from 'next/navigation';
+import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
+import { getPartnerMembers } from '@data/partner/queries';
 import {
   PartnerNotice,
   PartnerSuspense,
@@ -30,13 +27,12 @@ async function Members({ code }: { code: string }) {
   if (!access.allowed) return access.notice;
   const { partner, membership } = access.context;
 
-  const result = await createPartnerMembershipServices().memberships.listMembers(
+  const rawMembers = await getPartnerMembers(
     { kind: 'partner', userId: membership.userId },
     partner.id,
   );
-  if (!result.success) notFound();
 
-  const members = result.data.flatMap((member): MemberRow[] =>
+  const members = rawMembers.flatMap((member): MemberRow[] =>
     member.status === 'ended'
       ? []
       : [

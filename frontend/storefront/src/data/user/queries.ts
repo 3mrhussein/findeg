@@ -12,17 +12,12 @@ import { createIdentityServices } from '@findeg/backend/features/identity';
  * @returns User session data or null if not authenticated
  */
 export const getCurrentUser = cache(async () => {
-  try {
-    const session = await getCachedSession();
-    if (!session?.userId) return null;
+  const session = await getCachedSession();
+  if (!session?.userId) return null;
 
-    return {
-      user: session.user || null,
-    };
-  } catch (error) {
-    console.error('Failed to get current user:', error);
-    return null;
-  }
+  return {
+    user: session.user || null,
+  };
 });
 
 /**

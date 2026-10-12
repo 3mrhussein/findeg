@@ -231,7 +231,6 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
 export async function getProductPdp(
   locale: string,
   slug: string,
-  _session: import('@findeg/backend/features/core').SessionPayload | null = null,
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = parse(locale);
 
