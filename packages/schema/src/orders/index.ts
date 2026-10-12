@@ -54,18 +54,30 @@ export const PAYMENT_STATUS_TRANSITIONS: Readonly<Record<PaymentStatus, readonly
   };
 
 /**
- * Phase one accepts cash on delivery only (ADR-0005).
- * TODO (owner review): card is commented out until the payment option shape is agreed.
- * export const PAYMENT_METHODS = ['cod', 'card'] as const;
+ * Payment methods are data, not a fixed list: a method is accepted at checkout when its option
+ * is `allowed`. Turning card on is a data change, plus a database enum migration (ADR-0005).
  */
-export const PAYMENT_METHODS = ['cod'] as const;
-export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+export const PAYMENT_METHOD_TYPES = ['cod', 'card'] as const;
+export type PaymentMethodType = (typeof PAYMENT_METHOD_TYPES)[number];
 
-/** Whether a payment method may be used for a checkout. */
+/** A payment method, the phase in which it is accepted, and whether it is accepted today. */
 export interface PaymentOption {
-  type: PaymentMethod;
+  type: PaymentMethodType;
   allowed: boolean;
+  phase: 1 | 2;
 }
+
+export const PAYMENT_OPTIONS: readonly PaymentOption[] = [
+  { type: 'cod', allowed: true, phase: 1 },
+  { type: 'card', allowed: false, phase: 2 },
+];
+
+/** Payment methods a checkout may accept today. */
+export const ACCEPTED_PAYMENT_TYPES: readonly PaymentMethodType[] = PAYMENT_OPTIONS.filter(
+  (option) => option.allowed,
+).map((option) => option.type);
+
+export type PaymentMethod = PaymentMethodType;
 
 /** An accepted Order. Its status and payment status change after acceptance. */
 export interface Order {
@@ -77,6 +89,17 @@ export interface Order {
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
   currency: CurrencyCode;
+}
+
+/** One product variant on an Order, priced at acceptance. */
+export interface OrderLine {
+  id: number;
+  orderId: Order['id'];
+  variantId: number;
+  quantity: number;
+  unitPrice: MoneyInPiasters;
+  /** Set when the line came from a School Supply List (Exact Item or Allowed Alternative). */
+  supplyListItemId?: number;
 }
 
 /** An Order fixed to exactly one School Supply List, recording its Partner School's Business Partner. */

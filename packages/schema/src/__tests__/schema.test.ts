@@ -17,7 +17,8 @@ describe('pinned business values', () => {
       'refunded',
     ]);
     expect(schema.PAYMENT_STATUSES).toEqual(['unpaid', 'paid', 'refunded']);
-    expect(schema.PAYMENT_METHODS).toEqual(['cod']);
+    expect(schema.PAYMENT_METHOD_TYPES).toEqual(['cod', 'card']);
+    expect(schema.ACCEPTED_PAYMENT_TYPES).toEqual(['cod']);
   });
 
   it('partners', () => {
@@ -40,7 +41,7 @@ describe('pinned business values', () => {
   it('school supply lists and partner schools', () => {
     expect(schema.SUPPLY_LIST_STATUSES).toEqual(['draft', 'published', 'archived']);
     expect(schema.PUBLIC_SUPPLY_LIST_STATUSES).toEqual(['published', 'archived']);
-    expect(schema.GOVERNORATES).toHaveLength(16);
+    expect(schema.GOVERNORATES).toHaveLength(27);
     expect(schema.SCHOOL_TYPES).toHaveLength(5);
     expect(schema.ACADEMIC_SYSTEMS).toHaveLength(8);
   });
@@ -60,6 +61,9 @@ describe('transition tables', () => {
     ['order', schema.ORDER_STATUS_TRANSITIONS],
     ['payment', schema.PAYMENT_STATUS_TRANSITIONS],
     ['supply list', schema.SUPPLY_LIST_STATUS_TRANSITIONS],
+    ['partner', schema.BUSINESS_PARTNER_STATUS_TRANSITIONS],
+    ['membership', schema.PARTNER_MEMBERSHIP_STATUS_TRANSITIONS],
+    ['invitation', schema.PARTNER_INVITATION_STATUS_TRANSITIONS],
   ])('%s targets are declared statuses', (_name, table) => {
     const known = Object.keys(table);
     for (const targets of Object.values(table)) {
@@ -76,6 +80,9 @@ describe('transition tables', () => {
     expect(schema.ORDER_STATUS_TRANSITIONS.refunded).toEqual([]);
     expect(schema.PAYMENT_STATUS_TRANSITIONS.refunded).toEqual([]);
     expect(schema.SUPPLY_LIST_STATUS_TRANSITIONS.archived).toEqual([]);
+    expect(schema.BUSINESS_PARTNER_STATUS_TRANSITIONS.closed).toEqual([]);
+    expect(schema.PARTNER_MEMBERSHIP_STATUS_TRANSITIONS.ended).toEqual([]);
+    expect(schema.PARTNER_INVITATION_STATUS_TRANSITIONS.accepted).toEqual([]);
   });
 
   it('a refund follows only delivery (cash on delivery, ADR-0005)', () => {
@@ -100,5 +107,14 @@ describe('public list projection', () => {
       expect(schema.SUPPLY_LIST_STATUSES).toContain(status);
     }
     expect(schema.PUBLIC_SUPPLY_LIST_STATUSES).not.toContain('draft');
+  });
+});
+
+describe('payment options', () => {
+  it('only cash on delivery is accepted in phase one; card is defined for phase two', () => {
+    expect(schema.PAYMENT_OPTIONS).toEqual([
+      { type: 'cod', allowed: true, phase: 1 },
+      { type: 'card', allowed: false, phase: 2 },
+    ]);
   });
 });

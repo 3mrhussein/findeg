@@ -28,8 +28,36 @@ export const PARTNER_ADMINISTRATOR: PartnerRole = 'partner-administrator';
 /** A Business Partner that is not closed always keeps at least one active administrator. */
 export const PARTNER_ADMINISTRATOR_MIN_ACTIVE = 1;
 
+/** Partner status moves. `closed` is final; nothing returns from it. */
+export const BUSINESS_PARTNER_STATUS_TRANSITIONS: Readonly<
+  Record<BusinessPartnerStatus, readonly BusinessPartnerStatus[]>
+> = {
+  onboarding: ['active', 'closed'],
+  active: ['suspended', 'closed'],
+  suspended: ['active', 'closed'],
+  closed: [],
+};
+
+/** Membership moves. `ended` is permanent history: the backend and the schema both reject changes from it. */
+export const PARTNER_MEMBERSHIP_STATUS_TRANSITIONS: Readonly<
+  Record<PartnerMembershipStatus, readonly PartnerMembershipStatus[]>
+> = {
+  active: ['suspended', 'ended'],
+  suspended: ['active', 'ended'],
+  ended: [],
+};
+
 export const PARTNER_INVITATION_STATUSES = ['pending', 'accepted', 'revoked'] as const;
 export type PartnerInvitationStatus = (typeof PARTNER_INVITATION_STATUSES)[number];
+
+/** Invitation moves. Expiry after PARTNER_INVITATION_VALID_DAYS is derived from the date, not stored as a status. */
+export const PARTNER_INVITATION_STATUS_TRANSITIONS: Readonly<
+  Record<PartnerInvitationStatus, readonly PartnerInvitationStatus[]>
+> = {
+  pending: ['accepted', 'revoked'],
+  accepted: [],
+  revoked: [],
+};
 
 /** An invitation's link is valid for this many days after it is sent. */
 export const PARTNER_INVITATION_VALID_DAYS = 7;
@@ -43,17 +71,28 @@ export const GOVERNORATES = [
   'Alexandria',
   'Dakahlia',
   'Red Sea',
-  'Sharqia',
-  'Qalyubia',
   'Beheira',
-  'Gharbia',
   'Faiyum',
+  'Gharbia',
+  'Ismailia',
+  'Menofia',
   'Minya',
-  'Asyut',
-  'Sohag',
-  'Qena',
-  'Luxor',
+  'Qalyubia',
+  'New Valley',
+  'Suez',
   'Aswan',
+  'Assiut',
+  'Beni Suef',
+  'Port Said',
+  'Damietta',
+  'Sharqia',
+  'South Sinai',
+  'Kafr El Sheikh',
+  'Matrouh',
+  'Luxor',
+  'Qena',
+  'North Sinai',
+  'Sohag',
 ] as const;
 export type Governorate = (typeof GOVERNORATES)[number];
 
