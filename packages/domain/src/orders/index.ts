@@ -62,6 +62,17 @@ export {
   shippingAddress,
 } from './order-contact';
 export type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
+export {
+  CART_QUANTITY_MAX,
+  CART_QUANTITY_MIN,
+  CartError,
+  EMPTY_CART,
+  addToCart,
+  cart,
+  removeFromCart,
+  setCartQuantity,
+} from './cart';
+export type { Cart, CartErrorCode, CartLine } from './cart';
 
 export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
