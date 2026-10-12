@@ -30,6 +30,7 @@ export function mapDomainError(error: unknown): CheckoutAcceptFailure | undefine
     };
   }
   const codes = [
+    'INVALID_SKU',
     'INVALID_PHONE',
     'INVALID_GUEST_EMAIL',
     'INVALID_SHIPPING_ADDRESS',
