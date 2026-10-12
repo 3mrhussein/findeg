@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from '@findeg/domain/common';
+import { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from '@findeg/domain/orders';
 
 // Ported from partner-sales' Cairo-time boundary tests (ADR-0010).
 describe('FindEg business time', () => {
