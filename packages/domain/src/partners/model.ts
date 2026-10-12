@@ -124,5 +124,7 @@ export interface PartnerInvitation {
   email: string;
   roles: readonly PartnerRole[];
   status: PartnerInvitationStatus;
+  /** The sent time plus PARTNER_INVITATION_VALID_DAYS, reset on resend. Expired when `≤ now`. */
+  expiresAt: Date;
   locale: Locale;
 }
