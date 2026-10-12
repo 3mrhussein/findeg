@@ -23,6 +23,14 @@ describe('Server cart delegates quantity and merge rules to Domain', () => {
     expect(new CartEntity([item(2), item(3)]).getItems()).toEqual([item(5)]);
   });
 
+  it('returns exact decimal totals through the legacy numeric DTO', () => {
+    const service = new CartService();
+    expect(service.getTotals([{ ...item(3), unitPrice: 0.1 }])).toEqual({
+      totalItems: 3,
+      totalPrice: 0.3,
+    });
+  });
+
   it.each([0, -1, 1.5, 1000])('refuses quantity %s in adds and updates', (quantity) => {
     const service = new CartService();
     expect(() => service.addToCart([], item(quantity))).toThrow();
