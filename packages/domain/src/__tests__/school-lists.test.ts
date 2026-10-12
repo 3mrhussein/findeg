@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { DomainError, type ActiveStatus } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
+import { BUSINESS_PARTNER_STATUSES, type BusinessPartnerStatus } from '@findeg/domain/partners';
 import {
+  STAFF_LIST_AUTHORING_ACTIONS,
+  assertStaffListAuthoring,
   eligibleVariants,
   generatePublicCode,
+  staffListAuthoringAllows,
   isExactItem,
   publicCode,
   supplyListItem,
@@ -195,5 +199,30 @@ describe('public code (SL-6)', () => {
     ['empty', ''],
   ])('refuses a code that is %s', (_name, text) => {
     expect(codeOf(() => publicCode(text))).toBe('INVALID_PUBLIC_CODE');
+  });
+});
+
+describe('change: Staff list authoring is its own named rule (ADR-0014), apart from the ADR-0012 table', () => {
+  // Characterisation of the Backend's partnerListAuthoring and its lifecycle table.
+  const table: Record<BusinessPartnerStatus, { publish: boolean; draft: boolean }> = {
+    onboarding: { publish: true, draft: true },
+    active: { publish: true, draft: true },
+    suspended: { publish: false, draft: true },
+    closed: { publish: false, draft: false },
+  };
+
+  it('covers every Business Partner status', () => {
+    expect(Object.keys(table).sort()).toEqual([...BUSINESS_PARTNER_STATUSES].sort());
+    expect(STAFF_LIST_AUTHORING_ACTIONS).toEqual(['draft', 'publish']);
+  });
+
+  it.each(BUSINESS_PARTNER_STATUSES)('%s: publishing and drafting', (status) => {
+    for (const action of STAFF_LIST_AUTHORING_ACTIONS) {
+      expect(staffListAuthoringAllows(status, action), action).toBe(table[status][action]);
+      expect(
+        codeOf(() => assertStaffListAuthoring(status, action)),
+        action,
+      ).toBe(table[status][action] ? undefined : 'PARTNER_STATUS_NOT_ALLOWED');
+    }
   });
 });

@@ -13,6 +13,13 @@ export type { SupplyListErrorCode } from './supply-list-error';
 export { isExactItem, supplyListItem } from './item';
 export { PUBLIC_CODE_PATTERN, generatePublicCode, publicCode } from './public-code';
 export type { PublicCode, RandomBytes } from './public-code';
+export {
+  STAFF_LIST_AUTHORING_ACTIONS,
+  STAFF_LIST_AUTHORING_STATUSES,
+  assertStaffListAuthoring,
+  staffListAuthoringAllows,
+} from './staff-authoring';
+export type { StaffListAuthoringAction } from './staff-authoring';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
