@@ -1,4 +1,4 @@
-import { ZERO_MONEY, addMoney, businessMonthOf, type Money } from '../common';
+import { ZERO_MONEY, addMoney, type Money } from '../common';
 import type { VariantId } from '../catalog';
 import type { SupplyListId, SupplyListItemId } from '../school-lists';
 import { PARTNER_REPORT_MIN_ORDERS } from './model';
@@ -67,38 +67,3 @@ const NO_SALES: PartnerSalesFigures = { quantity: 0, charged: ZERO_MONEY };
 function addFigures(total: PartnerSalesFigures, row: PartnerSalesFigures): PartnerSalesFigures {
   return { quantity: total.quantity + row.quantity, charged: addMoney(total.charged, row.charged) };
 }
-
-/**
- * The months a Partner Report offers: every Cairo month from the first Attributed Order's month
- * (`YYYY-MM`) to the current one, ascending. None before the first Attributed Order.
- */
-export function partnerReportMonths(firstOrderMonth: string | null, now: Date): string[] {
-  const current = businessMonthOf(now);
-  if (firstOrderMonth === null || firstOrderMonth > current) return [];
-  const months: string[] = [];
-  let [year, month] = firstOrderMonth.split('-').map(Number) as [number, number];
-  for (let key = firstOrderMonth; key <= current; key = monthKey(year, month)) {
-    months.push(key);
-    month += 1;
-    if (month > 12) {
-      month = 1;
-      year += 1;
-    }
-  }
-  return months;
-}
-
-/**
- * Whether a Partner Report can be read for `month`: one of `partnerReportMonths`, or the current
- * Cairo month while there are none yet (the empty state).
- */
-export function isReadablePartnerReportMonth(
-  month: string,
-  firstOrderMonth: string | null,
-  now: Date,
-): boolean {
-  const months = partnerReportMonths(firstOrderMonth, now);
-  return months.length > 0 ? months.includes(month) : month === businessMonthOf(now);
-}
-
-const monthKey = (year: number, month: number) => `${year}-${String(month).padStart(2, '0')}`;

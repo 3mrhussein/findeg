@@ -31,7 +31,6 @@ const ACTION_ALLOWED: Record<PartnerAction, readonly BusinessPartnerStatus[]> = 
   read: ['onboarding', 'active', 'suspended'],
   reports: ['onboarding', 'active', 'suspended', 'closed'],
   'membership-change': ['onboarding', 'active'],
-  business: ['active'],
 };
 
 const EVERY_STATUS_AND_ACTION = BUSINESS_PARTNER_STATUSES.flatMap((status) =>
@@ -41,8 +40,8 @@ const EVERY_STATUS_AND_ACTION = BUSINESS_PARTNER_STATUSES.flatMap((status) =>
 );
 
 describe('ADR-0012 partner action table', () => {
-  it('names the four action classes', () => {
-    expect(PARTNER_ACTIONS).toEqual(['read', 'reports', 'membership-change', 'business']);
+  it('names the three action classes', () => {
+    expect(PARTNER_ACTIONS).toEqual(['read', 'reports', 'membership-change']);
   });
 
   it.each(EVERY_STATUS_AND_ACTION)('a %s partner allows %s: %s', (status, action, allowed) => {

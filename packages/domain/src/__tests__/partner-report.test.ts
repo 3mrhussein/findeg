@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { money, moneyFromDecimal } from '@findeg/domain/common';
 import {
   PARTNER_REPORT_MIN_ORDERS,
-  isReadablePartnerReportMonth,
-  partnerReportMonths,
   partnerReportTotals,
   rollUpPartnerReport,
 } from '@findeg/domain/partners';
@@ -71,53 +69,5 @@ describe('Partner Report roll-up', () => {
       { month: '2026-05', name: 'Popular', quantity: 3, charged: moneyFromDecimal('75.00') },
     ]);
     expect(Object.keys(report.otherItems!)).toEqual(['quantity', 'charged']);
-  });
-});
-
-// Ported from partner-sales' report month tests: months are Cairo months.
-describe('Partner Report months', () => {
-  const NOW = new Date('2026-05-20T10:00:00Z');
-
-  it('offers every month from the first Attributed Order to the current Cairo month', () => {
-    expect(partnerReportMonths('2026-04', NOW)).toEqual(['2026-04', '2026-05']);
-  });
-
-  it('crosses a year end', () => {
-    expect(partnerReportMonths('2025-11', NOW)).toEqual([
-      '2025-11',
-      '2025-12',
-      '2026-01',
-      '2026-02',
-      '2026-03',
-      '2026-04',
-      '2026-05',
-    ]);
-  });
-
-  it('takes the current month in Cairo time', () => {
-    // 00:30 on 1 June in Cairo, still May in UTC.
-    expect(partnerReportMonths('2026-05', new Date('2026-05-31T21:30:00Z'))).toEqual([
-      '2026-05',
-      '2026-06',
-    ]);
-  });
-
-  it('offers no months before the first Attributed Order', () => {
-    expect(partnerReportMonths(null, NOW)).toEqual([]);
-  });
-
-  it('reads the current month in the empty state', () => {
-    expect(isReadablePartnerReportMonth('2026-05', null, NOW)).toBe(true);
-    expect(isReadablePartnerReportMonth('2026-04', null, NOW)).toBe(false);
-  });
-
-  it.each([
-    ['2026-04', true],
-    ['2026-05', true],
-    ['2020-01', false],
-    ['2026-06', false],
-    ['May', false],
-  ])('reads %s once sales began in 2026-04: %s', (month, readable) => {
-    expect(isReadablePartnerReportMonth(month, '2026-04', NOW)).toBe(readable);
   });
 });

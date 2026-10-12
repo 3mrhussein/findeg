@@ -8,10 +8,10 @@ import {
 
 /**
  * The action classes a Business Partner's status limits in its own Partner Workspace (ADR-0012,
- * PA-3): reading the workspace, reading Partner Reports, changing memberships and invitations, and
- * the partner's business with FindEg. Staff list authoring is a separate rule (ADR-0014).
+ * PA-3): reading the workspace, reading Partner Reports, and changing memberships and
+ * invitations. Staff list authoring is a separate rule (ADR-0014).
  */
-export const PARTNER_ACTIONS = ['read', 'reports', 'membership-change', 'business'] as const;
+export const PARTNER_ACTIONS = ['read', 'reports', 'membership-change'] as const;
 export type PartnerAction = (typeof PARTNER_ACTIONS)[number];
 
 /** Which Business Partner statuses allow each action class. A closed partner keeps Reports only. */
@@ -19,7 +19,6 @@ const STATUSES_ALLOWING: Readonly<Record<PartnerAction, readonly BusinessPartner
   read: ['onboarding', 'active', 'suspended'],
   reports: ['onboarding', 'active', 'suspended', 'closed'],
   'membership-change': ['onboarding', 'active'],
-  business: ['active'],
 };
 
 /** Whether a Business Partner in `status` allows `action` (ADR-0012). */
