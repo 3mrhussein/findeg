@@ -25,6 +25,23 @@ export { archiveSupplyList, assertDraftEditable, cloneSupplyList } from './lifec
 export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './lifecycle';
 export { isListOfferActive, listOffer, listOfferBasisPointsAt } from './list-offer';
 export type { ListOfferWindow } from './list-offer';
+export {
+  chooseSelectionVariant,
+  isDefaultListSelection,
+  listCompleteness,
+  orderedSelectionLines,
+  reconcileListSelection,
+  seedListSelection,
+  setSelectionItemEnabled,
+  setSelectionQuantity,
+} from './list-selection';
+export type {
+  ListCompleteness,
+  ListSelection,
+  SelectableItem,
+  SelectableList,
+  SelectionLine,
+} from './list-selection';
 export { isSameSupplyListSlot, publishSupplyList } from './publish';
 export type {
   CopiedListOffer,
@@ -95,14 +112,4 @@ export interface SchoolSupplyListItem {
   specification: ItemSpecification | null;
   required: boolean;
   quantity: number;
-}
-
-/** A Customer's in-progress choices against one published list, kept apart from the Cart. */
-export interface ListSelection {
-  supplyListId: SupplyListId;
-  lines: readonly {
-    supplyListItemId: SupplyListItemId;
-    variantId: VariantId;
-    quantity: number;
-  }[];
 }
