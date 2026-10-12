@@ -4,6 +4,9 @@ import { brands, categories, products } from '../../schema';
 import { and, asc, Column, count, desc, eq, inArray, or, sql, SQL } from 'drizzle-orm';
 import type { AdminProductListQueryFilters, AdminProductListQueryResult } from './types';
 
+/**
+ * Queries a paginated list of admin products including the default variant SKU, price, and inventory.
+ */
 export async function getAdminProductsListRaw(
   filters: AdminProductListQueryFilters,
 ): Promise<AdminProductListQueryResult> {

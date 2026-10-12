@@ -104,6 +104,9 @@ export class ProductService implements IProductService {
     };
   }
 
+  /**
+   * Retrieves all products with their brand, category, variants, and default variant.
+   */
   async getAll(language?: Locale): Promise<Product[]> {
     const lang = parse(language);
     const results = await productQueries.getAllWithBrandAndCategory();
@@ -144,6 +147,9 @@ export class ProductService implements IProductService {
     return products;
   }
 
+  /**
+   * Retrieves a single product by ID with its brand, category, variants, and default variant.
+   */
   async getById(id: ID, language?: Locale): Promise<Product | null> {
     const lang = parse(language);
     const result = await productQueries.getByIdWithBrandAndCategory(id as number);

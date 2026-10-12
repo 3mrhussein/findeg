@@ -73,4 +73,11 @@ describe('AdminProductService catalogue write rules', () => {
     );
     expect(createProductWithVariantsInDb).not.toHaveBeenCalled();
   });
+
+  it('refuses equal base and compare-at prices when both are zero', async () => {
+    await expect(
+      service.createProduct(input({ basePrice: 0, strikePrice: 0 })),
+    ).rejects.toBeInstanceOf(ValidationError);
+    expect(createProductWithVariantsInDb).not.toHaveBeenCalled();
+  });
 });

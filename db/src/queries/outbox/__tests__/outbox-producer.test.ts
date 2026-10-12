@@ -27,7 +27,7 @@ describe('@findeg/db/queries/outbox', () => {
     const entry = await import('@findeg/db/queries/outbox');
 
     expect(typeof entry.enqueue).toBe('function');
-  }, 15000);
+  });
 
   it('exposes only the producer, not the connection-bound worker queries', async () => {
     const entry = await import('@findeg/db/queries/outbox');

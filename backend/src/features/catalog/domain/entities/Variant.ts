@@ -114,12 +114,16 @@ export class VariantEntity {
     return toMoney(Number(this.variant.strikePrice), currency as CurrencyCode);
   }
 
+  /**
+   * Returns discount percentage against the compare-at price, rounded to the nearest whole number.
+   */
   getDiscountPercentage(): number {
     return discountPercentage({
       price: moneyFromDecimal(Number(this.variant.basePrice).toFixed(2)),
-      compareAtPrice: this.variant.strikePrice
-        ? moneyFromDecimal(Number(this.variant.strikePrice).toFixed(2))
-        : null,
+      compareAtPrice:
+        this.variant.strikePrice != null
+          ? moneyFromDecimal(Number(this.variant.strikePrice).toFixed(2))
+          : null,
     });
   }
 
@@ -130,10 +134,16 @@ export class VariantEntity {
       .reduce((sum, bal) => sum + freeUnits(bal), 0);
   }
 
+  /**
+   * Indicates whether the variant has sellable units available in active warehouses.
+   */
   isInStock(): boolean {
     return stockLevel(this.getAvailableStock()) !== 'out-of-stock';
   }
 
+  /**
+   * Indicates whether the available stock is within the low stock threshold (1 to 5 units).
+   */
   isLowStock(): boolean {
     return stockLevel(this.getAvailableStock()) === 'low-stock';
   }

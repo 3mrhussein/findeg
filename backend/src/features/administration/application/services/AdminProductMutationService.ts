@@ -49,6 +49,9 @@ interface AdminProductMutationDependencies {
 export class AdminProductMutationService {
   constructor(private dependencies: AdminProductMutationDependencies) {}
 
+  /**
+   * Creates a product with variants after validating catalogue domain rules and relations.
+   */
   async createProduct(
     input: CreateProductWithVariantsInput,
     adminUserId?: number,
@@ -70,6 +73,9 @@ export class AdminProductMutationService {
     return { productId };
   }
 
+  /**
+   * Updates an existing product and its variants after validating catalogue domain rules.
+   */
   async updateProduct(
     id: ID,
     input: UpdateProductWithVariantsInput,

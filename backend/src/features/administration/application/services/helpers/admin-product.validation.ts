@@ -50,7 +50,7 @@ export function assertCatalogueWriteRules(rows: readonly CatalogueWriteRow[]): v
       if (row.basePrice === undefined) continue;
       checkCompareAtPrice(
         moneyFromDecimal(row.basePrice.toFixed(2)),
-        row.strikePrice ? moneyFromDecimal(row.strikePrice.toFixed(2)) : null,
+        row.strikePrice != null ? moneyFromDecimal(row.strikePrice.toFixed(2)) : null,
       );
     }
   } catch (error) {

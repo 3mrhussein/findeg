@@ -126,6 +126,9 @@ export function buildVariantKeyUpdates(
   }));
 }
 
+/**
+ * Maps a raw product list row into the public ProductListItem presentation shape.
+ */
 function mapAdminProductListItem({ defaultVariantSku, ...row }: ProductListRow): ProductListItem {
   let completeness: ProductListItem['completeness'] = 'complete';
 
