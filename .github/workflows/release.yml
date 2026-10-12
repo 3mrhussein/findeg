@@ -35,6 +35,11 @@ jobs:
         with:
           app-id: ${{ secrets.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          # Only what release-please, auto-merge and the sync PR need, not every
+          # permission the App's installation holds: contents to push the
+          # release branch, tag and publish; pull requests to open and merge.
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: Update Release PR or publish release
         id: release

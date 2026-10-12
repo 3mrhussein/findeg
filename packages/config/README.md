@@ -43,6 +43,6 @@ Current backlog is whatever `ratchet.json` holds. Both files are owned by people
 
 ## Verification
 
-`scripts/architecture/standard.test.mjs` holds a violating fixture for each new rule and for the ratchet itself, so a rule cannot go quiet without a test failing. Run it with `node --test scripts/architecture/*.test.mjs`.
+`scripts/architecture/standard.test.mjs` holds a violating fixture for each new rule and for the ratchet itself, so a rule cannot go quiet without a test failing. Run it with `pnpm test:architecture`; CI runs it in the `Architecture tests` job.
 
 `eslint/registry.js` holds the repo-specific facts (backend feature barrels, client-safe schema exports). A new project replaces that file and keeps the layers and profiles.
