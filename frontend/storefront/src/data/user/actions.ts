@@ -39,18 +39,23 @@ export async function updateProfile(formData: FormData) {
   if (!session?.userId) throw new Error('Not authenticated');
 
   const name = String(formData.get('name') ?? '').trim();
-  const phone = String(formData.get('phone') ?? '').trim();
+  const hasPhone = formData.has('phone');
+  const phone = hasPhone ? String(formData.get('phone') ?? '').trim() : undefined;
 
   // Validate input
-  validateInput(UpdateProfileInputSchema, { name, phone: phone || undefined });
+  validateInput(UpdateProfileInputSchema, { name, phone });
 
   const { firstName, lastName } = splitName(name);
 
-  await backendUpdateProfile(session.userId, {
+  const updatePayload: { firstName?: string; lastName?: string; phone?: string } = {
     firstName,
     lastName,
-    phone: phone || '',
-  });
+  };
+  if (phone !== undefined) {
+    updatePayload.phone = phone;
+  }
+
+  await backendUpdateProfile(session.userId, updatePayload);
 
   // Revalidate the account and settings pages to reflect updated data
   revalidatePath('/my-account');

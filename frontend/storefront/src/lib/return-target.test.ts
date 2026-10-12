@@ -12,4 +12,11 @@ describe('safeReturnTarget', () => {
     expect(safeReturnTarget('/my-account/orders', '/checkout')).toBe('/my-account/orders');
     expect(safeReturnTarget(undefined, 'https://outside.example')).toBe('/my-account');
   });
+  it('normalizes repeated query parameters passed as arrays', () => {
+    expect(safeReturnTarget(['/checkout', '/cart'])).toBe('/checkout');
+    expect(safeReturnTarget(['https://outside.example', '/checkout'])).toBe('/checkout');
+    expect(safeReturnTarget(['//outside.example'], '/my-account/orders')).toBe(
+      '/my-account/orders',
+    );
+  });
 });

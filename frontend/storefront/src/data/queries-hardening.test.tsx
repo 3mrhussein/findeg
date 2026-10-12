@@ -54,15 +54,17 @@ describe('ErrorPage component', () => {
 
 describe('ErrorBoundary route component', () => {
   it('renders error page with working server-data retry', () => {
-    const retry = vi.fn();
-    render(<ErrorBoundaryPage error={new Error('Database offline')} retry={retry} />);
+    const unstable_retry = vi.fn();
+    render(
+      <ErrorBoundaryPage error={new Error('Database offline')} unstable_retry={unstable_retry} />,
+    );
 
     expect(screen.getByText('Something went wrong!')).toBeInTheDocument();
     const retryBtn = screen.getByTestId('error-retry-button');
     expect(retryBtn).toBeInTheDocument();
 
     fireEvent.click(retryBtn);
-    expect(retry).toHaveBeenCalledTimes(1);
+    expect(unstable_retry).toHaveBeenCalledTimes(1);
   });
 });
 

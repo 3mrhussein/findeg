@@ -1,9 +1,11 @@
 /** Pick the first local return path, preserving the account fallback. */
-export function safeReturnTarget(...values: (string | undefined)[]): string {
+export function safeReturnTarget(...values: (string | string[] | undefined | null)[]): string {
+  const candidates = values.flatMap((value) => (Array.isArray(value) ? value : [value]));
   return (
-    values.find(
-      (value) =>
-        value?.startsWith('/') &&
+    candidates.find(
+      (value): value is string =>
+        typeof value === 'string' &&
+        value.startsWith('/') &&
         !value.startsWith('//') &&
         !value.includes('\\') &&
         !Array.from(value).some(

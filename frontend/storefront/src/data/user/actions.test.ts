@@ -84,7 +84,6 @@ describe('User actions - updateProfile', () => {
     expect(backendUpdateProfile).toHaveBeenCalledWith(102, {
       firstName: 'Sara',
       lastName: '',
-      phone: '',
     });
   });
   it('allows a phone-only update without inventing a name', async () => {

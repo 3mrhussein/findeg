@@ -26,8 +26,8 @@ export default async function Page({ params, searchParams }: Props) {
   const session = await requireAuth(locale);
   const { user, orders } = await getCustomerAccount(session);
 
-  const displayName =
-    [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;
+  const storedName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
+  const displayName = storedName || user.email;
 
   return (
     <div className="space-y-6">
@@ -65,7 +65,7 @@ export default async function Page({ params, searchParams }: Props) {
               <label className="text-sm font-medium" htmlFor="name">
                 {t('Pages.MyAccount.NameLabel')}
               </label>
-              <Input id="name" name="name" defaultValue={displayName} required minLength={2} />
+              <Input id="name" name="name" defaultValue={storedName} minLength={2} />
               <label className="text-sm font-medium" htmlFor="phone">
                 {t('Pages.MyAccount.PhoneLabel')}
               </label>
