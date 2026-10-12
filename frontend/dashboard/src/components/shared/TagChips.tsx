@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@findeg/domain';
 /**
  * TagChips Component
@@ -7,8 +9,6 @@ import { type Locale } from '@findeg/domain';
  *
  * Location: src/components/shared/ (cross-cutting)
  */
-
-('use client');
 
 import * as React from 'react';
 import { Badge } from '@findeg/ui';
