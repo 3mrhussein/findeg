@@ -3,8 +3,11 @@
  * Allowed Alternative, List Replacement; ADR-0004, ADR-0011).
  */
 import type { Id, LocalizedText } from '../common';
-import type { VariantId } from '../catalog';
+import type { CategoryId, VariantId } from '../catalog';
 import type { BusinessPartnerId } from '../partners';
+
+export { eligibleVariants, isEligibleVariant } from './eligibility';
+export type { CandidateVariant, EligibilityItem } from './eligibility';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
@@ -27,10 +30,6 @@ export const SUPPLY_LIST_STATUS_TRANSITIONS: Readonly<
   archived: [],
 };
 
-/** A School Supply List line is either an Exact Item or a specification (Allowed Alternative). */
-export const SUPPLY_LIST_ITEM_KINDS = ['exact-item', 'specification'] as const;
-export type SupplyListItemKind = (typeof SUPPLY_LIST_ITEM_KINDS)[number];
-
 export const SUPPLY_LIST_ITEM_QUANTITY_MIN = 1;
 export const SUPPLY_LIST_ITEM_QUANTITY_MAX = 999;
 
@@ -52,15 +51,26 @@ export interface SchoolSupplyList {
   replacedById?: SupplyListId;
 }
 
+/**
+ * What an item's Allowed Alternatives must match: a product in exactly this category whose
+ * variant carries every one of these attribute values.
+ */
+export interface ItemSpecification {
+  categoryId: CategoryId;
+  /** Attribute key → required value. Empty means any variant in the category. */
+  attributes: Readonly<Record<string, string>>;
+}
+
 /** One line of a School Supply List. Required or optional per item. */
 export interface SchoolSupplyListItem {
   id: SupplyListItemId;
   supplyListId: SupplyListId;
-  kind: SupplyListItemKind;
+  /** Every item has a default variant. A draft may still lack one; publishing refuses that. */
+  defaultVariantId: VariantId | null;
+  /** `null` makes an Exact Item: only the default variant is accepted. */
+  specification: ItemSpecification | null;
   required: boolean;
   quantity: number;
-  /** Exact Items name a product variant; specifications are matched at selection time. */
-  variantId?: VariantId;
 }
 
 /** A Customer's in-progress choices against one published list, kept apart from the Cart. */
