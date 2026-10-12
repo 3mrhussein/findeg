@@ -38,7 +38,7 @@ export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly Ord
 
 export { OrderError } from './order-error';
 export type { OrderErrorCode } from './order-error';
-export { changeOrderStatus } from './order-status';
+export { changeOrderStatus, changePaymentStatus, refundOrder } from './order-status';
 export type { OrderProgress, OrderProgressChange, OrderStatusAssertions } from './order-status';
 
 /** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
