@@ -36,6 +36,9 @@ export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly Ord
   refunded: [],
 };
 
+export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
+export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
+
 /** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
 export const ORDER_REFERENCE_PREFIX = 'FE-';
 export const ORDER_REFERENCE_BODY_LENGTH = 6;
