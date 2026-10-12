@@ -1,8 +1,8 @@
 # Identity & Administration
 
-As of 2026-10-11 · Clarity: **Launch roles decided; rest not documented**
+As of 2026-10-12 · Clarity: **Launch roles decided; rest not documented**
 
-> **Customer**, **Staff** and **Staff Role** are decided. The other terms are **proposed**, and rules marked _unconfirmed_ describe how the product behaves today without a business decision.
+> **Customer**, **Guest**, **Staff** and **Staff Role** are decided. The other terms are **proposed**, and rules marked _unconfirmed_ describe how the product behaves today without a business decision.
 
 ## Purpose
 
@@ -21,7 +21,7 @@ Know who is acting and what they are allowed to do: Customers who shop with or w
 
 **Customer** _(decided)_: A person who shops on the storefront, whether browsing in general or filling a School Supply List. _Avoid_: Parent, buyer, account.
 
-**Guest** _(proposed)_: A Customer without an account. They can buy, and look up their Orders through Guest Order Access (see [Checkout & Orders](checkout-and-orders.md)).
+**Guest** _(decided)_: A Customer without an account. They can buy, giving an email and a phone number with each Order (CO-19), and look up their Orders through Guest Order Access (see [Checkout & Orders](checkout-and-orders.md)).
 
 **Account** _(proposed)_: A person's sign-in identity: email, name, phone and Account Type. One person has one account, whatever Partner Memberships they hold.
 

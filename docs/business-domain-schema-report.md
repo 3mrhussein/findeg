@@ -1,5 +1,7 @@
 # Business Domain Schema: analysis and `@findeg/schema` report
 
+> Historical report. `@findeg/schema` is now `@findeg/domain`, the pure, rich business domain (ADR-0018, which supersedes ADR-0017). See `docs/business-domain-map.md` for the current map.
+
 Branch: `feat/business-domain-schema` (renamed from `claude/funny-hamilton-euzias` to satisfy AGENTS.md).
 
 ## What was built

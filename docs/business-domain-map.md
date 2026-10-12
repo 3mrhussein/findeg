@@ -1,34 +1,48 @@
 # Business-domain map
 
-The final map of FindEg's business areas and how they relate. The relations themselves are data in `packages/schema/src/relations`, and the schema tests check them: a relation that points at a missing entity fails the build. The diagrams below are maintained by hand. They were written from that data at this revision, and no test compares them with it, so update them whenever `RELATIONS` changes.
+The map of FindEg's business areas and how they relate. The relations themselves are data in `packages/domain/src/relations` (`@findeg/domain/relations`), and the domain tests check them against the domain's types: a relation that names a missing entity or a field the entity does not have fails the build. The map holds domain entities only; application plumbing (Outbox, Guest Order Access, idempotency) and read projections (the Partner Report) stay out. The diagrams below are maintained by hand. They were generated from that data at this revision, and no test compares them with it, so update them whenever `RELATIONS` changes.
 
 ## Business areas
 
-| Domain | Entities | Glossary terms |
+| Area | Entities | Glossary terms |
 | --- | --- | --- |
-| Customers | `Customer` | Customer |
-| Business Partners | `BusinessPartner`, `PartnerSchoolProfile`, `PartnerMembership`, `PartnerInvitation`, `PartnerReport` | Business Partner, Partner School, Partner Membership, Partner Invitation, Partner Report |
-| School Supply Lists | `SchoolSupplyList`, `SchoolSupplyListItem`, `ListSelection` | School Supply List, Exact Item, Allowed Alternative, List Selection |
-| Orders | `ListOffer`, `Order`, `OrderLine`, `AttributedOrder`, `GuestOrderAccess` | List Offer, Order, Attributed Order, Guest Order Access |
-| Catalog | `ProductVariant` | (variant of a product; referenced by lists and orders) |
-| Inventory | `StockReservation`, `Warehouse` | Stock Reservation |
-| Outbox | `OutboxMessage` | Outbox |
+| Customers | `Customer` | Customer, Guest |
+| Catalogue | `Product`, `ProductVariant`, `Category`, `Brand`, `Tag`, `Collection`, `Attribute` | Product, Product Variant, Default Variant, Compare-at Price, Category, Brand, Tag, New Arrival, Collection, Attribute |
+| Inventory | `Warehouse`, `StockBalance`, `StockReservation` | Warehouse, Stock Balance, Available Stock, Stock Level, Stock Reservation |
+| Business Partners | `BusinessPartner`, `PartnerSchoolProfile`, `PartnerMembership`, `PartnerInvitation` | Business Partner, Partner Code, Partner School, Partner Membership, Partner Invitation, Partner Report (a read model, not an entity) |
+| School Supply Lists | `SchoolSupplyList`, `SchoolSupplyListItem`, `ListSelection` | School Supply List, Exact Item, Specification, Allowed Alternative, Substitute, Slot, Public Code, List Replacement, List Selection, List Completeness |
+| Orders | `ListOffer`, `Order`, `OrderLine`, `AttributedOrder` | Cart, Quote, Confirmation, Order, Order Status, Payment Status, Order Reference, List Offer, Attributed Order |
+
+The Cart, the Quote and the Confirmation are values without an identity of their own, so they are not entities in the map.
 
 ## Area dependencies
 
-Each arrow reads "depends on": the source area stores an id that references the target area. Cross-area links are by id, never by object (ADR-0016).
+Each arrow reads "depends on": the source area stores ids that reference the target area, and the label counts those links. Cross-area links are by id, never by object (ADR-0018).
 
 ```mermaid
 flowchart LR
   subgraph customers["Customers"]
     Customer
   end
+  subgraph catalog["Catalogue"]
+    Product
+    ProductVariant
+    Category
+    Brand
+    Tag
+    Collection
+    Attribute
+  end
+  subgraph inventory["Inventory"]
+    Warehouse
+    StockBalance
+    StockReservation
+  end
   subgraph partners["Business Partners"]
     BusinessPartner
     PartnerSchoolProfile
     PartnerMembership
     PartnerInvitation
-    PartnerReport
   end
   subgraph school_lists["School Supply Lists"]
     SchoolSupplyList
@@ -40,94 +54,106 @@ flowchart LR
     Order
     OrderLine
     AttributedOrder
-    GuestOrderAccess
   end
-  subgraph catalog["Catalog"]
-    ProductVariant
-  end
-  subgraph inventory["Inventory"]
-    StockReservation
-    Warehouse
-  end
-  subgraph outbox["Outbox"]
-    OutboxMessage
-  end
-  partners -- "1 link(s)" --> customers
-  school_lists -- "1 link(s)" --> partners
-  school_lists -- "1 link(s)" --> catalog
-  orders -- "3 link(s)" --> school_lists
-  orders -- "1 link(s)" --> customers
-  orders -- "1 link(s)" --> catalog
-  orders -- "1 link(s)" --> partners
-  inventory -- "1 link(s)" --> orders
-  inventory -- "1 link(s)" --> catalog
-  outbox -- "1 link(s)" --> orders
+  partners -- "1 link" --> customers
+  school_lists -- "1 link" --> partners
+  school_lists -- "2 links" --> catalog
+  orders -- "4 links" --> school_lists
+  orders -- "1 link" --> customers
+  orders -- "1 link" --> catalog
+  orders -- "1 link" --> partners
+  inventory -- "2 links" --> catalog
+  inventory -- "1 link" --> orders
 ```
 
 ## Entity relations
 
-Each line is a link. The entity on the right stores the link in the field named on the line, and points at the parent on the left. `||` on the parent side means every child has exactly one parent (a required link); `|o` means the link is optional. `o{` means one parent has many children; `o|` means at most one.
+Each line is a link. The entity on the right stores the link in the field named on the line, and points at the parent on the left. `||` on the parent side means every child has exactly one parent (a required link); `|o` means the link is optional. `o{` means one parent has many children; `o|` means at most one. `}o--o{` is a many-to-many link held as a list of ids (or, for attributes, as values keyed by the Attribute's key).
 
 ```mermaid
 erDiagram
+  Product ||--o{ ProductVariant : "productId"
+  Category ||--o{ Product : "categoryId"
+  Brand |o--o{ Product : "brandId"
+  Category |o--o{ Category : "parentId"
+  Tag }o--o{ Product : "tagIds"
+  Tag }o--o{ Collection : "tagIds"
+  Attribute }o--o{ ProductVariant : "attributes"
   Customer ||--o{ PartnerMembership : "customerId"
   BusinessPartner ||--o{ PartnerMembership : "businessPartnerId"
   BusinessPartner ||--o{ PartnerInvitation : "businessPartnerId"
   BusinessPartner ||--o| PartnerSchoolProfile : "businessPartnerId"
-  BusinessPartner ||--o{ PartnerReport : "businessPartnerId"
   BusinessPartner ||--o{ SchoolSupplyList : "businessPartnerId"
   SchoolSupplyList ||--o{ SchoolSupplyListItem : "supplyListId"
-  ProductVariant |o--o{ SchoolSupplyListItem : "variantId"
-  SchoolSupplyList ||--o{ ListOffer : "supplyListId"
+  ProductVariant |o--o{ SchoolSupplyListItem : "defaultVariantId"
+  Category |o--o{ SchoolSupplyListItem : "specification.categoryId"
+  SchoolSupplyList ||--o| ListOffer : "supplyListId"
   SchoolSupplyList ||--o{ ListSelection : "supplyListId"
-  Customer |o--o{ Order : "customerId"
+  Customer |o--o{ Order : "buyer.customerId"
+  SchoolSupplyList |o--o{ Order : "source.supplyListId"
   Order ||--o{ OrderLine : "orderId"
   ProductVariant ||--o{ OrderLine : "variantId"
   SchoolSupplyListItem |o--o{ OrderLine : "supplyListItemId"
   Order ||--o| AttributedOrder : "orderId"
   SchoolSupplyList ||--o{ AttributedOrder : "supplyListId"
   BusinessPartner ||--o{ AttributedOrder : "businessPartnerId"
-  Order ||--o{ GuestOrderAccess : "orderReference"
+  ProductVariant ||--o{ StockBalance : "variantId"
+  Warehouse ||--o{ StockBalance : "warehouseId"
   Order ||--o{ StockReservation : "orderId"
   ProductVariant ||--o{ StockReservation : "variantId"
   Warehouse ||--o{ StockReservation : "warehouseId"
-  Order |o--o{ OutboxMessage : "payload.orderId"
 ```
+
+Notes on the optional links: a list item's default variant is missing only while its list is a draft, and an Exact Item has no specification. A guest buyer has no Customer, and a cart Order has no School Supply List. A list has at most one List Offer.
 
 ## Settled decisions
 
+The owner approved the rule changes marked _changed_ on 2026-10-12 (#402). The domain declares them, and #399 applies them in every layer.
+
 | Area | Decision | Source |
 | --- | --- | --- |
-| Payment | Cash on delivery is accepted now. Card is defined in `PAYMENT_OPTIONS` as phase 2 and is not accepted. Enabling card is a data change, plus a `payment_method` enum migration. | ADR-0005, this review |
-| Payment | A refund moves the order to `refunded` and its payment to `refunded` in the same transaction. Not implemented yet. | ADR-0005 amendment |
-| Order status | `confirmed` is kept as a Staff step between `pending` and `processing`. It is not the Order Acceptance moment (that stays atomic and is not a status). | `ORDER_STATUS_TRANSITIONS` |
-| Order status | Cancellation is allowed from `shipped` only once the parcel is back in the warehouse. | ADR-0005 |
-| Partner status | `closed` is final. `onboarding` can go to `active` or `closed`; `active` and `suspended` move between each other and to `closed`. | `BUSINESS_PARTNER_STATUS_TRANSITIONS`, ADR-0012 |
-| Membership | `ended` is terminal: no change from it. Reactivate applies only to `suspended`. | `PARTNER_MEMBERSHIP_STATUS_TRANSITIONS`, ADR-0003 |
-| Invitation | `pending` can become `accepted` or `revoked`. Expiry after 7 days is derived from the date. | `PARTNER_INVITATION_STATUS_TRANSITIONS` |
-| School Supply List | Draft → Published → Archived. Archived is set when a List Replacement supersedes it. Clones keep `sourceListId`; replacements keep `replacesListId`. | ADR-0004 |
-| Stock | A reservation is held from acceptance to delivery or cancellation. The state is derived from the order, not stored. | ADR-0005 |
-| Locations | All 27 Egyptian governorates. The list was 16, which was incomplete. | General knowledge, not from the repo. Staff to confirm the names used on profiles. |
-| Currency | EGP only. The dashboard's USD product table is a bug. | `DEFAULT_CURRENCY` |
-| Shipping | A flat fee from the backend, the same for every payment method until card has its own rule. | `DEFAULT_FLAT_SHIPPING_FEE` |
+| Money | EGP with exactly two decimals (`12.00`, `12.99`), never negative, stored as `decimal(…, 2)`. Input with more than two decimals is refused, never rounded. Prices include VAT. _Changed_: never negative. | ADR-0018, CO-9 |
+| List Offer | Each line total is `roundHalfUp(gross × (10000 − bps) / 10000)`, rounded to two decimals once per line; the discount is gross minus line total. A list has at most one List Offer; it applies when `startsAt ≤ at < endsAt`, and an offer with no end is open-ended. It applies to every line of the list's Order, whether or not the selection is complete. | ADR-0007 |
+| Payment | Cash on delivery is the only accepted payment method. Card is defined but not accepted. | ADR-0005, CO-6 |
+| Payment | _Changed_: payment becomes `paid` only once the Order is delivered. | CO-12 |
+| Refund | _Changed_: a Refund moves a delivered, paid Order and its payment to `refunded` together. A payment is never refunded alone. | ADR-0005 amendment, CO-13 |
+| Order status | `confirmed` is kept between `pending` and `processing`, is visible to Customers and means "confirmed by phone". It is not the Order Acceptance moment. | CO-18 |
+| Order status | _Changed_: cancelling a shipped Order requires Staff to state that the parcel is back in the warehouse. | ADR-0005, CO-13 |
+| Status changes | A same-status change is a no-op for Order status, payment status and Partner Membership. For a Business Partner and a Partner Invitation it is refused. | ADR-0016 |
+| Notifications | Customers are notified of `shipped`, `delivered` and `cancelled`. There is no refund email. | CO-16 |
+| Contact | _Changed_: every Order has an Egyptian mobile number, and a guest Order also has an email. | CO-19 |
+| Shipping | _Changed_: one flat fee of 50.00 EGP, declared in the domain, with no environment override. | CO-7 |
+| Time | Months and dates are bucketed in Africa/Cairo time everywhere. | PA-14 |
+| Stock | _Changed_: Available Stock is on hand minus reserved, summed over active warehouses, never below zero; low stock is 1 to 5 available units. | CA-9, CA-10 |
+| Stock | A reservation is held from Order Acceptance, consumed on delivery and released on cancellation; its state follows the Order. Stock is allocated greedily across active warehouses, all or nothing. | ADR-0005, CO-4, CO-11 |
+| Catalogue | _Changed_: the Default Variant is the variant flagged default, otherwise the first. A Compare-at Price is always above the price. Products and categories are Active or Inactive, never Draft. _Changed_: New Arrival means the `new-arrival` tag. | CA-1, CA-3, CA-11, CA-12 |
+| Partner status | `closed` is final. `onboarding` can go to `active` or `closed`; `active` and `suspended` move between each other and to `closed`. Activation needs an active Partner Administrator. | ADR-0012, PA-17 |
+| Partner access | _Changed_: two separate named rules: the partner action table (Workspace read, membership changes, reports; a closed partner keeps reports only) and the Staff list-authoring rule (draft while onboarding, active or suspended; publish or replace only while onboarding or active; archive in any status). The values are unchanged. | ADR-0012, ADR-0014 amendments, PA-3, SL-13 |
+| Membership | `ended` is terminal: no change from it. Reactivate applies only to `suspended`. | ADR-0003, PA-8 |
+| Invitation | `pending` can become `accepted` or `revoked`. Sending and resending set the expiry to 7 days later; it is expired once that moment has come. | PA-9 |
+| Partner Report | One row per month, list, item and variant, over Live Orders only. A row from fewer than 3 distinct Orders is folded into "Other items", so totals still add up, and no Order count is ever shown. | ADR-0010, PA-14 |
+| Directory | _Changed_: a Partner School is listed only when it has at least one published list. | PA-18 |
+| School Supply List | Draft → Published → Archived. Archived is set when a List Replacement supersedes it, and the replacement copies its List Offer. Clones keep `sourceListId`; replacements keep `replacesListId`. | ADR-0004, ADR-0007 |
+| Locations | All 27 Egyptian governorates, shared by shipping addresses and Partner School Profiles. | General knowledge, not from the repo |
+| Currency | EGP only. | `DEFAULT_CURRENCY` |
 | Rewards | Not modelled. The rewards ledger was removed. | ADR-0013 |
 
 ## Validation
 
-The schema tests check the map:
+The relation tests check the map:
 
 - every relation points at an entity that exists in `ENTITY_DOMAINS`
+- the map names exactly the entities the domain exports, and no application plumbing or read projection
+- every relation's field really exists on its entity (checked by the type-check)
 - no entity is left without a relation
 - no relation is declared twice
-- cross-area links use an id field or the Order Reference, never an object
-- every link has exactly one parent per child
-- payload references (outbox) are never required
-- every status transition table targets only declared statuses; `closed`, `ended`, `accepted`, `archived` and `refunded` have no outgoing moves
+- cross-area links use an `…Id` field, never an object
+- an `…Id` field names one parent; an id list or an attribute map names many
+- the catalogue, Order and List Offer links are pinned by name
 
-Both diagrams were checked by the Mermaid validator when written: the entity diagram and the area diagram are both valid. Nothing re-checks them automatically.
+Both diagrams were checked by the Mermaid validator when written. Nothing re-checks them automatically.
 
 ## Open for Staff
 
-1. The governorate names on school profiles must match the list above.
-2. Whether `confirmed` should stay as a visible status for Customers.
-3. The shipping rule for card, once card is enabled.
+1. The governorate names on school profiles and addresses must match the list above.
+2. The shipping rule for card, once card is enabled.

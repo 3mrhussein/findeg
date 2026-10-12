@@ -32,3 +32,7 @@ A Business Partner is `onboarding`, `active`, `suspended` or `closed` (ADR-0003;
 
 - Partner Rewards are not status-driven either (ADR-0013 removes the ledger).
 - ADR-0004's lifecycle gains a status check on publish, replace and draft; nothing else in lists or checkout changes.
+
+## Amendment: two named rules
+
+Decided in [#402](https://github.com/3mrhussein/findeg/issues/402). The matrix above is now two rules in `@findeg/domain`: the **partner action table** (Workspace read, membership changes, reports; a closed partner keeps reports only) and the **Staff list-authoring rule** (the two list columns, see the ADR-0014 amendment). The values in the matrix are unchanged.

@@ -4,7 +4,7 @@
  */
 import type { CurrencyCode, Id } from '../common';
 import type { BusinessPartnerId } from '../partners';
-import type { SupplyListId } from '../school-lists';
+import type { PublicCode, SupplyListId } from '../school-lists';
 import type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
 import type { OrderReference } from './order-reference';
 import type { OrderSource, OrderTotals, QuoteLine } from './quote';
@@ -146,7 +146,7 @@ export interface OrderLine extends QuoteLine {
 export interface AttributedOrder {
   orderId: OrderId;
   supplyListId: SupplyListId;
-  supplyListPublicCode: string;
+  supplyListPublicCode: PublicCode;
   businessPartnerId: BusinessPartnerId;
 }
 
