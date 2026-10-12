@@ -179,6 +179,7 @@ export type {
   Quote,
   QuoteLine,
   QuoteLineRequest,
+  QuoteSource,
 } from './quote';
 export { ReconfirmationRequiredError, confirmQuote, confirmationTerms } from './confirmation';
 export type { ConfirmationLine, ConfirmationTerms } from './confirmation';

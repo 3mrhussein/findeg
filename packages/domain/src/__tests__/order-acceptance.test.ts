@@ -14,11 +14,11 @@ import {
   shippingAddress,
   type ConfirmationTerms,
   type OrderAcceptanceRequest,
-  type OrderSource,
+  type QuoteSource,
   type Quote,
   type QuoteLineRequest,
 } from '@findeg/domain/orders';
-import type { SupplyListId, SupplyListItemId } from '@findeg/domain/school-lists';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
 
 function codeOf(run: () => unknown): string | undefined {
   try {
@@ -31,6 +31,7 @@ function codeOf(run: () => unknown): string | undefined {
 }
 
 const egp = moneyFromDecimal;
+const AT = new Date('2026-10-15T12:00:00.000Z');
 const pen = 1 as VariantId;
 const ruler = 2 as VariantId;
 const main = 10 as WarehouseId;
@@ -88,7 +89,7 @@ const plenty: StockBalance[] = [
 
 // Ported from checkout's acceptance tests (CO-4, CO-10, ADR-0005).
 describe('Order Acceptance', () => {
-  const quote = priceQuote({ kind: 'cart' }, [line(pen, '40.00', 5), line(ruler, '15.00', 1)]);
+  const quote = priceQuote({ kind: 'cart' }, [line(pen, '40.00', 5), line(ruler, '15.00', 1)], AT);
 
   it('accepts a confirmed Quote as a pending, unpaid cash-on-delivery Order', () => {
     const { order } = acceptOrder(request(quote, plenty));
@@ -168,7 +169,11 @@ describe('Order Acceptance', () => {
   });
 
   it('asks for reconfirmation when the terms changed, before holding any stock', () => {
-    const repriced = priceQuote({ kind: 'cart' }, [line(pen, '41.00', 5), line(ruler, '15.00', 1)]);
+    const repriced = priceQuote(
+      { kind: 'cart' },
+      [line(pen, '41.00', 5), line(ruler, '15.00', 1)],
+      AT,
+    );
     const stale = digest(confirmationTerms(quote));
     expect(codeOf(() => acceptOrder(request(repriced, [], { confirmation: stale })))).toBe(
       'RECONFIRMATION_REQUIRED',
@@ -196,24 +201,33 @@ describe('Order Acceptance', () => {
   });
 
   it('keeps a list Order attributed to its list, offer, items and substitutes', () => {
-    const source: OrderSource = {
+    const source: QuoteSource = {
       kind: 'list',
       supplyListId: 7 as SupplyListId,
+      publicCode: publicCode('a'.repeat(32)),
+      offer: { basisPoints: 1000, startsAt: new Date('2026-10-01T00:00:00.000Z'), endsAt: null },
+    };
+    const listQuote = priceQuote(
+      source,
+      [
+        {
+          ...line(pen, '10.05', 2),
+          listItem: { supplyListItemId: 3 as SupplyListItemId, defaultVariantId: pen },
+        },
+        {
+          ...line(ruler, '20.00', 1),
+          listItem: { supplyListItemId: 4 as SupplyListItemId, defaultVariantId: pen },
+        },
+      ],
+      AT,
+    );
+    const { order } = acceptOrder(request(listQuote, plenty));
+    expect(order.source).toEqual({
+      kind: 'list',
+      supplyListId: 7,
       publicCode: 'a'.repeat(32),
       listOfferBasisPoints: 1000,
-    };
-    const listQuote = priceQuote(source, [
-      {
-        ...line(pen, '10.05', 2),
-        listItem: { supplyListItemId: 3 as SupplyListItemId, isSubstitute: false },
-      },
-      {
-        ...line(ruler, '20.00', 1),
-        listItem: { supplyListItemId: 4 as SupplyListItemId, isSubstitute: true },
-      },
-    ]);
-    const { order } = acceptOrder(request(listQuote, plenty));
-    expect(order.source).toEqual(source);
+    });
     expect(order.lines.map((l) => [l.supplyListItemId, l.isSubstitute, l.discounts])).toEqual([
       [3, false, [{ source: 'list-offer', amount: egp('2.01') }]],
       [4, true, [{ source: 'list-offer', amount: egp('2.00') }]],

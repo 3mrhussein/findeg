@@ -8,8 +8,14 @@ import {
   type CurrencyCode,
   type Money,
 } from '../common';
-import type { SupplyListId, SupplyListItemId } from '../school-lists';
-import type { DiscountSource } from './index';
+import {
+  isSubstitute,
+  listOfferBasisPointsAt,
+  type PublicCode,
+  type SupplyListId,
+  type SupplyListItemId,
+} from '../school-lists';
+import type { DiscountSource, ListOffer } from './index';
 import { priceListOfferLine } from './list-offer-pricing';
 import { OrderError } from './order-error';
 
@@ -18,15 +24,25 @@ export const FLAT_SHIPPING_FEE: Money = moneyFromDecimal('50.00');
 
 /**
  * Where an Order's lines come from: the Cart, or exactly one School Supply List (CO-1). A list
- * Order carries the List Offer that was active when it was priced, or `null`.
+ * Order records the List Offer basis points that applied when it was priced, or `null`.
  */
 export type OrderSource =
   | { kind: 'cart' }
   | {
       kind: 'list';
       supplyListId: SupplyListId;
-      publicCode: string;
+      publicCode: PublicCode;
       listOfferBasisPoints: number | null;
+    };
+
+/** Where the lines to price come from: the Cart, or one list with its List Offer, if any. */
+export type QuoteSource =
+  | { kind: 'cart' }
+  | {
+      kind: 'list';
+      supplyListId: SupplyListId;
+      publicCode: PublicCode;
+      offer: Pick<ListOffer, 'basisPoints' | 'startsAt' | 'endsAt'> | null;
     };
 
 /** A line to price: a variant at its current catalogue price, and what it fulfils on a list. */
@@ -36,8 +52,8 @@ export interface QuoteLineRequest {
   sku: Sku;
   unitPrice: Money;
   quantity: number;
-  /** Only on list lines: the item it fulfils and whether the variant is not the item's default. */
-  listItem?: { supplyListItemId: SupplyListItemId; isSubstitute: boolean };
+  /** Only on list lines: the item it fulfils and that item's default variant. */
+  listItem?: { supplyListItemId: SupplyListItemId; defaultVariantId: VariantId | null };
 }
 
 /** Money taken off one line, tagged with where the discount came from (ADR-0007). */
@@ -86,26 +102,40 @@ export interface Quote {
 const LIST_OFFER: DiscountSource = 'list-offer';
 
 /**
- * Prices an Order's lines (ADR-0007). Cart lines of the same variant are merged, in the order
- * they first appear; list lines are ordered by list item. A list's offer is applied to every
- * line by the List Offer line rule and tagged `list-offer` when it takes anything off. Shipping
- * is the flat fee.
+ * Prices an Order's lines at the moment `at` (ADR-0007). Cart lines of the same variant are
+ * merged, in the order they first appear; list lines are ordered by list item. A list's offer,
+ * when active at `at`, is applied to every line alike by the List Offer line rule and tagged
+ * `list-offer` when it takes anything off. Shipping is the flat fee.
  */
-export function priceQuote(source: OrderSource, requests: readonly QuoteLineRequest[]): Quote {
+export function priceQuote(
+  source: QuoteSource,
+  requests: readonly QuoteLineRequest[],
+  at: Date,
+): Quote {
   if (requests.length === 0) {
     throw new OrderError('EMPTY_ORDER', 'An Order needs at least one line');
   }
   for (const request of requests) requireSource(source, request);
-  const basisPoints = source.kind === 'list' ? source.listOfferBasisPoints : null;
-  const ordered =
-    source.kind === 'cart'
-      ? mergeByVariant(requests)
-      : [...requests].sort((a, b) => a.listItem!.supplyListItemId - b.listItem!.supplyListItemId);
-  const lines = ordered.map((request) => priceLine(request, basisPoints));
+  if (source.kind === 'cart') {
+    const lines = mergeByVariant(requests).map((request) => priceLine(request, null));
+    return quoteOf({ kind: 'cart' }, lines);
+  }
+  const basisPoints = listOfferBasisPointsAt(source.offer, at);
+  const lines = [...requests]
+    .sort((a, b) => a.listItem!.supplyListItemId - b.listItem!.supplyListItemId)
+    .map((request) => priceLine(request, basisPoints));
+  const { supplyListId, publicCode } = source;
+  return quoteOf(
+    { kind: 'list', supplyListId, publicCode, listOfferBasisPoints: basisPoints },
+    lines,
+  );
+}
+
+function quoteOf(source: OrderSource, lines: readonly QuoteLine[]): Quote {
   return { source, lines, totals: totalsOf(lines, FLAT_SHIPPING_FEE), currency: DEFAULT_CURRENCY };
 }
 
-function requireSource(source: OrderSource, request: QuoteLineRequest): void {
+function requireSource(source: QuoteSource, request: QuoteLineRequest): void {
   if ((source.kind === 'list') !== (request.listItem !== undefined)) {
     throw new OrderError(
       'MIXED_ORDER_SOURCE',
@@ -147,7 +177,7 @@ function priceLine(request: QuoteLineRequest, basisPoints: number | null): Quote
     discounts: discount > ZERO_MONEY ? [{ source: LIST_OFFER, amount: discount }] : [],
     lineTotal,
     supplyListItemId: request.listItem?.supplyListItemId ?? null,
-    isSubstitute: request.listItem?.isSubstitute ?? null,
+    isSubstitute: request.listItem ? isSubstitute(request.listItem, request.variantId) : null,
   };
 }
 

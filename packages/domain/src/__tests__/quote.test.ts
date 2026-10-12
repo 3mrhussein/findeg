@@ -4,11 +4,11 @@ import { DomainError, moneyFromDecimal, moneyToDecimal } from '@findeg/domain/co
 import {
   FLAT_SHIPPING_FEE,
   priceQuote,
-  type OrderSource,
   type Quote,
   type QuoteLineRequest,
+  type QuoteSource,
 } from '@findeg/domain/orders';
-import type { SupplyListId, SupplyListItemId } from '@findeg/domain/school-lists';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
 
 function codeOf(run: () => unknown): string | undefined {
   try {
@@ -20,14 +20,25 @@ function codeOf(run: () => unknown): string | undefined {
   }
 }
 
-const CART: OrderSource = { kind: 'cart' };
-function list(listOfferBasisPoints: number | null): OrderSource {
+const OFFER_STARTS = new Date('2026-10-01T00:00:00.000Z');
+const OFFER_ENDS = new Date('2026-11-01T00:00:00.000Z');
+const AT = new Date('2026-10-15T12:00:00.000Z');
+
+const CART: QuoteSource = { kind: 'cart' };
+/** A list whose offer of `basisPoints` runs through October, or a list with no offer. */
+function list(basisPoints: number | null): QuoteSource {
   return {
     kind: 'list',
     supplyListId: 7 as SupplyListId,
-    publicCode: 'a'.repeat(32),
-    listOfferBasisPoints,
+    publicCode: publicCode('a'.repeat(32)),
+    offer:
+      basisPoints === null ? null : { basisPoints, startsAt: OFFER_STARTS, endsAt: OFFER_ENDS },
   };
+}
+
+/** A Quote priced mid-October unless another moment is given. */
+function quoteAt(source: QuoteSource, lines: QuoteLineRequest[], at = AT): Quote {
+  return priceQuote(source, lines, at);
 }
 
 function cartLine(variantId: number, price: string, quantity: number): QuoteLineRequest {
@@ -40,16 +51,20 @@ function cartLine(variantId: number, price: string, quantity: number): QuoteLine
   };
 }
 
+/** A list line; a substitute's item defaults to another variant. */
 function listLine(
   itemId: number,
   variantId: number,
   price: string,
   quantity: number,
-  isSubstitute = false,
+  substitute = false,
 ): QuoteLineRequest {
   return {
     ...cartLine(variantId, price, quantity),
-    listItem: { supplyListItemId: itemId as SupplyListItemId, isSubstitute },
+    listItem: {
+      supplyListItemId: itemId as SupplyListItemId,
+      defaultVariantId: (substitute ? variantId + 100 : variantId) as VariantId,
+    },
   };
 }
 
@@ -73,7 +88,7 @@ function amounts(quote: Quote) {
 // must match today's exactly; only the shipping fee is now always the flat 50.00.
 describe('Quote pricing', () => {
   it('prices a cart Quote line by line, plus shipping', () => {
-    const quote = priceQuote(CART, [cartLine(1, '40.00', 2), cartLine(2, '15.00', 3)]);
+    const quote = quoteAt(CART, [cartLine(1, '40.00', 2), cartLine(2, '15.00', 3)]);
     expect(quote.currency).toBe('EGP');
     expect(amounts(quote)).toEqual({
       lines: [
@@ -89,7 +104,7 @@ describe('Quote pricing', () => {
   });
 
   it('sums float-hostile cart amounts exactly', () => {
-    const quote = priceQuote(CART, [
+    const quote = quoteAt(CART, [
       cartLine(1, '0.10', 3),
       cartLine(2, '0.20', 7),
       cartLine(3, '19.99', 13),
@@ -97,7 +112,7 @@ describe('Quote pricing', () => {
     expect(amounts(quote).lines.map((line) => line.lineTotal)).toEqual(['0.30', '1.40', '259.87']);
     expect(amounts(quote)).toMatchObject({ netSubtotal: '261.57', total: '311.57' });
 
-    const tenths = priceQuote(
+    const tenths = quoteAt(
       CART,
       Array.from({ length: 12 }, (_, i) => cartLine(i + 1, '0.10', 1)),
     );
@@ -105,7 +120,7 @@ describe('Quote pricing', () => {
   });
 
   it('merges repeated cart variants, in the order they first appear', () => {
-    const quote = priceQuote(CART, [
+    const quote = quoteAt(CART, [
       cartLine(5, '1.00', 1),
       cartLine(2, '3.00', 1),
       cartLine(5, '1.00', 2),
@@ -118,7 +133,7 @@ describe('Quote pricing', () => {
   });
 
   it('prices a List Offer per line, rounding half up once per line, tagged list-offer', () => {
-    const quote = priceQuote(list(1000), [listLine(1, 1, '10.05', 1), listLine(2, 2, '3.33', 3)]);
+    const quote = quoteAt(list(1000), [listLine(1, 1, '10.05', 1), listLine(2, 2, '3.33', 3)]);
     // 1005 x 0.9 = 904.5 -> 905 (half rounds up); 999 x 0.9 = 899.1 -> 899
     expect(amounts(quote)).toEqual({
       lines: [
@@ -134,8 +149,7 @@ describe('Quote pricing', () => {
   });
 
   it('rounds exact half piasters up, and 0 and 10000 basis points to the extremes', () => {
-    const line = (bps: number) =>
-      amounts(priceQuote(list(bps), [listLine(1, 1, '0.03', 1)])).lines[0];
+    const line = (bps: number) => amounts(quoteAt(list(bps), [listLine(1, 1, '0.03', 1)])).lines[0];
     expect(line(5000)).toMatchObject({ lineTotal: '0.02' });
     expect(line(0)).toEqual({ unitPrice: '0.03', discounts: [], lineTotal: '0.03' });
     expect(line(10000)).toEqual({
@@ -146,14 +160,14 @@ describe('Quote pricing', () => {
   });
 
   it('prices a list with no active offer at gross', () => {
-    expect(amounts(priceQuote(list(null), [listLine(1, 1, '100.00', 1)]))).toMatchObject({
+    expect(amounts(quoteAt(list(null), [listLine(1, 1, '100.00', 1)]))).toMatchObject({
       lines: [{ discounts: [], lineTotal: '100.00' }],
       total: '150.00',
     });
   });
 
   it('records exact list amounts with an offer: gross, discount and net add up', () => {
-    const quote = priceQuote(list(1000), [
+    const quote = quoteAt(list(1000), [
       listLine(1, 1, '10.05', 3),
       listLine(2, 2, '0.10', 3),
       listLine(3, 3, '0.20', 3),
@@ -174,7 +188,7 @@ describe('Quote pricing', () => {
   });
 
   it('applies the offer to every line, Exact Item or substitute', () => {
-    const quote = priceQuote(list(1000), [
+    const quote = quoteAt(list(1000), [
       listLine(1, 1, '20.00', 1, false),
       listLine(2, 2, '30.00', 1, true),
     ]);
@@ -184,12 +198,12 @@ describe('Quote pricing', () => {
   });
 
   it('orders list lines by list item', () => {
-    const quote = priceQuote(list(null), [listLine(9, 1, '1.00', 1), listLine(3, 2, '1.00', 1)]);
+    const quote = quoteAt(list(null), [listLine(9, 1, '1.00', 1), listLine(3, 2, '1.00', 1)]);
     expect(quote.lines.map((line) => line.supplyListItemId)).toEqual([3, 9]);
   });
 
   it('keeps each line snapshot: name, SKU and, on cart lines, no list item', () => {
-    const [line] = priceQuote(CART, [cartLine(4, '2.50', 2)]).lines;
+    const [line] = quoteAt(CART, [cartLine(4, '2.50', 2)]).lines;
     expect(line).toMatchObject({
       variantId: 4,
       productName: 'Product 4',
@@ -202,41 +216,75 @@ describe('Quote pricing', () => {
 
   it('change: shipping is always the flat 50.00 fee', () => {
     expect(moneyToDecimal(FLAT_SHIPPING_FEE)).toBe('50.00');
-    expect(priceQuote(CART, [cartLine(1, '1.10', 1)]).totals.shipping).toBe(FLAT_SHIPPING_FEE);
-    expect(priceQuote(list(2500), [listLine(1, 1, '1.10', 1)]).totals.shipping).toBe(
+    expect(quoteAt(CART, [cartLine(1, '1.10', 1)]).totals.shipping).toBe(FLAT_SHIPPING_FEE);
+    expect(quoteAt(list(2500), [listLine(1, 1, '1.10', 1)]).totals.shipping).toBe(
       FLAT_SHIPPING_FEE,
     );
   });
 
   it('refuses an offer outside 0 to 10000 basis points', () => {
-    expect(codeOf(() => priceQuote(list(10001), [listLine(1, 1, '1.00', 1)]))).toBe(
+    expect(codeOf(() => quoteAt(list(10001), [listLine(1, 1, '1.00', 1)]))).toBe(
       'INVALID_BASIS_POINTS',
     );
   });
 
   it.each([[0], [-1], [1.5]])('refuses a line of %s units', (quantity) => {
-    expect(codeOf(() => priceQuote(CART, [cartLine(1, '1.00', quantity)]))).toBe(
+    expect(codeOf(() => quoteAt(CART, [cartLine(1, '1.00', quantity)]))).toBe(
       'INVALID_LINE_QUANTITY',
     );
   });
 
   it('refuses a Quote with no lines', () => {
-    expect(codeOf(() => priceQuote(CART, []))).toBe('EMPTY_ORDER');
-    expect(codeOf(() => priceQuote(list(null), []))).toBe('EMPTY_ORDER');
+    expect(codeOf(() => quoteAt(CART, []))).toBe('EMPTY_ORDER');
+    expect(codeOf(() => quoteAt(list(null), []))).toBe('EMPTY_ORDER');
+  });
+});
+
+// The List Offer applies only inside its window, decided once for the whole Quote (ADR-0007).
+describe('List Offer at the pricing moment', () => {
+  const lines = () => [listLine(1, 1, '100.00', 1), listLine(2, 2, '20.00', 1, true)];
+  const totalsAt = (at: Date) =>
+    amounts(quoteAt(list(2500), lines(), at)).lines.map((line) => line.lineTotal);
+
+  it('applies from its start, inclusive, to its end, exclusive, to every line alike', () => {
+    expect(totalsAt(new Date(OFFER_STARTS.getTime() - 1))).toEqual(['100.00', '20.00']);
+    expect(totalsAt(OFFER_STARTS)).toEqual(['75.00', '15.00']);
+    expect(totalsAt(new Date(OFFER_ENDS.getTime() - 1))).toEqual(['75.00', '15.00']);
+    expect(totalsAt(OFFER_ENDS)).toEqual(['100.00', '20.00']);
+  });
+
+  it('records the basis points that applied, or null, on the Quote source', () => {
+    expect(quoteAt(list(2500), lines()).source).toEqual({
+      kind: 'list',
+      supplyListId: 7,
+      publicCode: 'a'.repeat(32),
+      listOfferBasisPoints: 2500,
+    });
+    expect(quoteAt(list(2500), lines(), OFFER_ENDS).source).toMatchObject({
+      listOfferBasisPoints: null,
+    });
+    expect(quoteAt(list(null), lines()).source).toMatchObject({ listOfferBasisPoints: null });
+  });
+
+  it("flags a line as a substitute when its variant is not the item's default", () => {
+    expect(quoteAt(list(null), lines()).lines.map((line) => line.isSubstitute)).toEqual([
+      false,
+      true,
+    ]);
   });
 });
 
 // CO-1: an Order comes from the cart or from exactly one School Supply List, never both.
 describe('Order source', () => {
   it('refuses a cart Quote holding a list line', () => {
-    expect(
-      codeOf(() => priceQuote(CART, [cartLine(1, '1.00', 1), listLine(1, 2, '1.00', 1)])),
-    ).toBe('MIXED_ORDER_SOURCE');
+    expect(codeOf(() => quoteAt(CART, [cartLine(1, '1.00', 1), listLine(1, 2, '1.00', 1)]))).toBe(
+      'MIXED_ORDER_SOURCE',
+    );
   });
 
   it('refuses a list Quote holding a cart line', () => {
     expect(
-      codeOf(() => priceQuote(list(null), [listLine(1, 1, '1.00', 1), cartLine(2, '1.00', 1)])),
+      codeOf(() => quoteAt(list(null), [listLine(1, 1, '1.00', 1), cartLine(2, '1.00', 1)])),
     ).toBe('MIXED_ORDER_SOURCE');
   });
 });

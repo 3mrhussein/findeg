@@ -5,21 +5,29 @@ import {
   ReconfirmationRequiredError,
   confirmQuote,
   confirmationTerms,
-  priceQuote,
+  priceQuote as priceQuoteAt,
   type ConfirmationTerms,
-  type OrderSource,
+  type Quote,
   type QuoteLineRequest,
+  type QuoteSource,
 } from '@findeg/domain/orders';
-import type { SupplyListId, SupplyListItemId } from '@findeg/domain/school-lists';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
 
 const egp = moneyFromDecimal;
-const CART: OrderSource = { kind: 'cart' };
-const list = (listOfferBasisPoints: number | null): OrderSource => ({
+const PUBLIC_CODE = 'abc'.padEnd(32, '0');
+const AT = new Date('2026-10-15T12:00:00.000Z');
+const CART: QuoteSource = { kind: 'cart' };
+const list = (basisPoints: number | null): QuoteSource => ({
   kind: 'list',
   supplyListId: 7 as SupplyListId,
-  publicCode: 'abc',
-  listOfferBasisPoints,
+  publicCode: publicCode(PUBLIC_CODE),
+  offer:
+    basisPoints === null
+      ? null
+      : { basisPoints, startsAt: new Date('2026-10-01T00:00:00.000Z'), endsAt: null },
 });
+const priceQuote = (source: QuoteSource, lines: QuoteLineRequest[]): Quote =>
+  priceQuoteAt(source, lines, AT);
 
 function line(
   variantId: number,
@@ -35,7 +43,12 @@ function line(
     quantity,
     ...(itemId === undefined
       ? {}
-      : { listItem: { supplyListItemId: itemId as SupplyListItemId, isSubstitute: false } }),
+      : {
+          listItem: {
+            supplyListItemId: itemId as SupplyListItemId,
+            defaultVariantId: variantId as VariantId,
+          },
+        }),
   };
 }
 
@@ -62,7 +75,7 @@ describe('Confirmation terms', () => {
     const quote = priceQuote(list(1000), [line(5, '12.35', 3, 2), line(4, '0.10', 1, 1)]);
     expect(confirmationTerms(quote)).toEqual({
       source: 'list',
-      publicCode: 'abc',
+      publicCode: PUBLIC_CODE,
       listOfferBasisPoints: 1000,
       currency: 'EGP',
       shipping: egp('50.00'),
