@@ -9,7 +9,6 @@ import {
   PackageCheck,
   Percent,
   Search,
-  Star,
   Tag,
   Wallet,
   RotateCcw,
@@ -62,7 +61,7 @@ interface CategoryTreeNodeProps {
   depth?: number;
 }
 
-type GroupId = 'categories' | 'brands' | 'price' | 'rating' | 'availability' | 'discount';
+type GroupId = 'categories' | 'brands' | 'price' | 'availability' | 'discount';
 
 function sanitizePriceRange(
   minPrice: number,
@@ -205,7 +204,6 @@ export function FilterPanel({
     categories: true,
     brands: true,
     price: true,
-    rating: true,
     availability: true,
     discount: true,
   });
@@ -338,8 +336,6 @@ export function FilterPanel({
 
   const priceLabel = `EGP ${draftFilters.minPrice.toLocaleString()} — EGP ${draftFilters.maxPrice.toLocaleString()}`;
 
-  const ratingRows = [5, 4, 3, 2, 1];
-
   return (
     <div className="space-y-3">
       <FilterGroup
@@ -471,64 +467,6 @@ export function FilterPanel({
               />
             </div>
           </div>
-        </div>
-      </FilterGroup>
-
-      <FilterGroup
-        icon={<Star className="size-4 text-primary" />}
-        title={t('RatingFilterTitle')}
-        open={openGroups.rating}
-        onToggle={() => toggleGroup('rating')}
-      >
-        <div className="space-y-1">
-          {ratingRows.map((row) => {
-            const checked = draftFilters.ratingMin === row;
-            const count = facetCounts.ratings[row] || 0;
-
-            return (
-              <label
-                key={row}
-                className="flex cursor-pointer items-center justify-between rounded-md px-1 py-1.5"
-              >
-                <span className="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name="rating-min"
-                    checked={checked}
-                    onChange={() =>
-                      updateAndApply({
-                        ...draftFilters,
-                        ratingMin: row,
-                      })
-                    }
-                    className="size-4 accent-primary"
-                  />
-                  <span>{t('RatingAndAbove', { rating: row })}</span>
-                </span>
-                <Badge variant="outline" className="text-[10px]">
-                  {count}
-                </Badge>
-              </label>
-            );
-          })}
-
-          {draftFilters.ratingMin ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-xs"
-              onClick={() =>
-                updateAndApply({
-                  ...draftFilters,
-                  ratingMin: undefined,
-                })
-              }
-            >
-              <RotateCcw />
-              {t('ClearRating')}
-            </Button>
-          ) : null}
         </div>
       </FilterGroup>
 

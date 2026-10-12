@@ -2,24 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import {
-  Check,
-  Heart,
-  Minus,
-  Package,
-  RefreshCw,
-  Shield,
-  ShoppingCart,
-  Star,
-  Truck,
-} from 'lucide-react';
+import { Check, Minus, Package, RefreshCw, Shield, ShoppingCart, Truck } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
-import { Button } from '@findeg/ui';
-import { Badge } from '@findeg/ui';
-import { IconTooltip } from '@findeg/ui';
+import { Button, Badge, IconTooltip, formatEgpDecimal } from '@findeg/ui';
 import { useCart } from '@hooks/useCart';
-import { useUser } from '@hooks/useUser';
 import { cn } from '@lib/utils';
 import type { Product, Variant, ProductPdpViewModel } from '@/data/catalog/types';
 import { ImageGallery } from './ImageGallery';
@@ -31,11 +18,12 @@ function getProductStatusBadge({
   variant,
   lowStock,
 }: {
-  variant: Variant;
+  variant?: Variant;
   lowStock: boolean;
   product: Product;
 }) {
   if (lowStock) return { kind: 'low-stock' as const };
+  if (!variant) return null;
   const strike = Number(variant.strikePrice);
   const base = Number(variant.basePrice);
   if (strike && strike > base) {
@@ -48,10 +36,6 @@ function getProductStatusBadge({
 interface PriceState {
   unitPrice: number;
   currency: string;
-}
-
-function hasExplicitInventory(product: Product): boolean {
-  return (product.variants || []).some((variant) => (variant.inventory?.length ?? 0) > 0);
 }
 
 function getAttributeMap(variant?: Variant): Record<string, string> {
@@ -76,7 +60,7 @@ function isCssColorCandidate(value: string): boolean {
   );
 }
 
-function resolveVariantStock(product: Product, variant?: Variant) {
+function resolveVariantStock(variant?: Variant) {
   if (!variant) {
     return {
       inStock: false,
@@ -85,18 +69,12 @@ function resolveVariantStock(product: Product, variant?: Variant) {
     };
   }
 
-  if (!hasExplicitInventory(product)) {
-    return {
-      inStock: true,
-      lowStock: false,
-      availableUnits: 99,
-    };
-  }
-
   const inventory = variant.inventory || [];
-  const availableUnits = inventory.reduce((acc, inv) => acc + (inv.onHand || 0), 0);
+  const availableUnits = inventory
+    .filter((inv) => inv.warehouseActive !== false)
+    .reduce((acc, inv) => acc + Math.max(0, (inv.onHand || 0) - (inv.reserved || 0)), 0);
   const inStock = availableUnits > 0;
-  const lowStock = inStock && availableUnits < 5;
+  const lowStock = inStock && availableUnits <= 5;
 
   return {
     inStock,
@@ -112,17 +90,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const t = useTranslations('Pages.ProductDetail');
   const tCard = useTranslations('Pages.ProductCard');
   const locale = useLocale();
-  const egpFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
-        style: 'currency',
-        currency: 'EGP',
-      }),
-    [locale],
-  );
 
   const { addToCart } = useCart();
-  const { currentUser, toggleWishlistItem } = useUser();
 
   const [selectedVariantId, setSelectedVariantId] = useState<number | undefined>(
     vm.selectedVariant?.id,
@@ -158,7 +127,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     });
   }, [selectedVariant]);
 
-  const stockSnapshot = resolveVariantStock(vm.product, selectedVariant);
+  const stockSnapshot = resolveVariantStock(selectedVariant);
   const maxQuantity = stockSnapshot.inStock ? Math.max(stockSnapshot.availableUnits, 1) : 1;
 
   const [quantity, setQuantity] = useState(1);
@@ -176,12 +145,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     setIsAdded(true);
     window.dispatchEvent(new CustomEvent('findeg:cart-added', { detail: { count: quantity } }));
     window.setTimeout(() => setIsAdded(false), 1500);
-  };
-
-  const isWishlisted = Boolean(currentUser?.wishlist.includes(vm.product.id));
-
-  const onWishlistToggle = () => {
-    toggleWishlistItem(vm.product.id);
   };
 
   const allAttributeKeys = useMemo(() => {
@@ -313,11 +276,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     }
   };
 
-  const onReviewsClick = () => {
-    setActiveTab('reviews');
-    document.getElementById('pdp-tabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   return (
     <div className="space-y-10">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-8">
@@ -348,18 +306,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
             {vm.product.name}
           </h1>
 
-          <button
-            type="button"
-            onClick={onReviewsClick}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <Star className="size-4 fill-amber-400 text-amber-400" />
-            <span className="font-medium text-foreground">
-              {vm.reviewSummary.averageRating.toFixed(1)}
-            </span>
-            <span>({vm.reviewSummary.totalReviews})</span>
-          </button>
-
           <details className="rounded-xl border bg-card px-4 py-3 text-sm">
             <summary className="cursor-pointer font-medium text-foreground">
               {t('SkuDetails')}
@@ -377,13 +323,25 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
           <div className="rounded-2xl border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-3xl font-black text-primary">
-                {egpFormatter.format(priceState.unitPrice || 0)}
+                {formatEgpDecimal((priceState.unitPrice || 0).toFixed(2), locale)}
               </span>
 
               {Number(selectedVariant?.strikePrice || 0) > (priceState.unitPrice || 0) ? (
-                <span className="text-sm text-muted-foreground line-through">
-                  {egpFormatter.format(Number(selectedVariant!.strikePrice))}
-                </span>
+                <>
+                  <span className="text-sm text-muted-foreground line-through">
+                    {formatEgpDecimal(Number(selectedVariant!.strikePrice).toFixed(2), locale)}
+                  </span>
+                  <span className="text-sm font-semibold text-emerald-600">
+                    {t('YouSave', {
+                      amount: formatEgpDecimal(
+                        (
+                          Number(selectedVariant!.strikePrice) - (priceState.unitPrice || 0)
+                        ).toFixed(2),
+                        locale,
+                      ),
+                    })}
+                  </span>
+                </>
               ) : null}
 
               {badge?.text?.includes('SALE') || badge?.text?.includes('خصم') ? (
@@ -502,11 +460,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 {isAdded ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}
                 {isAdded ? t('Added') : tCard('AddToCartFull')}
               </Button>
-
-              <Button variant="outline" className="h-11" onClick={onWishlistToggle}>
-                <Heart className={cn('size-4', isWishlisted ? 'fill-current text-red-500' : '')} />
-                {t('Wishlist')}
-              </Button>
             </div>
 
             <div className={cn('text-sm font-semibold', stockClass)}>{stockText}</div>
@@ -542,9 +495,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
         selectedVariant={selectedVariant}
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
-        reviewSummary={vm.reviewSummary}
-        initialReviews={vm.initialReviews}
-        reviewTotal={vm.reviewTotal}
       />
 
       <RelatedProductsRail products={vm.relatedProducts} />

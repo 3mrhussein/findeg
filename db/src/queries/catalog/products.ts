@@ -242,6 +242,44 @@ export async function countProducts(filters?: ProductFiltersInput): Promise<numb
 }
 
 /**
+ * Real minimum and maximum price bounds for active products/variants.
+ */
+export async function getPriceBounds(
+  categoryId?: number,
+): Promise<{ minPrice: number; maxPrice: number }> {
+  const conditions = [eq(products.isActive, true), eq(productVariants.isActive, true)];
+  if (categoryId !== undefined) {
+    conditions.push(eq(products.categoryId, categoryId));
+  }
+  const [result] = await db
+    .select({
+      minPrice: sql<string>`MIN(${productVariants.basePrice})`,
+      maxPrice: sql<string>`MAX(${productVariants.basePrice})`,
+    })
+    .from(productVariants)
+    .innerJoin(products, eq(products.id, productVariants.productId))
+    .where(and(...conditions));
+
+  const min = result?.minPrice ? Math.floor(Number(result.minPrice)) : 0;
+  const max = result?.maxPrice ? Math.ceil(Number(result.maxPrice)) : 1000;
+  return { minPrice: min, maxPrice: max };
+}
+
+/**
+ * Get products that have any of the given tag IDs (used for Collections).
+ */
+export async function getProductsByTagIds(tagIds: number[]): Promise<ProductRow[]> {
+  if (tagIds.length === 0) return [];
+  const results = await db
+    .selectDistinct({ product: products })
+    .from(productTags)
+    .innerJoin(products, eq(products.id, productTags.productId))
+    .where(and(eq(products.isActive, true), inArray(productTags.tagId, tagIds)));
+
+  return results.map((r) => r.product);
+}
+
+/**
  * Get low stock products (returns first 5 as placeholder)
  */
 export async function getLowStockProducts(_threshold?: number): Promise<ProductRow[]> {

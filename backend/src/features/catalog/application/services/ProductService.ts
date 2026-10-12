@@ -325,6 +325,21 @@ export class ProductService implements IProductService {
     };
   }
 
+  async getPriceBounds(categoryId?: number): Promise<{ minPrice: number; maxPrice: number }> {
+    return productQueries.getPriceBounds(categoryId);
+  }
+
+  async getProductsByTagIds(tagIds: number[], language?: Locale): Promise<Product[]> {
+    if (tagIds.length === 0) return [];
+    const lang = parse(language);
+    const rows = await productQueries.getProductsByTagIds(tagIds);
+    if (rows.length === 0) return [];
+    return this.getByIds(
+      rows.map((r) => r.id),
+      lang,
+    );
+  }
+
   async create(input: ProductInput): Promise<Product> {
     const localizedName = Object.fromEntries(input.translations.map((t) => [t.language, t.name]));
     const localizedDescription = Object.fromEntries(

@@ -29,6 +29,8 @@ export {
   getVariantsByIds,
   getFiltered as getFilteredProducts,
   countProducts,
+  getPriceBounds,
+  getProductsByTagIds,
 } from './products';
 export type { ProductRow, ProductFiltersInput, ProductListingSort } from './products';
 

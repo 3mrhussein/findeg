@@ -290,6 +290,7 @@
       "MaximumQuantity": "Maximum: {count}",
       "Added": "Added!",
       "Wishlist": "Add to Wishlist",
+      "YouSave": "Save {amount}",
       "DeliveryEstimate": "Estimated delivery: 2-4 business days to Cairo",
       "ReturnsPolicy": "30-day returns on eligible items",
       "SecureCheckout": "Secure checkout · Paymob encrypted",

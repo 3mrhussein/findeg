@@ -8,16 +8,3 @@ import { getUnreadNotificationCount } from './queries';
 export async function getUnreadNotificationCountAction() {
   return await getUnreadNotificationCount();
 }
-
-/**
- * Log a client-side action on the server.
- *
- * Validates payload before logging to prevent garbage data.
- */
-export async function logAction(payload: unknown): Promise<void> {
-  if (!payload || typeof payload !== 'object') {
-    console.warn('Invalid log payload received:', payload);
-    return;
-  }
-  console.log('Client action logged:', payload);
-}

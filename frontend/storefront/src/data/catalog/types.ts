@@ -84,7 +84,7 @@ export interface ReviewSummary {
 /**
  * Shared Listing View Model Base
  */
-export type ShopPlpSort = 'popular' | 'newest' | 'price-low-high' | 'price-high-low' | 'rating';
+export type ShopPlpSort = 'popular' | 'newest' | 'price-low-high' | 'price-high-low';
 
 export interface BaseListingViewModel {
   products: Product[];

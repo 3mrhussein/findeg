@@ -15,6 +15,7 @@ import {
   createBrandService,
   createSearchService,
   createCollectionService,
+  createInventoryService,
 } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import type {
@@ -75,8 +76,9 @@ export async function getShopPlpViewModel(
   );
 
   const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
-  const minPriceBound = 0;
-  const maxPriceBound = 1000;
+  const priceBounds = await productService.getPriceBounds(category?.id);
+  const minPriceBound = priceBounds.minPrice;
+  const maxPriceBound = priceBounds.maxPrice;
 
   return {
     products: mappedProducts,
@@ -125,7 +127,7 @@ export async function getShopPlpViewModel(
 export async function getSearchPageViewModel(
   locale: string,
   rawQuery: string,
-  _query: Record<string, string | string[] | undefined>,
+  query: Record<string, string | string[] | undefined>,
 ): Promise<SearchPageViewModel> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'categories', `search-${resolvedLocale}-${rawQuery}`);
@@ -134,13 +136,31 @@ export async function getSearchPageViewModel(
   const searchService = createSearchService();
   const categoryService = createCategoryService();
   const brandService = createBrandService();
+  const productService = createProductService();
+
+  const listing = parseShopPlpQuery(query);
+  const offset = (listing.page - 1) * listing.perPage;
+  const inStockOnly = query.inStock === 'true';
+  const brandId = listing.brandIds.length > 0 ? listing.brandIds[0] : undefined;
+  const searchSort =
+    listing.backendSort === 'popular'
+      ? 'relevance'
+      : (listing.backendSort as import('@findeg/backend/features/catalog').SearchParams['sort']);
+
   const result = await searchService.search({
     query: rawQuery,
     locale: resolvedLocale,
-    limit: 20,
+    brandId,
+    minPrice: listing.minPrice,
+    maxPrice: listing.maxPrice,
+    inStockOnly,
+    sort: searchSort,
+    limit: listing.perPage,
+    offset,
   });
 
   const mappedItems = result.items.map((p) => mapProduct(p, resolvedLocale));
+  const priceBounds = await productService.getPriceBounds();
 
   return {
     mode: mappedItems.length > 0 ? 'search' : 'fallback',
@@ -152,8 +172,8 @@ export async function getSearchPageViewModel(
       resolvedLocale,
     ),
     brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
-    minPriceBound: 0,
-    maxPriceBound: 1000,
+    minPriceBound: priceBounds.minPrice,
+    maxPriceBound: priceBounds.maxPrice,
     facetCounts: {
       categories: {},
       brands: {},
@@ -164,22 +184,22 @@ export async function getSearchPageViewModel(
       },
     },
     total: result.total,
-    totalPages: Math.ceil(result.total / 20),
-    page: 1,
-    perPage: 20,
-    from: 1,
-    to: mappedItems.length,
+    totalPages: Math.ceil(result.total / listing.perPage),
+    page: listing.page,
+    perPage: listing.perPage,
+    from: mappedItems.length > 0 ? offset + 1 : 0,
+    to: mappedItems.length > 0 ? offset + mappedItems.length : 0,
     exactCount: true,
     locale: resolvedLocale,
     categorySlugPath: [],
     filters: {
-      minPrice: 0,
-      maxPrice: 1000,
-      brandIds: [],
-      inStockOnly: false,
+      minPrice: listing.minPrice ?? priceBounds.minPrice,
+      maxPrice: listing.maxPrice ?? priceBounds.maxPrice,
+      brandIds: listing.brandIds,
+      inStockOnly,
       discounts: [],
     },
-    sort: 'newest',
+    sort: listing.sort,
   };
 }
 
@@ -218,6 +238,7 @@ export async function getProductPdp(
   const productService = createProductService();
   const brandService = createBrandService();
   const categoryService = createCategoryService();
+  const inventoryService = createInventoryService();
 
   const product = await productService.getBySlug(slug, resolvedLocale);
   if (!product) return null;
@@ -232,8 +253,36 @@ export async function getProductPdp(
     : [];
   const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
 
-  const mappedProduct = mapProduct(product, resolvedLocale);
+  const variantsWithInventory = await Promise.all(
+    (product.variants || []).map(async (v) => {
+      const balances = await inventoryService.getWarehouseBalances(v.id);
+      return {
+        ...v,
+        inventory: balances.map((b) => ({
+          warehouseActive: true,
+          onHand: b.onHand,
+          reserved: b.reserved,
+          warehouseId: b.warehouseId,
+          warehouseCode: b.warehouseCode,
+        })),
+      };
+    }),
+  );
+
+  const hydratedProduct = {
+    ...product,
+    variants: variantsWithInventory,
+  };
+
+  const mappedProduct = mapProduct(hydratedProduct, resolvedLocale);
   const mappedRelated = related.map((p) => mapProduct(p, resolvedLocale));
+
+  const totalAvailable = (mappedProduct.variants || []).reduce((variantSum, v) => {
+    const freeInVariant = (v.inventory || [])
+      .filter((inv) => inv.warehouseActive !== false)
+      .reduce((sum, inv) => sum + Math.max(0, (inv.onHand || 0) - (inv.reserved || 0)), 0);
+    return variantSum + freeInVariant;
+  }, 0);
 
   return {
     product: mappedProduct,
@@ -245,19 +294,18 @@ export async function getProductPdp(
     categories,
     relatedProducts: mappedRelated,
     reviewSummary: {
-      averageRating: product.rating || 0,
-      totalReviews: product.reviewsCount || 0,
+      averageRating: 0,
+      totalReviews: 0,
       verifiedReviews: 0,
       histogram: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
     },
     initialReviews: [],
-    reviewTotal: product.reviewsCount || 0,
+    reviewTotal: 0,
     shouldRedirect: false,
     canonicalPath: `/shop/products/${slug}`,
     stockSnapshot: {
-      inStock: mappedProduct.variants?.some((v) => (v.inventory?.[0]?.onHand || 0) > 0) || false,
-      quantity:
-        mappedProduct.variants?.reduce((acc, v) => acc + (v.inventory?.[0]?.onHand || 0), 0) || 0,
+      inStock: totalAvailable > 0,
+      quantity: totalAvailable,
     },
     breadcrumbs: [
       { label: 'Home', href: '/' },
@@ -397,8 +445,12 @@ export async function getCollectionPageViewModel(
   const collection = await collectionService.getCollectionBySlug(slug);
   if (!collection) return null;
 
-  const products = await productService.getByCategory(collection.id, resolvedLocale);
+  const tagIds =
+    (collection as unknown as { tags?: { id: number }[] }).tags?.map((t) => t.id) || [];
+  const products =
+    tagIds.length > 0 ? await productService.getProductsByTagIds(tagIds, resolvedLocale) : [];
   const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
+  const priceBounds = await productService.getPriceBounds();
 
   return {
     collection: collection,
@@ -409,8 +461,8 @@ export async function getCollectionPageViewModel(
       resolvedLocale,
     ),
     brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
-    minPriceBound: 0,
-    maxPriceBound: 1000,
+    minPriceBound: priceBounds.minPrice,
+    maxPriceBound: priceBounds.maxPrice,
     facetCounts: {
       categories: {},
       brands: {},
@@ -424,13 +476,13 @@ export async function getCollectionPageViewModel(
     totalPages: 1,
     page: 1,
     perPage: mappedProducts.length,
-    from: 1,
+    from: mappedProducts.length > 0 ? 1 : 0,
     to: mappedProducts.length,
     locale: resolvedLocale,
     categorySlugPath: [],
     filters: {
-      minPrice: 0,
-      maxPrice: 1000,
+      minPrice: priceBounds.minPrice,
+      maxPrice: priceBounds.maxPrice,
       brandIds: [],
       inStockOnly: false,
       discounts: [],

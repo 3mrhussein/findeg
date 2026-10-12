@@ -9,7 +9,6 @@ export interface UserContextType {
   isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
-  toggleWishlistItem: (productId: number) => void;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -39,7 +38,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setCurrentUser({
             name: session.user.firstName || session.user.email,
             email: session.user.email,
-            wishlist: [], // TODO: Potentially fetch from profile
           });
         }
       } catch (error) {
@@ -69,27 +67,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   /**
    *
    */
-  const toggleWishlistItem = (productId: number) => {
-    setCurrentUser((prevUser: User | null) => {
-      if (!prevUser) return null;
-
-      const newWishlist = prevUser.wishlist.includes(productId)
-        ? prevUser.wishlist.filter((id: number) => id !== productId)
-        : [...prevUser.wishlist, productId];
-
-      return { ...prevUser, wishlist: newWishlist };
-    });
-  };
-
-  /**
-   *
-   */
   const isLoggedIn = !!currentUser;
 
   return (
-    <UserContext.Provider
-      value={{ currentUser, isLoggedIn, isLoading, login, logout, toggleWishlistItem }}
-    >
+    <UserContext.Provider value={{ currentUser, isLoggedIn, isLoading, login, logout }}>
       {children}
     </UserContext.Provider>
   );
