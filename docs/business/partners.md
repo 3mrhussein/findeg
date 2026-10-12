@@ -46,6 +46,35 @@ This area is the Partner Program (B2B2C): FindEg serves the biggest business cus
 
 **Partner Report**: What a partner's members see of the sales from its lists, in monthly totals. It never identifies a Customer or an Order. _Avoid_: Dashboard, analytics, statement.
 
+### Partner Sales Attribution & Privacy-Preserving Reporting Architecture
+
+```mermaid
+flowchart TD
+    subgraph StorefrontSales["Storefront Checkout Layer"]
+        OrderPlacement["Family Places Order from School Supply List"] --> AttributedOrder["Attributed Order Created<br/>(Stores supplyListId & businessPartnerId)"]
+    end
+
+    subgraph MonthlyReporting["Monthly Aggregation Pipeline (Cairo Time)"]
+        AttributedOrder --> QueryEngine["Monthly Aggregation Engine"]
+        QueryEngine --> StatusFilter{"Order Status"}
+        StatusFilter -->|Cancelled or Refunded| Exclude["Exclude (PA-14)"]
+        StatusFilter -->|Pending, Confirmed, Processing, Shipped, Delivered| AggregateItems["Group by List Item & Variant"]
+
+        AggregateItems --> AnonymityCheck{"Distinct Orders count for item line?"}
+        AnonymityCheck -->|>= 3 Orders| StandardRow["Display: Item Name, Variant & Units Sold"]
+        AnonymityCheck -->|< 3 Orders| FoldRow["Fold into 'Other Items' Aggregate Row (PA-14)"]
+
+        StandardRow --> PartnerReportTable["Partner Report View<br/>(/[locale]/partner/[code])"]
+        FoldRow --> PartnerReportTable
+    end
+
+    subgraph PrivacyGuarantees["Strict Privacy Invariants (PA-14)"]
+        PartnerReportTable -.-> G1["Never displays Customer identity or contact info"]
+        PartnerReportTable -.-> G2["Never displays Order References (FE-xxxxxx)"]
+        PartnerReportTable -.-> G3["Never displays individual Order counts"]
+    end
+```
+
 ## Capabilities
 
 | Actor | Capability | State |
@@ -95,24 +124,36 @@ This area is the Partner Program (B2B2C): FindEg serves the biggest business cus
 
 ```mermaid
 stateDiagram-v2
-    direction LR
-    state "Business Partner" as BP {
-        [*] --> Onboarding
-        Onboarding --> Active
-        Active --> Suspended
-        Suspended --> Active
-        Onboarding --> Closed
-        Active --> Closed
-        Suspended --> Closed
-        Closed --> [*]
+    direction TB
+
+    state "Business Partner Status (PA-1, PA-3, PA-17)" as BP {
+        [*] --> Onboarding: Partner created by Staff
+        Onboarding --> Active: Partner goes live
+        Active --> Suspended: Suspended by Staff (Workspace read-only)
+        Suspended --> Active: Re-activated by Staff
+        Onboarding --> Closed: Cancelled setup
+        Active --> Closed: Relationship ended permanently
+        Suspended --> Closed: Terminated
+        Closed --> [*]: Closed is final
     }
-    state "Partner Membership" as PM {
-        [*] --> active: invitation accepted
-        active --> suspended
-        suspended --> active: reactivate
-        active --> ended: removed or left
-        suspended --> ended
-        ended --> [*]
+
+    state "Partner Membership Status (PA-8)" as PM {
+        [*] --> active: Invitation accepted explicitly
+        active --> suspended: Suspended by Partner Admin / Staff
+        suspended --> active: Reactivated
+        active --> ended: Member removed or leaves
+        suspended --> ended: Member removed
+        ended --> [*]: Ended is final (Cannot reactivate)
+    }
+
+    state "Partner Invitation Lifecycle (PA-9)" as PI {
+        [*] --> Pending: Emailed 7-day token link
+        Pending --> Accepted: User signs in with invited email & accepts
+        Pending --> Revoked: Partner Admin revokes invite
+        Pending --> Expired: 7 days elapsed (Derived from created date)
+        Accepted --> [*]
+        Revoked --> [*]
+        Expired --> [*]
     }
 ```
 

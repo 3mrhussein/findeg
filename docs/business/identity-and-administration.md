@@ -45,6 +45,61 @@ Other roles (customer support, business analyst, and so on) are added only when 
 
 **Audit Log** _(proposed)_: The record of important Staff changes: who changed what, and when.
 
+### Identity Boundaries & RBAC Separation Architecture
+
+```mermaid
+flowchart TB
+    subgraph NaturalPerson["Individual Human User (One Login Identity)"]
+        Person["User Account<br/>(email, password hash, phone)"]
+    end
+
+    subgraph AccountTypeSplit["Account Type (ID-1)"]
+        CustomerType["Account Type: Customer"]
+        StaffType["Account Type: Staff"]
+    end
+
+    subgraph StaffRealm["Staff Dashboard Realm (ID-2)"]
+        direction TB
+        StaffRoleAssignment["Staff Role Assignment (ID-7)"]
+        Role_Admin["Administrator<br/>(Staff, Roles, Partners, System)"]
+        Role_Editor["Catalog & Content Editor<br/>(Products, Merchandising, Supply Lists)"]
+        Role_Ops["Operations<br/>(Orders, Fulfillment, Stock, Refunds)"]
+    end
+
+    subgraph PartnerRealm["Partner Workspace Realm (ID-2, PA-4)"]
+        direction TB
+        Membership["Partner Membership<br/>(per Business Partner)"]
+        PR_Admin["partner-administrator<br/>(Invites, Memberships, Reports)"]
+        PR_Viewer["report-viewer<br/>(Monthly Aggregated Sales)"]
+        PR_List["list-manager<br/>(Future capability)"]
+        PR_Col["collection-staff<br/>(Future capability)"]
+    end
+
+    subgraph StorefrontRealm["Storefront Realm"]
+        CustomerProfile["Customer Profile<br/>(Orders, Saved Addresses)"]
+    end
+
+    Person -->|Designated at registration/creation| CustomerType
+    Person -->|Designated by System Admin| StaffType
+
+    StaffType --> StaffRoleAssignment
+    StaffRoleAssignment --> Role_Admin
+    StaffRoleAssignment --> Role_Editor
+    StaffRoleAssignment --> Role_Ops
+
+    CustomerType --> CustomerProfile
+
+    Person -.->|Independent Membership Linkage| Membership
+    Membership --> PR_Admin
+    Membership --> PR_Viewer
+    Membership --> PR_List
+    Membership --> PR_Col
+
+    CustomerProfile -.->|ID-2: Isolated: No Dashboard Access| StaffRealm
+    StaffRealm -.->|ID-2: Isolated: Never grants Partner Workspace| PartnerRealm
+    PartnerRealm -.->|ID-2: Isolated: Never grants Dashboard Access| StaffRealm
+```
+
 ## Capabilities
 
 | Actor | Capability | State |
@@ -68,9 +123,33 @@ Other roles (customer support, business analyst, and so on) are added only when 
 - **ID-6** _(unconfirmed)_ FindEg never keeps a readable copy of a password.
 - **ID-7** At launch, every Staff member holds at least one of the three Staff Roles, and only an Administrator manages Staff accounts and roles.
 
-## Lifecycle
+## Lifecycle & Governance
 
-None decided. Accounts are active or inactive today.
+### Staff Action Guard & Audit Trail Flow (ID-3)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Staff as Staff Member
+    participant Guard as IPermissionService (Auth Guard)
+    participant Core as Application Service
+    participant DB as System Database
+    participant Audit as Audit Log Store
+
+    Staff->>Guard: Perform Action (e.g. Move Order to Confirmed / Adjust Price)
+    Guard->>Guard: Check Staff Role & Required Permission
+    alt Permission Denied
+        Guard-->>Staff: 403 Forbidden: Insufficient Permissions (Blocked)
+    else Permission Granted
+        Guard->>Core: Forward Authorized Command (staffId, action, payload)
+        rect rgb(240, 248, 255)
+        note over Core,Audit: Atomic Transaction (ID-3)
+        Core->>DB: Execute Mutation (Update Order / Price / Partner)
+        Core->>Audit: Append Audit Record (timestamp, staffId, role, entity, changeDiff)
+        end
+        Core-->>Staff: Success: Action Committed & Audited
+    end
+```
 
 ## Known gaps
 

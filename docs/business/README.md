@@ -20,6 +20,57 @@ As of 2026-10-11.
 | 2026-10-11 | In the Partner Program, a partner's clients are Customers (families, who buy). Students are not modelled. A school buying for its own use is not part of the program. |
 | 2026-10-11 | The money relationship between FindEg and a partner is not settled. The program is defined by its service to families and schools. |
 
+## Enterprise Blueprints & System Diagrams
+
+FindEg maintains a formal enterprise architectural atlas documenting capabilities, user journeys, and data pipelines across the system:
+
+- 🏛️ **[Enterprise System Architecture](enterprise-system-architecture.md)**: C4 Level 1 System Context, Clean Architecture multi-tier layers, Business Capability Map, DDD Bounded Contexts, and Unified Tri-State Synchronization Engine.
+- 🔄 **[User Flow Diagrams](user-flows-and-diagrams.md)**: Complete end-to-end journey maps for Storefront Customers, School Families, Guest Lookups, Partner Administrators, Report Viewers, and Operations Staff.
+- 🔀 **[Data Flow Diagrams](data-flow-diagrams.md)**: DFD Level 0 Context and DFD Level 1 sub-system flows for Catalog Ingestion, Quoting/Acceptance, Dynamic Alternative Resolution, Fulfillment, Anonymized Reporting, and the Transactional Outbox.
+- ⚡ **[Technical Sequence Diagrams](system-sequence-diagrams.md)**: Multi-tier interaction flows (SEQ-1 through SEQ-9) connecting Actor, Client Components, Server Actions, Core Services, Database Transactions, and Outbox.
+- 📋 **[System Specifications](system-specifications.md)**: Formal functional specifications, data schemas, API contracts, invariant constraints (`CA-*`, `CO-*`, `ID-*`, `PA-*`, `SL-*`), and non-functional guarantees.
+- 🎨 **[UI/UX Requirements & User Journeys](ui-ux-requirements-and-user-journeys.md)**: 6 persona journey maps, design system foundation (Cairo/Inter bilingual typography, RTL logical properties), and screen-by-screen UX specifications.
+
+### Dual Value Stream Overview
+
+#### Value Stream 1: Core B2C Stationery E-Commerce
+
+```mermaid
+flowchart TD
+    subgraph Stream1_Phase1["Phase 1: Catalog Discovery & Quoting"]
+        direction LR
+        V1_1["1. Catalog Curation<br/>(Bulk Import / Manual)"] --> V1_2["2. Storefront Browse & Cart<br/>(Categories, Tags, Collections)"]
+        V1_2 --> V1_3["3. Server-Authoritative Quote<br/>(Piasters & Flat Shipping)"]
+    end
+
+    subgraph Stream1_Phase2["Phase 2: Order Acceptance & Fulfilment"]
+        direction LR
+        V1_4["4. Atomic Order Acceptance<br/>(COD & Stock Reservation)"] --> V1_5["5. Phone Confirmation<br/>(Staff verifies with Customer)"]
+        V1_5 --> V1_6["6. Courier Delivery & Cash<br/>(Stock Consumed & Paid)"]
+    end
+
+    V1_3 --> V1_4
+```
+
+#### Value Stream 2: B2B2C School Supply Lists (Partner Program)
+
+```mermaid
+flowchart TD
+    subgraph Stream2_Phase1["Phase 1: School Onboarding & List Publishing"]
+        direction LR
+        V2_1["1. Partner School Setup<br/>(Profile: Governorate, System)"] --> V2_2["2. Staff List Authoring<br/>(Draft: Exact Items & Specs)"]
+        V2_2 --> V2_3["3. Publication & Freezing<br/>(Unguessable Public Code)"]
+    end
+
+    subgraph Stream2_Phase2["Phase 2: Family Fulfillment & Partner Reporting"]
+        direction LR
+        V2_4["4. Family Fulfills List<br/>(Select Allowed Alternatives)"] --> V2_5["5. List Offer Checkout<br/>(Isolated Selection & Attributed Order)"]
+        V2_5 --> V2_6["6. Anonymized School Reports<br/>(k-Anonymity monthly totals)"]
+    end
+
+    V2_3 --> V2_4
+```
+
 ## First launch: the stationery store
 
 Decided 2026-10-11. The store launches when all of these are true:

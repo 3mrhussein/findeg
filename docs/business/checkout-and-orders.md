@@ -42,6 +42,43 @@ Turn a Cart or a List Selection into an accepted cash-on-delivery Order, at exac
 
 **Guest Order Access**: How a Customer without an account views an Order: they give its Order Reference and email, and prove it with a one-time code emailed on request. _Avoid_: Order tracking, guest login.
 
+### Quoting & Atomic Order Acceptance Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as Customer (Client)
+    participant Server as Quoting & Checkout Engine
+    participant DB as Orders DB
+    participant Inv as Warehouse Inventory
+    participant Outbox as Outbox Queue
+
+    Customer->>Server: Request Quote (Cart / List Selection lines)
+    Server->>Server: Compute exact line prices, discounts (List Offer) & 50 EGP flat shipping
+    Server->>Server: Generate Confirmation Digest (cryptographic terms fingerprint)
+    Server-->>Customer: Return Quote + Confirmation Digest
+
+    Customer->>Server: Submit Checkout (Confirmation Digest, Address, COD, IdempotencyKey)
+    Server->>Server: Re-run fresh Quote against live catalog
+    alt Confirmation Digest Mismatch (Price or List Offer changed)
+        Server-->>Customer: 409 Conflict: Quote Expired / Changed (Requires Reconfirmation CO-3)
+    else Confirmation Digest Verified
+        Server->>Inv: Check on-hand stock for all variants
+        alt Insufficient Stock for any line
+            Inv-->>Server: Stock shortage
+            Server-->>Customer: 422 Unprocessable: Insufficient Stock (All-or-nothing rejection CO-4)
+        else Stock Available
+            rect rgb(240, 248, 255)
+            note over Server,Outbox: Atomic Transaction: Order Acceptance
+            Server->>DB: Insert Order (FE-xxxxxx, pending, unpaid, frozen lines & attribution)
+            Server->>Inv: Create StockReservation (Hold units per warehouse)
+            Server->>Outbox: Enqueue Order Confirmation Email
+            end
+            Server-->>Customer: 201 Created: Order Accepted (FE-xxxxxx)
+        end
+    end
+```
+
 ## Capabilities
 
 | Actor | Capability | State |
@@ -86,19 +123,52 @@ Turn a Cart or a List Selection into an accepted cash-on-delivery Order, at exac
 
 ## Lifecycle
 
+### Synchronized Order, Payment & Stock State Lifecycle
+
 ```mermaid
 stateDiagram-v2
-    [*] --> pending: Order Acceptance (stock reserved)
+    direction TB
+
+    state "Pending (Unpaid)" as pending {
+        [*] --> Pending_Active
+        note right of Pending_Active: Stock: RESERVED\nPayment: UNPAID\nAttribution: FROZEN
+    }
+
+    state "Confirmed (Unpaid)" as confirmed {
+        note right of confirmed: Confirmed via phone CO-18\nStock: RESERVED\nPayment: UNPAID
+    }
+
+    state "Processing (Unpaid)" as processing {
+        note right of processing: Warehouse pick & pack\nStock: RESERVED\nPayment: UNPAID
+    }
+
+    state "Shipped (Unpaid)" as shipped {
+        note right of shipped: In transit with courier\nStock: RESERVED\nPayment: UNPAID
+    }
+
+    state "Delivered (Paid)" as delivered {
+        note right of delivered: Courier collects COD cash\nStock: CONSUMED CO-11\nPayment: PAID
+    }
+
+    state "Cancelled (Terminal)" as cancelled {
+        note right of cancelled: Cancelled before delivery\nStock: RELEASED CO-11\nPayment: UNPAID
+    }
+
+    state "Refunded (Terminal)" as refunded {
+        note right of refunded: Follows delivery only CO-13\nStock: UNCHANGED (Manual restock)\nPayment: REFUNDED
+    }
+
+    [*] --> pending: Order Acceptance (Atomic)
     pending --> confirmed: Customer confirmed by phone
-    pending --> cancelled
-    confirmed --> processing
-    confirmed --> cancelled
-    processing --> shipped
-    processing --> cancelled
-    shipped --> delivered: stock consumed
-    shipped --> cancelled: parcel back in warehouse
-    delivered --> refunded: no stock effect
-    cancelled --> [*]: stock released
+    pending --> cancelled: Customer unreachable / cancelled
+    confirmed --> processing: Dispatched to warehouse
+    confirmed --> cancelled: Cancelled before packing
+    processing --> shipped: Handover to courier
+    processing --> cancelled: Cancelled before dispatch
+    shipped --> delivered: Delivered & cash collected
+    shipped --> cancelled: Parcel back in warehouse CO-13
+    delivered --> refunded: Approved return after delivery
+    cancelled --> [*]
     refunded --> [*]
 ```
 
