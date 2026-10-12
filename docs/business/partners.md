@@ -62,7 +62,7 @@ flowchart TD
 
         AggregateItems --> AnonymityCheck{"Distinct Orders count for item line?"}
         AnonymityCheck -->|>= 3 Orders| StandardRow["Display: List, Item Name, Variant & Units Sold"]
-        AnonymityCheck -->|< 3 Orders| FoldRow["Fold into 'Other Items' per List (PA-14)"]
+        AnonymityCheck -->|< 3 Orders| FoldRow["Fold into 'Other items' (PA-14)"]
 
         StandardRow --> PartnerReportTable["Partner Report View<br/>(/[locale]/partner/[code])"]
         FoldRow --> PartnerReportTable

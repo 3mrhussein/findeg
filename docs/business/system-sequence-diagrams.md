@@ -504,11 +504,11 @@ sequenceDiagram
 
     ReportService->>DB: Query Attributed Orders for partner in Cairo month range (PA-14)
     ReportService->>DB: Filter OUT cancelled and refunded orders (PA-14)
-    DB-->>ReportService: List of qualifying OrderLines with orderId, variantId, units, price
+    DB-->>ReportService: List of qualifying OrderLines with orderId, supplyListId, list_name, item_name, variantId, variant_name, units, price
 
-    ReportService->>ReportService: Group qualifying sales lines by (item_name, variant_name)
+    ReportService->>ReportService: Group qualifying sales lines by (supplyListId, item, variant) within the month
     
-    loop For each distinct (item, variant) group
+    loop For each distinct (list, item, variant) group
         ReportService->>ReportService: Count distinct orderId values contributing to group
         alt Distinct Orders >= 3 (k-Anonymity satisfied PA-14)
             ReportService->>ReportService: Keep as individual visible report row

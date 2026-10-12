@@ -2,7 +2,7 @@
 
 As of 2026-10-12 · Clarity: **Formal Engineering & Behavioral System Specifications**
 
-This document establishes the formal functional and non-functional specifications for all subsystems of the FindEg platform. It serves as the definitive engineering contract governing API interfaces, business invariants, data schemas, validation rules, and transactional boundaries.
+This document establishes the formal functional and non-functional specifications for all subsystems of the FindEg platform. It serves as the definitive engineering contract governing API interfaces, business invariants, data schemas, validation rules, and transactional boundaries. A rule's status (decided, proposed or _unconfirmed_) comes from the business-area page that owns it; this page restates rules and never promotes one.
 
 ---
 
@@ -10,11 +10,11 @@ This document establishes the formal functional and non-functional specification
 
 ### 1.1. Functional Requirements & Invariants
 - **CA-1 (Default Variant)**: Every `Product` MUST possess at least one `ProductVariant`. Exactly one variant MUST be designated as `isDefault = true`.
-- **CA-2 (SKU Uniqueness)**: Every `ProductVariant.sku` MUST be globally unique across the platform. SKUs are normalized as uppercase alphanumeric strings matching `^[A-Z0-9-]{3,32}$`.
+- **CA-2 (SKU Uniqueness)**: Every `ProductVariant.sku` MUST be unique across the catalog, never empty and never padded with spaces. No SKU format is imposed.
 - **CA-3 (Variant Pricing & Currency)**: Pricing lives exclusively on the `ProductVariant`. All prices MUST be represented as positive integer piasters in Egyptian Pounds (`EGP`). Optional `strikeThroughPrice` must exceed `price` if present.
 - **CA-4 (Active Selling Constraint)**: Only products and variants with `isActive = true` are displayed on public storefront listings. Inactive variants MUST NEVER be resolved as Allowed Alternatives on School Supply Lists.
 - **CA-5 (Bilingual Mandatory)**: Every product MUST provide both English (`name_en`, `description_en`) and Arabic (`name_ar`, `description_ar`) localized text strings.
-- **CA-6 (Review Moderation)**: Reviews submitted by customers are marked `approved` immediately and appear on the storefront without pre-moderation.
+- **CA-6 (Review Moderation)** _(unconfirmed)_: Reviews submitted by customers are marked `approved` immediately and appear on the storefront without pre-moderation.
 - **CA-8 (Order Snapshot Immutability)**: Deleting, renaming, or modifying a product or variant MUST NEVER alter historical `OrderLine` records. Past orders retain frozen names, SKUs, and piaster prices.
 
 ### 1.2. Service & API Contracts

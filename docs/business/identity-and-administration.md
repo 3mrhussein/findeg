@@ -148,7 +148,7 @@ sequenceDiagram
         Core->>DB: Execute Order Mutation (Update Order Status)
         Core->>DB: INSERT INTO audit_logs in same tx (timestamp, staffId, role, entity='order', changeDiff)
         end
-        note over Core,DB: Non-order mutations (Price, Partner) audit atomically when configured
+        note over Core,DB: Proposed, pending the Audit Log scope decision: non-order mutations (Price, Partner) audited the same way
         Core-->>Staff: Success: Action Committed & Audited
     end
 ```
