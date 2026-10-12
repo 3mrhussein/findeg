@@ -9,6 +9,8 @@ export { InventoryError } from './inventory-error';
 export type { InventoryErrorCode } from './inventory-error';
 export { RESERVATION_STATES, reservationSettlement, reservationState } from './reservation';
 export type { ReservationSettlement, ReservationState } from './reservation';
+export { InsufficientStockError, allocateStock } from './allocation';
+export type { StockAllocation, StockLine, StockShortfall } from './allocation';
 
 export type WarehouseId = Id<'Warehouse'>;
 

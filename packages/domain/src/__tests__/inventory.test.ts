@@ -3,7 +3,9 @@ import { DomainError } from '@findeg/domain/common';
 import type { VariantId } from '@findeg/domain/catalog';
 import { ORDER_STATUSES } from '@findeg/domain/orders';
 import {
+  InsufficientStockError,
   LOW_STOCK_MAX_UNITS,
+  allocateStock,
   RESERVATION_STATES,
   STOCK_LEVELS,
   availableStock,
@@ -155,5 +157,110 @@ describe('Stock Reservation by Order status', () => {
     ['refunded', 'cancelled'],
   ] as const)('refuses %s → %s: the reservation was settled the other way', (from, to) => {
     expect(codeOf(() => reservationSettlement(from, to))).toBe('RESERVATION_ALREADY_SETTLED');
+  });
+});
+
+// Characterised from db reserveOrderStock (ADR-0005, CO-4): duplicate variants are summed,
+// each variant is filled greedily from active warehouses in warehouse order, and any shortfall
+// refuses the whole Order before anything is held.
+describe('stock allocation', () => {
+  const ruler = 3 as VariantId;
+
+  it('fills a variant greedily across active warehouses in warehouse order', () => {
+    const balances = [balance(pen, cairo, 2), balance(pen, giza, 4)];
+    expect(allocateStock([{ variantId: pen, quantity: 5 }], balances, warehouses)).toEqual([
+      { variantId: pen, warehouseId: cairo, quantity: 2 },
+      { variantId: pen, warehouseId: giza, quantity: 3 },
+    ]);
+  });
+
+  it('takes everything from the first warehouse when it has enough', () => {
+    const balances = [balance(pen, cairo, 5), balance(pen, giza, 4)];
+    expect(allocateStock([{ variantId: pen, quantity: 5 }], balances, warehouses)).toEqual([
+      { variantId: pen, warehouseId: cairo, quantity: 5 },
+    ]);
+  });
+
+  it('is deterministic whatever order lines and balances come in', () => {
+    const lines = [
+      { variantId: pencil, quantity: 1 },
+      { variantId: pen, quantity: 3 },
+    ];
+    const balances = [balance(pencil, cairo, 1), balance(pen, giza, 4), balance(pen, cairo, 1, 0)];
+    const expected = [
+      { variantId: pen, warehouseId: cairo, quantity: 1 },
+      { variantId: pen, warehouseId: giza, quantity: 2 },
+      { variantId: pencil, warehouseId: cairo, quantity: 1 },
+    ];
+    expect(allocateStock(lines, balances, warehouses)).toEqual(expected);
+    expect(allocateStock([...lines].reverse(), [...balances].reverse(), warehouses)).toEqual(
+      expected,
+    );
+  });
+
+  it('skips inactive warehouses and units already reserved', () => {
+    const balances = [balance(pen, cairo, 3, 2), balance(pen, closed, 50), balance(pen, giza, 1)];
+    expect(allocateStock([{ variantId: pen, quantity: 2 }], balances, warehouses)).toEqual([
+      { variantId: pen, warehouseId: cairo, quantity: 1 },
+      { variantId: pen, warehouseId: giza, quantity: 1 },
+    ]);
+  });
+
+  it('sums duplicate lines of one variant before allocating', () => {
+    const lines = [
+      { variantId: pen, quantity: 2 },
+      { variantId: pen, quantity: 1 },
+    ];
+    expect(allocateStock(lines, [balance(pen, cairo, 3)], warehouses)).toEqual([
+      { variantId: pen, warehouseId: cairo, quantity: 3 },
+    ]);
+  });
+
+  it('holds nothing for an Order with no lines', () => {
+    expect(allocateStock([], [balance(pen, cairo, 3)], warehouses)).toEqual([]);
+  });
+
+  it('refuses the whole Order on a shortfall, naming each short variant', () => {
+    const lines = [
+      { variantId: ruler, quantity: 1 },
+      { variantId: pen, quantity: 10 },
+      { variantId: pencil, quantity: 3 },
+    ];
+    const balances = [
+      balance(pen, cairo, 2),
+      balance(pen, giza, 5, 1),
+      balance(pen, closed, 20),
+      balance(ruler, cairo, 9),
+    ];
+    let error: unknown;
+    try {
+      allocateStock(lines, balances, warehouses);
+    } catch (thrown) {
+      error = thrown;
+    }
+    expect(error).toBeInstanceOf(InsufficientStockError);
+    expect((error as InsufficientStockError).code).toBe('INSUFFICIENT_STOCK');
+    expect((error as InsufficientStockError).shortfalls).toEqual([
+      { variantId: pen, requested: 10, available: 6 },
+      { variantId: pencil, requested: 3, available: 0 },
+    ]);
+  });
+
+  it('checks the summed quantity of duplicate lines', () => {
+    const lines = [
+      { variantId: pen, quantity: 2 },
+      { variantId: pen, quantity: 2 },
+    ];
+    expect(codeOf(() => allocateStock(lines, [balance(pen, cairo, 3)], warehouses))).toBe(
+      'INSUFFICIENT_STOCK',
+    );
+  });
+
+  it.each([0, -1, 1.5, Number.NaN])('refuses a line quantity of %s', (quantity) => {
+    expect(
+      codeOf(() =>
+        allocateStock([{ variantId: pen, quantity }], [balance(pen, cairo, 3)], warehouses),
+      ),
+    ).toBe('INVALID_QUANTITY');
   });
 });
