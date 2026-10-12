@@ -43,7 +43,7 @@ export type AcceptInvitationError =
 export type PartnerContextError = 'not-found' | 'suspended';
 
 /** Action classes of the partner status table (ADR-0003). */
-export type PartnerAction = 'read' | 'reports' | 'membership-change' | 'business';
+export type PartnerAction = 'read' | 'reports' | 'membership-change';
 
 export type RequirePartnerRoleError = 'role-not-held' | 'partner-status-not-allowed';
 

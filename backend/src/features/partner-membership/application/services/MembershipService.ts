@@ -21,7 +21,15 @@ import {
   type PartnerTransaction,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerRow } from '@findeg/db/queries/partners';
-import { PARTNER_MEMBERSHIP_STATUSES, PARTNER_ROLES, type PartnerRole } from '@findeg/db/schema';
+import {
+  acceptPartnerInvitation,
+  changePartnerMembership,
+  leavePartnerMembership,
+  PARTNER_MEMBERSHIP_STATUSES,
+  PARTNER_ROLES,
+  type PartnerMembershipStatus,
+  type PartnerRole,
+} from '@findeg/domain';
 import type {
   AcceptInvitationError,
   IMembershipService,
@@ -36,18 +44,13 @@ import type {
   UpdateMembershipInput,
 } from '../interfaces/IMembershipService';
 import type { PartnerActor, PartnerResult, StaffActor } from '../interfaces/IPartnerService';
+import { partnerFailure } from './domain-failures';
 import { requirePartnerRole } from './requirePartnerRole';
-import {
-  canManagePartners,
-  fail,
-  isActiveAdministrator,
-  isActivePartnerAdministrator,
-  isOpen,
-  ok,
-} from './shared';
+import { canManagePartners, fail, isActivePartnerAdministrator, ok } from './shared';
 
+/** Shape only: the domain rejects an empty role list and reports unknown roles. */
 const updateSchema = z.object({
-  roles: z.array(z.enum(PARTNER_ROLES)).min(1).optional(),
+  roles: z.array(z.enum(PARTNER_ROLES)).optional(),
   status: z.enum(PARTNER_MEMBERSHIP_STATUSES).optional(),
 });
 
@@ -90,15 +93,16 @@ type MembershipAuditAction =
 
 type MembershipPatch = { roles?: PartnerRole[]; status?: PartnerMembershipRow['status'] };
 
+type MembershipStanding = { roles: readonly PartnerRole[]; status: PartnerMembershipStatus };
+
 const sameRoles = (a: readonly string[], b: readonly string[]) =>
   a.length === b.length && a.every((role) => b.includes(role));
 
-/** The fields of `input` that actually differ from the membership, deduplicated. */
-function toPatch(current: PartnerMembershipRow, input: UpdateMembershipInput): MembershipPatch {
-  const roles = input.roles && [...new Set(input.roles)];
+/** The fields that differ between the membership as stored and as the domain changed it. */
+function toPatch(current: PartnerMembershipRow, next: MembershipStanding): MembershipPatch {
   return {
-    roles: roles && !sameRoles(roles, current.roles) ? roles : undefined,
-    status: input.status && input.status !== current.status ? input.status : undefined,
+    roles: sameRoles(next.roles, current.roles) ? undefined : [...next.roles],
+    status: next.status !== current.status ? next.status : undefined,
   };
 }
 
@@ -140,7 +144,6 @@ export class MembershipService implements IMembershipService {
     const digest = digestToken(token);
     const initial = await getPartnerInvitationByTokenDigest(db, digest);
     if (!initial) return fail('not-found');
-    if (normalizeEmail(session.user.email) !== initial.email) return fail('email-mismatch');
 
     return db.transaction(async (tx) => {
       const beforeLock = await getPartnerInvitationByTokenDigest(tx, digest);
@@ -152,24 +155,32 @@ export class MembershipService implements IMembershipService {
       // Re-read after taking the shared per-partner lock. This makes accept,
       // revoke and duplicate accepts serialize to one consistent outcome.
       const invitation = await getPartnerInvitationByTokenDigest(tx, digest);
-      if (!invitation || invitation.status !== 'pending') return fail('invitation-not-pending');
-      if (invitation.expiresAt <= this.clock()) return fail('invitation-expired');
-      if (normalizeEmail(session.user.email) !== invitation.email) return fail('email-mismatch');
-      if (!isOpen(partner)) return fail('partner-not-open');
+      if (!invitation) return fail('invitation-not-pending');
       const user = await getPartnerUserById(tx, session.userId);
       if (!user?.isActive) return fail('not-authenticated');
-      if (normalizeEmail(user.email) !== invitation.email) return fail('email-mismatch');
 
       const existing = await getCurrentPartnerMembership(tx, partner.id, session.userId);
-      if (existing) return fail('already-member');
+      let accepted: ReturnType<typeof acceptPartnerInvitation>;
+      try {
+        accepted = acceptPartnerInvitation(invitation, {
+          email: session.user.email,
+          partnerStatus: partner.status,
+          now: this.clock(),
+          alreadyMember: existing !== undefined,
+        });
+      } catch (error) {
+        return partnerFailure(error);
+      }
+      // The stored account email must also be the invited one, not only the session's.
+      if (normalizeEmail(user.email) !== invitation.email) return fail('email-mismatch');
 
       const membership = await insertPartnerMembership(tx, {
         businessPartnerId: partner.id,
         userId: session.userId,
         invitationId: invitation.id,
-        roles: invitation.roles,
+        roles: [...accepted.membership.roles],
       });
-      await setPartnerInvitationStatus(tx, invitation.id, 'accepted');
+      await setPartnerInvitationStatus(tx, invitation.id, accepted.invitation.status);
       const acceptedAt = this.clock();
       await verifyUserEmailIfUnset(tx, session.userId, acceptedAt);
       await insertPartnerAccessHistory(tx, {
@@ -200,19 +211,27 @@ export class MembershipService implements IMembershipService {
       if (!locked) return fail('forbidden');
       const { partner, current } = locked;
       if (!(await this.mayManageMembers(tx, actor, partner.id))) return fail('forbidden');
-      if (!isOpen(partner)) return fail('partner-not-open');
-      if (current.status === 'ended') return fail('membership-ended');
+
+      const others = await countOtherActivePartnerAdministrators(tx, partner.id, current.id);
+      let change: ReturnType<typeof changePartnerMembership<PartnerMembershipRow>>;
+      try {
+        change = changePartnerMembership(current, input, {
+          partnerStatus: partner.status,
+          otherActivePartnerAdministrators: others,
+        });
+      } catch (error) {
+        return partnerFailure(error);
+      }
       if (expectedVersion !== current.authorizationVersion) return fail('stale-membership');
 
-      const patch = toPatch(current, input);
-      if (!patch.roles && !patch.status) return ok(toMembership(current));
+      if (!change.changed) return ok(toMembership(current));
       return this.commitChange(
         tx,
         actor,
         partner,
         current,
-        patch,
-        updateAuditActions(current, patch),
+        change.membership,
+        updateAuditActions(current, toPatch(current, change.membership)),
       );
     });
   }
@@ -226,11 +245,18 @@ export class MembershipService implements IMembershipService {
       const locked = await this.lockMembership(tx, membershipId);
       if (!locked || locked.current.userId !== actor.userId) return fail('forbidden');
       const { partner, current } = locked;
-      if (!isOpen(partner)) return fail('partner-not-open');
-      if (current.status === 'ended') return fail('membership-ended');
-      return this.commitChange(tx, actor, partner, current, { status: 'ended' }, [
-        'membership.left',
-      ]);
+
+      const others = await countOtherActivePartnerAdministrators(tx, partner.id, current.id);
+      let left: PartnerMembershipRow;
+      try {
+        left = leavePartnerMembership(current, {
+          partnerStatus: partner.status,
+          otherActivePartnerAdministrators: others,
+        });
+      } catch (error) {
+        return partnerFailure(error);
+      }
+      return this.commitChange(tx, actor, partner, current, left, ['membership.left']);
     });
   }
 
@@ -275,25 +301,23 @@ export class MembershipService implements IMembershipService {
   }
 
   /**
-   * Applies a patch under the partner lock: refuses it when it would leave the
-   * partner without an active Partner Administrator, then writes the update and
-   * one audit row per action in the same transaction.
+   * Writes a membership the domain has already accepted, and one audit row per
+   * action, in the same transaction.
    */
   private async commitChange(
     tx: PartnerTransaction,
     actor: PartnerActor | StaffActor,
     partner: BusinessPartnerRow,
     current: PartnerMembershipRow,
-    patch: MembershipPatch,
+    next: MembershipStanding,
     actions: readonly MembershipAuditAction[],
   ) {
-    const next = { roles: patch.roles ?? current.roles, status: patch.status ?? current.status };
-    if (isActiveAdministrator(current) && !isActiveAdministrator(next)) {
-      const others = await countOtherActivePartnerAdministrators(tx, partner.id, current.id);
-      if (others === 0) return fail('last-administrator');
-    }
-
-    const updated = await updatePartnerMembership(tx, current.id, patch, this.clock());
+    const updated = await updatePartnerMembership(
+      tx,
+      current.id,
+      toPatch(current, next),
+      this.clock(),
+    );
     for (const action of actions) {
       await insertPartnerAccessHistory(tx, {
         businessPartnerId: partner.id,

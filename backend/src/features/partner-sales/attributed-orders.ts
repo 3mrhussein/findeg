@@ -15,7 +15,8 @@ import {
   type PartnerSalesResult,
   type PartnerSalesStaffActor,
 } from './access';
-import { isDateKey, PARTNER_SALES_TIME_ZONE } from './time';
+import { BUSINESS_TIME_ZONE } from '@findeg/domain';
+import { isDateKey } from './time';
 
 export type AttributedOrderStatus = (typeof orderStatusEnum.enumValues)[number];
 export type AttributedPaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
@@ -88,7 +89,7 @@ export class AttributedOrderService implements IAttributedOrderService {
       businessPartnerId,
       from: filter.from,
       to: filter.to,
-      timeZone: PARTNER_SALES_TIME_ZONE,
+      timeZone: BUSINESS_TIME_ZONE,
       orderStatuses: filter.orderStatuses,
       paymentStatuses: filter.paymentStatuses,
     };

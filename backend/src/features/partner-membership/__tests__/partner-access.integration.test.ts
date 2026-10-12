@@ -19,14 +19,13 @@ import {
 
 const PARTNER_STATUSES: PartnerStatus[] = ['onboarding', 'active', 'suspended', 'closed'];
 const MEMBERSHIP_STATUSES: PartnerMembershipStatus[] = ['active', 'suspended', 'ended'];
-const ACTIONS: PartnerAction[] = ['read', 'reports', 'membership-change', 'business'];
+const ACTIONS: PartnerAction[] = ['read', 'reports', 'membership-change'];
 
 /** The #175 partner-status table: which Business Partner statuses allow each action class. */
 const ACTION_ALLOWED: Record<PartnerAction, PartnerStatus[]> = {
   read: ['onboarding', 'active', 'suspended'],
   reports: ['onboarding', 'active', 'suspended', 'closed'],
   'membership-change': ['onboarding', 'active'],
-  business: ['active'],
 };
 
 describe('Partner access check', () => {
@@ -229,7 +228,7 @@ describe('Partner access check', () => {
       if (!context.success) throw new Error(context.error);
 
       expect(services.memberships.requireRole(context.data, 'any', 'read').success).toBe(true);
-      expect(services.memberships.requireRole(context.data, 'any', 'business')).toEqual({
+      expect(services.memberships.requireRole(context.data, 'any', 'membership-change')).toEqual({
         success: false,
         error: 'partner-status-not-allowed',
       });
@@ -248,7 +247,7 @@ describe('Partner access check', () => {
         services.memberships.requireRole(
           context.data,
           ['partner-administrator', 'report-viewer'],
-          'business',
+          'membership-change',
         ).success,
       ).toBe(true);
     });
