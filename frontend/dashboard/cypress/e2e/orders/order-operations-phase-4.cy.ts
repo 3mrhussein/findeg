@@ -14,17 +14,23 @@ const statusSelect = '[data-testid="order-status-select"]:visible';
 const paymentBadge = '[data-testid="order-payment-badge"]:visible';
 
 /**
- * Opens an Order detail page and waits until React has hydrated it, so a click is never
- * swallowed by server-rendered markup that has no handlers yet.
+ * Waits until React has hydrated the Order controls, so a click is never swallowed by
+ * server-rendered markup that has no handlers yet.
  */
-function visitOrderDetail(path: string): void {
-  cy.visit(path);
+function waitForOrderHydration(): void {
   cy.get(statusSelect).should(($el) => {
     expect(Object.keys($el[0]).some((key) => key.startsWith('__reactProps'))).to.eq(true);
   });
 }
 
+function visitOrderDetail(path: string): void {
+  cy.visit(path);
+  waitForOrderHydration();
+}
+
 function chooseStatus(label: string): void {
+  // Client navigation can expose the control before its event handlers are ready, too.
+  waitForOrderHydration();
   cy.get(statusSelect).click();
   // Radix also renders a hidden native <select> whose <option>s share the role; a listbox that
   // is still closing after a refresh can briefly coexist with the new one, so take the open one.
@@ -90,7 +96,14 @@ for (const locale of ['en', 'ar']) {
           .and('not.contain.text', 'pending');
       });
 
+      it('offers payment only after delivery', () => {
+        visitOrderDetail(detailPath());
+        cy.get(paymentBadge).should('have.text', 'unpaid');
+        cy.contains('button:visible', 'Mark as paid').should('not.exist');
+      });
+
       it('updates the payment status and records it in the activity log', () => {
+        cy.task('setTestOrderStatus', { id: order.id, status: 'delivered' });
         visitOrderDetail(detailPath());
         cy.get(paymentBadge).should('have.text', 'unpaid');
 
@@ -114,19 +127,20 @@ for (const locale of ['en', 'ar']) {
 
         chooseStatus('Confirmed');
 
-        expectFailureToast(/Invalid status transition from cancelled to confirmed/);
+        expectFailureToast(/An Order cannot move from cancelled to confirmed/);
         cy.reload();
         cy.contains('h1', /cancelled/i).should('be.visible');
       });
 
       it('rejects an invalid payment transition and leaves the Order unchanged', () => {
+        cy.task('setTestOrderStatus', { id: order.id, status: 'delivered' });
         visitOrderDetail(detailPath());
         cy.contains('button:visible', 'Mark as paid').should('be.visible');
         cy.task('setTestOrderPaymentStatus', { id: order.id, status: 'refunded' });
 
         cy.contains('button:visible', 'Mark as paid').click();
 
-        expectFailureToast(/Invalid payment status transition from refunded to paid/);
+        expectFailureToast(/A payment cannot move from refunded to paid/);
         cy.reload();
         cy.get(paymentBadge).should('have.text', 'refunded');
       });
@@ -170,6 +184,7 @@ for (const locale of ['en', 'ar']) {
 
       it('refuses a payment change from Staff who can only read Orders', () => {
         signInToDashboardAsReadOnlyStaff();
+        cy.task('setTestOrderStatus', { id: order.id, status: 'delivered' });
         visitOrderDetail(detailPath());
 
         cy.contains('button:visible', 'Mark as paid').click();
