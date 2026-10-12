@@ -1,6 +1,6 @@
+import { type Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
-import type { Locale } from 'next-intl';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getCollectionPageViewModel } from '@/data/catalog/queries';
@@ -48,7 +48,7 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
   const title =
     collection.localizedTitle?.[locale as keyof typeof collection.localizedTitle] ||
     collection.slug;
-  const subtitle = collection.localizedSubtitle?.[locale as 'en' | 'ar'];
+  const subtitle = collection.localizedSubtitle?.[locale as Locale];
 
   return (
     <PageShell>

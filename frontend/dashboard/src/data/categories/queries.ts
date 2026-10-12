@@ -8,7 +8,7 @@
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createCategoryService } from '@findeg/backend/features/catalog';
-import type { Locale } from '@findeg/backend/features/core';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Get all categories

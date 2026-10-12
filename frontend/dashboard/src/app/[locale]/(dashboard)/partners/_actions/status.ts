@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@lib/auth-guard';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import {
   createPartnerMembershipServices,
   type BusinessPartner,

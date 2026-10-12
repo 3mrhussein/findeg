@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { piastersToEgp } from '@findeg/money';
+import { formatEgp } from '@findeg/ui';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
 interface OrderItemsTableProps {
@@ -52,17 +52,17 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     <span>
-                      {currency} {piastersToEgp(price)}
+                      {currency} {formatEgp(price)}
                     </span>
                     {/* Placeholder for price change detection */}
                   </div>
                 </TableCell>
                 <TableCell className="text-right">{qty}</TableCell>
                 <TableCell className="text-right">
-                  {currency} {piastersToEgp(item.discountAmount)}
+                  {currency} {formatEgp(item.discountAmount)}
                 </TableCell>
                 <TableCell className="text-right font-medium">
-                  {currency} {piastersToEgp(total)}
+                  {currency} {formatEgp(total)}
                 </TableCell>
               </TableRow>
             );

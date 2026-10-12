@@ -49,7 +49,7 @@ test('L2: a workspace import the manifest does not declare is reported', async (
   const undeclared = [
     ['backend', 'backend/src/fixture.ts', "import '@findeg/dashboard';"],
     ['frontend/ui', 'frontend/ui/src/fixture.ts', "import '@findeg/backend/features/core';"],
-    ['packages/money', 'packages/money/src/fixture.ts', "import '@findeg/db';"],
+    ['packages/domain', 'packages/domain/src/fixture.ts', "import '@findeg/db';"],
     ['db', 'db/src/fixture.ts', "const x = import('@findeg/orders');"],
   ];
   for (const [project, file, code] of undeclared) {
@@ -58,7 +58,7 @@ test('L2: a workspace import the manifest does not declare is reported', async (
   }
   for (const [project, file, code] of [
     ['backend', 'backend/src/fixture.ts', "import '@findeg/db'; import '@findeg/backend/index';"],
-    ['packages/orders', 'packages/orders/src/fixture.ts', "import '@findeg/money';"],
+    ['packages/orders', 'packages/orders/src/fixture.ts', "import '@findeg/domain';"],
   ]) {
     const messages = await lint(project, file, code);
     assert.deepEqual(only(messages, 'local/declared-workspace-dependencies'), [], code);
@@ -67,16 +67,16 @@ test('L2: a workspace import the manifest does not declare is reported', async (
 
 test('L1: modules the runtime cannot provide are reported outside tests only', async () => {
   const isomorphic = await lint(
-    'packages/money',
-    'packages/money/src/fixture.ts',
+    'packages/domain',
+    'packages/domain/src/fixture.ts',
     "import 'node:fs'; import 'react'; import 'next/headers';",
   );
   assert.equal(only(isomorphic, 'local/runtime-imports').length, 3);
   const node = await lint('backend', 'backend/src/fixture.ts', "import 'next/server';");
   assert.equal(only(node, 'local/runtime-imports').length, 1);
   const inTest = await lint(
-    'packages/money',
-    'packages/money/src/fixture.test.ts',
+    'packages/domain',
+    'packages/domain/src/fixture.test.ts',
     "import 'node:fs';",
   );
   assert.deepEqual(only(inTest, 'local/runtime-imports'), []);

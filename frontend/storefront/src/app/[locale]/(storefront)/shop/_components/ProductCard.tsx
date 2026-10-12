@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Eye, ShoppingCart } from 'lucide-react';
 import { Link } from '@i18n/navigation';
 import type { Product } from '@data/catalog/types';
@@ -16,6 +16,7 @@ import {
   TooltipTrigger,
   formatEgpDecimal,
 } from '@findeg/ui';
+import { discountPercentage as savingPercentage, moneyFromDecimal } from '@findeg/domain';
 import { cn } from '@lib/utils';
 
 export interface ProductCardBrand {
@@ -31,7 +32,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, view, brand }: ProductCardProps) {
-  const locale = useLocale();
   const t = useTranslations('Pages.ProductCard');
 
   const { addToCart } = useCart();
@@ -67,15 +67,14 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
   const discountPercentage = useMemo(() => {
     if (!primaryVariant || !primaryVariant.basePrice || !primaryVariant.strikePrice) return 0;
-    const strike = Number(primaryVariant.strikePrice);
-    const base = Number(primaryVariant.basePrice);
-    const diff = strike - base;
-    if (diff <= 0) return 0;
-    return Math.round((diff / strike) * 100);
+    return savingPercentage({
+      price: moneyFromDecimal(String(primaryVariant.basePrice)),
+      compareAtPrice: moneyFromDecimal(String(primaryVariant.strikePrice)),
+    });
   }, [primaryVariant]);
 
-  const currentPrice = primaryVariant?.basePrice || 0;
-  const originalPrice = primaryVariant?.strikePrice;
+  const currentPrice = String(primaryVariant?.basePrice || '0');
+  const originalPrice = primaryVariant?.strikePrice ? String(primaryVariant.strikePrice) : null;
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const imageUrl =
@@ -187,11 +186,11 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
       <div className="mt-3 flex items-end gap-2">
         <span className="text-base font-bold text-foreground">
-          {formatEgpDecimal(Number(currentPrice).toFixed(2), locale)}
+          {`EGP ${formatEgpDecimal(currentPrice)}`}
         </span>
-        {originalPrice && Number(originalPrice) > Number(currentPrice) ? (
+        {originalPrice && moneyFromDecimal(originalPrice) > moneyFromDecimal(currentPrice) ? (
           <span className="text-xs text-muted-foreground line-through">
-            {formatEgpDecimal(Number(originalPrice).toFixed(2), locale)}
+            {`EGP ${formatEgpDecimal(originalPrice)}`}
           </span>
         ) : null}
       </div>

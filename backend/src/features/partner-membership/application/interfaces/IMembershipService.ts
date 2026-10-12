@@ -1,4 +1,5 @@
-import type { PartnerMembershipStatus, PartnerRole } from '@findeg/db/schema';
+import type { BusinessPartnerStatus } from '@findeg/domain';
+import type { PartnerMembershipStatus, PartnerRole } from '@findeg/domain';
 import type { PartnerActor, PartnerResult, StaffActor } from './IPartnerService';
 
 export interface PartnerSession {
@@ -26,7 +27,7 @@ export interface PartnerContext {
     code: string;
     nameEn: string;
     nameAr: string;
-    status: 'onboarding' | 'active' | 'suspended' | 'closed';
+    status: BusinessPartnerStatus;
   };
   membership: PartnerMembership;
 }
@@ -43,7 +44,8 @@ export type AcceptInvitationError =
 export type PartnerContextError = 'not-found' | 'suspended';
 
 /** Action classes of the partner status table (ADR-0003). */
-export type PartnerAction = 'read' | 'reports' | 'membership-change';
+export type { PartnerAction } from '@findeg/domain';
+import type { PartnerAction } from '@findeg/domain';
 
 export type RequirePartnerRoleError = 'role-not-held' | 'partner-status-not-allowed';
 

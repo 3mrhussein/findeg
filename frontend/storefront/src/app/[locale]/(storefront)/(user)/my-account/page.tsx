@@ -1,8 +1,7 @@
-import { piastersToEgp } from '@findeg/money';
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle, formatEgp } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { logoutAction } from '@data/auth/actions';
 import { updateProfileAction } from '@data/user/actions';
@@ -116,7 +115,7 @@ export default async function Page({ params, searchParams }: Props) {
                     </div>
                     <div className="mt-1 text-sm">
                       {t('Pages.MyAccount.OrderTotal')}: {order.currency || 'EGP'}{' '}
-                      {piastersToEgp(order.totalAmount)}
+                      {formatEgp(order.totalAmount)}
                     </div>
                   </Link>
                 ))}

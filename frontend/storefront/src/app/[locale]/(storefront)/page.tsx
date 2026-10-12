@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import HomePage from './HomePage';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { buildPageMetadata } from './_lib/metadata';

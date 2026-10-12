@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import Image from 'next/image';
 import { Link } from '@i18n/navigation';
 import { getCategoriesPageData } from '@/data/categories/queries';

@@ -1,4 +1,5 @@
 import 'server-only';
+import type { Locale } from '@findeg/domain';
 import { cache } from 'react';
 import {
   createPartnerMembershipServices,
@@ -79,7 +80,7 @@ export async function getPartnerMembers(actor: PartnerActor, partnerId: number) 
 export async function getPartnerReport(
   actor: { userId: number },
   partnerId: number,
-  options: { month?: string; locale: 'en' | 'ar' },
+  options: { month?: string; locale: Locale },
 ) {
   const reports = createPartnerSalesServices().partnerReports;
   const read = (selected?: string) =>

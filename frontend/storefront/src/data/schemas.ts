@@ -1,3 +1,4 @@
+import { LOCALES, CART_QUANTITY_MIN, CART_QUANTITY_MAX } from '@findeg/domain';
 /**
  * Storefront Input Validation Schemas
  *
@@ -32,9 +33,9 @@ export const AddToCartInputSchema = z.object({
   quantity: z
     .number()
     .int()
-    .min(1, 'Quantity must be at least 1')
-    .max(999, 'Quantity must be at most 999'),
-  locale: z.enum(['en', 'ar']).optional(),
+    .min(CART_QUANTITY_MIN, 'Quantity must be at least 1')
+    .max(CART_QUANTITY_MAX, 'Quantity must be at most 999'),
+  locale: z.enum([...LOCALES]).optional(),
 });
 
 export type AddToCartInput = z.infer<typeof AddToCartInputSchema>;
@@ -44,8 +45,8 @@ export const UpdateQuantityInputSchema = z.object({
   quantity: z
     .number()
     .int()
-    .min(1, 'Quantity must be at least 1')
-    .max(999, 'Quantity must be at most 999'),
+    .min(CART_QUANTITY_MIN, 'Quantity must be at least 1')
+    .max(CART_QUANTITY_MAX, 'Quantity must be at most 999'),
 });
 
 export type UpdateQuantityInput = z.infer<typeof UpdateQuantityInputSchema>;
@@ -58,7 +59,7 @@ export type CartId = z.infer<typeof CartIdSchema>;
 // CATALOG SCHEMAS
 // ============================================================================
 
-export const LocaleSchema = z.enum(['en', 'ar']).default('en');
+export const LocaleSchema = z.enum([...LOCALES]).default('en');
 
 export type Locale = z.infer<typeof LocaleSchema>;
 

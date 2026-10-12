@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { StaffPartnerReportView } from '@findeg/backend/features/partner-sales';
-import { piastersToEgp } from '@findeg/money';
+import { formatEgp } from '@findeg/ui';
 import { toSalesReportProps } from './salesReport';
 
 const row = (over: Partial<StaffPartnerReportView['sales'][number]> = {}) => ({
@@ -34,6 +34,6 @@ describe('toSalesReportProps', () => {
   });
 
   it('formats piasters without floating point', () => {
-    expect(piastersToEgp(1_234_567_890_123n)).toBe('12345678901.23');
+    expect(formatEgp(1_234_567_890_123n)).toBe('12345678901.23');
   });
 });

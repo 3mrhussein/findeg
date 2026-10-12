@@ -24,10 +24,9 @@
   },
   "dependencies": {
     "@findeg/db": "workspace:*",
+    "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
-    "@findeg/money": "workspace:*",
     "drizzle-orm": "^0.45.3",
-    "zod": "^4.6.5",
-    "@findeg/domain": "workspace:*"
+    "zod": "^4.6.5"
   }
 }

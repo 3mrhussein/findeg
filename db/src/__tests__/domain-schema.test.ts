@@ -1,14 +1,14 @@
-import { ShippingAddressSchema } from '@findeg/db/types';
-import {
-  ORDER_STATUS_VALUES,
-  PAYMENT_STATUS_VALUES,
-  PAYMENT_METHOD_VALUES,
-  PORTAL_ROLE_VALUES,
-  ACTOR_TYPE_VALUES,
-} from '@findeg/db/types/enum-values';
+import { StoredShippingAddressSchema } from '@findeg/db/types';
+import { PORTAL_ROLE_VALUES, ACTOR_TYPE_VALUES } from '@findeg/db/types/enum-values';
 import { expect, it } from 'vitest';
 import { PgDialect, getTableConfig } from 'drizzle-orm/pg-core';
-import { ORDER_REFERENCE_PATTERN, orderReference } from '@findeg/domain';
+import {
+  ORDER_STATUSES as ORDER_STATUS_VALUES,
+  PAYMENT_STATUSES as PAYMENT_STATUS_VALUES,
+  PAYMENT_METHOD_TYPES as PAYMENT_METHOD_VALUES,
+  ORDER_REFERENCE_PATTERN,
+  orderReference,
+} from '@findeg/domain';
 import {
   orders,
   generateOrderReference,
@@ -62,7 +62,7 @@ it('domain-derived CHECKs retain the existing PostgreSQL SQL including the list 
   });
 });
 
-it('retains the browser-safe legacy value import path until consumer migration', () => {
+it('retains the persistence-owned portal and actor classifications', () => {
   expect(ORDER_STATUS_VALUES).toEqual([
     'pending',
     'confirmed',
@@ -79,7 +79,7 @@ it('retains the browser-safe legacy value import path until consumer migration',
 });
 
 it('accepts Egyptian mobile forms from the domain and rejects the old doubled zero prefix', () => {
-  expect(ShippingAddressSchema.shape.phone.safeParse('01012345678').success).toBe(true);
-  expect(ShippingAddressSchema.shape.phone.safeParse('+201012345678').success).toBe(true);
-  expect(ShippingAddressSchema.shape.phone.safeParse('+2001012345678').success).toBe(false);
+  expect(StoredShippingAddressSchema.shape.phone.safeParse('01012345678').success).toBe(true);
+  expect(StoredShippingAddressSchema.shape.phone.safeParse('+201012345678').success).toBe(true);
+  expect(StoredShippingAddressSchema.shape.phone.safeParse('+2001012345678').success).toBe(false);
 });

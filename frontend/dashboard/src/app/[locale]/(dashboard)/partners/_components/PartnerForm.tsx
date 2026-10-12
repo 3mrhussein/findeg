@@ -1,4 +1,5 @@
 'use client';
+import type { Locale } from '@findeg/domain';
 
 import { useActionState, useEffect } from 'react';
 import { Button, Input, Label } from '@findeg/ui';
@@ -18,7 +19,7 @@ const initialState: PartnerFormState = { status: 'idle' };
  */
 export function PartnerForm({ partner }: PartnerFormProps) {
   const router = useRouter();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const [state, formAction, isPending] = useActionState(
     savePartnerAction.bind(null, locale, partner?.id ?? null),
     initialState,

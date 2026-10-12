@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { setRequestLocale } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getSchoolSupplyListByPublicCode } from '@data/school/queries';
 import { SupplyListView } from './_components/SupplyListView';
 

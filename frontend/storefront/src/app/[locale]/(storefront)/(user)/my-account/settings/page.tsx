@@ -1,4 +1,4 @@
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
 import { Button } from '@findeg/ui';

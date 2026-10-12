@@ -1,10 +1,10 @@
 import type { Order as StoredOrder, OrderItem as StoredItem, User } from '@findeg/db/schema';
-import { toPiasters } from '@findeg/money';
+import { moneyFromDecimal } from '@findeg/domain';
 import type { Order } from './types';
 
 function amount(value: string | null): bigint {
   if (value === null) throw new TypeError('Missing canonical Order money snapshot');
-  return toPiasters(value);
+  return moneyFromDecimal(value);
 }
 
 export function mapOrder(row: StoredOrder, items: StoredItem[], user?: User | null): Order {

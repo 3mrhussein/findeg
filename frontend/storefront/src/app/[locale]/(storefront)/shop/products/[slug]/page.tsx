@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Link } from '@i18n/navigation';

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Navbar } from '@components/layout/Navbar';
 import { Footer } from '@components/shared/Footer';
 import { CartDrawer } from './_components/CartDrawer';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 import { setRequestLocale } from 'next-intl/server';
 

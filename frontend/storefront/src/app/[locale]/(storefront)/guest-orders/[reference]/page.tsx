@@ -1,7 +1,15 @@
 import { cookies } from 'next/headers';
-import { Card, CardContent, CardHeader, CardTitle, Container, Separator } from '@findeg/ui';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Container,
+  Separator,
+  formatEgpDecimal,
+} from '@findeg/ui';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { redirect } from '@i18n/navigation';
 import { GUEST_ORDER_COOKIE, getGuestOrder } from '@data/order/queries';
 
@@ -19,7 +27,7 @@ export default async function GuestOrderPage({ params }: GuestOrderPageProps) {
   const order = await getGuestOrder(token, decodeURIComponent(reference));
   if (!order) return redirect({ href: '/order-lookup', locale });
 
-  const money = (amount: string | null) => `${order.currency} ${Number(amount ?? 0).toFixed(2)}`;
+  const money = (amount: string | null) => `${order.currency} ${formatEgpDecimal(amount ?? '0')}`;
 
   return (
     <main className="bg-background py-10 md:py-14">

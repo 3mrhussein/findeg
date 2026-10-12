@@ -1,3 +1,4 @@
+import { PARTNER_ADMINISTRATOR, type PartnerRole } from '@findeg/domain';
 import { and, asc, eq, isNull, ne, sql } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '../../schema';
@@ -14,7 +15,6 @@ export type PartnerDatabase = PostgresJsDatabase<typeof schema>;
 export type PartnerTransaction = Parameters<Parameters<PartnerDatabase['transaction']>[0]>[0];
 export type PartnerExecutor = PartnerDatabase | PartnerTransaction;
 
-const { PARTNER_ADMINISTRATOR } = schema;
 const {
   businessPartners,
   partnerAccessHistory,
@@ -439,7 +439,7 @@ export async function getActiveMembershipRoles(
   executor: PartnerExecutor,
   businessPartnerId: number,
   userId: number,
-): Promise<schema.PartnerRole[] | null> {
+): Promise<PartnerRole[] | null> {
   const [row] = await executor
     .select({ roles: partnerMemberships.roles })
     .from(partnerMemberships)

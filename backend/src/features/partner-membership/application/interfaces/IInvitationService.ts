@@ -1,5 +1,5 @@
 import type { PartnerTransaction } from '@findeg/db/queries/partners';
-import type { PartnerInvitationStatus, PartnerRole } from '@findeg/db/schema';
+import type { PartnerInvitationStatus, PartnerRole } from '@findeg/domain';
 import type { PartnerActor, PartnerResult, StaffActor } from './IPartnerService';
 
 export type { PartnerRole };

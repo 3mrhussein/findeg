@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Search } from 'lucide-react';

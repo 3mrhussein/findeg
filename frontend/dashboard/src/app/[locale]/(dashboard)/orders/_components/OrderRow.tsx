@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { piastersToEgp } from '@findeg/money';
+import { addMoney, money } from '@findeg/domain';
+import { formatEgp } from '@findeg/ui';
 
 import { useState } from 'react';
 import { EnrichedTableRow } from '@/app/[locale]/_components/table/EnrichedTableRow';
@@ -26,7 +27,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
   const t = useTranslations('Common');
-  const totalAmount = `${order.currency || 'EGP'} ${piastersToEgp(order.totalAmount)}`;
+  const totalAmount = `${order.currency || 'EGP'} ${formatEgp(order.totalAmount)}`;
   const timeAgo = order.createdAt
     ? formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })
     : 'Unknown';
@@ -95,7 +96,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
                   </div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || 'EGP'} {piastersToEgp(item.lineTotal)}
+                  {order.currency || 'EGP'} {formatEgp(item.lineTotal)}
                 </div>
               </div>
             ))}
@@ -106,20 +107,21 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.subtotal + order.discountTotal)}
+                {order.currency || 'EGP'}{' '}
+                {formatEgp(addMoney(money(order.subtotal), money(order.discountTotal)))}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.shippingCost)}
+                {order.currency || 'EGP'} {formatEgp(money(order.shippingCost))}
               </span>
             </div>
             {order.discountTotal > 0n && (
               <div className="flex justify-between text-sm text-destructive">
                 <span>{t('Discount')}</span>
                 <span>
-                  -{order.currency} {piastersToEgp(order.discountTotal)}
+                  -{order.currency} {formatEgp(money(order.discountTotal))}
                 </span>
               </div>
             )}

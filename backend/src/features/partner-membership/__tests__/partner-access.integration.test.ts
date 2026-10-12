@@ -1,12 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
+import { businessPartners, partnerMemberships, users } from '@findeg/db/schema';
 import {
-  businessPartners,
-  partnerMemberships,
-  users,
   type PartnerMembershipStatus,
-  type PartnerStatus,
-} from '@findeg/db/schema';
+  type BusinessPartnerStatus as PartnerStatus,
+} from '@findeg/domain';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import {
   createPartnerMembershipServices,

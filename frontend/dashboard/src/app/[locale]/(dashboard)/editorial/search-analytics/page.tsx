@@ -1,6 +1,6 @@
 import { requireAdmin } from '@lib/auth-guard';
 import { SearchAnalyticsView } from './_components/SearchAnalyticsView';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 /**
  *

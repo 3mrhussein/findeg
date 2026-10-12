@@ -1,3 +1,4 @@
+import { type Locale } from '@findeg/domain';
 import { eq } from 'drizzle-orm';
 import { db } from '../../connection';
 import { products, productVariants, variantImages } from '../../schema';
@@ -16,7 +17,7 @@ export async function duplicateProductWithVariants(id: number): Promise<{ newId:
     .where(eq(productVariants.productId, id));
 
   return db.transaction(async (tx) => {
-    const localizedName = product.localizedName as Record<'en' | 'ar', string>;
+    const localizedName = product.localizedName as Record<Locale, string>;
 
     const [newSpu] = await tx
       .insert(products)

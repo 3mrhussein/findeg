@@ -1,4 +1,4 @@
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { PartnerForm } from '../_components/PartnerForm';

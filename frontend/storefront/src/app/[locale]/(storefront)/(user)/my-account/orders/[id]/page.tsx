@@ -1,10 +1,9 @@
 import { OrderSnapshotTotals } from '@components/orders/OrderSnapshotTotals';
-import { piastersToEgp } from '@findeg/money';
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle, formatEgp } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Separator } from '@findeg/ui';
 import { getCustomerOrder } from '@data/order/queries';
@@ -68,19 +67,19 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
                 <div className="flex justify-between">
                   <dt>{t('Pages.Checkout.UnitPrice')}</dt>
                   <dd>
-                    {order.currency} {piastersToEgp(item.unitPrice)}
+                    {order.currency} {formatEgp(item.unitPrice)}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>{t('Pages.Checkout.Discounts')}</dt>
                   <dd>
-                    {order.currency} {piastersToEgp(item.discountAmount)}
+                    {order.currency} {formatEgp(item.discountAmount)}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>{t('Pages.Checkout.LineTotal')}</dt>
                   <dd>
-                    {order.currency} {piastersToEgp(item.lineTotal)}
+                    {order.currency} {formatEgp(item.lineTotal)}
                   </dd>
                 </div>
               </dl>

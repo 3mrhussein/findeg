@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Check, Minus, Package, RefreshCw, Shield, ShoppingCart, Truck } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
-import { Button, Badge, IconTooltip, formatEgpDecimal } from '@findeg/ui';
+import { Button, Badge, IconTooltip, formatEgp, formatEgpDecimal } from '@findeg/ui';
+import { discountPercentage, moneyFromDecimal, subtractMoney } from '@findeg/domain';
 import { useCart } from '@hooks/useCart';
 import { cn } from '@lib/utils';
 import type { Product, Variant, ProductPdpViewModel } from '@/data/catalog/types';
@@ -24,11 +25,12 @@ function getProductStatusBadge({
 }) {
   if (lowStock) return { kind: 'low-stock' as const };
   if (!variant) return null;
-  const strike = Number(variant.strikePrice);
-  const base = Number(variant.basePrice);
-  if (strike && strike > base) {
-    const percent = Math.round(((strike - base) / strike) * 100);
-    return { kind: 'sale' as const, percent };
+  if (variant.strikePrice && variant.basePrice) {
+    const percent = discountPercentage({
+      price: moneyFromDecimal(String(variant.basePrice)),
+      compareAtPrice: moneyFromDecimal(String(variant.strikePrice)),
+    });
+    if (percent > 0) return { kind: 'sale' as const, percent };
   }
   return null;
 }
@@ -89,7 +91,6 @@ function resolveVariantStock(variant?: Variant) {
 export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const t = useTranslations('Pages.ProductDetail');
   const tCard = useTranslations('Pages.ProductCard');
-  const locale = useLocale();
 
   const { addToCart } = useCart();
 
@@ -323,21 +324,22 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
           <div className="rounded-2xl border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-3xl font-black text-primary">
-                {formatEgpDecimal((priceState.unitPrice || 0).toFixed(2), locale)}
+                {formatEgpDecimal(String(selectedVariant?.basePrice ?? '0'))}
               </span>
 
-              {Number(selectedVariant?.strikePrice || 0) > (priceState.unitPrice || 0) ? (
+              {moneyFromDecimal(String(selectedVariant?.strikePrice ?? '0')) >
+              moneyFromDecimal(String(selectedVariant?.basePrice ?? '0')) ? (
                 <>
                   <span className="text-sm text-muted-foreground line-through">
-                    {formatEgpDecimal(Number(selectedVariant!.strikePrice).toFixed(2), locale)}
+                    {formatEgpDecimal(String(selectedVariant!.strikePrice))}
                   </span>
                   <span className="text-sm font-semibold text-emerald-600">
                     {t('YouSave', {
-                      amount: formatEgpDecimal(
-                        (
-                          Number(selectedVariant!.strikePrice) - (priceState.unitPrice || 0)
-                        ).toFixed(2),
-                        locale,
+                      amount: formatEgp(
+                        subtractMoney(
+                          moneyFromDecimal(String(selectedVariant!.strikePrice)),
+                          moneyFromDecimal(String(selectedVariant!.basePrice)),
+                        ),
                       ),
                     })}
                   </span>

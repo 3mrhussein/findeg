@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { Link } from '@i18n/navigation';
 import { HeaderNavClient } from './HeaderNavClient';
 import ToggleLanguage from './ToggleLanguage';

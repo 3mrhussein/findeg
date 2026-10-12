@@ -1,9 +1,10 @@
+import type { TagScope } from '@findeg/domain';
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 import { type ProductFilters } from '../interfaces/ProductFilters';
 import { type IProductService } from '../interfaces/IProductService';
 import { type Product } from '@findeg/backend/features/catalog/domain/entities/Product';
 import { type Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';
-import { type Locale } from '@findeg/backend/features/core/domain/value-objects';
+import { type Locale } from '@findeg/domain';
 import type { ProductInput } from '../dtos/ProductInput';
 import { productQueries } from '@findeg/db/queries';
 import { defaultVariant as domainDefaultVariant } from '@findeg/domain/catalog';
@@ -96,9 +97,7 @@ export class ProductService implements IProductService {
       icon: dbTag.icon || undefined,
       color: dbTag.color || undefined,
       isActive: dbTag.isActive,
-      scope:
-        (dbTag.scope as 'catalog' | 'school' | 'campaign' | 'system' | 'search' | 'editorial') ||
-        'catalog',
+      scope: (dbTag.scope as TagScope) || 'catalog',
       createdAt: dbTag.createdAt,
       updatedAt: dbTag.updatedAt,
     };

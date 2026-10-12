@@ -9,7 +9,7 @@ import {
 } from '@findeg/domain/orders';
 import { enqueue } from '@findeg/db/queries/outbox';
 import { consumeOrderStock, releaseOrderStock } from '@findeg/db/queries/stock-reservations';
-import { toPiasters } from '@findeg/money';
+import { moneyFromDecimal } from '@findeg/domain';
 import { assertCanWriteOrders } from './orderWritePermission';
 import { OrderStatusUpdateSchema, PaymentStatusSchema, type OrderStatusUpdate } from './schemas';
 import type { OrderStaffActor } from './OrderStaffActor';
@@ -296,15 +296,15 @@ export function createOrders({
             currency: 'EGP' as const,
             timezone: 'Africa/Cairo' as const,
             totalOrders: totals.totalOrders,
-            totalRevenue: toPiasters(totals.revenue),
+            totalRevenue: moneyFromDecimal(totals.revenue),
             todayOrders: totals.todayOrders,
-            todayRevenue: toPiasters(totals.todayRevenue),
+            todayRevenue: moneyFromDecimal(totals.todayRevenue),
             ordersByStatus,
             revenueByPeriod: Array.from(trend, (row) => ({
               date: row.date,
-              revenue: toPiasters(row.revenue),
+              revenue: moneyFromDecimal(row.revenue),
             })),
-            topProducts: top.map((row) => ({ ...row, revenue: toPiasters(row.revenue) })),
+            topProducts: top.map((row) => ({ ...row, revenue: moneyFromDecimal(row.revenue) })),
           };
         },
         { isolationLevel: 'repeatable read', accessMode: 'read only' },

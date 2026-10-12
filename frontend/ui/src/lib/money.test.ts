@@ -9,23 +9,12 @@ describe('formatEgp', () => {
     [2500n, '25.00'],
     [1_234_567_890_123n, '12345678901.23'],
     [-250n, '-2.50'],
-  ])('formats %s piasters as %s in en', (piasters, text) => {
-    expect(formatEgp(piasters, 'en')).toBe(text);
-  });
-
-  it('uses Arabic-Indic digits and the Arabic decimal separator in ar', () => {
-    expect(formatEgp(3750n, 'ar')).toBe('٣٧٫٥٠');
-    expect(formatEgp(5n, 'ar')).toBe('٠٫٠٥');
+  ])('formats %s piasters as %s', (piasters, text) => {
+    expect(formatEgp(piasters)).toBe(text);
   });
 
   it('is exact beyond Number.MAX_SAFE_INTEGER piasters', () => {
-    expect(formatEgp(12345678901234567890123456789012n, 'en')).toBe(
-      '123456789012345678901234567890.12',
-    );
-  });
-
-  it('is not sensitive to the regional suffix of the locale', () => {
-    expect(formatEgp(3750n, 'ar-EG')).toBe(formatEgp(3750n, 'ar'));
+    expect(formatEgp(12345678901234567890123456789012n)).toBe('123456789012345678901234567890.12');
   });
 });
 
@@ -36,14 +25,15 @@ describe('formatEgpDecimal', () => {
     ['25', '25.00'],
     ['0.05', '0.05'],
     ['007.10', '7.10'],
-  ])('formats %s as %s in en', (decimal, text) => {
-    expect(formatEgpDecimal(decimal, 'en')).toBe(text);
+    ['-2.5', '-2.50'],
+  ])('formats %s as %s', (decimal, text) => {
+    expect(formatEgpDecimal(decimal)).toBe(text);
   });
 
   it.each([[''], [' 37.50'], ['10.005'], ['1,000.00'], ['1e2'], ['+5'], ['abc']])(
     'refuses %j instead of rounding it',
     (decimal) => {
-      expect(() => formatEgpDecimal(decimal, 'en')).toThrow(RangeError);
+      expect(() => formatEgpDecimal(decimal)).toThrow(RangeError);
     },
   );
 });

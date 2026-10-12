@@ -3,7 +3,7 @@ import { Sidebar } from './_components/Sidebar';
 import { Topbar } from './_components/Topbar';
 import { requireAuth } from '@lib/auth-guard';
 import { getCachedActivePartnerMemberships } from '@data/partner/queries';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 /**
  * User Account Layout

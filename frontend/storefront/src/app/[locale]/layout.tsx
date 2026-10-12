@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import '../globals.css';
-import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { routing } from '@i18n/routing';
 import { notFound } from 'next/navigation';
 import { getMessages, setRequestLocale } from 'next-intl/server';

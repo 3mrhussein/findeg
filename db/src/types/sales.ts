@@ -1,27 +1,14 @@
 import { z } from 'zod';
-import {
-  EGYPTIAN_MOBILE_PATTERN,
-  ORDER_STATUSES as ORDER_STATUS_VALUES,
-  PAYMENT_STATUSES as PAYMENT_STATUS_VALUES,
-  PAYMENT_METHOD_TYPES as PAYMENT_METHOD_VALUES,
-} from '@findeg/domain';
+import { EGYPTIAN_MOBILE_PATTERN } from '@findeg/domain';
 import type { OrderStatus, PaymentStatus } from '@findeg/domain';
 
 /**
  * Sales & Order Primitives for Database Layer
  */
 
-// ─── Enum-derived Schemas ────────────────────────────────────────────────────
+/** Legacy stored address fields; domain ShippingAddress is mapped at acceptance. */
 
-export const OrderStatusSchema = z.enum(ORDER_STATUS_VALUES);
-
-export const PaymentStatusSchema = z.enum(PAYMENT_STATUS_VALUES);
-
-export const PaymentMethodSchema = z.enum(PAYMENT_METHOD_VALUES);
-
-export type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain';
-
-export const ShippingAddressSchema = z.object({
+export const StoredShippingAddressSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   phone: z
     .string()
@@ -36,7 +23,7 @@ export const ShippingAddressSchema = z.object({
   notes: z.string().optional(),
 });
 
-export type ShippingAddress = z.infer<typeof ShippingAddressSchema>;
+export type StoredShippingAddress = z.infer<typeof StoredShippingAddressSchema>;
 
 export const VariantSnapshotSchema = z
   .object({
