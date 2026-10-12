@@ -80,7 +80,11 @@ export class CategoryService implements ICategoryService {
 
   async getAll(language?: Locale): Promise<Category[]> {
     const rows = await categoryQueries.getAll();
-    return rows.map((category) => this.mapToDomain(category, language));
+    if (rows.length === 0) return [];
+    const directCounts = await categoryQueries.getProductCounts(rows.map((c) => c.id));
+    return rows.map((category) =>
+      this.mapToDomain(category, language, undefined, directCounts.get(category.id) ?? 0),
+    );
   }
 
   async getBySlug(slug: Slug, language?: Locale): Promise<Category | null> {

@@ -21,7 +21,7 @@ export const connection = postgres(env.DATABASE_URL!, {
   },
 
   idle_timeout: 20, // Close idle connections after 20 seconds
-  connect_timeout: 10, // Connection timeout in seconds
+  connect_timeout: 30, // Connection timeout in seconds
 
   // SSL configuration (for production)
   ssl: env.DB_SSL ? { rejectUnauthorized: false } : false,

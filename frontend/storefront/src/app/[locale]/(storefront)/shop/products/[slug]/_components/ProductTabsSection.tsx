@@ -1,34 +1,26 @@
 'use client';
 
-import { FileText, Package, Ruler, Star } from 'lucide-react';
+import { FileText, Package, Ruler } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import type { Product, Variant } from '@findeg/backend/features/catalog';
-import type { ProductReviewSummary, Review } from '@findeg/backend/features/review';
 import { sanitizeHtml } from '@findeg/backend/lib';
-import { ReviewsSection } from './ReviewsSection';
 
 interface ProductTabsSectionProps {
   product: Product;
   selectedVariant?: Variant;
   activeTab: string;
   onActiveTabChange: (value: string) => void;
-  reviewSummary: ProductReviewSummary;
-  initialReviews: Review[];
-  reviewTotal: number;
 }
 
 /**
- * PDP tabs for description, specs, reviews and shipping/returns.
+ * PDP tabs for description, specs, and shipping/returns.
  */
 export function ProductTabsSection({
   product,
   selectedVariant,
   activeTab,
   onActiveTabChange,
-  reviewSummary,
-  initialReviews,
-  reviewTotal,
 }: ProductTabsSectionProps) {
   const t = useTranslations('Pages.ProductDetail');
 
@@ -45,11 +37,6 @@ export function ProductTabsSection({
           <TabsTrigger value="specifications" className="gap-2 rounded-full border px-4 py-2">
             <Ruler className="size-4" />
             {t('Specifications')}
-          </TabsTrigger>
-          <TabsTrigger value="reviews" className="gap-2 rounded-full border px-4 py-2">
-            <Star className="size-4" />
-            {t('Reviews')}
-            <span className="text-xs text-muted-foreground">({reviewTotal})</span>
           </TabsTrigger>
           <TabsTrigger value="shipping" className="gap-2 rounded-full border px-4 py-2">
             <Package className="size-4" />
@@ -88,15 +75,6 @@ export function ProductTabsSection({
               </tbody>
             </table>
           </div>
-        </TabsContent>
-
-        <TabsContent value="reviews" className="mt-4" id="reviews-tab-panel">
-          <ReviewsSection
-            productId={product.id}
-            initialReviews={initialReviews}
-            initialSummary={reviewSummary}
-            initialTotal={reviewTotal}
-          />
         </TabsContent>
 
         <TabsContent value="shipping" className="mt-4">

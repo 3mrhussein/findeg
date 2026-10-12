@@ -9,6 +9,7 @@ import {
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
 } from '@data/catalog/queries';
+import { getSession } from '@lib/session';
 import { PageShell } from '../../../_components/PageShell';
 import { ProductDetailClient } from './_components/ProductDetailClient';
 
@@ -54,16 +55,11 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   };
 }
 
-import { getSession } from '@lib/session';
-
-// ... (imports)
-
 /**
  * Canonical PDP route: /shop/products/[slug].
  */
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { locale, slug } = await params;
-  console.log('[PDP] Rendering for slug:', slug, 'locale:', locale);
   setRequestLocale(locale as Locale);
 
   const session = await getSession();

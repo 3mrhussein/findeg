@@ -10,7 +10,6 @@ export const SHOP_PLP_PAGE_SIZES = [24, 48, 96] as const;
 const SORTS: Record<ShopPlpSort, ListingSort> = {
   newest: 'newest',
   popular: 'popular',
-  rating: 'rating',
   'price-low-high': 'price_asc',
   'price-high-low': 'price_desc',
 };

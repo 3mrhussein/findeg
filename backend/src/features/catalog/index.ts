@@ -36,6 +36,7 @@ export type {
 
 // ─── Interface-adjacent types ───────────────────────────────────────────────
 export type { ProductFilters } from './application/interfaces/ProductFilters';
+export type { SearchParams } from './application/interfaces/ISearchService';
 export type {
   SearchAnalyticsMetrics,
   TopSearchQuery,

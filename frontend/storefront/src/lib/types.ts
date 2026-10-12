@@ -51,5 +51,4 @@ export type ViewMode = 'grid' | 'list';
 export interface ClientUser {
   name: string;
   email: string;
-  wishlist: number[];
 }
