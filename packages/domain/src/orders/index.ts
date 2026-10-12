@@ -41,6 +41,8 @@ export type { OrderErrorCode } from './order-error';
 export { changeOrderStatus, changePaymentStatus, refundOrder } from './order-status';
 export type { OrderProgress, OrderProgressChange, OrderStatusAssertions } from './order-status';
 export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
+export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from './notified-statuses';
+export type { NotifiedOrderStatus } from './notified-statuses';
 export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
 
 /** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
