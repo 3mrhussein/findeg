@@ -26,7 +26,7 @@ export function MobileNavSheet() {
   const topLevelCategories = categories.filter((c: Category) => !c.parentId || c.depth === 0) || [];
 
   return (
-    <div className="md:hidden flex items-center mr-2">
+    <div className="md:hidden flex items-center me-2">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <Menu className="size-6 text-slate-900 dark:text-white" />
@@ -36,7 +36,7 @@ export function MobileNavSheet() {
           side="left"
           className="w-[85vw] sm:w-[350px] p-0 flex flex-col h-full bg-white dark:bg-background overflow-hidden border-r-0"
         >
-          <SheetHeader className="p-4 border-b border-slate-100 dark:border-slate-800 text-left bg-slate-50 dark:bg-slate-950/50">
+          <SheetHeader className="p-4 border-b border-slate-100 dark:border-slate-800 text-start bg-slate-50 dark:bg-slate-950/50">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
             {/* User Greeting */}
@@ -48,20 +48,20 @@ export function MobileNavSheet() {
                 {isLoggedIn ? (
                   <>
                     <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                      Hello, {currentUser?.name || 'User'}
+                      {currentUser?.name || 'User'}
                     </span>
                     <Link
-                      href="/dashboard"
+                      href="/my-account"
                       onClick={() => setOpen(false)}
                       className="text-xs text-primary font-medium hover:underline"
                     >
-                      View Account
+                      {t('MyAccount')}
                     </Link>
                   </>
                 ) : (
                   <>
                     <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                      Welcome to FindEg
+                      FindEg
                     </span>
                     <div className="flex items-center gap-2 text-xs font-medium mt-0.5">
                       <Link
@@ -69,15 +69,15 @@ export function MobileNavSheet() {
                         onClick={() => setOpen(false)}
                         className="text-primary hover:underline"
                       >
-                        Sign In
+                        {t('SignIn')}
                       </Link>
                       <span className="text-slate-300 dark:text-slate-600">|</span>
                       <Link
-                        href="/register"
+                        href="/registration"
                         onClick={() => setOpen(false)}
                         className="text-primary hover:underline"
                       >
-                        Register
+                        {t('Register')}
                       </Link>
                     </div>
                   </>
@@ -97,6 +97,33 @@ export function MobileNavSheet() {
               </Link>
             </div>
 
+            {/* Quick Links: Schools, Collections, Track Order */}
+            <div className="p-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col space-y-1">
+                <Link
+                  href="/schools"
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg transition-colors"
+                >
+                  {t('Schools')}
+                </Link>
+                <Link
+                  href="/collections"
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg transition-colors"
+                >
+                  {t('Collections')}
+                </Link>
+                <Link
+                  href="/order-lookup"
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg transition-colors"
+                >
+                  {t('TrackOrder')}
+                </Link>
+              </div>
+            </div>
+
             {/* Category Accordion */}
             <div className="p-2">
               <h3 className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -111,7 +138,7 @@ export function MobileNavSheet() {
                     return (
                       <AccordionItem value={`cat-${cat.id}`} key={cat.id} className="border-b-0">
                         <AccordionTrigger className="px-3 py-3 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg transition-colors data-[state=open]:bg-slate-50 dark:data-[state=open]:bg-slate-900">
-                          <div className="flex items-center gap-3 text-left">
+                          <div className="flex items-center gap-3 text-start">
                             <div className="flex size-8 items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">
                               {cat.icon ? (
                                 <span className="material-symbols-outlined text-[18px]">
@@ -126,7 +153,7 @@ export function MobileNavSheet() {
                             </span>
                           </div>
                         </AccordionTrigger>
-                        <AccordionContent className="pb-2 pt-1 pl-12 pr-4">
+                        <AccordionContent className="pb-2 pt-1 ps-12 pe-4">
                           <div className="flex flex-col space-y-1">
                             {subCats.length > 0 ? (
                               subCats.map((sub: Category) => (
@@ -164,28 +191,36 @@ export function MobileNavSheet() {
           <div className="mt-auto border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <Link
-                href={isLoggedIn ? '/dashboard/wishlist' : '/login'}
+                href={isLoggedIn ? '/my-account' : '/login?returnUrl=/my-account'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <Heart className="size-4" />
-                <span className="text-sm font-medium">{t('SavedItems') || 'Saved'}</span>
+                <span className="text-sm font-medium">{t('SavedItems')}</span>
               </Link>
               <Link
-                href={isLoggedIn ? '/dashboard/orders' : '/login'}
+                href={isLoggedIn ? '/my-account/orders' : '/login?returnUrl=/my-account/orders'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">inventory_2</span>
-                <span className="text-sm font-medium">{t('Orders') || 'Orders'}</span>
+                <span className="text-sm font-medium">{t('Orders')}</span>
               </Link>
               <Link
-                href={isLoggedIn ? '/dashboard/settings' : '/login'}
+                href={isLoggedIn ? '/my-account/settings' : '/login?returnUrl=/my-account/settings'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <Settings className="size-4" />
-                <span className="text-sm font-medium">{t('Settings') || 'Settings'}</span>
+                <span className="text-sm font-medium">{t('Settings')}</span>
+              </Link>
+              <Link
+                href="/order-lookup"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">local_shipping</span>
+                <span className="text-sm font-medium">{t('TrackOrder')}</span>
               </Link>
             </div>
 

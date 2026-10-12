@@ -52,7 +52,9 @@
       "Description": "لا تضيع وقتك في البحث عن كل عنصر على حدة. ارفع قائمة مستلزمات المدرسة أو الصف الدراسي، وسيجد كتالوجنا الذكي المنتجات المناسبة لك.",
       "TryFree": "جرّب مجاناً",
       "LearnMore": "اعرف المزيد"
-    }
+    },
+    "Schools": "المدارس",
+    "TrackOrder": "تتبع الطلب"
   },
   "Layout": {
     "Header": {
@@ -98,7 +100,10 @@
       "AboutUs": "من نحن",
       "ContactSupport": "اتصل بالدعم",
       "ReturnPolicy": "سياسة الإرجاع",
-      "TermsOfService": "شروط الخدمة"
+      "TermsOfService": "شروط الخدمة",
+      "Schools": "المدارس",
+      "Collections": "المجموعات",
+      "TrackOrder": "تتبع الطلب"
     },
     "Announcement": {
       "BarText": "شحن مجاني للطلبات التي تزيد عن 200 جنيه! 🎉",
@@ -217,7 +222,7 @@
       "CollectionsTitle": "تسوق حسب المجموعة",
       "CollectionsDescription": "اكتشف مجموعات منتقاة مصممة لاحتياجاتك وأسلوب حياتك.",
       "CollectionsExplore": "استكشف هذه المجموعة",
-      "SearchListo": "ابحث في ليستو",
+      "SearchListo": "ابحث في فايند إيج",
       "SearchButton": "بحث",
       "SearchHint": "أدخل كلمة مفتاحية للعثور على ما تحتاجه.",
       "SearchResultsFor": "نتائج البحث عن \"{query}\"",
@@ -451,7 +456,8 @@
       "HaveAccount": "هل لديك حساب بالفعل؟",
       "NoAccount": "ليس لديك حساب؟",
       "SigninLink": "تسجيل الدخول",
-      "SignupLink": "إنشاء حساب"
+      "SignupLink": "إنشاء حساب",
+      "ConfirmPassword": "تأكيد كلمة المرور"
     },
     "About": {
       "HeroTitle": "إشعال الفرح في التعلم واللعب",
@@ -524,7 +530,11 @@
         "StoreHome": "الرئيسية",
         "NeedUserAccount": "تحتاج لحساب عميل؟",
         "SwitchAccount": "التبديل لحساب عميل"
-      }
+      },
+      "PhoneLabel": "رقم الهاتف",
+      "AccountDetails": "تفاصيل الحساب",
+      "UpdatePersonalInfo": "تحديث معلوماتك الشخصية.",
+      "EmailCannotChange": "لا يمكن تغيير البريد الإلكتروني."
     },
     "GuestOrder": {
       "LookupTitle": "ابحث عن طلبك",
@@ -668,5 +678,12 @@
     "unnamed": "—",
     "egp": "{amount} ج.م",
     "loading": "جارٍ تحميل التقارير…"
+  },
+  "Validation": {
+    "NameMin": "يجب أن يتكون الاسم من حرفين على الأقل.",
+    "EmailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+    "PasswordRequired": "كلمة المرور مطلوبة.",
+    "PasswordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+    "PasswordsDoNotMatch": "كلمتا المرور غير متطابقتين."
   }
 }

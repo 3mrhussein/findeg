@@ -105,7 +105,7 @@ export class UserService implements IUserService {
    */
   async updateProfile(
     userId: number,
-    input: { firstName?: string; lastName?: string },
+    input: { firstName?: string; lastName?: string; phone?: string },
   ): Promise<void> {
     await userQueries.update(userId, input);
   }

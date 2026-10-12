@@ -48,7 +48,7 @@ export function MegaMenuOverlay({
   return (
     <div className="w-full max-h-[420px] min-h-[420px] bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex cursor-default text-slate-900 dark:text-white">
       {/* Column 1 (20%): List of main categories */}
-      <div className="w-1/5 bg-slate-50 dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-y-auto py-4">
+      <div className="w-1/5 bg-slate-50 dark:bg-slate-900/50 border-e border-slate-200 dark:border-slate-800 flex flex-col overflow-y-auto py-4">
         {topLevelCategories.map((cat) => {
           const isActive = activeCategory?.id === cat.id;
           return (
@@ -56,8 +56,8 @@ export function MegaMenuOverlay({
               key={cat.id}
               className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors group ${
                 isActive
-                  ? 'bg-white dark:bg-slate-950 text-primary border-l-4 border-primary font-semibold'
-                  : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium border-l-4 border-transparent'
+                  ? 'bg-white dark:bg-slate-950 text-primary border-s-4 border-primary font-semibold'
+                  : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium border-s-4 border-transparent'
               }`}
               onMouseEnter={() => setActiveCategorySlug(cat.slug)}
             >
@@ -107,7 +107,7 @@ export function MegaMenuOverlay({
       </div>
 
       {/* Column 3 (35%): Featured Content */}
-      <div className="w-[35%] bg-slate-50 dark:bg-slate-900/50 border-l border-slate-200 dark:border-slate-800 p-8 flex flex-col gap-6">
+      <div className="w-[35%] bg-slate-50 dark:bg-slate-900/50 border-s border-slate-200 dark:border-slate-800 p-8 flex flex-col gap-6">
         {activeCategory?.image ? (
           <div className="relative w-full h-32 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 shadow-inner group">
             <Image

@@ -3,18 +3,15 @@ import { Sidebar } from './_components/Sidebar';
 import { Topbar } from './_components/Topbar';
 import { requireAuth } from '@lib/auth-guard';
 import { getCachedActivePartnerMemberships } from '@data/partner/queries';
-import { adminSession } from '@findeg/backend/features/core';
-import { AdminAccessForbidden } from '@components/shared/AdminAccessForbidden';
 import type { Locale } from 'next-intl';
 
 /**
- * Dashboard Layout
+ * User Account Layout
  *
  * Requires any authenticated user. Redirects guests to /login.
- * Wraps all user account and dashboard pages with a sidebar and topbar.
- * Admins are blocked from seeing user-specific features.
+ * Wraps user account pages with a sidebar and topbar.
  */
-export default async function DashboardLayout({
+export default async function UserAccountLayout({
   children,
   params,
 }: {
@@ -22,12 +19,7 @@ export default async function DashboardLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const session = await requireAuth(locale as Locale);
-
-  // If the user is an admin, show the "Forbidden" UI instead of the user tools
-  if (adminSession(session)) {
-    return <AdminAccessForbidden />;
-  }
+  await requireAuth(locale as Locale);
 
   // The Partner Workspace link is a convenience: a failure here must not break the account area.
   const hasPartnerWorkspace = await getCachedActivePartnerMemberships().then(

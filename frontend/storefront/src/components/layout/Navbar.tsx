@@ -13,7 +13,6 @@ import { IconTooltip } from '@findeg/ui';
 // Assuming CartTrigger exists in _components, we'll wrap it or use directly.
 // For now we'll put a placeholder cart icon until CartSheet context is clear.
 import { CartTrigger } from '@app/[locale]/(storefront)/_components/CartTrigger';
-import { NotificationBell } from '@components/shared/NotificationBell';
 
 import { SearchBar } from './SearchBar';
 import { MobileNavSheet } from './MobileNavSheet';
@@ -73,6 +72,13 @@ export function Navbar() {
           <span>{t('DeliverTo', { city: 'Cairo' })}</span>
         </div>
         <div className="flex items-center gap-4">
+          <Link
+            href="/order-lookup"
+            className="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+          >
+            {t('TrackOrder')}
+          </Link>
+          <div className="h-3 w-px bg-slate-200 dark:bg-slate-700"></div>
           <ToggleLanguage />
           <div className="h-3 w-px bg-slate-200 dark:bg-slate-700"></div>
           <ToggleTheme />
@@ -101,7 +107,7 @@ export function Navbar() {
         </div>
         {/* Right: Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
-          <Link href={isLoggedIn ? '/dashboard' : '/login'}>
+          <Link href={isLoggedIn ? '/my-account' : '/login'}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
               <IconTooltip
                 icon={User}
@@ -111,9 +117,7 @@ export function Navbar() {
             </div>
           </Link>
 
-          {isLoggedIn && <NotificationBell />}
-
-          <Link href={isLoggedIn ? '/dashboard/wishlist' : '/login?returnUrl=/dashboard/wishlist'}>
+          <Link href={isLoggedIn ? '/my-account' : '/login?returnUrl=/my-account'}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
               <IconTooltip icon={Heart} label={t('SavedItems')} size={20} />
             </div>
@@ -162,18 +166,30 @@ export function Navbar() {
 
         <div className="flex items-center gap-4 text-sm font-bold">
           <Link
+            href="/schools"
+            className="flex items-center gap-1.5 hover:text-white/80 transition-colors whitespace-nowrap"
+          >
+            <span>{t('Schools')}</span>
+          </Link>
+          <Link
+            href="/collections"
+            className="flex items-center gap-1.5 hover:text-white/80 transition-colors whitespace-nowrap"
+          >
+            <span>{t('Collections')}</span>
+          </Link>
+          <Link
             href="/shop?discount=on-sale&sort=popular"
-            className="flex items-center gap-1.5 hover:text-amber-200 transition-colors"
+            className="flex items-center gap-1.5 hover:text-amber-200 transition-colors whitespace-nowrap"
           >
             <Flame className="size-4 text-amber-400" />
             <span>{t('Deals')}</span>
-            <span className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm ml-1">
+            <span className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm ms-1">
               {t('Hot')}
             </span>
           </Link>
           <Link
             href="/shop?sort=newest"
-            className="flex items-center gap-1.5 hover:text-blue-200 transition-colors"
+            className="flex items-center gap-1.5 hover:text-blue-200 transition-colors whitespace-nowrap"
           >
             <Sparkles className="size-4" />
             <span>{t('NewArrivals')}</span>
@@ -183,7 +199,7 @@ export function Navbar() {
         {/* ================= MEGA MENU OVERLAY ================= */}
         {isMegaMenuOpen && (
           <div
-            className="absolute top-11 left-0 w-full"
+            className="absolute top-11 start-0 w-full"
             onMouseEnter={() => handleMouseEnterMenu()}
             onMouseLeave={handleMouseLeaveMenu}
           >

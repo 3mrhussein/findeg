@@ -32,7 +32,7 @@ export async function Header({ locale }: HeaderProps) {
               <span className="material-symbols-outlined text-[20px]">school</span>
             </div>
             <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-              Listo<span className="text-primary">.</span>
+              FindEg<span className="text-primary">.</span>
             </span>
           </Link>
         </div>

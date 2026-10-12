@@ -44,7 +44,7 @@ export function Sidebar() {
         <div className="flex h-full flex-col gap-4">
           <div className="flex h-[60px] items-center border-b px-6">
             <Link className="flex items-center gap-2 font-bold text-xl text-primary" href="/">
-              <span className="text-2xl">FindEg.</span>Stationary
+              <span className="text-2xl">FindEg</span>
             </Link>
           </div>
           <div className="flex-1 overflow-auto py-2">
@@ -89,7 +89,7 @@ export function Sidebar() {
                 href="/"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="text-2xl">FindEg.</span>Stationary
+                <span className="text-2xl">FindEg</span>
               </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">

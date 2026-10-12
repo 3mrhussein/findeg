@@ -50,8 +50,12 @@ export function Topbar({ hasPartnerWorkspace = false }: { hasPartnerWorkspace?: 
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/my-account/settings">Settings</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/about">Support</Link>
+          </DropdownMenuItem>
           {hasPartnerWorkspace ? (
             <DropdownMenuItem asChild>
               <Link href="/partner">Partner Workspace</Link>
@@ -59,7 +63,7 @@ export function Topbar({ hasPartnerWorkspace = false }: { hasPartnerWorkspace?: 
           ) : null}
           <DropdownMenuSeparator />
           <form action={logoutAction}>
-            <button type="submit" className="w-full text-left">
+            <button type="submit" className="w-full text-start">
               <DropdownMenuItem asChild>
                 <span>Logout</span>
               </DropdownMenuItem>

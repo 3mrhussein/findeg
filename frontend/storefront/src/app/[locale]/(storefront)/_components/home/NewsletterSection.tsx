@@ -13,7 +13,7 @@ export function NewsletterSection() {
             <div className="size-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center mb-4">
               <span className="material-symbols-outlined">verified_user</span>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Why Listo?</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Why FindEg?</h3>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
               We verify every item against official school requirements so you never buy the wrong
               supplies again. Quality guaranteed.

@@ -17,7 +17,7 @@ interface SchoolListLayoutProps {
 function UserIconNav() {
   const { isLoggedIn } = useUser();
   return (
-    <Link href={isLoggedIn ? '/dashboard' : '/login'}>
+    <Link href={isLoggedIn ? '/my-account' : '/login'}>
       <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 text-slate-700 transition-colors">
         <User className="size-5" />
       </div>

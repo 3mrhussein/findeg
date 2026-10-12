@@ -1,23 +1,18 @@
-'use cache';
-
 import 'server-only';
-import { getSession } from '@lib/session';
-import { cacheLife, cacheTag } from 'next/cache';
+import { cache } from 'react';
+import { getCachedSession } from '@data/auth/queries';
 
 /**
- * Get current user from session (cached).
+ * Get current user from session.
  *
- * Note: Currently returns session data directly since user is loaded at auth time.
- * If user data needs to be fetched from backend, integrate createIdentityServices here.
+ * Read outside 'use cache' scopes so the navbar and navigation render the
+ * correct state per request without leaking or caching user cookies across requests.
  *
  * @returns User session data or null if not authenticated
  */
-export async function getCurrentUser() {
-  cacheLife('hours');
-  cacheTag('user');
-
+export const getCurrentUser = cache(async () => {
   try {
-    const session = await getSession();
+    const session = await getCachedSession();
     if (!session?.userId) return null;
 
     return {
@@ -27,4 +22,4 @@ export async function getCurrentUser() {
     console.error('Failed to get current user:', error);
     return null;
   }
-}
+});
