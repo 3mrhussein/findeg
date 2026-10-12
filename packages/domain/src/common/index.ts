@@ -1,7 +1,8 @@
 export * from './locale';
 export * from './governorates';
 export type { Id } from './identity';
-export type { Money } from './money';
+export { MoneyError, money, moneyFromDecimal, moneyToDecimal } from './money';
+export type { Money, MoneyErrorCode } from './money';
 export { DomainError } from './domain-error';
 
 /** FindEg prices in Egyptian pounds. */
