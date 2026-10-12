@@ -5,3 +5,4 @@
 export * from './model';
 export * from './business-partner';
 export * from './partner-access';
+export * from './membership';
