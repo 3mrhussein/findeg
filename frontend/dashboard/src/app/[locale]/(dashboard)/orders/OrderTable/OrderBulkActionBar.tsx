@@ -8,7 +8,7 @@ import { Check, Settings, Printer, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from '@i18n/navigation';
 import { bulkUpdateOrderStatusAction } from '@data/orders/actions';
-import type { OrderStatus } from '@findeg/orders/schemas';
+import type { OrderStatus } from '@findeg/domain/orders';
 
 interface OrderBulkActionBarProps {
   table: Table<Order>;

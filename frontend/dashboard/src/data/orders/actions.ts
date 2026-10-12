@@ -9,7 +9,7 @@
 import { updateTag } from 'next/cache';
 import { createOrders } from '@findeg/orders';
 import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders/schemas';
-import type { OrderStatus } from '@findeg/orders/schemas';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 import { getErrorMessage } from '@lib/type-guards';
 import { requireOrderWriteActor } from '@lib/order-write-access';
 
@@ -83,10 +83,7 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
  *
  * Invalidates: Order detail and lists
  */
-export async function updateOrderPaymentStatusAction(
-  id: number,
-  paymentStatus: 'unpaid' | 'paid' | 'refunded',
-) {
+export async function updateOrderPaymentStatusAction(id: number, paymentStatus: PaymentStatus) {
   try {
     const actor = await requireOrderWriteActor();
     const orders = createOrders();
@@ -98,6 +95,23 @@ export async function updateOrderPaymentStatusAction(
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error('[updateOrderPaymentStatusAction]', error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+/** Refund the Order and its payment in one audited command. */
+export async function refundOrderAction(id: number) {
+  try {
+    const actor = await requireOrderWriteActor();
+    const result = await createOrders()
+      .refund(actor, id)
+      .finally(() => {
+        updateTag('orders');
+        updateTag('dashboard');
+      });
+    return { success: true, data: result };
+  } catch (error: unknown) {
+    console.error('[refundOrderAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

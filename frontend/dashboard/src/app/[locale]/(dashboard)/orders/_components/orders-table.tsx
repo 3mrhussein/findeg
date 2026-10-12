@@ -17,15 +17,17 @@ import { useRouter } from '@i18n/navigation';
 import {
   type OrderStatus,
   type PaymentStatus,
-  ORDER_STATUS_OPTIONS as ORDER_STATUSES,
-  PAYMENT_STATUS_OPTIONS as PAYMENT_STATUSES,
-  OrderStatusSchema,
-  PaymentStatusSchema,
+  ORDER_STATUSES,
+  PAYMENT_STATUSES,
+} from '@findeg/domain/orders';
+import {
+  confirmStatusUpdate,
   getAllowedOrderStatusTransitions,
   getAllowedPaymentStatusTransitions,
   getOrderStatusLabel,
   getPaymentStatusLabel,
-} from '@findeg/orders/schemas';
+} from '@lib/order-presentation';
+import { OrderStatusSchema, PaymentStatusSchema } from '@findeg/orders/schemas';
 const ORDER_STATUS_OPTIONS = ORDER_STATUSES.map((value) => ({
   value,
   label: getOrderStatusLabel(value),
@@ -52,9 +54,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
    *
    */
   const handleStatusChange = async (orderId: number, newStatus: OrderStatus) => {
+    const order = orders.find((order) => order.id === orderId);
+    if (!order) return;
+    const update = confirmStatusUpdate(order.status, newStatus);
+    if (!update) return;
     setUpdatingStatusId(orderId);
     try {
-      const result = await updateOrderStatusAction(orderId, { status: newStatus });
+      const result = await updateOrderStatusAction(orderId, update);
       if (result.success) {
         toast({
           title: 'Status updated',
@@ -119,8 +125,10 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               const allowedTargets = getAllowedOrderStatusTransitions(currentStatus);
               const selectableStatuses = new Set<OrderStatus>([currentStatus, ...allowedTargets]);
               const currentPaymentStatus = PaymentStatusSchema.parse(order.paymentStatus);
-              const allowedPaymentTargets =
-                getAllowedPaymentStatusTransitions(currentPaymentStatus);
+              const allowedPaymentTargets = getAllowedPaymentStatusTransitions({
+                status: currentStatus,
+                paymentStatus: currentPaymentStatus,
+              });
               const selectablePaymentStatuses = new Set<PaymentStatus>([
                 currentPaymentStatus,
                 ...allowedPaymentTargets,

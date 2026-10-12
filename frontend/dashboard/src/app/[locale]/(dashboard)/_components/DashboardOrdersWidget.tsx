@@ -1,5 +1,5 @@
 import type { Order, OrderStats } from '@findeg/orders';
-import { ORDER_STATUS_OPTIONS, type OrderStatus } from '@findeg/orders/schemas';
+import { ORDER_STATUSES as ORDER_STATUS_OPTIONS, type OrderStatus } from '@findeg/domain/orders';
 import { piastersToEgp } from '@findeg/money';
 import {
   Card,

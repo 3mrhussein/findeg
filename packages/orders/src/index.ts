@@ -12,7 +12,12 @@ export type {
   OrderActivityEntry,
 } from './types';
 export * from './schemas';
-export * from './errors';
+export {
+  OrderNotFoundError,
+  InvalidOrderStatusTransitionError,
+  InvalidPaymentStatusTransitionError,
+} from './errors';
+export type { OrderStatusTransitionResult, PaymentStatusTransitionResult } from './errors';
 export type { OrderStaffActor } from './OrderStaffActor';
 export { canWriteOrders, assertCanWriteOrders } from './orderWritePermission';
 export { NotAuthorizedError, DomainError } from '@findeg/domain-errors';

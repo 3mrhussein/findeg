@@ -7,6 +7,9 @@ describe('Orders before database resolution', () => {
     await expect(
       orders.changeStatus({ kind: 'staff', userId: 1 }, 1, { status: 'confirmed' }),
     ).rejects.toBeInstanceOf(NotAuthorizedError);
+    await expect(orders.refund({ kind: 'staff', userId: 1 }, 1)).rejects.toBeInstanceOf(
+      NotAuthorizedError,
+    );
   });
 });
 

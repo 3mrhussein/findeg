@@ -63,7 +63,8 @@
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
     "zod": "^4.6.5",
-    "@findeg/orders": "workspace:*"
+    "@findeg/orders": "workspace:*",
+    "@findeg/domain": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",
@@ -76,7 +77,6 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^5.7.3",
-    "vitest": "^4.1.11",
-    "@findeg/domain": "workspace:*"
+    "vitest": "^4.1.11"
   }
 }

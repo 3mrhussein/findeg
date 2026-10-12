@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { OrderStatus } from '@findeg/domain/orders';
 import { Section, Text, Button, Heading } from '@react-email/components';
 import { EmailLayout } from './EmailLayout';
 
@@ -13,7 +14,7 @@ const colors = {
 interface OrderStatusUpdateEmailProps {
   orderId: string | number;
   customerName: string;
-  newStatus: string;
+  newStatus: OrderStatus;
   trackingNumber?: string;
   /** Locale-less path of the order page; defaults to the account page for `orderId`. */
   orderPath?: string;
@@ -24,34 +25,25 @@ import env from '@findeg/env';
 
 const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
-// Map status to localized strings
-/**
- *
- */
-const getStatusLabel = (status: string, isRtl: boolean) => {
-  const norm = status.toLowerCase();
-
-  if (isRtl) {
-    switch (norm) {
-      case 'pending':
-        return 'قيد الانتظار';
-      case 'processing':
-        return 'قيد التجهيز';
-      case 'shipped':
-        return 'تم الشحن';
-      case 'delivered':
-        return 'تم التوصيل';
-      case 'cancelled':
-        return 'تم الإلغاء';
-      case 'returned':
-        return 'تم الاسترجاع';
-      default:
-        return status;
-    }
-  } else {
-    // Capitalize first letter
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  }
+const statusLabels: Record<'en' | 'ar', Record<OrderStatus, string>> = {
+  en: {
+    pending: 'Pending',
+    confirmed: 'Confirmed',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    refunded: 'Refunded',
+  },
+  ar: {
+    pending: 'قيد الانتظار',
+    confirmed: 'تم التأكيد',
+    processing: 'قيد التجهيز',
+    shipped: 'تم الشحن',
+    delivered: 'تم التوصيل',
+    cancelled: 'تم الإلغاء',
+    refunded: 'تم رد المبلغ',
+  },
 };
 
 /**
@@ -66,7 +58,7 @@ export const OrderStatusUpdateEmail = ({
   locale = 'en',
 }: OrderStatusUpdateEmailProps) => {
   const isRtl = locale === 'ar';
-  const localizedStatus = getStatusLabel(newStatus, isRtl);
+  const localizedStatus = statusLabels[isRtl ? 'ar' : 'en'][newStatus];
 
   const content = {
     title: isRtl ? 'تحديث حالة الطلب 📦' : 'Order Status Update 📦',
