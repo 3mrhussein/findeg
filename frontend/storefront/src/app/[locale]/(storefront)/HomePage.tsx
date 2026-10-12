@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { Suspense } from 'react';
 
 // Sub-components
@@ -9,7 +10,7 @@ import { SchoolBanner } from './_components/home/SchoolBanner';
 import { NewsletterSection } from './_components/home/NewsletterSection';
 
 interface HomePageProps {
-  language?: string;
+  language?: Locale;
 }
 
 /**

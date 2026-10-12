@@ -1,7 +1,7 @@
 import { redirect } from '@i18n/navigation';
 import { adminSession, hasPermission, systemAdmin } from '@findeg/backend/features/core';
 import type { PermissionCode, SessionPayload } from '@findeg/backend/features/core';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getSession } from '@lib/session';
 
 /**

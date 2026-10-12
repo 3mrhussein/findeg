@@ -1,3 +1,4 @@
+import { ORDER_STATUSES } from '@findeg/domain';
 /**
  * WebMCP Tool Definitions for FindEg Platform
  * Chrome 146 navigator.modelContext.registerTool() implementation
@@ -198,7 +199,7 @@ export const TOOLS: WebMCPTool[] = [
           properties: {
             status: {
               type: 'string',
-              enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+              enum: [...ORDER_STATUSES],
             },
             trackingNumber: { type: 'string' },
             notes: { type: 'string' },

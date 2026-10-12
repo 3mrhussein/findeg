@@ -1,5 +1,5 @@
 import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
-import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { Locale } from '@findeg/domain';
 import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
 import type { CategoryInput } from '../dtos/CategoryInput';
 

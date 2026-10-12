@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 /**
  * UI / Presentation Types
  *
@@ -8,7 +9,7 @@
  * Domain entities (Product, Category, User, etc.) live in src/domain/entities/.
  */
 
-export type Locale = 'en' | 'ar';
+export type { Locale } from '@findeg/domain';
 
 // Navigation Types
 export interface NavigationSubLink {

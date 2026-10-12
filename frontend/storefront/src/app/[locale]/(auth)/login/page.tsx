@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { LoginContent } from './_components/LoginContent';
 

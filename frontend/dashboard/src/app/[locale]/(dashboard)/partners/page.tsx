@@ -1,6 +1,6 @@
 import { Link } from '@i18n/navigation';
 import { Badge, Button } from '@findeg/ui';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';

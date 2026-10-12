@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { IdSchema, PriceSchema, TranslationMapSchema } from '../../../core/domain/types/common';
+import { IdSchema, TranslationMapSchema } from '../../../core/domain/types/common';
 import { LocaleSchema } from '../../../core/domain/value-objects';
 
 const ProductTranslationSchema = z.object({
@@ -31,9 +31,9 @@ export const VariantInputSchema = z.object({
   sortOrder: z.number().int().optional().default(0),
   isDefault: z.boolean().optional().default(false),
   isActive: z.boolean().optional().default(true),
-  basePrice: PriceSchema,
-  strikePrice: PriceSchema.optional(),
-  costPrice: PriceSchema.optional(),
+  basePrice: z.number().finite().nonnegative(),
+  strikePrice: z.number().finite().nonnegative().optional(),
+  costPrice: z.number().finite().nonnegative().optional(),
   weight: z.number().optional(),
   weightGrams: z.number().int().optional(),
   dimensions: z

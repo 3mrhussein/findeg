@@ -1,6 +1,6 @@
 import { Container } from '@findeg/ui';
 import { setRequestLocale } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { OrderCodeForm } from './OrderCodeForm';
 
 interface OrderCodePageProps {

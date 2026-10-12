@@ -1,5 +1,5 @@
 import { redirectIfAuthenticated } from '@lib/auth-guard';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { Suspense } from 'react';
 
 /**

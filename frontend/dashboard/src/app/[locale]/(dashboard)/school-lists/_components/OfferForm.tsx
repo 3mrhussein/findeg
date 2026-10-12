@@ -1,4 +1,5 @@
 'use client';
+import type { Locale } from '@findeg/domain';
 
 import { useActionState } from 'react';
 import { Button, Input, Label } from '@findeg/ui';
@@ -15,7 +16,7 @@ const initialState: OfferFormState = { status: 'idle' };
 
 /** Edits a list's List Offer. Times are UTC; the offer changes without republishing the list. */
 export function OfferForm({ listId, canEdit, offer }: OfferFormProps) {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const [state, saveAction, saving] = useActionState(
     saveOfferAction.bind(null, locale, listId),
     initialState,

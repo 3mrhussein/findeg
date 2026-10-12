@@ -1,6 +1,8 @@
 import { getActiveMembershipRoles, getBusinessPartnerById } from '@findeg/db/queries/partners';
 import {
   BUSINESS_TIME_ZONE,
+  PAYMENT_STATUSES,
+  type Locale,
   businessMonthOf,
   canReadPartnerReport,
   LIVE_ORDER_STATUSES,
@@ -42,9 +44,10 @@ export const canReadPartnerReports = (roles: readonly PartnerRole[]) =>
  * Payment statuses a Partner Report counts alongside live Order statuses (`LIVE_ORDER_STATUSES`).
  * A delivered Order whose payment was refunded stays out of the report.
  */
-export const REPORTED_PAYMENT_STATUSES: readonly AttributedPaymentStatus[] = ['unpaid', 'paid'];
+export const REPORTED_PAYMENT_STATUSES: readonly AttributedPaymentStatus[] =
+  PAYMENT_STATUSES.filter((status) => status !== 'refunded');
 
-export type ReportLocale = 'en' | 'ar';
+export type ReportLocale = Locale;
 
 /**
  * One row of the sales table: a list × list item × variant within the month, with the units sold

@@ -1,3 +1,4 @@
+import { type Locale } from '@findeg/domain';
 import * as React from 'react';
 import type { OrderStatus } from '@findeg/domain/orders';
 import { Section, Text, Button, Heading } from '@react-email/components';
@@ -25,7 +26,7 @@ import env from '@findeg/env';
 
 const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
-const statusLabels: Record<'en' | 'ar', Record<OrderStatus, string>> = {
+const statusLabels: Record<Locale, Record<OrderStatus, string>> = {
   en: {
     pending: 'Pending',
     confirmed: 'Confirmed',

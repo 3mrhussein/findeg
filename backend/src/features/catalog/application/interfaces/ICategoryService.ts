@@ -6,7 +6,7 @@
  */
 
 import { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
-import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { Locale } from '@findeg/domain';
 import type { CategoryInput } from '../dtos/CategoryInput';
 
 export interface ICategoryService {

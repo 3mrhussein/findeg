@@ -1,4 +1,4 @@
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { getDashboardData } from '@findeg/backend';
 import { requireAuth } from '@lib/auth-guard';

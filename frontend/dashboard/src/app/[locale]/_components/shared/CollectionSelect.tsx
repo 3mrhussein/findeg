@@ -1,3 +1,6 @@
+'use client';
+
+import { type Locale } from '@findeg/domain';
 /**
  * CollectionSelect Component
  *
@@ -6,8 +9,6 @@
  *
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
-
-'use client';
 
 import * as React from 'react';
 import { ChevronsUpDown } from 'lucide-react';
@@ -32,7 +33,7 @@ export interface CollectionSelectProps {
   /** Change handler */
   onChange: (selectedIds: number[]) => void;
   /** Current locale */
-  locale?: 'en' | 'ar';
+  locale?: Locale;
   /** Placeholder text */
   placeholder?: string;
   /** Additional CSS classes */

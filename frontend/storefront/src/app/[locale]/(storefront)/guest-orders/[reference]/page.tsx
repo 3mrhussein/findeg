@@ -9,7 +9,7 @@ import {
   formatEgpDecimal,
 } from '@findeg/ui';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { redirect } from '@i18n/navigation';
 import {
   GUEST_ORDER_COOKIE,

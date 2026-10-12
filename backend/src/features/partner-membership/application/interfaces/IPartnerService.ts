@@ -1,4 +1,4 @@
-import type { PartnerStatus } from '@findeg/db/schema';
+import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 
 /**
  * A Staff session acting on Business Partners. A `SessionPayload` satisfies this

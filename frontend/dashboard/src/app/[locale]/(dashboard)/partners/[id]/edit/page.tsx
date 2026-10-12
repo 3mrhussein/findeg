@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';

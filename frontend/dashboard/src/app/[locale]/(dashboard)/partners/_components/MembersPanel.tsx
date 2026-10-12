@@ -1,9 +1,10 @@
 'use client';
+import type { PartnerMembershipStatus } from '@findeg/domain';
 
 import { useState, useTransition } from 'react';
 import { Badge, Button } from '@findeg/ui';
 import { useLocale } from 'next-intl';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { updateMembershipAction, type MembershipActionState } from '../_actions/memberships';
 import { PARTNER_ROLES, type PartnerRoleValue } from '../_lib/partnerRoles';
 
@@ -12,7 +13,7 @@ export interface MemberRow {
   email: string;
   name: string;
   roles: PartnerRoleValue[];
-  status: 'active' | 'suspended' | 'ended';
+  status: PartnerMembershipStatus;
   authorizationVersion: number;
 }
 
