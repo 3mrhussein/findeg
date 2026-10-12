@@ -94,7 +94,7 @@ A blog, other Staff Roles and the school milestone come after launch.
 |---|---|---|---|---|
 | [Catalog & Merchandising](catalog-and-merchandising.md) | Launch scope and model decided; reviews not documented | 13 decided, 2 proposed | 5 | Who may review, and whether reviews are moderated |
 | [Checkout & Orders](checkout-and-orders.md) | Clear | 14 | 7 (2 launch blockers) | Card payment design, after launch |
-| [Identity & Administration](identity-and-administration.md) | Launch roles decided; rest not documented | 4 decided, 5 proposed | 1 | Exactly what each Staff Role may do |
+| [Identity & Administration](identity-and-administration.md) | Launch roles decided; permissions provisional | 4 decided, 5 proposed | 1 | Exactly what each Staff Role may do |
 
 ### Growth: Partner Program (first segment: schools)
 
@@ -122,7 +122,8 @@ Each area page ends with its own checklist of open questions, each with a sugges
 Questions that span every area:
 
 - [ ] **Launch date** (Business): What is the target date for the store launch?
-- [ ] **Languages** (Business): Does the store launch in both Arabic and English? Which is the default?
+- [ ] **Languages** (Business): Launch in both Arabic and English is confirmed; which is the default language?
+  Suggested: Arabic default, English secondary.
 - [ ] **Source of truth** (Business): Confirm that when this folder and the product disagree, the folder is the intended behaviour (step 5 of "How to use this folder").
 - [ ] **Folder owner** (Business): Who keeps this folder up to date, and who approves a change to a rule?
 

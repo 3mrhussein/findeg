@@ -62,7 +62,7 @@ flowchart TB
         direction TB
         StaffRoleAssignment["Staff Role Assignment (ID-7)"]
         Role_Admin["Administrator<br/>(Staff, Roles, Partners, System)"]
-        Role_Editor["Catalog & Content Editor<br/>(Products, Merchandising, Supply Lists)"]
+        Role_Editor["Catalog & Content Editor<br/>(Products, Merchandising, Supply Lists [Proposed])"]
         Role_Ops["Operations<br/>(Orders, Fulfillment, Stock, Refunds)"]
     end
 
@@ -79,8 +79,9 @@ flowchart TB
         CustomerProfile["Customer Profile<br/>(Orders, Saved Addresses)"]
     end
 
-    Person -->|Designated at registration/creation| CustomerType
-    Person -->|Designated by System Admin| StaffType
+    Person --> AccountChoice{"Account Type Selection<br/>(ID-1: Mutually Exclusive)"}
+    AccountChoice -->|Customer Registration| CustomerType
+    AccountChoice -->|Staff Provisioning| StaffType
 
     StaffType --> StaffRoleAssignment
     StaffRoleAssignment --> Role_Admin
@@ -143,10 +144,11 @@ sequenceDiagram
     else Permission Granted
         Guard->>Core: Forward Authorized Command (staffId, action, payload)
         rect rgb(240, 248, 255)
-        note over Core,Audit: Atomic Transaction (ID-3)
-        Core->>DB: Execute Mutation (Update Order / Price / Partner)
-        Core->>Audit: Append Audit Record (timestamp, staffId, role, entity, changeDiff)
+        note over Core,DB: Atomic Transaction (ID-3: Order Mutations)
+        Core->>DB: Execute Order Mutation (Update Order Status)
+        Core->>DB: INSERT INTO audit_logs in same tx (timestamp, staffId, role, entity='order', changeDiff)
         end
+        note over Core,DB: Non-order mutations (Price, Partner) audit atomically when configured
         Core-->>Staff: Success: Action Committed & Audited
     end
 ```

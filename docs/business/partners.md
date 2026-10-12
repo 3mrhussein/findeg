@@ -58,11 +58,11 @@ flowchart TD
         AttributedOrder --> QueryEngine["Monthly Aggregation Engine"]
         QueryEngine --> StatusFilter{"Order Status"}
         StatusFilter -->|Cancelled or Refunded| Exclude["Exclude (PA-14)"]
-        StatusFilter -->|Pending, Confirmed, Processing, Shipped, Delivered| AggregateItems["Group by List Item & Variant"]
+        StatusFilter -->|Pending, Confirmed, Processing, Shipped, Delivered| AggregateItems["Group by List, Item & Variant"]
 
         AggregateItems --> AnonymityCheck{"Distinct Orders count for item line?"}
-        AnonymityCheck -->|>= 3 Orders| StandardRow["Display: Item Name, Variant & Units Sold"]
-        AnonymityCheck -->|< 3 Orders| FoldRow["Fold into 'Other Items' Aggregate Row (PA-14)"]
+        AnonymityCheck -->|>= 3 Orders| StandardRow["Display: List, Item Name, Variant & Units Sold"]
+        AnonymityCheck -->|< 3 Orders| FoldRow["Fold into 'Other Items' per List (PA-14)"]
 
         StandardRow --> PartnerReportTable["Partner Report View<br/>(/[locale]/partner/[code])"]
         FoldRow --> PartnerReportTable
@@ -151,7 +151,7 @@ stateDiagram-v2
         [*] --> Pending: Emailed 7-day token link
         Pending --> Accepted: User signs in with invited email & accepts
         Pending --> Revoked: Partner Admin revokes invite
-        Pending --> Expired: 7 days elapsed (Derived from created date)
+        Pending --> Expired: 7 days elapsed (Derived from last send date)
         Accepted --> [*]
         Revoked --> [*]
         Expired --> [*]

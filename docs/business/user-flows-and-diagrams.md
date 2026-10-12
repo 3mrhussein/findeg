@@ -105,7 +105,9 @@ flowchart TD
 
     ReviewSelection --> ProceedListCheckout[Proceed to List Checkout]
     ProceedListCheckout --> VerifyEligibility{All selected variants active & allowed?}
-    VerifyEligibility -->|No| FlaggedLine[Flag line as 'Choose Again': Checkout Disabled]
+    VerifyEligibility -->|No: Inactive Variant| ExactCheck{Is line an Exact Item?}
+    ExactCheck -->|Yes: Exact Item (SL-8 No Substitutes)| BlockedItem[Flag item as Unavailable: Requires Staff List Replacement or Removal]
+    ExactCheck -->|No: Has Specification| FlaggedLine[Flag line as 'Choose Again': Checkout Disabled]
     FlaggedLine --> AlternativeChoice
     VerifyEligibility -->|Yes| CheckoutScreen[Enter Delivery Address & Contact Phone]
 
@@ -341,7 +343,7 @@ flowchart TD
     OpsReview --> PhoneCall[Operations agent phones Customer]
     PhoneCall --> CallOutcome{Call Outcome}
 
-    CallOutcome -->|Unreachable after 3 tries / Refused| CancelOrder[Staff marks Cancelled with reason]
+    CallOutcome -->|Unreachable / Refused| CancelOrder[Staff marks Cancelled with reason]
     CancelOrder --> ReleaseHold[Release Stock Reservation<br/>Order status becomes Cancelled terminal]
 
     CallOutcome -->|Customer Confirms COD| MarkConfirmed[Staff marks Order Confirmed CO-18]

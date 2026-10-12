@@ -130,7 +130,7 @@ This document establishes the formal functional and non-functional specification
   2. Sets `replacesListId = previousList.id` on the new list.
   3. Establishes the backward replacement audit chain.
 - **SL-5 (Pre-Publish Verification)**: Publishing is refused if the list is empty, if any default variant is missing/inactive, or if a default variant fails to satisfy its item's specification. Out-of-stock items trigger advisory warnings but do not block publication.
-- **SL-6 (Public Code)**: Publishing assigns a high-entropy, unguessable `publicCode` (12-16 alphanumeric characters). Holding this code is the only mechanism for families to reach the list.
+- **SL-6 (Public Code)**: Publishing assigns a high-entropy, unguessable `publicCode` (32 hexadecimal characters). Holding this code is the only mechanism for families to reach the list.
 - **SL-8 (Alternative Resolution Rule)**:
   - `ExactItem`: ONLY its pre-assigned default variant is permitted. Substitutions forbidden.
   - `Specification`: A product variant qualifies as an Allowed Alternative IF AND ONLY IF:

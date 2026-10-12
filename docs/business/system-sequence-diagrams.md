@@ -125,46 +125,52 @@ sequenceDiagram
     UI->>ServerAction: submitOrder({ confirmationDigest, lines, address, phone, idempotencyKey, supplyListId? })
     ServerAction->>CheckoutService: processCheckout(command)
 
-    CheckoutService->>DB: Check idempotencyKey in orders table
-    alt Duplicate Idempotency Key
-        DB-->>CheckoutService: Existing Order found
-        CheckoutService-->>ServerAction: Return original Order (CO-5)
+    CheckoutService->>DB: Find saved idempotency outcome by scope & key (checkout_idempotency)
+    alt Replay Existing Outcome (CO-5)
+        DB-->>CheckoutService: Existing outcome with matching fingerprint
+        CheckoutService-->>ServerAction: Return original Order receipt (CO-5)
         ServerAction-->>UI: 200 OK: Existing order reference
+    else Fingerprint Mismatch
+        CheckoutService-->>ServerAction: 409 Conflict: Idempotency fingerprint mismatch
+        ServerAction-->>UI: Error: Request parameters conflict with idempotency key
     else New Request
-        CheckoutService->>QuotingEngine: recalculateQuote(command.lines, command.supplyListId)
+        rect rgb(240, 248, 255)
+        note over CheckoutService,Outbox: ATOMIC DATABASE TRANSACTION (CO-4, CO-10)
+        CheckoutService->>DB: Begin Transaction
+        CheckoutService->>DB: Claim idempotencyKey (INSERT INTO checkout_idempotency)
+        CheckoutService->>QuotingEngine: Authoritative re-quote under FOR SHARE locks
         QuotingEngine-->>CheckoutService: Fresh Quote + Fresh Digest
 
         alt Fresh Digest != Submitted Confirmation Digest (CO-3)
+            CheckoutService->>DB: Rollback
             CheckoutService-->>ServerAction: 409 Conflict: Quote Expired / Changed
             ServerAction-->>UI: Prompt Customer to reconfirm updated terms
         else Digest Matches
-            CheckoutService->>InventoryRepo: checkAvailableStock(command.lines)
-            alt Any Variant Out of Stock (CO-4)
-                InventoryRepo-->>CheckoutService: Shortage detected
+            CheckoutService->>DB: Generate Order Reference (FE-xxxxxx) (CO-14)
+            CheckoutService->>DB: INSERT INTO orders (reference, status='pending', payment='unpaid', total, shipping)
+            CheckoutService->>DB: INSERT INTO order_lines (order_id, variant_id, frozen_name, frozen_sku, frozen_price)
+            
+            opt Order from School Supply List
+                CheckoutService->>DB: INSERT INTO attributed_orders (order_id, supply_list_id, business_partner_id) (PA-15)
+            end
+
+            CheckoutService->>InventoryRepo: Reserve stock in transaction (reserveOrderStock CO-4)
+            alt Insufficient Stock (Concurrent shortfall)
+                InventoryRepo-->>CheckoutService: Throws InsufficientStockError
+                CheckoutService->>DB: Rollback
                 CheckoutService-->>ServerAction: 422 Unprocessable: Insufficient Stock
                 ServerAction-->>UI: Entire order rejected: show stock shortage alert
-            else All Stock Available
-                rect rgb(240, 248, 255)
-                note over CheckoutService,Outbox: ATOMIC DATABASE TRANSACTION (CO-4, CO-10)
-                CheckoutService->>DB: Begin Transaction
-                CheckoutService->>DB: Generate Order Reference (FE-xxxxxx) (CO-14)
-                CheckoutService->>DB: INSERT INTO orders (reference, status='pending', payment='unpaid', total, shipping)
-                CheckoutService->>DB: INSERT INTO order_lines (order_id, variant_id, frozen_name, frozen_sku, frozen_price)
-                
-                opt Order from School Supply List
-                    CheckoutService->>DB: INSERT INTO attributed_orders (order_id, supply_list_id, business_partner_id) (PA-15)
-                end
-
+            else Stock Reserved Successfully
                 CheckoutService->>DB: INSERT INTO stock_reservations (order_id, variant_id, warehouse_id, quantity) (CO-11)
                 CheckoutService->>Outbox: INSERT INTO outbox_messages (channel='email', template='order_confirmation', payload) (CO-16)
+                CheckoutService->>DB: Update checkout_idempotency with completed outcome
                 CheckoutService->>DB: Commit Transaction
-                end
-
                 CheckoutService-->>ServerAction: OrderAcceptedResult { orderReference, total }
                 ServerAction-->>UI: 201 Created: { orderReference: 'FE-xxxxxx' }
                 UI->>UI: Clear local Cart or List Selection (CO-10)
                 UI-->>Customer: Redirect to Confirmation Page with FE-xxxxxx
             end
+        end
         end
     end
 ```
@@ -201,7 +207,7 @@ sequenceDiagram
     ServerAction->>FulfillmentService: transitionStatus(orderId, 'confirmed')
     
     FulfillmentService->>DB: Begin Transaction
-    FulfillmentService->>DB: UPDATE orders SET status='confirmed' WHERE status='pending'
+    FulfillmentService->>DB: UPDATE orders SET status='confirmed' WHERE id = orderId AND status = 'pending'
     FulfillmentService->>DB: INSERT INTO audit_logs (staff_id, action='order_confirmed', order_id) (ID-3)
     FulfillmentService->>DB: Commit Transaction
     Dashboard-->>Ops: Status updated to Confirmed
@@ -210,14 +216,14 @@ sequenceDiagram
     Ops->>Dashboard: Click "Send to Warehouse"
     Dashboard->>ServerAction: transitionStatus(orderId, 'processing')
     ServerAction->>FulfillmentService: transitionStatus(orderId, 'processing')
-    FulfillmentService->>DB: UPDATE orders SET status='processing'
+    FulfillmentService->>DB: UPDATE orders SET status='processing' WHERE id = orderId AND status = 'confirmed'
     
     Ops->>Courier: Handover packed parcel with Waybill & Order Reference FE-xxxxxx
     Ops->>Dashboard: Click "Dispatch Courier"
     Dashboard->>ServerAction: transitionStatus(orderId, 'shipped')
     ServerAction->>FulfillmentService: transitionStatus(orderId, 'shipped')
     FulfillmentService->>DB: Begin Transaction
-    FulfillmentService->>DB: UPDATE orders SET status='shipped'
+    FulfillmentService->>DB: UPDATE orders SET status='shipped' WHERE id = orderId AND status = 'processing'
     FulfillmentService->>Outbox: INSERT INTO outbox_messages (template='order_shipped')
     FulfillmentService->>DB: Commit Transaction
 
@@ -233,9 +239,9 @@ sequenceDiagram
     rect rgb(240, 248, 255)
     note over FulfillmentService,DB: Delivery Transaction (CO-11, CO-12)
     FulfillmentService->>DB: Begin Transaction
-    FulfillmentService->>DB: UPDATE orders SET status='delivered', payment_status='paid'
+    FulfillmentService->>DB: UPDATE orders SET status='delivered', payment_status='paid' WHERE id = orderId AND status = 'shipped'
     FulfillmentService->>DB: DELETE FROM stock_reservations WHERE order_id = orderId (Stock Consumed)
-    FulfillmentService->>DB: UPDATE inventory SET on_hand = on_hand - reserved_units
+    FulfillmentService->>DB: UPDATE inventory SET on_hand = on_hand - reserved_units WHERE variant_id IN (order_variants) AND warehouse_id = order_warehouse
     FulfillmentService->>Outbox: INSERT INTO outbox_messages (template='order_delivered')
     FulfillmentService->>DB: Commit Transaction
     end
@@ -385,16 +391,19 @@ sequenceDiagram
         UI->>ServerAction: verifyCode(reference, email, code)
         ServerAction->>AuthService: validateGuestOTP(reference, email, code)
 
-        AuthService->>DB: Query active guest_order_access row
+        AuthService->>DB: Begin Transaction (Lock live requests for order FOR UPDATE)
+        AuthService->>DB: UPDATE guest_access_requests SET attempts = attempts + 1 WHERE id = request.id
         alt Code Expired (> 15 min) OR Attempts Exceeded (CO-15)
+            AuthService->>DB: Commit Transaction
             AuthService-->>ServerAction: 401 Unauthorized: Code expired or max attempts reached
             ServerAction-->>UI: Show expired code error: Request new code
         else Code Incorrect
-            AuthService->>DB: UPDATE guest_order_access SET attempts = attempts - 1
-            AuthService-->>ServerAction: 401 Unauthorized: Incorrect code (attempts remaining)
+            AuthService->>DB: Commit Transaction
+            AuthService-->>ServerAction: 401 Unauthorized: Incorrect code
             ServerAction-->>UI: Show invalid code error with remaining attempts
         else Code Verified
-            AuthService->>DB: DELETE FROM guest_order_access WHERE id = accessRow.id
+            AuthService->>DB: UPDATE guest_access_requests SET consumed_at = NOW() WHERE id = matched.id
+            AuthService->>DB: Commit Transaction
             AuthService->>AuthService: Issue short-lived scoped JWT session token
             AuthService-->>ServerAction: AuthenticatedGuestSession
             ServerAction-->>UI: Set secure HttpOnly session cookie
@@ -425,16 +434,18 @@ sequenceDiagram
     ServerAction->>MemberService: createInvitation(businessPartnerId, email, roles, adminId)
 
     MemberService->>DB: Check for existing pending invitation for email (PA-9)
-    opt Pending Invitation Exists
-        MemberService->>DB: Revoke old invitation record
+    alt Pending Invitation Exists (Resend Flow PA-9)
+        MemberService->>DB: UPDATE partner_invitations SET expires_at = NOW() + INTERVAL '7 days' WHERE id = existing.id (Keeps token valid)
+        MemberService->>DB: INSERT INTO partner_access_history (action='invitation_resent', actor_id=adminId) (PA-12)
+        MemberService->>Outbox: INSERT INTO outbox_messages (template='partner_invite', payload={ inviteUrl })
+    else No Existing Pending Invitation
+        MemberService->>MemberService: Generate 7-day secret invitation token (PA-9)
+        MemberService->>DB: Begin Transaction
+        MemberService->>DB: INSERT INTO partner_invitations (partner_id, email, roles, token_hash, expires_at=NOW()+INTERVAL '7 days', status='pending')
+        MemberService->>DB: INSERT INTO partner_access_history (action='invitation_created', actor_id=adminId) (PA-12)
+        MemberService->>Outbox: INSERT INTO outbox_messages (template='partner_invite', payload={ inviteUrl })
+        MemberService->>DB: Commit Transaction
     end
-
-    MemberService->>MemberService: Generate 7-day secret invitation token (PA-9)
-    MemberService->>DB: Begin Transaction
-    MemberService->>DB: INSERT INTO partner_invitations (partner_id, email, roles, token_hash, expires_at=NOW()+7d, status='pending')
-    MemberService->>DB: INSERT INTO partner_access_history (action='invitation_created', actor_id=adminId) (PA-12)
-    MemberService->>Outbox: INSERT INTO outbox_messages (template='partner_invite', payload={ inviteUrl })
-    MemberService->>DB: Commit Transaction
     MemberService-->>ServerAction: Success
     ServerAction-->>UI: 200 OK: Invitation sent
 

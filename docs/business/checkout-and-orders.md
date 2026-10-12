@@ -65,18 +65,19 @@ sequenceDiagram
     alt Confirmation Digest Mismatch (Price or List Offer changed)
         Server-->>Customer: 409 Conflict: Quote Expired / Changed (Requires Reconfirmation CO-3)
     else Confirmation Digest Verified
-        Server->>Inv: Check on-hand stock for all variants
-        alt Insufficient Stock for any line
-            Inv-->>Server: Stock shortage
+        rect rgb(240, 248, 255)
+        note over Server,Outbox: Atomic Transaction: Order Acceptance
+        Server->>DB: Claim Idempotency Key (checkout_idempotency)
+        Server->>Inv: Reserve Stock inside Transaction (Authoritative CO-4)
+        alt Insufficient Stock (Shortfall on reservation)
+            Inv-->>Server: Throws InsufficientStockError
             Server-->>Customer: 422 Unprocessable: Insufficient Stock (All-or-nothing rejection CO-4)
-        else Stock Available
-            rect rgb(240, 248, 255)
-            note over Server,Outbox: Atomic Transaction: Order Acceptance
+        else Stock Reserved
             Server->>DB: Insert Order (FE-xxxxxx, pending, unpaid, frozen lines & attribution)
             Server->>Inv: Create StockReservation (Hold units per warehouse)
             Server->>Outbox: Enqueue Order Confirmation Email
-            end
             Server-->>Customer: 201 Created: Order Accepted (FE-xxxxxx)
+        end
         end
     end
 ```

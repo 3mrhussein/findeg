@@ -28,7 +28,7 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 
 **Specification**: What a non-exact list item asks for: a category plus attribute values. It is frozen when the list is published.
 
-**Allowed Alternative**: Any active variant of an active product that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
+**Allowed Alternative**: Any active variant that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
 
 **Substitute**: A list line whose chosen variant is not its item's default variant. _Avoid_: Swap.
 

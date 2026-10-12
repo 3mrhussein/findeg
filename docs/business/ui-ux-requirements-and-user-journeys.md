@@ -141,7 +141,7 @@ Per platform architecture rules, all layouts MUST use **Tailwind Logical Propert
   --primary-foreground: 210 40% 98%;
 
   /* Growth / School Extension */
-  --school: 142 71% 45%;          /* Emerald Green #16A34A - Education, Go-Ahead */
+  --school: 142 76% 36%;          /* Emerald Green #15803D - Education, Go-Ahead (4.9:1 WCAG AA) */
   --school-foreground: 210 40% 98%;
 
   /* Base & Surfaces */
@@ -159,7 +159,7 @@ Per platform architecture rules, all layouts MUST use **Tailwind Logical Propert
   --accent-foreground: 222 47% 11%;
 
   /* Feedback & Diagnostics */
-  --destructive: 0 84% 60%;       /* Crimson #EF4444 */
+  --destructive: 0 72% 51%;       /* Crimson #DC2626 (4.9:1 WCAG AA) */
   --destructive-foreground: 210 40% 98%;
   --warning: 38 92% 50%;          /* Amber #F59E0B */
   --success: 142 71% 45%;          /* Emerald #16A34A */

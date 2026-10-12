@@ -112,7 +112,6 @@ flowchart TB
     LayerDelivery --> LayerApplication
     LayerApplication --> LayerDomain
     LayerInfrastructure -.->|Implements Ports & Contracts| LayerDomain
-    LayerApplication --> LayerInfrastructure
 ```
 
 ---
@@ -297,6 +296,6 @@ FindEg enforces absolute separation between Customer Accounts, Staff Dashboard R
 | **Partner** | `partner-administrator` | Partner Workspace (`/partner/[code]`) | Invite members (7-day link), manage member roles, suspend/reactivate members, read monthly `PartnerReport`. Always at least 1 per partner. |
 | **Partner** | `report-viewer` | Partner Workspace (`/partner/[code]`) | Read-only access to anonymized monthly `PartnerReport` (k-anonymity applied). Cannot manage members. |
 | **Partner** | `list-manager` / `collection-staff` | Partner Workspace (`/partner/[code]`) | Granted roles reserved for future partner self-service; grant no operational privileges today. |
-| **Staff** | `Administrator` | Dashboard (`/dashboard`) | Full access: manage Staff accounts, grant Staff roles, create & onboard Business Partners, view audit logs. |
-| **Staff** | `Catalog & Content Editor` | Dashboard (`/dashboard`) | Manage products, variants, prices, images, categories, brands, tags, Home Banners, Content Pages, School Supply Lists. |
-| **Staff** | `Operations` | Dashboard (`/dashboard`) | View orders, perform COD phone confirmation, move orders through fulfillment (`processing`, `shipped`, `delivered`), cancel orders, trigger refunds, adjust inventory. |
+| **Staff** | `Administrator` | Dashboard (`/dashboard`) | Full access: manage Staff accounts, grant Staff roles, create & onboard Business Partners, view audit logs. _(Provisional: pending final role-permission sign-off)_ |
+| **Staff** | `Catalog & Content Editor` | Dashboard (`/dashboard`) | Manage products, variants, prices, images, categories, brands, tags, Home Banners, Content Pages, School Supply Lists. _(Provisional)_ |
+| **Staff** | `Operations` | Dashboard (`/dashboard`) | View orders, perform COD phone confirmation, move orders through fulfillment (`processing`, `shipped`, `delivered`), cancel orders, trigger refunds, adjust inventory. _(Provisional)_ |
