@@ -2,11 +2,12 @@
  * Order vocabulary (GLOSSARY: Order, Order Acceptance, Order Reference, Quote, Confirmation,
  * List Offer, Cancellation, Refund, Attributed Order; ADR-0005, ADR-0007).
  */
-import type { CurrencyCode, Id, Money } from '../common';
-import type { CustomerId } from '../customers';
-import type { VariantId } from '../catalog';
+import type { CurrencyCode, Id } from '../common';
 import type { BusinessPartnerId } from '../partners';
-import type { SupplyListId, SupplyListItemId } from '../school-lists';
+import type { SupplyListId } from '../school-lists';
+import type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
+import type { OrderReference } from './order-reference';
+import type { OrderSource, OrderTotals, QuoteLine } from './quote';
 
 export type OrderId = Id<'Order'>;
 export type OrderLineId = Id<'OrderLine'>;
@@ -36,17 +37,42 @@ export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly Ord
   refunded: [],
 };
 
+export { OrderError } from './order-error';
+export type { OrderErrorCode } from './order-error';
+export { changeOrderStatus, changePaymentStatus, refundOrder } from './order-status';
+export type { OrderProgress, OrderProgressChange, OrderStatusAssertions } from './order-status';
 export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
+export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from './notified-statuses';
+export type { NotifiedOrderStatus } from './notified-statuses';
 export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
 
-/** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
-export const ORDER_REFERENCE_PREFIX = 'FE-';
-export const ORDER_REFERENCE_BODY_LENGTH = 6;
-export const CROCKFORD_BASE32_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-export const ORDER_REFERENCE_PATTERN = new RegExp(
-  `^${ORDER_REFERENCE_PREFIX}[${CROCKFORD_BASE32_ALPHABET}]{${ORDER_REFERENCE_BODY_LENGTH}}$`,
-);
-export type OrderReference = string;
+export {
+  CROCKFORD_BASE32_ALPHABET,
+  ORDER_REFERENCE_BODY_LENGTH,
+  ORDER_REFERENCE_PATTERN,
+  ORDER_REFERENCE_PREFIX,
+  generateOrderReference,
+  orderReference,
+} from './order-reference';
+export type { OrderReference } from './order-reference';
+export {
+  EGYPTIAN_MOBILE_PATTERN,
+  egyptianMobile,
+  guestBuyer,
+  shippingAddress,
+} from './order-contact';
+export type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
+export {
+  CART_QUANTITY_MAX,
+  CART_QUANTITY_MIN,
+  CartError,
+  EMPTY_CART,
+  addToCart,
+  cart,
+  removeFromCart,
+  setCartQuantity,
+} from './cart';
+export type { Cart, CartErrorCode, CartLine } from './cart';
 
 export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
@@ -83,27 +109,37 @@ export const ACCEPTED_PAYMENT_TYPES: readonly PaymentMethodType[] = PAYMENT_OPTI
 
 export type PaymentMethod = PaymentMethodType;
 
-/** An accepted Order. Its status and payment status change after acceptance. */
-export interface Order {
-  id: OrderId;
+/**
+ * An Order as Order Acceptance makes it, before it is stored and given ids. Its buyer, contact,
+ * source, lines and totals are a frozen snapshot; only its status and payment status change.
+ */
+export interface AcceptedOrder {
   reference: OrderReference;
-  customerId?: CustomerId;
-  guestEmail?: string;
+  buyer: OrderBuyer;
+  contactPhone: EgyptianMobile;
+  shippingAddress: ShippingAddress;
+  source: OrderSource;
+  lines: readonly QuoteLine[];
+  totals: OrderTotals;
+  paymentMethod: PaymentMethod;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
-  paymentMethod: PaymentMethod;
   currency: CurrencyCode;
 }
 
-/** One product variant on an Order, priced at acceptance. */
-export interface OrderLine {
+/** An accepted Order. Its status and payment status change after acceptance; nothing else does. */
+export interface Order extends Omit<AcceptedOrder, 'lines'> {
+  id: OrderId;
+  lines: readonly OrderLine[];
+}
+
+/**
+ * One variant on an Order: its name, SKU, unit price, discounts and line total as accepted, the
+ * list item it fulfils and whether it substitutes for that item's default (`null` on cart lines).
+ */
+export interface OrderLine extends QuoteLine {
   id: OrderLineId;
   orderId: OrderId;
-  variantId: VariantId;
-  quantity: number;
-  unitPrice: Money;
-  /** Set when the line came from a School Supply List (Exact Item or Allowed Alternative). */
-  supplyListItemId?: SupplyListItemId;
 }
 
 /** An Order fixed to exactly one School Supply List, recording its Partner School's Business Partner. */
@@ -135,12 +171,17 @@ export interface ListOffer {
   endsAt: Date | null;
 }
 
-/** The server's authoritative pricing of a set of lines at one moment. */
-export interface Quote {
-  lines: readonly { variantId: VariantId; quantity: number; unitPrice: Money }[];
-  discounts: readonly { source: DiscountSource; amount: Money }[];
-  shippingFee: Money;
-  total: Money;
-  /** Digest of the Quote's terms that the Customer agrees to. */
-  confirmation: string;
-}
+export { FLAT_SHIPPING_FEE, priceQuote } from './quote';
+export type {
+  LineDiscount,
+  OrderSource,
+  OrderTotals,
+  Quote,
+  QuoteLine,
+  QuoteLineRequest,
+  QuoteSource,
+} from './quote';
+export { ReconfirmationRequiredError, confirmQuote, confirmationTerms } from './confirmation';
+export type { ConfirmationLine, ConfirmationTerms } from './confirmation';
+export { acceptOrder, acceptedPaymentMethod } from './acceptance';
+export type { OrderAcceptance, OrderAcceptanceRequest } from './acceptance';
