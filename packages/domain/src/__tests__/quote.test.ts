@@ -234,6 +234,19 @@ describe('Quote pricing', () => {
     );
   });
 
+  // Rule change (spec #402): today an Order line has no upper bound. An Order comes from the
+  // Cart or from one list, and both hold at most 999 units a line, so an Order line does too.
+  it('change: refuses an Order line above 999 units', () => {
+    expect(quoteAt(CART, [cartLine(1, '1.00', 999)]).lines[0].quantity).toBe(999);
+    expect(codeOf(() => quoteAt(CART, [cartLine(1, '1.00', 1000)]))).toBe('INVALID_LINE_QUANTITY');
+    expect(codeOf(() => quoteAt(list(null), [listLine(1, 1, '1.00', 1000)]))).toBe(
+      'INVALID_LINE_QUANTITY',
+    );
+    expect(codeOf(() => quoteAt(CART, [cartLine(1, '1.00', 600), cartLine(1, '1.00', 400)]))).toBe(
+      'INVALID_LINE_QUANTITY',
+    );
+  });
+
   it('refuses a Quote with no lines', () => {
     expect(codeOf(() => quoteAt(CART, []))).toBe('EMPTY_ORDER');
     expect(codeOf(() => quoteAt(list(null), []))).toBe('EMPTY_ORDER');

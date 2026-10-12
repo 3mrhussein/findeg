@@ -1,5 +1,5 @@
 import type { VariantId } from '../catalog';
-import { DomainError } from '../common';
+import { DomainError, LINE_QUANTITY_MAX, LINE_QUANTITY_MIN, isLineQuantity } from '../common';
 import { activeWarehouseIds, freeUnits } from './availability';
 import { InventoryError } from './inventory-error';
 import type { StockBalance, StockReservation, Warehouse } from './index';
@@ -33,14 +33,14 @@ export class InsufficientStockError extends DomainError<'INSUFFICIENT_STOCK'> {
   }
 }
 
-/** The lines summed per variant, in variant order. Each quantity must be a positive whole number. */
+/** The lines summed per variant, in variant order. Each line holds 1 to 999 units. */
 function totalPerVariant(lines: readonly StockLine[]): StockLine[] {
   const totals = new Map<VariantId, number>();
   for (const { variantId, quantity } of lines) {
-    if (!Number.isInteger(quantity) || quantity <= 0) {
+    if (!isLineQuantity(quantity)) {
       throw new InventoryError(
         'INVALID_QUANTITY',
-        `A stock quantity must be a positive whole number, received ${quantity}`,
+        `A stock line holds ${LINE_QUANTITY_MIN} to ${LINE_QUANTITY_MAX} units, received ${quantity}`,
       );
     }
     totals.set(variantId, (totals.get(variantId) ?? 0) + quantity);

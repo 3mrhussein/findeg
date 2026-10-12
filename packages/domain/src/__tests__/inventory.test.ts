@@ -256,6 +256,19 @@ describe('stock allocation', () => {
     );
   });
 
+  // Rule change (spec #402): allocation takes Order lines, which hold 1 to 999 units.
+  it('change: refuses a line above 999 units', () => {
+    expect(
+      codeOf(() =>
+        allocateStock(
+          [{ variantId: pen, quantity: 1000 }],
+          [balance(pen, cairo, 5000)],
+          warehouses,
+        ),
+      ),
+    ).toBe('INVALID_QUANTITY');
+  });
+
   it.each([0, -1, 1.5, Number.NaN])('refuses a line quantity of %s', (quantity) => {
     expect(
       codeOf(() =>

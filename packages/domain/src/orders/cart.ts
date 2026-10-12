@@ -1,8 +1,9 @@
 import type { VariantId } from '../catalog';
-import { DomainError } from '../common';
+import { DomainError, LINE_QUANTITY_MAX, LINE_QUANTITY_MIN, isLineQuantity } from '../common';
 
-export const CART_QUANTITY_MIN = 1;
-export const CART_QUANTITY_MAX = 999;
+/** A Cart line holds a line quantity: 1 to 999 units. */
+export const CART_QUANTITY_MIN = LINE_QUANTITY_MIN;
+export const CART_QUANTITY_MAX = LINE_QUANTITY_MAX;
 
 /** Units of one variant in the Cart. It has no price: a Quote prices it (CO-2). */
 export interface CartLine {
@@ -30,7 +31,7 @@ export class CartError extends DomainError<CartErrorCode> {
 export const EMPTY_CART: Cart = { lines: [] };
 
 function requireQuantity(quantity: number): void {
-  if (!Number.isInteger(quantity) || quantity < CART_QUANTITY_MIN || quantity > CART_QUANTITY_MAX) {
+  if (!isLineQuantity(quantity)) {
     throw new CartError(
       'INVALID_CART_QUANTITY',
       `A Cart line holds ${CART_QUANTITY_MIN} to ${CART_QUANTITY_MAX} units, received ${quantity}`,

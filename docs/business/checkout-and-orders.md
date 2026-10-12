@@ -86,7 +86,7 @@ The List Offer (a list's percentage discount) is defined in [School Supply Lists
 - **CO-17** Business Partner Status never affects checkout, acceptance or fulfilment.
 - **CO-18** An Order becomes confirmed only after Staff have phoned the Customer and the Customer confirmed it. Confirmed is shown to Customers.
 - **CO-19** Every Order has an Egyptian mobile number, so Staff can phone to confirm, and a shipping address in one of Egypt's 27 governorates. A guest Order also has an email.
-- **CO-20** A Cart line is one variant with 1 to 999 units. Adding a variant already in the Cart adds to its line.
+- **CO-20** A Cart line is one variant with 1 to 999 units. Adding a variant already in the Cart adds to its line. An Order line holds 1 to 999 units too, the same bound as a list item (SL-17), since every Order comes from the Cart or one list; a larger line is refused.
 
 ## Lifecycle
 
@@ -116,7 +116,7 @@ stateDiagram-v2
 | 4 | CO-7 | The flat fee can be overridden by an environment setting. |
 | 5 | CO-12, CO-13 | A payment can be marked paid before delivery, or refunded without its Order; a Refund leaves the payment as it was; a shipped Order can be cancelled without stating that the parcel is back. |
 | 6 | CO-19 | The phone check accepts some invalid Egyptian numbers and refuses real ones starting `+2010`, and a guest's email and phone are not required in every layer. The shipping address has no governorate. |
-| 7 | CO-20 | Not every client limits a Cart line to 1 to 999 units. |
+| 7 | CO-20 | Not every client limits a Cart line to 1 to 999 units, and an Order line has no upper bound. |
 
 ## Open questions
 

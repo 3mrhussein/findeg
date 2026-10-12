@@ -1,8 +1,11 @@
 import type { Sku, VariantId } from '../catalog';
 import {
   DEFAULT_CURRENCY,
+  LINE_QUANTITY_MAX,
+  LINE_QUANTITY_MIN,
   ZERO_MONEY,
   addMoney,
+  isLineQuantity,
   moneyFromDecimal,
   sumMoney,
   type CurrencyCode,
@@ -103,8 +106,9 @@ export interface Quote {
 const LIST_OFFER: DiscountSource = 'list-offer';
 
 /**
- * Prices an Order's lines at the moment `at` (ADR-0007). Cart lines of the same variant are
- * merged, in the order they first appear; list lines are ordered by list item. A list's offer,
+ * Prices an Order's lines at the moment `at` (ADR-0007). Each line holds 1 to 999 units. Cart
+ * lines of the same variant are merged, in the order they first appear, and the merged line
+ * holds 1 to 999 units too; list lines are ordered by list item. A list's offer,
  * when active at `at`, is applied to every line alike by the List Offer line rule and tagged
  * `list-offer` when it takes anything off. Shipping is the flat fee.
  */
@@ -118,7 +122,9 @@ export function priceQuote(
   }
   for (const request of requests) requireSource(source, request);
   if (source.kind === 'cart') {
-    const lines = mergeByVariant(requests).map((request) => priceLine(request, null));
+    const merged = mergeByVariant(requests);
+    for (const request of merged) requireLineQuantity(request.quantity);
+    const lines = merged.map((request) => priceLine(request, null));
     return quoteOf({ kind: 'cart' }, lines);
   }
   const basisPoints = listOfferBasisPointsAt(source.offer, at);
@@ -143,10 +149,14 @@ function requireSource(source: QuoteSource, request: QuoteLineRequest): void {
       'An Order comes from the Cart or from exactly one School Supply List, never both',
     );
   }
-  if (!Number.isInteger(request.quantity) || request.quantity < 1) {
+  requireLineQuantity(request.quantity);
+}
+
+function requireLineQuantity(quantity: number): void {
+  if (!isLineQuantity(quantity)) {
     throw new OrderError(
       'INVALID_LINE_QUANTITY',
-      `An Order line holds a positive whole number of units, received ${request.quantity}`,
+      `An Order line holds ${LINE_QUANTITY_MIN} to ${LINE_QUANTITY_MAX} units, received ${quantity}`,
     );
   }
 }
