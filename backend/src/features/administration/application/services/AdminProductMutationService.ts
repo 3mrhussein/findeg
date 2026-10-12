@@ -10,11 +10,11 @@ import {
   bulkDeleteProducts,
   createProductWithVariantsInDb,
   duplicateProductWithVariants,
-  getVariantsByIds,
   updateProductWithVariantsInDb,
 } from '@findeg/db/queries';
 import {
   assertCatalogueWriteRules,
+  rethrowCatalogueWriteError,
   ensureBrandExists,
   ensureCategoryExists,
   getExistingProductOrThrow,
@@ -83,34 +83,10 @@ export class AdminProductMutationService {
     adminUserId?: number,
   ): Promise<void> {
     await getExistingProductOrThrow(id);
-    const variants = input.variants ?? [];
-    const partialPriceIds = variants.flatMap((variant) =>
-      'id' in variant &&
-      (variant.basePrice !== undefined || variant.strikePrice !== undefined) &&
-      (variant.basePrice === undefined || variant.strikePrice === undefined)
-        ? [variant.id]
-        : [],
-    );
-    const persisted = partialPriceIds.length ? await getVariantsByIds(partialPriceIds) : [];
-    const byId = new Map(persisted.map((variant) => [variant.id, variant]));
-    assertCatalogueWriteRules(
-      variants.map((variant) => {
-        const current = 'id' in variant ? byId.get(variant.id) : undefined;
-        return {
-          sku: variant.sku,
-          basePrice: variant.basePrice ?? (current ? Number(current.basePrice) : undefined),
-          strikePrice:
-            variant.strikePrice !== undefined
-              ? variant.strikePrice
-              : current?.strikePrice != null
-                ? Number(current.strikePrice)
-                : undefined,
-        };
-      }),
-    );
+    assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
 
-    await updateProductWithVariantsInDb(id as number, input);
+    await updateProductWithVariantsInDb(id as number, input).catch(rethrowCatalogueWriteError);
 
     await this.dependencies.auditLogService?.logAction({
       entityType: 'product',

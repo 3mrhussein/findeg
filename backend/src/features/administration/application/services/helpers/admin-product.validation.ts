@@ -54,7 +54,12 @@ export function assertCatalogueWriteRules(rows: readonly CatalogueWriteRow[]): v
       );
     }
   } catch (error) {
-    if (error instanceof DomainError) throw new ValidationError('variants', error.message);
-    throw error;
+    rethrowCatalogueWriteError(error);
   }
+}
+
+/** Map a catalogue rule rejection from either preflight validation or the locked writer. */
+export function rethrowCatalogueWriteError(error: unknown): never {
+  if (error instanceof DomainError) throw new ValidationError('variants', error.message);
+  throw error;
 }
