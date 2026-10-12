@@ -21,6 +21,57 @@ As of 2026-10-12.
 | 2026-10-11 | The money relationship between FindEg and a partner is not settled. The program is defined by its service to families and schools. |
 | 2026-10-12 | Every business value, entity, relation and rule is declared once, in the domain package ([ADR-0018](../adr/0018-domain-package-is-the-pure-rich-business-domain.md)). The owner approved the rule changes and defaults it settles; they are recorded on the area pages and in the [business-domain map](../business-domain-map.md). |
 
+## Enterprise Blueprints & System Diagrams
+
+FindEg maintains a formal enterprise architectural atlas documenting capabilities, user journeys, and data pipelines across the system:
+
+- 🏛️ **[Enterprise System Architecture](enterprise-system-architecture.md)**: C4 Level 1 System Context, Clean Architecture multi-tier layers, Business Capability Map, DDD Bounded Contexts, and Unified Tri-State Synchronization Engine.
+- 🔄 **[User Flow Diagrams](user-flows-and-diagrams.md)**: Complete end-to-end journey maps for Storefront Customers, School Families, Guest Lookups, Partner Administrators, Report Viewers, and Operations Staff.
+- 🔀 **[Data Flow Diagrams](data-flow-diagrams.md)**: DFD Level 0 Context and DFD Level 1 sub-system flows for Catalog Ingestion, Quoting/Acceptance, Dynamic Alternative Resolution, Fulfillment, Anonymized Reporting, and the Transactional Outbox.
+- ⚡ **[Technical Sequence Diagrams](system-sequence-diagrams.md)**: Multi-tier interaction flows (SEQ-1 through SEQ-9) connecting Actor, Client Components, Server Actions, Core Services, Database Transactions, and Outbox.
+- 📋 **[System Specifications](system-specifications.md)**: Formal functional specifications, data schemas, API contracts, invariant constraints (`CA-*`, `CO-*`, `ID-*`, `PA-*`, `SL-*`), and non-functional guarantees.
+- 🎨 **[UI/UX Requirements & User Journeys](ui-ux-requirements-and-user-journeys.md)**: 6 persona journey maps, design system foundation (Cairo/Inter bilingual typography, RTL logical properties), and screen-by-screen UX specifications.
+
+### Dual Value Stream Overview
+
+#### Value Stream 1: Core B2C Stationery E-Commerce
+
+```mermaid
+flowchart TD
+    subgraph Stream1_Phase1["Phase 1: Catalog Discovery & Quoting"]
+        direction LR
+        V1_1["1. Catalog Curation<br/>(Bulk Import / Manual)"] --> V1_2["2. Storefront Browse & Cart<br/>(Categories, Tags, Collections)"]
+        V1_2 --> V1_3["3. Server-Authoritative Quote<br/>(Piasters & Flat Shipping)"]
+    end
+
+    subgraph Stream1_Phase2["Phase 2: Order Acceptance & Fulfilment"]
+        direction LR
+        V1_4["4. Atomic Order Acceptance<br/>(COD & Stock Reservation)"] --> V1_5["5. Phone Confirmation<br/>(Staff verifies with Customer)"]
+        V1_5 --> V1_6["6. Courier Delivery & Cash<br/>(Stock Consumed & Paid)"]
+    end
+
+    V1_3 --> V1_4
+```
+
+#### Value Stream 2: B2B2C School Supply Lists (Partner Program)
+
+```mermaid
+flowchart TD
+    subgraph Stream2_Phase1["Phase 1: School Onboarding & List Publishing"]
+        direction LR
+        V2_1["1. Partner School Setup<br/>(Profile: Governorate, System)"] --> V2_2["2. Staff List Authoring<br/>(Draft: Exact Items & Specs)"]
+        V2_2 --> V2_3["3. Publication & Freezing<br/>(Unguessable Public Code)"]
+    end
+
+    subgraph Stream2_Phase2["Phase 2: Family Fulfillment & Partner Reporting"]
+        direction LR
+        V2_4["4. Family Fulfills List<br/>(Select Allowed Alternatives)"] --> V2_5["5. List Offer Checkout<br/>(Isolated Selection & Attributed Order)"]
+        V2_5 --> V2_6["6. Anonymized School Reports<br/>(k-Anonymity monthly totals)"]
+    end
+
+    V2_3 --> V2_4
+```
+
 ## First launch: the stationery store
 
 Decided 2026-10-11. The store launches when all of these are true:
@@ -43,7 +94,7 @@ A blog, other Staff Roles and the school milestone come after launch.
 |---|---|---|---|---|
 | [Catalog & Merchandising](catalog-and-merchandising.md) | Launch scope and model decided; reviews not documented | 13 decided, 2 proposed | 5 | Who may review, and whether reviews are moderated |
 | [Checkout & Orders](checkout-and-orders.md) | Clear | 14 | 7 (2 launch blockers) | Card payment design, after launch |
-| [Identity & Administration](identity-and-administration.md) | Launch roles decided; rest not documented | 4 decided, 5 proposed | 1 | Exactly what each Staff Role may do |
+| [Identity & Administration](identity-and-administration.md) | Launch roles decided; permissions provisional | 4 decided, 5 proposed | 1 | Exactly what each Staff Role may do |
 
 ### Growth: Partner Program (first segment: schools)
 
@@ -71,7 +122,8 @@ Each area page ends with its own checklist of open questions, each with a sugges
 Questions that span every area:
 
 - [ ] **Launch date** (Business): What is the target date for the store launch?
-- [ ] **Languages** (Business): Does the store launch in both Arabic and English? Which is the default?
+- [ ] **Languages** (Business): Launch in both Arabic and English is confirmed; which is the default language?
+  Suggested: Arabic default, English secondary.
 - [ ] **Source of truth** (Business): Confirm that when this folder and the product disagree, the folder is the intended behaviour (step 5 of "How to use this folder").
 - [ ] **Folder owner** (Business): Who keeps this folder up to date, and who approves a change to a rule?
 

@@ -51,6 +51,68 @@ FindEg sells stationery, plus gifts and toys. This is the core of the business, 
 
 A gift guide is a Collection, not a separate concept.
 
+### Catalog Hierarchy & Merchandising Structure
+
+```mermaid
+classDiagram
+    direction TB
+    class Category {
+        +string name_en
+        +string name_ar
+        +Category parent
+        +boolean isRoot
+    }
+    class Brand {
+        +string name
+        +string logoUrl
+    }
+    class Product {
+        +string name_en
+        +string name_ar
+        +string description_en
+        +string description_ar
+        +boolean isActive
+        +rating averageRating
+        +int reviewCount
+    }
+    class ProductVariant {
+        +string sku
+        +int pricePiasters
+        +int strikeThroughPrice
+        +string barcode
+        +int weightGrams
+        +boolean isDefault
+        +boolean isActive
+    }
+    class TagGroup {
+        +string name
+    }
+    class Tag {
+        +string name
+    }
+    class Collection {
+        +string name
+        +string slug
+    }
+    class Review {
+        +int rating (1-5)
+        +string comment
+        +boolean isVerifiedPurchase
+        +int helpfulVotes
+        +string status
+    }
+
+    Category "1" <-- "*" Category : parent / children
+    Category "1" <-- "*" Product : belongs to
+    Brand "0..1" <-- "*" Product : manufactured by
+    Product "1" *-- "1..*" ProductVariant : has variants
+    Product "1" *-- "1" ProductVariant : defaultVariant
+    TagGroup "1" *-- "*" Tag : groups
+    Product "*" o-- "*" Tag : labeled with
+    Collection "*" o-- "*" Tag : dynamically populated by
+    Product "1" *-- "*" Review : customer feedback
+```
+
 ## Capabilities
 
 | Actor | Capability | State |
@@ -87,7 +149,27 @@ A gift guide is a Collection, not a separate concept.
 
 ## Lifecycle
 
-A Product is Active or Inactive (CA-11), with no draft or archived state. A Review is pending, approved or rejected today, although every Review is approved on arrival.
+```mermaid
+stateDiagram-v2
+    direction LR
+
+    state "Product & Variant Lifecycle" as ProductLifecycle {
+        [*] --> Inactive: Created via manual entry or bulk spreadsheet
+        Inactive --> Active: Staff marks active (validated default variant & SKU)
+        Active --> Inactive: Staff deactivates (stock out, supplier delisted)
+        Active --> [*]: Permanently removed (Past orders keep frozen line data CA-8)
+        Inactive --> [*]
+    }
+
+    state "Review Lifecycle" as ReviewLifecycle {
+        [*] --> PendingReview: Customer submits rating & comment
+        PendingReview --> Approved: Auto-approved immediately CA-6 (live on storefront)
+        PendingReview --> Rejected: Staff moderation (future capability)
+        Approved --> Rejected: Staff removes inappropriate review
+        Approved --> [*]
+        Rejected --> [*]
+    }
+```
 
 ## Known gaps
 

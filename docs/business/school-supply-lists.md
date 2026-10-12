@@ -28,7 +28,7 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 
 **Specification**: What a non-exact list item asks for: a category plus attribute values. It is frozen when the list is published.
 
-**Allowed Alternative**: Any active variant of an active product that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
+**Allowed Alternative**: Any active variant that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
 
 **Substitute**: A list line whose chosen variant is not its item's default variant. _Avoid_: Swap.
 
@@ -43,6 +43,40 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 **List Completeness**: Whether a List Selection covers every required item at its prescribed quantity, with any allowed substitute counting. Advisory only: it never blocks checkout and never changes the List Offer. _Avoid_: List validation, list progress.
 
 **List Offer**: A percentage discount on one School Supply List, active from its start until its end, or open-ended when it has no end. A list has at most one. It applies to every line bought from that list. Its rules are SL-16; Checkout applies it to the Quote (CO-8). _Avoid_: List discount, coupon, promotion.
+
+### Specification Matching & Dynamic Substitution Engine (SL-8)
+
+```mermaid
+flowchart TD
+    subgraph ListLine["School Supply List Line"]
+        LineItem["Curated Line Item"] --> LineType{"Line Type"}
+        LineType -->|Exact Item| ExactVariant["Exact Variant SKU<br/>(No alternatives allowed)"]
+        LineType -->|Specification| Spec["Frozen Specification<br/>(Category ID + Required Attributes)"]
+    end
+
+    subgraph CatalogResolution["Dynamic Runtime Evaluation (Catalog Engine)"]
+        Spec --> QueryLive["Query Active Catalog Variants in Category"]
+        QueryLive --> AttrFilter{"Matches ALL specified attribute values?"}
+        AttrFilter -->|No| Discard["Excluded"]
+        AttrFilter -->|Yes| ActiveCheck{"Variant is Active? (CA-4)"}
+        ActiveCheck -->|No| Discard
+        ActiveCheck -->|Yes| AllowedAlt["Allowed Alternative<br/>(Computed dynamically at runtime)"]
+    end
+
+    subgraph SelectionAssembly["Customer List Selection (Device)"]
+        ExactVariant --> FixedChoice["Default Variant pre-selected"]
+        AllowedAlt --> UserChoice{"Customer Preference"}
+        UserChoice -->|Keep Default| KeepCurated["Curated Default Variant"]
+        UserChoice -->|Swap Variant| SelectedAlt["Customer-Chosen Alternative Variant"]
+
+        FixedChoice --> SelectionState["List Selection State<br/>(Item ID, Variant ID, Quantity)"]
+        KeepCurated --> SelectionState
+        SelectedAlt --> SelectionState
+
+        SelectionState --> CompletenessEvaluator["Advisory List Completeness Engine<br/>(Checks all required items covered)"]
+        CompletenessEvaluator --> AdvisoryNotice["Advisory Indicator (Never blocks checkout SL-12)"]
+    end
+```
 
 ## Capabilities
 
@@ -95,13 +129,33 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 
 ## Lifecycle
 
+### List Lifecycle & Slot Replacement Chain (SL-1, SL-3, SL-4)
+
 ```mermaid
 stateDiagram-v2
-    [*] --> Draft: create, or copy a published/archived list
-    Draft --> Draft: edit items
-    Draft --> Published: publish (gets a Public Code)
-    Published --> Archived: archive, or replaced by a newer list in its slot
-    Archived --> [*]
+    direction TB
+
+    state "List Version Lifecycle (SL-1)" as VersionLifecycle {
+        [*] --> Draft: Create draft, or copy existing list
+        Draft --> Draft: Edit items, quantities, specs
+        Draft --> Published: Publish (SL-2: Freezes specs & creates Public Code)
+        Published --> Archived: Superseded by newer list in slot (SL-4), or retired
+        Archived --> [*]: Final (Read-only, non-buyable SL-7)
+    }
+
+    state "Slot Ownership & Replacement Flow (SL-3, SL-4)" as SlotFlow {
+        state "Slot: (School, Year, Grade)" as CurrentSlot
+        state "List v1 [Published]" as V1
+        state "List v2 [Draft Copy]" as V2_Draft
+        state "List v2 [Published]" as V2_Pub
+        state "List v1 [Archived]" as V1_Arch
+
+        CurrentSlot --> V1: Holds slot
+        V1 --> V2_Draft: Staff copies into new draft
+        V2_Draft --> V2_Pub: Publish into same slot
+        V2_Pub --> CurrentSlot: Takes over slot
+        V1 --> V1_Arch: Automatically archived in same step (replacesListId = v1.id)
+    }
 ```
 
 ## Known gaps
