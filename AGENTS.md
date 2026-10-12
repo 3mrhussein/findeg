@@ -1,8 +1,8 @@
 # IMPORTANT
 
-Make every change in your own worktree, never in the main checkout. Before the first edit, run `git worktree add -b <type>/<kebab-case-slug> worktree/<type>/<kebab-case-slug> origin/develop` and work only inside that directory. Type is one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`. A branch listed in `git worktree list` belongs to the session working there, so leave it alone.
+Make every change in a linked worktree, never in the main checkout. You are in the main checkout when `git rev-parse --path-format=absolute --git-dir` and `git rev-parse --path-format=absolute --git-common-dir` print the same path; then, before the first edit, run `git worktree add -b <type>/<kebab-case-slug> worktree/<type>/<kebab-case-slug> origin/develop` and work only inside it. Type is one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`.
 
-Already in a worktree, check `git branch --show-current`: unless it is `develop` or `main`, it must be `<type>/<kebab-case-slug>`; if it is not, rename it now with `git branch -m <type>/<slug>`.
+Already in a linked worktree, stay there and create no other. A subagent keeps the branch it starts on unless its prompt names a new one. A top-level session renames a branch that is not `develop`, `main` or `<type>/<kebab-case-slug>` with `git branch -m <type>/<slug>`.
 
 ## Agent skills
 

@@ -26,6 +26,7 @@ Communication to and from subagents should be sparse. Communicate primarily thro
 
 4. Use **implementer subagents** to implement each ticket, each in its own worktree on its own branch. Each implementer subagent:
    - confirms its worktree is based on the integration branch before starting, and resets onto it if not;
+   - renames its branch to the `<type>/<kebab-case-slug>` its prompt names (the orchestrator picks one per ticket);
    - calls the Skill tool with `tdd` to build the ticket;
    - merges the integration branch tip into its own branch before reporting done
 
