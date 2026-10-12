@@ -51,5 +51,5 @@ Current backlog is whatever `ratchet.json` holds. Both files are owned by people
 public exports of the live `@findeg/domain` source to discover `as const` string arrays,
 including re-exports and `satisfies` expressions. Consumer arrays, string unions and SQL
 `IN` lists must import the owner when they equal a set in any order or copy at least three
-of its members. Domain source, tests, test support, fixtures, Cypress and migrations are
+of its members. Domain source, tests, test support, fixtures, Cypress specs and migrations are
 exempt. Missing or invalid domain source fails lint configuration loading.

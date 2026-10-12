@@ -169,6 +169,23 @@ test('non-matches and compliant imports remain legal', async () => {
     assert.equal((await copies(code)).length, 0, code);
 });
 
+test('Cypress support and configuration remain subject to ownership checks', async () => {
+  for (const file of ['backend/cypress/support/helpers.ts', 'backend/cypress.config.ts']) {
+    assert.equal(
+      (await copies("export const statuses = ['inactive', 'active'];", file)).length,
+      1,
+      file,
+    );
+  }
+  for (const file of ['backend/cypress/e2e/checkout.ts', 'backend/cypress/checkout.cy.ts']) {
+    assert.equal(
+      (await copies("export const statuses = ['inactive', 'active'];", file)).length,
+      0,
+      file,
+    );
+  }
+});
+
 test('findeg-lint rejects a copied set rather than ratcheting it as a warning', () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-cli-'));
   try {
@@ -201,4 +218,12 @@ test('findeg-lint rejects a copied set rather than ratcheting it as a warning', 
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
+});
+
+test('SQL comments between list members cannot hide a copied set', async () => {
+  for (const code of [
+    "export const query = sql`status in ('pending', /* lifecycle */ 'shipped', 'cancelled')`;",
+    "export const query = sql`status in ('pending', -- lifecycle\n 'shipped', 'cancelled')`;",
+  ])
+    assert.equal((await copies(code)).length, 1, code);
 });

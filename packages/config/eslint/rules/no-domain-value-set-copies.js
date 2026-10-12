@@ -112,12 +112,23 @@ const domainSets = readDomainSets();
 // doubled quote escape, instead of splitting on commas (which may occur inside a value).
 function sqlLists(text) {
   const lists = [];
-  for (const match of text.matchAll(/\bin\s*\(/gi)) {
+  for (const match of text.matchAll(/\bin\b/gi)) {
     let cursor = match.index + match[0].length;
     const values = [];
     const whitespace = () => {
-      while (/\s/.test(text[cursor] ?? '') && cursor < text.length) cursor++;
+      while (cursor < text.length) {
+        if (/\s/.test(text[cursor])) cursor++;
+        else if (text.startsWith('/*', cursor)) {
+          const end = text.indexOf('*/', cursor + 2);
+          cursor = end === -1 ? text.length : end + 2;
+        } else if (text.startsWith('--', cursor)) {
+          const end = text.indexOf('\n', cursor + 2);
+          cursor = end === -1 ? text.length : end + 1;
+        } else break;
+      }
     };
+    whitespace();
+    if (text[cursor++] !== '(') continue;
     while (cursor < text.length) {
       whitespace();
       if (text[cursor++] !== "'") break;
@@ -159,8 +170,8 @@ export const noDomainValueSetCopiesRule = {
     if (
       (!ownerRelative.startsWith('..') && !path.isAbsolute(ownerRelative)) ||
       /(?:^|\/)(?:__tests__|tests?|specs?|testing|fixtures?|migrations?)(?:\/|$)/.test(filename) ||
-      /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(filename) ||
-      /(?:^|\/)cypress\//i.test(filename)
+      /\.(?:test|spec|cy)\.[cm]?[jt]sx?$/.test(filename) ||
+      /(?:^|\/)cypress\/(?:e2e|integration|specs)\//i.test(filename)
     )
       return {};
     function report(node, values) {
