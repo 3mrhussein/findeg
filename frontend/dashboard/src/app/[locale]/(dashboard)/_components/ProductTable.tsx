@@ -14,6 +14,7 @@ import type { Product } from '@findeg/backend/features/catalog';
 import { isNewProduct } from '@findeg/backend/features/catalog';
 import Image from 'next/image';
 import { Badge } from '@findeg/ui';
+import { formatEgpDecimal } from '@findeg/ui';
 
 interface ProductTableProps {
   products: Product[];
@@ -27,12 +28,9 @@ export function ProductTable({ products }: ProductTableProps) {
   /**
    *
    */
-  const formatPrice = (price: number | string | undefined) => {
+  const formatPrice = (price: string | number | undefined) => {
     if (!price) return '';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(Number(price));
+    return `EGP ${formatEgpDecimal(String(price))}`;
   };
 
   return (
@@ -89,7 +87,7 @@ export function ProductTable({ products }: ProductTableProps) {
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-medium">
-                      {formatPrice(product?.variants?.[0]?.basePrice ?? 0)}
+                      {formatPrice(product?.variants?.[0]?.basePrice ?? undefined)}
                     </span>
                     {product.variants?.[0]?.strikePrice && (
                       <span className="text-xs text-muted-foreground line-through">

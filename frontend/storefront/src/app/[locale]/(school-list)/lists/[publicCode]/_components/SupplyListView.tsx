@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { compareMoney, moneyFromDecimal, subtractMoney } from '@findeg/domain';
+import { formatEgp } from '@findeg/ui';
 import type {
   PublicSupplyList,
   PublicSupplyListItem,
@@ -30,12 +32,14 @@ function pick(text: Text, locale: string): string {
   return (locale === 'ar' ? text.ar : text.en) || text.en || text.ar || '';
 }
 
-/** Signed price difference from the default, e.g. `+2.50`, `-1.00`, `0.00`. */
+/** Signed price difference from the default, e.g. `+2.50`, `-1.00`, `0.00`. Exact Money maths. */
 function priceDifference(price: string, defaultPrice: string): string {
-  const diff = Number(price) - Number(defaultPrice);
-  const text = Math.abs(diff).toFixed(2);
-  if (diff > 0) return `+${text}`;
-  if (diff < 0) return `-${text}`;
+  const current = moneyFromDecimal(price);
+  const base = moneyFromDecimal(defaultPrice);
+  const order = compareMoney(current, base);
+  const text = formatEgp(order >= 0 ? subtractMoney(current, base) : subtractMoney(base, current));
+  if (order > 0) return `+${text}`;
+  if (order < 0) return `-${text}`;
   return text;
 }
 

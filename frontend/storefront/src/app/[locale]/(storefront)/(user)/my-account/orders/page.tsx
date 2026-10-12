@@ -1,8 +1,7 @@
-import { piastersToEgp } from '@findeg/money';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
-import { Card, CardContent } from '@findeg/ui';
+import { Card, CardContent, formatEgp } from '@findeg/ui';
 import { getCustomerOrders } from '@data/order/queries';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
@@ -61,7 +60,7 @@ export default async function OrdersPage({ params }: Props) {
                     <div className="flex justify-between">
                       <span>{t('Pages.MyAccount.OrderTotal')}:</span>
                       <span className="text-foreground font-medium">
-                        {order.currency || 'EGP'} {piastersToEgp(order.totalAmount)}
+                        {order.currency || 'EGP'} {formatEgp(order.totalAmount)}
                       </span>
                     </div>
                   </div>

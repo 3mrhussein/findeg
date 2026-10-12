@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@findeg/ui';
+import { formatEgpDecimal } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { IconTooltip } from '@findeg/ui';
 import {
@@ -133,11 +134,7 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
 
         if (!defaultVariant) return '—';
 
-        const amount = Number(defaultVariant.basePrice ?? 0);
-        const formatted = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'EGP',
-        }).format(amount);
+        const formatted = `EGP ${formatEgpDecimal(String(defaultVariant.basePrice || '0'))}`;
 
         // Show + tooltip if multiple variants
         if (variants.length > 1) {

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@findeg/backend": "workspace:*",
+    "@findeg/domain": "workspace:*",
     "@findeg/money": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",

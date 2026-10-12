@@ -44,9 +44,6 @@ importers:
       '@findeg/env':
         specifier: workspace:*
         version: link:../packages/env
-      '@findeg/money':
-        specifier: workspace:*
-        version: link:../packages/money
       '@findeg/orders':
         specifier: workspace:*
         version: link:../packages/orders
@@ -196,9 +193,6 @@ importers:
       '@findeg/domain-errors':
         specifier: workspace:*
         version: link:../../packages/domain-errors
-      '@findeg/money':
-        specifier: workspace:*
-        version: link:../../packages/money
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
@@ -344,6 +338,9 @@ importers:
       '@findeg/backend':
         specifier: workspace:*
         version: link:../../backend
+      '@findeg/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@findeg/domain-errors':
         specifier: workspace:*
         version: link:../../packages/domain-errors

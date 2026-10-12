@@ -2,14 +2,15 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Heart, Eye, Star, ShoppingCart } from 'lucide-react';
 import { Link } from '@i18n/navigation';
 import type { Product } from '@data/catalog/types';
 import { useCart } from '@hooks/useCart';
 import { useToast } from '@hooks/use-toast';
 import { useUser } from '@hooks/useUser';
-import { Button } from '@findeg/ui';
+import { Button, formatEgpDecimal } from '@findeg/ui';
+import { discountPercentage as savingPercentage, moneyFromDecimal } from '@findeg/domain';
 import { Badge } from '@findeg/ui';
 import { Skeleton } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@findeg/ui';
@@ -29,16 +30,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, view, brand }: ProductCardProps) {
-  const locale = useLocale();
   const t = useTranslations('Pages.ProductCard');
-  const egpFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
-        style: 'currency',
-        currency: 'EGP',
-      }),
-    [locale],
-  );
 
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -85,15 +77,14 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
   const discountPercentage = useMemo(() => {
     if (!primaryVariant || !primaryVariant.basePrice || !primaryVariant.strikePrice) return 0;
-    const strike = Number(primaryVariant.strikePrice);
-    const base = Number(primaryVariant.basePrice);
-    const diff = strike - base;
-    if (diff <= 0) return 0;
-    return Math.round((diff / strike) * 100);
+    return savingPercentage({
+      price: moneyFromDecimal(String(primaryVariant.basePrice)),
+      compareAtPrice: moneyFromDecimal(String(primaryVariant.strikePrice)),
+    });
   }, [primaryVariant]);
 
-  const currentPrice = primaryVariant?.basePrice || 0;
-  const originalPrice = primaryVariant?.strikePrice;
+  const currentPrice = String(primaryVariant?.basePrice || '0');
+  const originalPrice = primaryVariant?.strikePrice ? String(primaryVariant.strikePrice) : null;
   const [imageLoaded, setImageLoaded] = useState(false);
   const isWishlisted = Boolean(currentUser?.wishlist.includes(product.id));
 
@@ -235,11 +226,11 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
       <div className="mt-3 flex items-end gap-2">
         <span className="text-base font-bold text-foreground">
-          {egpFormatter.format(Number(currentPrice))}
+          {`EGP ${formatEgpDecimal(currentPrice)}`}
         </span>
-        {originalPrice && Number(originalPrice) > Number(currentPrice) ? (
+        {originalPrice && moneyFromDecimal(originalPrice) > moneyFromDecimal(currentPrice) ? (
           <span className="text-xs text-muted-foreground line-through">
-            {egpFormatter.format(Number(originalPrice))}
+            {`EGP ${formatEgpDecimal(originalPrice)}`}
           </span>
         ) : null}
       </div>

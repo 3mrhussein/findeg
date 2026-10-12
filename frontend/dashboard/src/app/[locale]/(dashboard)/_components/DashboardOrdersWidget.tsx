@@ -1,6 +1,6 @@
 import type { Order, OrderStats } from '@findeg/orders';
-import { ORDER_STATUSES as ORDER_STATUS_OPTIONS, type OrderStatus } from '@findeg/domain/orders';
-import { piastersToEgp } from '@findeg/money';
+import { ORDER_STATUSES as ORDER_STATUS_OPTIONS, type OrderStatus } from '@findeg/domain';
+import { formatEgp } from '@findeg/ui';
 import {
   Card,
   CardHeader,
@@ -51,7 +51,7 @@ export function DashboardOrdersWidget({
               className="text-2xl font-semibold tabular-nums"
               data-testid="dashboard-orders-revenue"
             >
-              {stats.currency} {piastersToEgp(stats.totalRevenue)}
+              {stats.currency} {formatEgp(stats.totalRevenue)}
             </p>
           </CardContent>
         </Card>
@@ -117,7 +117,7 @@ export function DashboardOrdersWidget({
                       </a>
                     </TableCell>
                     <TableCell>
-                      {stats.currency} {piastersToEgp(order.totalAmount)}
+                      {stats.currency} {formatEgp(order.totalAmount)}
                     </TableCell>
                     <TableCell>{labels.statuses[order.status]}</TableCell>
                   </TableRow>

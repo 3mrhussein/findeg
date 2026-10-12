@@ -1,6 +1,6 @@
 'use client';
 
-import { piastersToEgp } from '@findeg/money';
+import { formatEgp } from '@findeg/ui';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Button } from '@findeg/ui';
@@ -142,7 +142,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   </TableCell>
                   <TableCell>{order.customerName}</TableCell>
                   <TableCell>
-                    {order.currency} {piastersToEgp(order.totalAmount)}
+                    {order.currency} {formatEgp(order.totalAmount)}
                   </TableCell>
                   <TableCell>
                     <Select

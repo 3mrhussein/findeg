@@ -7,7 +7,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: process.env.VERIFY_CLIENT_BUNDLE === '1',
   // Turbopack bundles TypeScript workspace packages automatically; pure Money/UI are client-safe.
-  transpilePackages: ['@findeg/ui', '@findeg/money'],
+  transpilePackages: ['@findeg/ui'],
   // Orders stays bundled: its public exports are TypeScript source and its UI entry is pure.
   // External packages use native server require; this setting does not enforce client safety.
   serverExternalPackages: [
