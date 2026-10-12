@@ -1,6 +1,8 @@
 # IMPORTANT
 
-Before any other action in the codebase, check `git branch --show-current`. Unless it is `develop` or `main`, the branch must be `<type>/<kebab-case-slug>` with type one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`; if it is not, rename it now with `git branch -m <type>/<slug>`.
+Before any other action in the codebase:
+1. **Branch naming**: Check `git branch --show-current`. Unless it is `develop` or `main`, the branch must be `<type>/<kebab-case-slug>` with type one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`; if it is not, rename it now with `git branch -m <type>/<slug>`.
+2. **Sync with develop**: Before starting implementation on any task branch, ensure your branch is up to date with latest `develop`. Run `git fetch origin develop && git merge origin/develop` (or create new branches directly from fresh `origin/develop`) so work builds on current code and avoids preventable conflicts.
 
 ## Agent skills
 
@@ -8,7 +10,7 @@ Before any other action in the codebase, check `git branch --show-current`. Unle
 
 - **Verify before working**: Always run `git worktree list`. Never assume an unlisted path under `.claude/worktrees/` or `worktree/` is an active worktree; directories containing only `.vscode/` or editor configs are orphaned leftovers from past worktrees.
 - **Clean teardown**: When deleting a worktree, remove both the git worktree tracking and any lingering untracked directory (`git worktree remove <path> && rm -rf <path>`).
-- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees.
+- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees, starting new branches from up-to-date `origin/develop`.
 
 ### Issue tracker
 
