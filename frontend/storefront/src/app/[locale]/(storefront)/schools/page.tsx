@@ -1,15 +1,18 @@
-import { SchoolCard } from '@app/[locale]/(storefront)/school/_components/SchoolCard';
+import { SchoolCard } from './_components/SchoolCard';
 import { searchSchools, getSchoolFilterOptions } from '@/data/school/queries';
 import type { SchoolSearchParams } from '@findeg/backend/features/school';
+import type { Locale } from '@findeg/domain';
 import { Badge } from '@findeg/ui';
 import { Card, CardContent } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import { Search, SlidersHorizontal, PlusCircle } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Link } from '@i18n/navigation';
 import { Suspense } from 'react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 interface PageProps {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     q?: string;
     gov?: string;
@@ -24,7 +27,7 @@ interface PageProps {
  * /schools
  *
  * The main school directory page.
- * Features search, filters, and a grid of schools.
+ * Features search, filters (governorate, school type, academic system), and a grid of schools.
  */
 export default function SchoolsPage(props: PageProps) {
   return (
@@ -41,6 +44,13 @@ export default function SchoolsPage(props: PageProps) {
 }
 
 async function SchoolsContent(props: PageProps) {
+  const { locale } = await props.params;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations({
+    locale: locale as Locale,
+    namespace: 'Pages.Schools.Directory',
+  });
+
   const searchParams = await props.searchParams;
   const searchParams_Parsed: SchoolSearchParams = {
     query: searchParams.q,
@@ -73,36 +83,23 @@ async function SchoolsContent(props: PageProps) {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-black tracking-tight text-primary">
-            🏫 Find Your School
+            🏫 {t('Title')}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl">
-            Browse through hundreds of schools and find the exact supply list your child needs for
-            the academic year.
-          </p>
+          <p className="text-xl text-muted-foreground max-w-2xl">{t('Subtitle')}</p>
         </div>
-        <Button
-          asChild
-          variant="outline"
-          className="gap-2 border-dashed border-2 hover:border-primary hover:bg-primary/5"
-        >
-          <Link href="/schools/suggest">
-            <PlusCircle className="w-4 h-4" />
-            Can&apos;t find your school?
-          </Link>
-        </Button>
       </div>
 
       {/* Search & Filter Bar */}
       <Card className="border-2 shadow-md">
         <CardContent className="p-6">
           <form className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <div className="md:col-span-12 lg:col-span-5 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <div className="md:col-span-12 lg:col-span-3 relative">
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 name="q"
                 defaultValue={searchParams.q}
-                placeholder="Search by school name..."
-                className="pl-10 h-12 text-lg shadow-sm"
+                placeholder={t('Search')}
+                className="ps-10 h-12 text-lg shadow-sm"
               />
             </div>
 
@@ -112,7 +109,7 @@ async function SchoolsContent(props: PageProps) {
                 defaultValue={searchParams.gov}
                 className="w-full h-12 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               >
-                <option value="">All Governorates</option>
+                <option value="">{t('AllGovernorates')}</option>
                 {filterOptions.governorates.map((g) => (
                   <option key={g} value={g}>
                     {g}
@@ -127,22 +124,37 @@ async function SchoolsContent(props: PageProps) {
                 defaultValue={searchParams.type}
                 className="w-full h-12 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               >
-                <option value="">All Types</option>
-                {filterOptions.schoolTypes.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
+                <option value="">{t('AllTypes')}</option>
+                {filterOptions.schoolTypes.map((tItem) => (
+                  <option key={tItem} value={tItem}>
+                    {tItem}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="md:col-span-4 lg:col-span-3">
+            <div className="md:col-span-4 lg:col-span-2">
+              <select
+                name="sys"
+                defaultValue={searchParams.sys}
+                className="w-full h-12 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              >
+                <option value="">{t('AllSystems')}</option>
+                {filterOptions.academicSystems.map((sItem) => (
+                  <option key={sItem} value={sItem}>
+                    {sItem}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="md:col-span-12 lg:col-span-3">
               <Button
                 type="submit"
                 size="lg"
                 className="w-full h-12 text-lg font-bold gap-2 shadow-sm"
               >
-                Search Now
+                {t('SearchButton')}
               </Button>
             </div>
           </form>
@@ -153,15 +165,11 @@ async function SchoolsContent(props: PageProps) {
       <div className="space-y-8">
         <div className="flex items-center justify-between border-b pb-4">
           <h2 className="text-2xl font-bold flex items-center gap-3">
-            Search Results
+            {t('Results')}
             <Badge variant="secondary" className="text-sm rounded-full px-3">
-              {totalCount} schools found
+              {t('SchoolsFound', { count: totalCount })}
             </Badge>
           </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <SlidersHorizontal className="w-4 h-4" />
-            Sort by: <span className="font-semibold text-foreground">A-Z</span>
-          </div>
         </div>
 
         {items.length > 0 ? (
@@ -176,14 +184,13 @@ async function SchoolsContent(props: PageProps) {
               <Search className="w-10 h-10 text-muted-foreground/40" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-2xl font-bold">No schools found</h3>
+              <h3 className="text-2xl font-bold">{t('Results')}</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                We couldn&apos;t find any schools matching your search criteria. Try adjusting your
-                filters or search for another name.
+                {t('SchoolsFound', { count: 0 })}
               </p>
             </div>
             <Button asChild variant="outline" className="mt-4">
-              <Link href="/schools">Clear all filters</Link>
+              <Link href="/schools">Clear</Link>
             </Button>
           </div>
         )}
@@ -200,7 +207,7 @@ async function SchoolsContent(props: PageProps) {
               </Button>
             )}
             <span className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              {page} / {totalPages}
             </span>
             {page < totalPages ? (
               <Button asChild variant="outline">

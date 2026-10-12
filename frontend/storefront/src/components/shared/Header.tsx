@@ -58,7 +58,7 @@ export async function Header({ locale }: HeaderProps) {
             {t('Collections') || 'Collections'}
           </Link>
           <Link
-            href="/school-lists"
+            href="/schools"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
             {t('SchoolLists') || 'For Schools'}
@@ -75,7 +75,7 @@ export async function Header({ locale }: HeaderProps) {
           <SearchOverlay />
 
           <Link
-            href="/dashboard"
+            href="/my-account"
             className="hidden sm:flex size-10 items-center justify-center rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             <span className="material-symbols-outlined text-[20px]">person</span>

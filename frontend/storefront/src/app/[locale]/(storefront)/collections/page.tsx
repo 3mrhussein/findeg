@@ -153,7 +153,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
           </div>
           <div className="flex gap-3 shrink-0">
             <Button asChild size="lg" className="rounded-full px-8 font-bold shadow-lg">
-              <Link href="/school-lists">{tNav('School.TryFree')}</Link>
+              <Link href="/schools">{tNav('School.TryFree')}</Link>
             </Button>
             <Button
               asChild
@@ -161,7 +161,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
               size="lg"
               className="rounded-full px-8 font-bold border-slate-600 text-white hover:bg-slate-700"
             >
-              <Link href="/school-lists">{tNav('School.LearnMore')}</Link>
+              <Link href="/schools">{tNav('School.LearnMore')}</Link>
             </Button>
           </div>
         </div>

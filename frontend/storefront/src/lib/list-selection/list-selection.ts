@@ -1,4 +1,22 @@
 import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
+import {
+  seedListSelection,
+  reconcileListSelection,
+  setSelectionQuantity,
+  setSelectionItemEnabled,
+  chooseSelectionVariant,
+  orderedSelectionLines,
+  isDefaultListSelection,
+  listCompleteness as domainListCompleteness,
+  checkoutBlockingItemIds as domainCheckoutBlockingItemIds,
+  type SelectableList,
+  type SelectionLine as DomainSelectionLine,
+  type ListSelection as DomainListSelection,
+  type SupplyListItemId,
+  type VariantId,
+  type SupplyListId,
+  type CategoryId,
+} from '@findeg/domain';
 
 /**
  * A Customer's List Selection: held in the browser per `publicCode`, never
@@ -29,30 +47,41 @@ export const MAX_QUANTITY = 999;
 const KEY_PREFIX = 'findeg:list-selection:';
 export const selectionIndexKey = 'findeg:list-selection-index';
 
-const clampQuantity = (quantity: number) => {
-  const whole = Number.isFinite(quantity) ? Math.trunc(quantity) : MIN_QUANTITY;
-  return Math.min(MAX_QUANTITY, Math.max(MIN_QUANTITY, whole));
-};
-
-/** Enabled lines are clamped to 1–999; a required line can never be 0, an optional one may be off. */
-const normalizeQuantity = (quantity: number, required: boolean) =>
-  quantity === 0 && !required ? 0 : clampQuantity(quantity);
-
-/** The server's eligibility result is the only authority; a default that dropped out of it is not eligible. */
-const isEligibleChoice = (item: PublicSupplyListItem, variantId: number) =>
-  item.eligibleVariants.some((variant) => variant.variantId === variantId);
-
 export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`;
 
-export function seedSelection(list: PublicSupplyList): ListSelection {
+function toSelectableList(list: PublicSupplyList): SelectableList {
   return {
-    v: 1,
-    lines: list.items.map((item) => ({
-      listItemId: item.id,
-      variantId: item.defaultVariant.variantId,
-      quantity: item.required ? item.quantity : 0,
+    id: ((list as unknown as { id?: number }).id ?? 1) as unknown as SupplyListId,
+    items: list.items.map((item) => ({
+      id: item.id as unknown as SupplyListItemId,
+      required: item.required,
+      quantity: item.quantity,
+      defaultVariantId: item.defaultVariant.variantId as unknown as VariantId,
+      specification: item.exactItem
+        ? null
+        : {
+            categoryId: (item.specification?.categoryId ?? 0) as unknown as CategoryId,
+            attributes: item.specification?.attributes ?? {},
+          },
+      eligibleVariantIds: item.eligibleVariants.map((v) => v.variantId as unknown as VariantId),
     })),
   };
+}
+
+function toDomainLines(lines: readonly SelectionLine[]): DomainSelectionLine[] {
+  return lines.map((line) => ({
+    supplyListItemId: line.listItemId as unknown as SupplyListItemId,
+    variantId: line.variantId as unknown as VariantId,
+    quantity: line.quantity,
+  }));
+}
+
+function fromDomainLines(lines: readonly DomainSelectionLine[]): SelectionLine[] {
+  return lines.map((line) => ({
+    listItemId: line.supplyListItemId as number,
+    variantId: line.variantId as number,
+    quantity: line.quantity,
+  }));
 }
 
 const isLine = (value: unknown): value is SelectionLine => {
@@ -79,11 +108,17 @@ function parseSelection(raw: string | null): ListSelection | null {
   }
 }
 
+export function seedSelection(list: PublicSupplyList): ListSelection {
+  const seeded = seedListSelection(toSelectableList(list));
+  return {
+    v: 1,
+    lines: fromDomainLines(seeded.lines),
+  };
+}
+
 /**
  * Reads the stored selection (reseeding when it is missing, unreadable or the
- * wrong version) and reconciles it against the list just read: lines for
- * unknown items are dropped, items without a line are seeded, and a line whose
- * variant is no longer eligible is kept but reported in `flaggedItemIds`.
+ * wrong version) and reconciles it against the list just read via domain reconcileListSelection.
  */
 export function loadSelection(
   list: PublicSupplyList,
@@ -95,26 +130,18 @@ export function loadSelection(
   } catch {
     stored = null;
   }
-  if (!stored) return { selection: seedSelection(list), flaggedItemIds: [] };
 
-  const seeded = seedSelection(list);
-  const storedByItem = new Map(stored.lines.map((line) => [line.listItemId, line]));
-  const flaggedItemIds: number[] = [];
+  const selectable = toSelectableList(list);
+  const earlier = stored ? toDomainLines(stored.lines) : null;
+  const { selection, staleItemIds } = reconcileListSelection(selectable, earlier);
 
-  const lines = list.items.map((item, index) => {
-    const stored = storedByItem.get(item.id);
-    if (!stored) return seeded.lines[index];
-    // Exact Items have no Change control, so a stale variant is reset to the default.
-    const line: SelectionLine = {
-      ...stored,
-      variantId: item.exactItem ? item.defaultVariant.variantId : stored.variantId,
-      quantity: normalizeQuantity(stored.quantity, item.required),
-    };
-    if (!isEligibleChoice(item, line.variantId)) flaggedItemIds.push(item.id);
-    return line;
-  });
-
-  return { selection: { v: 1, lines }, flaggedItemIds };
+  return {
+    selection: {
+      v: 1,
+      lines: fromDomainLines(selection.lines),
+    },
+    flaggedItemIds: staleItemIds as number[],
+  };
 }
 
 export function saveSelection(
@@ -145,25 +172,25 @@ export function resetSelection(publicCode: string, storage: SelectionStorage): v
   }
 }
 
-const mapLine = (
-  selection: ListSelection,
-  listItemId: number,
-  update: (line: SelectionLine) => SelectionLine,
-): ListSelection => ({
-  v: 1,
-  lines: selection.lines.map((line) => (line.listItemId === listItemId ? update(line) : line)),
-});
-
 /** Clamps to 1–999 on an enabled line; a switched-off line stays at 0. */
 export function setQuantity(
   selection: ListSelection,
   listItemId: number,
   quantity: number,
 ): ListSelection {
-  return mapLine(selection, listItemId, (line) => {
-    if (line.quantity === 0) return line;
-    return { ...line, quantity: clampQuantity(quantity) };
-  });
+  const domainSelection: DomainListSelection = {
+    supplyListId: 1 as unknown as SupplyListId,
+    lines: toDomainLines(selection.lines),
+  };
+  const updated = setSelectionQuantity(
+    domainSelection,
+    listItemId as unknown as SupplyListItemId,
+    quantity,
+  );
+  return {
+    v: 1,
+    lines: fromDomainLines(updated.lines),
+  };
 }
 
 /** Turns an optional item on at its prescribed quantity, or off. Required items cannot be turned off. */
@@ -173,12 +200,21 @@ export function setEnabled(
   listItemId: number,
   enabled: boolean,
 ): ListSelection {
-  const item = list.items.find((candidate) => candidate.id === listItemId);
-  if (!item || item.required) return selection;
-  return mapLine(selection, listItemId, (line) => ({
-    ...line,
-    quantity: enabled ? clampQuantity(item.quantity) : 0,
-  }));
+  const selectable = toSelectableList(list);
+  const domainSelection: DomainListSelection = {
+    supplyListId: selectable.id,
+    lines: toDomainLines(selection.lines),
+  };
+  const updated = setSelectionItemEnabled(
+    domainSelection,
+    selectable,
+    listItemId as unknown as SupplyListItemId,
+    enabled,
+  );
+  return {
+    v: 1,
+    lines: fromDomainLines(updated.lines),
+  };
 }
 
 export function chooseVariant(
@@ -186,12 +222,41 @@ export function chooseVariant(
   listItemId: number,
   variantId: number,
 ): ListSelection {
-  return mapLine(selection, listItemId, (line) => ({ ...line, variantId }));
+  const domainSelection: DomainListSelection = {
+    supplyListId: 1 as unknown as SupplyListId,
+    lines: toDomainLines(selection.lines),
+  };
+  const updated = chooseSelectionVariant(
+    domainSelection,
+    listItemId as unknown as SupplyListItemId,
+    variantId as unknown as VariantId,
+  );
+  return {
+    v: 1,
+    lines: fromDomainLines(updated.lines),
+  };
 }
 
 /** The lines that would be posted: switched-off (quantity 0) lines are stripped. */
 export function linesForPost(selection: ListSelection): SelectionLine[] {
-  return selection.lines.filter((line) => line.quantity > 0);
+  const domainSelection: DomainListSelection = {
+    supplyListId: 1 as unknown as SupplyListId,
+    lines: toDomainLines(selection.lines),
+  };
+  return fromDomainLines(orderedSelectionLines(domainSelection));
+}
+
+/** The stale choices that block checkout. */
+export function checkoutBlockingItemIds(
+  list: PublicSupplyList,
+  selection: ListSelection,
+): number[] {
+  const selectable = toSelectableList(list);
+  const domainSelection: DomainListSelection = {
+    supplyListId: selectable.id,
+    lines: toDomainLines(selection.lines),
+  };
+  return domainCheckoutBlockingItemIds(selectable, domainSelection) as number[];
 }
 
 /** What the Cart drawer needs to link to an in-progress list without a network call. */
@@ -235,18 +300,12 @@ export function readSelectionIndex(storage: SelectionStorage): SelectionIndexEnt
 
 /** True when every line is exactly what seeding would produce. */
 export function isDefaultSelection(selection: ListSelection, list: PublicSupplyList): boolean {
-  const seeded = seedSelection(list);
-  return (
-    selection.lines.length === seeded.lines.length &&
-    seeded.lines.every((line, index) => {
-      const current = selection.lines[index];
-      return (
-        current.listItemId === line.listItemId &&
-        current.variantId === line.variantId &&
-        current.quantity === line.quantity
-      );
-    })
-  );
+  const selectable = toSelectableList(list);
+  const domainSelection: DomainListSelection = {
+    supplyListId: selectable.id,
+    lines: toDomainLines(selection.lines),
+  };
+  return isDefaultListSelection(domainSelection, selectable);
 }
 
 /**
@@ -284,20 +343,22 @@ export interface ListCompleteness {
 }
 
 /**
- * Advisory List Completeness (ADR-0011): a required item is complete when its
- * chosen variant is eligible and its quantity reaches the prescription. Optional
- * items never count. Computed on the client only and never stored.
+ * Advisory List Completeness (ADR-0011): delegates to domain listCompleteness.
  */
 export function listCompleteness(
   list: PublicSupplyList,
   selection: ListSelection,
 ): ListCompleteness {
-  const lineByItem = new Map(selection.lines.map((line) => [line.listItemId, line]));
-  const required = list.items.filter((item) => item.required);
-  const missing = required.filter((item) => {
-    const line = lineByItem.get(item.id);
-    if (!line || line.quantity < item.quantity) return true;
-    return !isEligibleChoice(item, line.variantId);
-  });
-  return { total: required.length, completed: required.length - missing.length, missing };
+  const selectable = toSelectableList(list);
+  const domainSelection: DomainListSelection = {
+    supplyListId: selectable.id,
+    lines: toDomainLines(selection.lines),
+  };
+  const result = domainListCompleteness(selectable, domainSelection);
+  const itemById = new Map(list.items.map((i) => [i.id, i]));
+  return {
+    total: result.total,
+    completed: result.completed,
+    missing: result.missing.map((m) => itemById.get(m.id as number)!).filter(Boolean),
+  };
 }

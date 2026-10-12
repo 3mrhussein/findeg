@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
 import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
 import { getPartnerMembers } from '@data/partner/queries';
@@ -14,18 +15,21 @@ export default async function PartnerMembersPage({
 }: {
   params: Promise<{ locale: string; code: string }>;
 }) {
-  const { code } = await params;
+  const { locale, code } = await params;
+  const tWorkspace = await getTranslations({ locale, namespace: 'PartnerWorkspace' });
   return (
-    <PartnerSuspense label="Loading members…">
-      <Members code={code} />
+    <PartnerSuspense label={tWorkspace('Loading')}>
+      <Members locale={locale} code={code} />
     </PartnerSuspense>
   );
 }
 
-async function Members({ code }: { code: string }) {
+async function Members({ locale, code }: { locale: string; code: string }) {
   const access = await requireWorkspaceAccess(code, [PARTNER_ADMINISTRATOR], 'read');
   if (!access.allowed) return access.notice;
   const { partner, membership } = access.context;
+  const tWorkspace = await getTranslations({ locale, namespace: 'PartnerWorkspace' });
+  const tReports = await getTranslations({ locale, namespace: 'PartnerReports' });
 
   const rawMembers = await getPartnerMembers(
     { kind: 'partner', userId: membership.userId },
@@ -49,10 +53,13 @@ async function Members({ code }: { code: string }) {
   );
 
   return (
-    <PartnerNotice title="Members" description={partner.nameEn}>
+    <PartnerNotice
+      title={tWorkspace('MembersTitle')}
+      description={locale === 'ar' ? partner.nameAr : partner.nameEn}
+    >
       <div className="space-y-4">
         <Link href={`/partner/${code}`} className="text-sm hover:text-primary">
-          ← Back to workspace
+          {tReports('back')}
         </Link>
         <MembersList code={code} canChange={canChangeMembers(access.context)} members={members} />
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@findeg/ui';
 import type {
   PartnerMember,
@@ -9,7 +10,7 @@ import type {
   UpdateMembershipInput,
 } from '@findeg/backend/features/partner-membership';
 import type { ActionState } from '../_lib/action-state';
-import { PARTNER_ROLES, ROLE_LABELS } from '../_lib/roles';
+import { PARTNER_ROLES } from '../_lib/roles';
 import { updateMemberAction } from './actions';
 
 export interface MemberRow {
@@ -32,6 +33,7 @@ function MemberItem({
   canChange: boolean;
 }) {
   const router = useRouter();
+  const t = useTranslations('PartnerWorkspace');
   const [roles, setRoles] = useState<PartnerRole[]>(member.roles);
   // After a refresh delivers a newer version, drop the local edits so the checkboxes show the
   // saved roles. The error message stays, so the user still sees why the save failed.
@@ -63,14 +65,14 @@ function MemberItem({
         <div>
           <div className="font-medium text-foreground">
             {member.name || member.email}
-            {member.isSelf ? ' (you)' : ''}
+            {member.isSelf ? t('You') : ''}
           </div>
           <div dir="ltr" className="text-sm">
             {member.email}
           </div>
         </div>
         <span className="text-sm" data-testid="member-status">
-          {member.status === 'active' ? 'Active' : 'Suspended'}
+          {member.status === 'active' ? t('StatusActive') : t('StatusSuspended')}
         </span>
       </div>
 
@@ -85,13 +87,13 @@ function MemberItem({
                   checked={roles.includes(role)}
                   onChange={() => toggle(role)}
                 />
-                {ROLE_LABELS[role]}
+                {t(`Roles.${role}`)}
               </label>
             ))}
           </fieldset>
           <div className="flex flex-wrap gap-2">
             <Button type="button" disabled={busy || !rolesChanged} onClick={() => save({ roles })}>
-              Save roles
+              {t('SaveRoles')}
             </Button>
             <Button
               type="button"
@@ -99,24 +101,24 @@ function MemberItem({
               disabled={busy}
               onClick={() => save({ status: member.status === 'active' ? 'suspended' : 'active' })}
             >
-              {member.status === 'active' ? 'Suspend' : 'Reactivate'}
+              {member.status === 'active' ? t('Suspend') : t('Reactivate')}
             </Button>
             <Button
               type="button"
               variant="outline"
               disabled={busy}
               onClick={() => {
-                if (confirm(`Remove ${member.email} from this Business Partner?`)) {
+                if (confirm(t('RemoveConfirm', { email: member.email }))) {
                   save({ status: 'ended' });
                 }
               }}
             >
-              Remove
+              {t('Remove')}
             </Button>
           </div>
         </>
       ) : (
-        <p className="text-sm">{member.roles.map((role) => ROLE_LABELS[role]).join(', ')}</p>
+        <p className="text-sm">{member.roles.map((role) => t(`Roles.${role}`)).join(', ')}</p>
       )}
 
       {state.status === 'error' && (
@@ -139,13 +141,10 @@ export function MembersList({
   canChange: boolean;
   members: MemberRow[];
 }) {
+  const t = useTranslations('PartnerWorkspace');
   return (
     <div className="space-y-4">
-      {!canChange && (
-        <p className="text-sm">
-          Members can only change while the Business Partner is onboarding or active.
-        </p>
-      )}
+      {!canChange && <p className="text-sm">{t('MembersHint')}</p>}
       <ul className="divide-y" data-testid="members">
         {members.map((member) => (
           <MemberItem key={member.id} code={code} member={member} canChange={canChange} />

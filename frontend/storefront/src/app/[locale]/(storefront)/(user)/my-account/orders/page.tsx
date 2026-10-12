@@ -24,7 +24,7 @@ export default async function OrdersPage({ params }: Props) {
     <div className="space-y-6">
       <div className="space-y-1">
         <h1 className="text-3xl font-bold">{t('Pages.MyAccount.Orders')}</h1>
-        <p className="text-muted-foreground">View and track all your past orders.</p>
+        <p className="text-muted-foreground">{t('Pages.MyAccount.OrdersSubtitle')}</p>
       </div>
 
       <Card>
@@ -43,9 +43,11 @@ export default async function OrdersPage({ params }: Props) {
                   className="block rounded-lg border p-4 hover:bg-muted/40 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-primary">#{order.id}</span>
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary uppercase">
-                      {order.status}
+                    <span className="font-bold text-primary">
+                      {order.orderReference} (#{order.id})
+                    </span>
+                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                      {t(`Pages.MyAccount.Statuses.${order.status}`)}
                     </span>
                   </div>
                   <div className="space-y-1 text-sm text-muted-foreground">

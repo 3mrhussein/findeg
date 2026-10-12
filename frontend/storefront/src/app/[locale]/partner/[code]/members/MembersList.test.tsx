@@ -7,6 +7,23 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
 vi.mock('./actions', () => ({
   updateMemberAction: (...args: unknown[]) => updateMemberAction(...args),
 }));
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const map: Record<string, string> = {
+      'Roles.report-viewer': 'Report viewer',
+      'Roles.collection-staff': 'Collection staff',
+      'Roles.list-manager': 'List manager',
+      'Roles.partner-administrator': 'Partner administrator',
+      SaveRoles: 'Save roles',
+      Suspend: 'Suspend',
+      Reactivate: 'Reactivate',
+      Remove: 'Remove',
+      StatusActive: 'Active',
+      StatusSuspended: 'Suspended',
+    };
+    return map[key] ?? key;
+  },
+}));
 vi.mock('@findeg/ui', () => ({
   Button: ({ children, ...props }: React.ComponentProps<'button'>) => (
     <button {...props}>{children}</button>

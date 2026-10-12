@@ -25,9 +25,6 @@ function UserIconNav() {
   );
 }
 
-/**
- *
- */
 export function SchoolListLayout({ children }: SchoolListLayoutProps) {
   const t = useTranslations('School.SupplyList.Layout');
 

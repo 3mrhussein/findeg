@@ -32,7 +32,7 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-bold" data-testid="my-account-order-detail-heading">
-          {t('Pages.MyAccount.OrderId')}: #{order.id}
+          {t('Pages.MyAccount.OrderReference')}: {order.orderReference} (#{order.id})
         </h1>
         <Button asChild variant="outline">
           <Link href="/my-account">{t('Pages.MyAccount.Title')}</Link>
@@ -44,13 +44,55 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           <CardTitle>{t('Pages.MyAccount.OrderStatus')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p>{order.status}</p>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{t('Pages.MyAccount.OrderStatus')}:</span>
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+              {t(`Pages.MyAccount.Statuses.${order.status}`)}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{t('Pages.MyAccount.PaymentStatus')}:</span>
+            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium">
+              {t(`Pages.MyAccount.PaymentStatuses.${order.paymentStatus}`)}
+            </span>
+          </div>
           <p className="text-sm text-muted-foreground">
             {t('Pages.MyAccount.OrderDate')}:{' '}
-            {order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}
+            {order.createdAt ? new Date(order.createdAt).toLocaleString(locale) : '-'}
           </p>
         </CardContent>
       </Card>
+
+      {order.shippingAddressSnapshot && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('Pages.MyAccount.ShippingAddress')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1 text-sm">
+            {order.shippingAddressSnapshot.fullName && (
+              <p className="font-medium">{order.shippingAddressSnapshot.fullName}</p>
+            )}
+            <p className="text-muted-foreground">
+              {[
+                order.shippingAddressSnapshot.street,
+                order.shippingAddressSnapshot.building,
+                order.shippingAddressSnapshot.apartment,
+                order.shippingAddressSnapshot.floor,
+              ]
+                .filter(Boolean)
+                .join(', ')}
+            </p>
+            <p className="text-muted-foreground">
+              {[order.shippingAddressSnapshot.area, order.shippingAddressSnapshot.city]
+                .filter(Boolean)
+                .join(', ')}
+            </p>
+            {order.shippingAddressSnapshot.phone && (
+              <p className="text-muted-foreground">{order.shippingAddressSnapshot.phone}</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

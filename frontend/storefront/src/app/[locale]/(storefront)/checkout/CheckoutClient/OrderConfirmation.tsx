@@ -2,7 +2,7 @@
 
 import { Button } from '@findeg/ui';
 import { CheckCircle2 } from 'lucide-react';
-import { useRouter } from '@i18n/navigation';
+import { Link, useRouter } from '@i18n/navigation';
 import type { PlaceOrderResult } from './CheckoutClient.interface';
 
 interface OrderConfirmationProps {
@@ -10,6 +10,7 @@ interface OrderConfirmationProps {
   continueLabel: string;
   confirmTitle: string;
   orderReferenceLabel?: string;
+  trackOrderLabel?: string;
 }
 
 /**
@@ -20,6 +21,7 @@ export function OrderConfirmation({
   continueLabel,
   confirmTitle,
   orderReferenceLabel = 'Order Reference:',
+  trackOrderLabel,
 }: OrderConfirmationProps) {
   const router = useRouter();
 
@@ -44,9 +46,17 @@ export function OrderConfirmation({
           <span className="text-slate-500 font-sans text-sm">Order ID:</span> #{result.orderId}
         </div>
       ) : null}
-      <div>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        {result.orderReference && (
+          <Button asChild size="lg" className="rounded-full px-8 h-12 text-base shadow-sm">
+            <Link href={`/order-lookup?ref=${encodeURIComponent(result.orderReference)}`}>
+              {trackOrderLabel || 'Track Order'}
+            </Link>
+          </Button>
+        )}
         <Button
           onClick={() => router.push('/shop')}
+          variant="outline"
           size="lg"
           className="rounded-full px-8 h-12 text-base shadow-sm"
         >

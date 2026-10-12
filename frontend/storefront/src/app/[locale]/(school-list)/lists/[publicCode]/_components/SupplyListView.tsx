@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { compareMoney, moneyFromDecimal, subtractMoney } from '@findeg/domain';
+import { compareMoney, moneyFromDecimal, subtractMoney, priceListOfferLine } from '@findeg/domain';
 import { formatEgp } from '@findeg/ui';
 import type {
   PublicSupplyList,
@@ -113,6 +113,17 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
         </div>
       )}
 
+      {list.offer && list.offer.basisPoints > 0 && (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-emerald-800"
+        >
+          <p className="font-semibold">
+            {t('ListOfferBanner', { percent: list.offer.basisPoints / 100 })}
+          </p>
+        </div>
+      )}
+
       <header className="space-y-1">
         <h1 className="text-3xl font-black">{pick(list.title, locale)}</h1>
         <p className="text-muted-foreground">
@@ -175,7 +186,25 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
               <p>{variant ? variantName(variant) : t('VariantUnknown')}</p>
               {variant && (
                 <p className="text-sm text-muted-foreground">
-                  {variant.price}
+                  {list.offer && list.offer.basisPoints > 0 ? (
+                    <>
+                      <span className="line-through me-1.5">{variant.price}</span>
+                      <span className="font-semibold text-primary">
+                        {formatEgp(
+                          priceListOfferLine(
+                            moneyFromDecimal(variant.price),
+                            1,
+                            list.offer.basisPoints,
+                          ).lineTotal,
+                        )}
+                      </span>
+                      <span className="ms-1.5 text-xs font-semibold text-emerald-600">
+                        ({t('LineDiscount', { percent: list.offer.basisPoints / 100 })})
+                      </span>
+                    </>
+                  ) : (
+                    variant.price
+                  )}
                   {variant.variantId !== item.defaultVariant.variantId &&
                     ` (${priceDifference(variant.price, item.defaultVariant.price)})`}
                 </p>

@@ -15,37 +15,45 @@ export default async function PartnerWorkspacePage({
 }: {
   params: Promise<{ locale: string; code: string }>;
 }) {
-  const { code } = await params;
+  const { locale, code } = await params;
+  const tWorkspace = await getTranslations({ locale, namespace: 'PartnerWorkspace' });
   return (
-    <PartnerSuspense label="Loading workspace…">
-      <PartnerWorkspace code={code} />
+    <PartnerSuspense label={tWorkspace('Loading')}>
+      <PartnerWorkspace locale={locale} code={code} />
     </PartnerSuspense>
   );
 }
 
-async function PartnerWorkspace({ code }: { code: string }) {
+async function PartnerWorkspace({ locale, code }: { locale: string; code: string }) {
   // A closed Business Partner only exposes Reports; the workspace home is not one of them.
   const access = await requireWorkspaceAccess(code, 'any', 'read');
   if (!access.allowed) return access.notice;
 
   const { partner, membership } = access.context;
-  const t = await getTranslations('PartnerReports');
+  const t = await getTranslations({ locale, namespace: 'PartnerReports' });
+  const tWorkspace = await getTranslations({ locale, namespace: 'PartnerWorkspace' });
+  const isAr = locale === 'ar';
   return (
-    <PartnerNotice title={partner.nameEn} description={partner.nameAr}>
-      <h2 className="font-semibold text-foreground">Your Partner Roles</h2>
+    <PartnerNotice
+      title={isAr ? partner.nameAr : partner.nameEn}
+      description={isAr ? partner.nameEn : partner.nameAr}
+    >
+      <h2 className="font-semibold text-foreground">{tWorkspace('YourRoles')}</h2>
       <ul className="mt-3 list-inside list-disc">
         {membership.roles.map((role) => (
-          <li key={role}>{role}</li>
+          <li key={role}>
+            {tWorkspace(`Roles.${role}`)} ({role})
+          </li>
         ))}
       </ul>
       <div className="mt-6 flex flex-wrap items-start gap-3">
         {membership.roles.includes(PARTNER_ADMINISTRATOR) && (
           <>
             <Button asChild variant="outline">
-              <Link href={`/partner/${code}/members`}>Members</Link>
+              <Link href={`/partner/${code}/members`}>{tWorkspace('Members')}</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href={`/partner/${code}/invitations`}>Invitations</Link>
+              <Link href={`/partner/${code}/invitations`}>{tWorkspace('Invitations')}</Link>
             </Button>
           </>
         )}

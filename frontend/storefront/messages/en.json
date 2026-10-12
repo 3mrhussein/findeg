@@ -60,7 +60,10 @@
       "LearnMore": "Learn more"
     },
     "Schools": "Schools",
-    "TrackOrder": "Track Order"
+    "TrackOrder": "Track Order",
+    "PartnerWorkspace": "Partner Workspace",
+    "Language": "Language",
+    "Theme": "Theme"
   },
   "Layout": {
     "Header": {
@@ -371,6 +374,7 @@
       "OrderId": "Order ID: #{id}",
       "OrderReference": "Order Reference:",
       "ContinueShopping": "Continue Shopping",
+      "TrackOrder": "Track Order",
       "ShippingInformation": "1. Shipping Information",
       "FullName": "Full Name",
       "PlaceholderFullName": "John Doe",
@@ -393,7 +397,9 @@
       "PlaceholderNotes": "Landmark or additional notes",
       "PaymentMethod": "2. Payment Method",
       "CashOnDelivery": "Cash on Delivery",
-      "CardPayment": "Card Payment",
+      "CashOnDeliveryDescription": "Pay in cash at your doorstep when your supplies arrive.",
+      "SecurityNotice": "Cash on delivery: Pay securely in cash when your order is delivered to your address.",
+      "Subtitle": "Complete your details below to finalize your order.",
       "PlacingOrder": "Placing Order...",
       "Items": "Items",
       "Subtotal": "Subtotal",
@@ -439,10 +445,16 @@
     },
     "Schools": {
       "Directory": {
-        "Title": "School Directory",
-        "Subtitle": "Discover and browse school supply lists organized by grade level.",
-        "Search": "Search schools...",
-        "Filters": "Filter by location or type"
+        "Title": "Find Your School",
+        "Subtitle": "Browse through hundreds of schools and find the exact supply list your child needs for the academic year.",
+        "Search": "Search by school name...",
+        "Filters": "Filter by location or type",
+        "AllGovernorates": "All Governorates",
+        "AllTypes": "All Types",
+        "AllSystems": "All Academic Systems",
+        "SearchButton": "Search Now",
+        "Results": "Search Results",
+        "SchoolsFound": "{count} schools found"
       },
       "Profile": {
         "Title": "{school} Supply Lists",
@@ -541,7 +553,25 @@
       "PhoneLabel": "Phone Number",
       "AccountDetails": "Account Details",
       "UpdatePersonalInfo": "Update your personal information.",
-      "EmailCannotChange": "Email cannot be changed."
+      "EmailCannotChange": "Email cannot be changed.",
+      "OrderReference": "Order Reference",
+      "OrdersSubtitle": "View and track all your past orders.",
+      "PaymentStatus": "Payment Status",
+      "ShippingAddress": "Shipping Address",
+      "Statuses": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      },
+      "PaymentStatuses": {
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "refunded": "Refunded"
+      }
     },
     "GuestOrder": {
       "LookupTitle": "Find your order",
@@ -558,10 +588,25 @@
       "RequestAgain": "Request a new code",
       "OrderTitle": "Order {reference}",
       "Status": "Status",
+      "PaymentStatus": "Payment Status",
       "Placed": "Placed",
       "Items": "Items",
       "Shipping": "Shipping",
-      "Total": "Total"
+      "Total": "Total",
+      "Statuses": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      },
+      "PaymentStatuses": {
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "refunded": "Refunded"
+      }
     }
   },
   "Seo": {
@@ -641,7 +686,9 @@
         "Progress": "{completed} of {total} required items covered",
         "ProgressLabel": "List Completeness",
         "MissingItems": "Still needed",
-        "ProgressAdvisory": "This is a guide only and never blocks checkout."
+        "ProgressAdvisory": "This is a guide only and never blocks checkout.",
+        "ListOfferBanner": "Special Offer: {percent}% off items on this list",
+        "LineDiscount": "{percent}% off"
       }
     }
   },
@@ -685,6 +732,75 @@
     "unnamed": "—",
     "egp": "{amount} EGP",
     "loading": "Loading reports…"
+  },
+  "PartnerWorkspace": {
+    "Loading": "Loading workspace…",
+    "YourRoles": "Your Partner Roles",
+    "Members": "Members",
+    "Invitations": "Invitations",
+    "Reports": "Reports",
+    "Leave": "Leave",
+    "LeaveConfirm": "Leave this Business Partner? You will lose access to its workspace.",
+    "AccessSuspendedTitle": "Access suspended",
+    "AccessSuspendedDesc": "Your access to this Partner Workspace is suspended.",
+    "AccessSuspendedContact": "Contact an administrator of this Business Partner to restore your access.",
+    "NotPermittedTitle": "Not permitted",
+    "NotPermittedDesc": "Your Partner Roles do not allow you to open this page.",
+    "ClosedNotice": "This Business Partner is closed. Only its Partner Reports remain available.",
+    "UnavailableStatusNotice": "This is not available while the Business Partner is {status}.",
+    "MembersTitle": "Members",
+    "MembersHint": "Members can only change while the Business Partner is onboarding or active.",
+    "SaveRoles": "Save roles",
+    "Suspend": "Suspend",
+    "Reactivate": "Reactivate",
+    "Remove": "Remove",
+    "RemoveConfirm": "Remove {email} from this Business Partner?",
+    "StatusActive": "Active",
+    "StatusSuspended": "Suspended",
+    "You": " (you)",
+    "Roles": {
+      "partner-administrator": "Partner administrator",
+      "list-manager": "List manager",
+      "collection-staff": "Collection staff",
+      "report-viewer": "Report viewer"
+    },
+    "InvitationsTitle": "Invitations",
+    "PendingInvitations": "Pending invitations",
+    "NoPendingInvitations": "No pending invitations.",
+    "Email": "Email",
+    "RolesLabel": "Roles",
+    "Invite": "Invite",
+    "ResendAndCopy": "Resend & copy invitation link",
+    "Revoke": "Revoke",
+    "CopyLink": "Copy invitation link",
+    "Copied": "Copied",
+    "Expires": "expires {date}",
+    "InvitationsSuspendedHint": "Invitations cannot be changed while the Business Partner is suspended.",
+    "InvitationTo": "Invitation to {partner}",
+    "InvitationExpires": "Expires {date}",
+    "InvitationAuthPrompt": "Sign in or create an account with {email} to continue.",
+    "InvitationSignIn": "Sign in",
+    "InvitationRegister": "Register",
+    "InvitationEmailMismatch": "You are signed in as {signedEmail}, but this invitation is for {invitedEmail}.",
+    "SwitchAccount": "Switch account",
+    "AcceptingConfirms": "Accepting confirms that you control {email}.",
+    "AcceptInvitation": "Accept invitation",
+    "LoadingInvitation": "Loading invitation…",
+    "InvitationErrors": {
+      "not-authenticated": "Please sign in before accepting this invitation.",
+      "email-mismatch": "This invitation belongs to a different email address.",
+      "invitation-not-pending": "This invitation is no longer available.",
+      "invitation-expired": "This invitation has expired. Ask the Business Partner for a new one.",
+      "partner-not-open": "This Business Partner is not currently accepting members.",
+      "already-member": "You already have a current membership for this Business Partner.",
+      "not-found": "This invitation could not be found.",
+      "generic": "The invitation could not be accepted."
+    },
+    "InvitationStates": {
+      "expired": "This invitation has expired. Ask the Business Partner for a new invitation.",
+      "accepted": "This invitation has already been accepted.",
+      "revoked": "This invitation was revoked. Ask the Business Partner for a new invitation."
+    }
   },
   "Validation": {
     "NameMin": "Name must be at least 2 characters.",

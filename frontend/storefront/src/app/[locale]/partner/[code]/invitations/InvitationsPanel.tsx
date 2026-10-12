@@ -1,10 +1,11 @@
 'use client';
 
 import { useActionState, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import type { PartnerInvitation } from '@findeg/backend/features/partner-membership';
 import { Button, Input, Label } from '@findeg/ui';
 import type { ActionState } from '../_lib/action-state';
-import { PARTNER_ROLES, ROLE_LABELS } from '../_lib/roles';
+import { PARTNER_ROLES } from '../_lib/roles';
 import { inviteAction, resendInvitationAction, revokeInvitationAction } from './actions';
 
 /** The service's invitation as the page passes it across the client boundary (dates as ISO strings). */
@@ -17,6 +18,7 @@ const idle: ActionState = { status: 'idle' };
 // Until the Outbox delivers invitation emails, Partner Administrators share the link themselves.
 function LinkBox({ link }: { link: string }) {
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('PartnerWorkspace');
   return (
     <div className="flex items-center gap-2" data-testid="invitation-link">
       <Input readOnly value={link} dir="ltr" onFocus={(event) => event.currentTarget.select()} />
@@ -28,7 +30,7 @@ function LinkBox({ link }: { link: string }) {
           setCopied(true);
         }}
       >
-        {copied ? 'Copied' : 'Copy invitation link'}
+        {copied ? t('Copied') : t('CopyLink')}
       </Button>
     </div>
   );
@@ -47,6 +49,7 @@ export function InvitationsPanel({
   canChange: boolean;
   invitations: PendingInvitation[];
 }) {
+  const t = useTranslations('PartnerWorkspace');
   const [inviteState, inviteFormAction, inviting] = useActionState(
     inviteAction.bind(null, locale, code),
     idle,
@@ -69,7 +72,7 @@ export function InvitationsPanel({
           data-testid="invite-form"
         >
           <div className="space-y-2">
-            <Label htmlFor="invite-email">Email</Label>
+            <Label htmlFor="invite-email">{t('Email')}</Label>
             <Input id="invite-email" name="email" type="email" required dir="ltr" />
           </div>
           <fieldset
@@ -78,11 +81,11 @@ export function InvitationsPanel({
               setHasRole(event.currentTarget.querySelector('input:checked') !== null)
             }
           >
-            <legend className="text-sm font-medium">Roles</legend>
+            <legend className="text-sm font-medium">{t('RolesLabel')}</legend>
             {PARTNER_ROLES.map((role) => (
               <label key={role} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="roles" value={role} />
-                {ROLE_LABELS[role]}
+                {t(`Roles.${role}`)}
               </label>
             ))}
           </fieldset>
@@ -92,18 +95,18 @@ export function InvitationsPanel({
             </p>
           )}
           <Button type="submit" disabled={inviting || !hasRole}>
-            Invite
+            {t('Invite')}
           </Button>
           {inviteState.link && <LinkBox link={inviteState.link} />}
         </form>
       ) : (
         <p className="text-sm text-muted-foreground" data-testid="invitations-read-only">
-          Invitations cannot be changed while the Business Partner is suspended.
+          {t('InvitationsSuspendedHint')}
         </p>
       )}
 
       <div>
-        <h2 className="mb-2 text-xl font-semibold">Pending invitations</h2>
+        <h2 className="mb-2 text-xl font-semibold">{t('PendingInvitations')}</h2>
         <ul className="divide-y rounded-lg border" data-testid="pending-invitations">
           {invitations.map((invitation) => (
             <li key={invitation.id} className="space-y-2 p-4" data-testid="pending-invitation">
@@ -113,9 +116,12 @@ export function InvitationsPanel({
                     {invitation.email}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {invitation.roles.map((role) => ROLE_LABELS[role]).join(', ')} · expires{' '}
-                    {new Date(invitation.expiresAt).toLocaleDateString('en-GB', {
-                      timeZone: 'UTC',
+                    {invitation.roles.map((role) => t(`Roles.${role}`)).join(', ')} ·{' '}
+                    {t('Expires', {
+                      date: new Date(invitation.expiresAt).toLocaleDateString(
+                        locale === 'ar' ? 'ar-EG' : 'en-GB',
+                        { timeZone: 'UTC' },
+                      ),
                     })}
                   </div>
                 </div>
@@ -131,7 +137,7 @@ export function InvitationsPanel({
                         )
                       }
                     >
-                      Resend &amp; copy invitation link
+                      {t('ResendAndCopy')}
                     </Button>
                     <Button
                       type="button"
@@ -141,7 +147,7 @@ export function InvitationsPanel({
                         run(invitation.id, () => revokeInvitationAction(code, invitation.id))
                       }
                     >
-                      Revoke
+                      {t('Revoke')}
                     </Button>
                   </div>
                 )}
@@ -157,7 +163,7 @@ export function InvitationsPanel({
             </li>
           ))}
           {invitations.length === 0 && (
-            <li className="p-4 text-sm text-muted-foreground">No pending invitations.</li>
+            <li className="p-4 text-sm text-muted-foreground">{t('NoPendingInvitations')}</li>
           )}
         </ul>
       </div>

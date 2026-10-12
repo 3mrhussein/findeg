@@ -52,9 +52,9 @@ export function CartDrawer() {
                 <CartItem
                   key={item.variantId}
                   variantId={item.variantId}
-                  productName={item.productName}
-                  variantLabel={item.variantLabel}
-                  unitPrice={item.unitPrice}
+                  productName={item.productName ?? ''}
+                  variantLabel={item.variantLabel ?? ''}
+                  unitPrice={item.unitPrice ?? 0}
                   quantity={item.quantity}
                   imageUrl={item.imageUrl}
                   onIncrease={() => updateQuantity(item.variantId, item.quantity + 1)}

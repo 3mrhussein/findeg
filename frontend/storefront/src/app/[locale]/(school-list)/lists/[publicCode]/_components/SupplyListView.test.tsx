@@ -241,4 +241,20 @@ describe('SupplyListView', () => {
       expect(screen.queryByText(/^Progress:/)).not.toBeInTheDocument();
     });
   });
+
+  describe('List Offer', () => {
+    it('renders offer banner and per-line discount when active offer is present', () => {
+      const l = list({
+        offer: {
+          basisPoints: 1000,
+          startsAt: '2026-10-01T00:00:00.000Z',
+          endsAt: '2026-10-31T00:00:00.000Z',
+        },
+      });
+      render(<SupplyListView list={l} locale="en" />);
+      expect(screen.getByText('ListOfferBanner:{"percent":10}')).toBeInTheDocument();
+      expect(screen.getByText('(LineDiscount:{"percent":10})')).toBeInTheDocument();
+      expect(screen.getByText(/9\.00/)).toBeInTheDocument();
+    });
+  });
 });

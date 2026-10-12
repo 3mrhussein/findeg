@@ -59,14 +59,14 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                   asChild
                   className="rounded-full px-7 font-bold bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10"
                 >
-                  <Link href="/school-lists">{t('Nav.School.CreateList')}</Link>
+                  <Link href="/schools">{t('Nav.School.CreateList')}</Link>
                 </Button>
                 <Button
                   asChild
                   variant="ghost"
                   className="rounded-full px-7 font-bold text-white hover:bg-white/10 border border-white/20"
                 >
-                  <Link href="/school-lists">{t('Nav.School.LearnMore')}</Link>
+                  <Link href="/schools">{t('Nav.School.LearnMore')}</Link>
                 </Button>
               </div>
             </div>
@@ -136,7 +136,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                     asChild
                     className="w-full mt-4 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white"
                   >
-                    <Link href="/school-lists">{t('Pages.SchoolLists.ViewSchoolLists')}</Link>
+                    <Link href="/schools">{t('Pages.SchoolLists.ViewSchoolLists')}</Link>
                   </Button>
                 </div>
               </div>

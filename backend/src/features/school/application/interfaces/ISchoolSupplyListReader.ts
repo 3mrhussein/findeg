@@ -35,6 +35,12 @@ export interface PublicSupplyListItem {
   eligibleVariants: PublicSupplyListEligibleVariant[];
 }
 
+export interface PublicSupplyListOffer {
+  basisPoints: number;
+  startsAt: string;
+  endsAt: string | null;
+}
+
 export interface PublicSupplyList {
   publicCode: string;
   status: PublicSupplyListStatus;
@@ -46,8 +52,8 @@ export interface PublicSupplyList {
   school: { id: number; nameEn: string; nameAr: string; logoUrl: string | null };
   /** Set when an archived list was replaced by a newer one. */
   replacementPublicCode: string | null;
-  /** Reserved for the List Offer (ADR-0007); always `null` until that spec lands. */
-  offer: null;
+  /** Active List Offer (ADR-0007); null when none exists or inactive. */
+  offer: PublicSupplyListOffer | null;
   items: PublicSupplyListItem[];
 }
 

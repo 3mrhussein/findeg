@@ -60,7 +60,10 @@
       "LearnMore": "اعرف المزيد"
     },
     "Schools": "المدارس",
-    "TrackOrder": "تتبع الطلب"
+    "TrackOrder": "تتبع الطلب",
+    "PartnerWorkspace": "مساحة عمل الشريك",
+    "Language": "اللغة",
+    "Theme": "المظهر"
   },
   "Layout": {
     "Header": {
@@ -371,6 +374,7 @@
       "OrderId": "رقم الطلب: #{id}",
       "OrderReference": "الرقم المرجعي للطلب:",
       "ContinueShopping": "متابعة التسوق",
+      "TrackOrder": "تتبع الطلب",
       "ShippingInformation": "1. معلومات الشحن",
       "FullName": "الاسم الكامل",
       "PlaceholderFullName": "محمد أحمد",
@@ -393,7 +397,9 @@
       "PlaceholderNotes": "علامة مميزة أو ملاحظات إضافية",
       "PaymentMethod": "2. طريقة الدفع",
       "CashOnDelivery": "الدفع عند الاستلام",
-      "CardPayment": "الدفع بالبطاقة",
+      "CashOnDeliveryDescription": "ادفع نقداً عند استلام طلبك عند باب منزلك.",
+      "SecurityNotice": "الدفع عند الاستلام: ادفع نقداً بأمان عند توصيل طلبك إلى عنوانك.",
+      "Subtitle": "أكمل بياناتك أدناه لتأكيد طلبك.",
       "PlacingOrder": "جارٍ إتمام الطلب...",
       "Items": "المنتجات",
       "Subtotal": "المجموع الفرعي",
@@ -439,10 +445,16 @@
     },
     "Schools": {
       "Directory": {
-        "Title": "دليل المدارس",
-        "Subtitle": "اكتشف وتصفح قوائم مستلزمات المدرسة حسب المراحل الدراسية.",
-        "Search": "ابحث عن مدرسة...",
-        "Filters": "تصفية حسب الموقع أو النوع"
+        "Title": "اعثر على مدرستك",
+        "Subtitle": "تصفح مئات المدارس واعثر على قائمة المستلزمات المحددة التي يحتاجها طفلك للعام الدراسي.",
+        "Search": "ابحث باسم المدرسة...",
+        "Filters": "تصفية حسب الموقع أو النوع",
+        "AllGovernorates": "جميع المحافظات",
+        "AllTypes": "جميع الأنواع",
+        "AllSystems": "جميع الأنظمة التعليمية",
+        "SearchButton": "ابحث الآن",
+        "Results": "نتائج البحث",
+        "SchoolsFound": "{count} مدرسة"
       },
       "Profile": {
         "Title": "قوائم مستلزمات {school}",
@@ -541,7 +553,25 @@
       "PhoneLabel": "رقم الهاتف",
       "AccountDetails": "تفاصيل الحساب",
       "UpdatePersonalInfo": "تحديث معلوماتك الشخصية.",
-      "EmailCannotChange": "لا يمكن تغيير البريد الإلكتروني."
+      "EmailCannotChange": "لا يمكن تغيير البريد الإلكتروني.",
+      "OrderReference": "مرجع الطلب",
+      "OrdersSubtitle": "عرض وتتبع جميع طلباتك السابقة.",
+      "PaymentStatus": "حالة الدفع",
+      "ShippingAddress": "عنوان التوصيل",
+      "Statuses": {
+        "pending": "قيد الانتظار",
+        "confirmed": "تم التأكيد",
+        "processing": "قيد التجهيز",
+        "shipped": "تم الشحن",
+        "delivered": "تم التوصيل",
+        "cancelled": "تم الإلغاء",
+        "refunded": "تم رد المبلغ"
+      },
+      "PaymentStatuses": {
+        "unpaid": "غير مدفوع",
+        "paid": "مدفوع",
+        "refunded": "تم رد المبلغ"
+      }
     },
     "GuestOrder": {
       "LookupTitle": "ابحث عن طلبك",
@@ -558,10 +588,25 @@
       "RequestAgain": "اطلب رمزاً جديداً",
       "OrderTitle": "الطلب {reference}",
       "Status": "الحالة",
+      "PaymentStatus": "حالة الدفع",
       "Placed": "تاريخ الطلب",
       "Items": "المنتجات",
       "Shipping": "الشحن",
-      "Total": "الإجمالي"
+      "Total": "الإجمالي",
+      "Statuses": {
+        "pending": "قيد الانتظار",
+        "confirmed": "تم التأكيد",
+        "processing": "قيد التجهيز",
+        "shipped": "تم الشحن",
+        "delivered": "تم التوصيل",
+        "cancelled": "تم الإلغاء",
+        "refunded": "تم رد المبلغ"
+      },
+      "PaymentStatuses": {
+        "unpaid": "غير مدفوع",
+        "paid": "مدفوع",
+        "refunded": "تم رد المبلغ"
+      }
     }
   },
   "Seo": {
@@ -641,7 +686,9 @@
         "Progress": "تم تغطية {completed} من {total} من العناصر المطلوبة",
         "ProgressLabel": "تقدم القائمة",
         "MissingItems": "لا يزال مطلوبًا",
-        "ProgressAdvisory": "هذا للإرشاد فقط ولا يمنع إتمام الطلب."
+        "ProgressAdvisory": "هذا للإرشاد فقط ولا يمنع إتمام الطلب.",
+        "ListOfferBanner": "عرض خاص: خصم {percent}٪ على عناصر هذه القائمة",
+        "LineDiscount": "خصم {percent}٪"
       }
     }
   },
@@ -685,6 +732,75 @@
     "unnamed": "—",
     "egp": "{amount} ج.م",
     "loading": "جارٍ تحميل التقارير…"
+  },
+  "PartnerWorkspace": {
+    "Loading": "جارٍ تحميل مساحة العمل…",
+    "YourRoles": "أدوار الشريك الخاصة بك",
+    "Members": "الأعضاء",
+    "Invitations": "الدعوات",
+    "Reports": "التقارير",
+    "Leave": "مغادرة",
+    "LeaveConfirm": "هل تريد مغادرة هذا الشريك التجاري؟ ستفقد إمكانية الوصول إلى مساحة عمله.",
+    "AccessSuspendedTitle": "تم تعليق الوصول",
+    "AccessSuspendedDesc": "تم تعليق وصولك إلى مساحة عمل هذا الشريك.",
+    "AccessSuspendedContact": "تواصل مع أحد مسؤولي هذا الشريك التجاري لاستعادة وصولك.",
+    "NotPermittedTitle": "غير مسموح",
+    "NotPermittedDesc": "أدوار الشريك الخاصة بك لا تسمح لك بفتح هذه الصفحة.",
+    "ClosedNotice": "هذا الشريك التجاري مغلق. تقارير الشريك فقط هي المتاحة.",
+    "UnavailableStatusNotice": "هذا غير متاح عندما يكون الشريك التجاري في حالة {status}.",
+    "MembersTitle": "الأعضاء",
+    "MembersHint": "لا يمكن تعديل الأعضاء إلا أثناء فترة الإعداد أو النشاط.",
+    "SaveRoles": "حفظ الأدوار",
+    "Suspend": "تعليق",
+    "Reactivate": "إعادة التفعيل",
+    "Remove": "إزالة",
+    "RemoveConfirm": "هل تريد إزالة {email} من هذا الشريك التجاري؟",
+    "StatusActive": "نشط",
+    "StatusSuspended": "معلق",
+    "You": " (أنت)",
+    "Roles": {
+      "partner-administrator": "مسؤول الشريك",
+      "list-manager": "مدير القوائم",
+      "collection-staff": "طاقم التجميع",
+      "report-viewer": "مشاهد التقارير"
+    },
+    "InvitationsTitle": "الدعوات",
+    "PendingInvitations": "الدعوات المعلقة",
+    "NoPendingInvitations": "لا توجد دعوات معلقة.",
+    "Email": "البريد الإلكتروني",
+    "RolesLabel": "الأدوار",
+    "Invite": "إرسال دعوة",
+    "ResendAndCopy": "إعادة الإرسال ونسخ الرابط",
+    "Revoke": "إلغاء الدعوة",
+    "CopyLink": "نسخ رابط الدعوة",
+    "Copied": "تم النسخ",
+    "Expires": "ينتهي في {date}",
+    "InvitationsSuspendedHint": "لا يمكن تغيير الدعوات أثناء تعليق الشريك التجاري.",
+    "InvitationTo": "دعوة إلى {partner}",
+    "InvitationExpires": "ينتهي في {date}",
+    "InvitationAuthPrompt": "سجل الدخول أو أنشئ حساباً باستخدام {email} للمتابعة.",
+    "InvitationSignIn": "تسجيل الدخول",
+    "InvitationRegister": "تسجيل جديد",
+    "InvitationEmailMismatch": "أنت مسجل الدخول باسم {signedEmail}، لكن هذه الدعوة مخصصة لـ {invitedEmail}.",
+    "SwitchAccount": "تبديل الحساب",
+    "AcceptingConfirms": "القبول يؤكد أنك تتحكم في {email}.",
+    "AcceptInvitation": "قبول الدعوة",
+    "LoadingInvitation": "جارٍ تحميل الدعوة…",
+    "InvitationErrors": {
+      "not-authenticated": "يرجى تسجيل الدخول قبل قبول هذه الدعوة.",
+      "email-mismatch": "هذه الدعوة تنتمي إلى عنوان بريد إلكتروني مختلف.",
+      "invitation-not-pending": "هذه الدعوة لم تعد متاحة.",
+      "invitation-expired": "انتهت صلاحية هذه الدعوة. اطلب من الشريك التجاري دعوة جديدة.",
+      "partner-not-open": "هذا الشريك التجاري لا يقبل أعضاء جدداً حالياً.",
+      "already-member": "لديك بالفعل عضوية حالية في هذا الشريك التجاري.",
+      "not-found": "تعذر العثور على هذه الدعوة.",
+      "generic": "تعذر قبول الدعوة."
+    },
+    "InvitationStates": {
+      "expired": "انتهت صلاحية هذه الدعوة. اطلب من الشريك التجاري دعوة جديدة.",
+      "accepted": "تم قبول هذه الدعوة بالفعل.",
+      "revoked": "تم إلغاء هذه الدعوة. اطلب من الشريك التجاري دعوة جديدة."
+    }
   },
   "Validation": {
     "NameMin": "يجب أن يتكون الاسم من حرفين على الأقل.",

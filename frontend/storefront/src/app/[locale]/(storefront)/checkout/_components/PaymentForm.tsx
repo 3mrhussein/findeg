@@ -46,7 +46,7 @@ export function PaymentForm({
           {t('Pages.Checkout.CashOnDelivery')}
         </span>
         <span className="text-sm text-slate-500 line-clamp-2">
-          Pay at your doorstep when your supplies arrive.
+          {t('Pages.Checkout.CashOnDeliveryDescription')}
         </span>
       </label>
     </fieldset>

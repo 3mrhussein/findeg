@@ -39,8 +39,19 @@ export default async function GuestOrderPage({ params }: GuestOrderPageProps) {
           <CardHeader>
             <CardTitle>{t('Status')}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1">
-            <p>{order.status}</p>
+          <CardContent className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="font-medium">{t('Status')}:</span>
+              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                {t(`Statuses.${order.status}`)}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">{t('PaymentStatus')}:</span>
+              <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium">
+                {t(`PaymentStatuses.${order.paymentStatus}`)}
+              </span>
+            </div>
             <p className="text-sm text-muted-foreground">
               {t('Placed')}: {new Date(order.createdAt).toLocaleString(locale)}
             </p>

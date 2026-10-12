@@ -1,7 +1,17 @@
 'use client';
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
-import type { CartItem } from '@findeg/backend/features/cart';
+export interface CartItem {
+  productId?: number;
+  variantId: number;
+  sku?: string;
+  productName?: string;
+  variantLabel?: string;
+  imageUrl?: string;
+  quantity: number;
+  unitPrice?: number;
+  currency?: string;
+}
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -182,7 +192,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [cartItems],
   );
   const cartTotal = useMemo(
-    () => cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
+    () => cartItems.reduce((total, item) => total + (item.unitPrice ?? 0) * item.quantity, 0),
     [cartItems],
   );
 

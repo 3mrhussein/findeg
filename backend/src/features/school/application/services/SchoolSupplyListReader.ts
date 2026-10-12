@@ -1,6 +1,7 @@
 import {
   findVariantCandidates,
   getAvailableQuantities,
+  getListOffer,
   getPublicSupplyListByCode,
   getVariantDisplayDetails,
   type SchoolSupplyListDatabase,
@@ -10,11 +11,12 @@ import { eligibleVariants } from '../../domain/eligibleVariants';
 import type {
   ISchoolSupplyListReader,
   PublicSupplyListItem,
+  PublicSupplyListOffer,
   PublicSupplyListResult,
   PublicSupplyListVariant,
 } from '../interfaces/ISchoolSupplyListReader';
 
-import { PUBLIC_CODE_PATTERN } from '@findeg/domain/school-lists';
+import { PUBLIC_CODE_PATTERN, listOfferBasisPointsAt } from '@findeg/domain/school-lists';
 
 function differingAttributes(
   candidate: Record<string, string>,
@@ -114,6 +116,17 @@ export class SchoolSupplyListReader implements ISchoolSupplyListReader {
           };
         });
 
+        const offerRow = await getListOffer(tx, list.id);
+        const activeBasisPoints = offerRow ? listOfferBasisPointsAt(offerRow, new Date()) : null;
+        const offer: PublicSupplyListOffer | null =
+          activeBasisPoints !== null && offerRow
+            ? {
+                basisPoints: activeBasisPoints,
+                startsAt: offerRow.startsAt.toISOString(),
+                endsAt: offerRow.endsAt ? offerRow.endsAt.toISOString() : null,
+              }
+            : null;
+
         return {
           success: true,
           data: {
@@ -126,7 +139,7 @@ export class SchoolSupplyListReader implements ISchoolSupplyListReader {
             heroImageUrl: list.heroImageUrl,
             school,
             replacementPublicCode,
-            offer: null,
+            offer,
             items: publicItems,
           },
         };
