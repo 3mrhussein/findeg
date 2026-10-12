@@ -15,8 +15,9 @@ import {
   createBrandService,
 } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
-import { mapProduct, mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
+import { mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
 import { ShopPlpViewModel } from '../catalog/types';
+import { mapProductsWithInventory } from '../catalog/inventory';
 import { parseShopPlpQuery } from '../catalog/plp-query';
 
 /**
@@ -54,7 +55,7 @@ export async function getCategoryPageViewModel(
     resolvedLocale,
   );
 
-  const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
+  const mappedProducts = await mapProductsWithInventory(result.products, resolvedLocale);
   const priceBounds = await productService.getPriceBounds(category.id);
 
   return {

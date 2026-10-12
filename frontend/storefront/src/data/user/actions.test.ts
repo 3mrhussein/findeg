@@ -84,7 +84,39 @@ describe('User actions - updateProfile', () => {
     expect(backendUpdateProfile).toHaveBeenCalledWith(102, {
       firstName: 'Sara',
       lastName: '',
-      phone: undefined,
+      phone: '',
+    });
+  });
+  it('allows a phone-only update without inventing a name', async () => {
+    vi.mocked(getSession).mockResolvedValue({
+      userId: 102,
+      portalRole: 'customer',
+      user: { email: 'sara@example.com', firstName: '', lastName: '', fullName: '' },
+    });
+    const data = new FormData();
+    data.set('name', '');
+    data.set('phone', '+201012345678');
+    await updateProfile(data);
+    expect(backendUpdateProfile).toHaveBeenCalledWith(102, {
+      firstName: undefined,
+      lastName: undefined,
+      phone: '+201012345678',
+    });
+  });
+  it('clears a stored phone when the field is submitted empty', async () => {
+    vi.mocked(getSession).mockResolvedValue({
+      userId: 102,
+      portalRole: 'customer',
+      user: { email: 'sara@example.com', firstName: 'Sara', lastName: '', fullName: 'Sara' },
+    });
+    const data = new FormData();
+    data.set('name', 'Sara');
+    data.set('phone', '');
+    await updateProfile(data);
+    expect(backendUpdateProfile).toHaveBeenCalledWith(102, {
+      firstName: 'Sara',
+      lastName: '',
+      phone: '',
     });
   });
 });

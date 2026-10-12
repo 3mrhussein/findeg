@@ -1,3 +1,4 @@
+import { safeReturnTarget } from '@lib/return-target';
 import { Suspense } from 'react';
 import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
@@ -23,7 +24,7 @@ export default async function Page({ params, searchParams }: Props) {
   const query = await searchParams;
   setRequestLocale(locale);
 
-  const returnTarget = query.returnUrl || query.returnTo;
+  const returnTarget = safeReturnTarget(query.returnUrl, query.returnTo);
 
   return (
     <Suspense fallback={null}>

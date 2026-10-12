@@ -1,4 +1,10 @@
 {
+  "HomeCollections": {
+    "Title": "مجموعات مختارة",
+    "ViewAll": "عرض الكل",
+    "Subtitle": "اكتشف مجموعات مميزة اخترناها لك.",
+    "Badge": "مجموعة"
+  },
   "Common": {
     "LogoAriaLabel": "FindEg.com الصفحة الرئيسية",
     "LogoSubtitle": "المدرسة والقرطاسية",

@@ -1,3 +1,4 @@
+import { safeReturnTarget } from '@lib/return-target';
 import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { RegistrationContent } from './_components/RegistrationContent';
@@ -20,7 +21,7 @@ export default async function RegistrationPage({ params, searchParams }: Props) 
   const query = await searchParams;
   setRequestLocale(locale);
 
-  const returnTarget = query.returnUrl || query.returnTo;
+  const returnTarget = safeReturnTarget(query.returnUrl, query.returnTo);
 
   return (
     <RegistrationContent

@@ -8,7 +8,7 @@ import { useCategories, type Category } from '@hooks/useCategories';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@findeg/ui';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@findeg/ui';
-import { Menu, User, Settings, Heart, Image as ImageIcon, Search } from 'lucide-react';
+import { Menu, User, Settings, Image as ImageIcon, Search } from 'lucide-react';
 
 import ToggleLanguage from '@components/shared/ToggleLanguage';
 import { ToggleTheme } from '@findeg/ui';
@@ -190,14 +190,6 @@ export function MobileNavSheet() {
           {/* Bottom Utility Strip */}
           <div className="mt-auto border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <Link
-                href={isLoggedIn ? '/my-account' : '/login?returnUrl=/my-account'}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
-              >
-                <Heart className="size-4" />
-                <span className="text-sm font-medium">{t('SavedItems')}</span>
-              </Link>
               <Link
                 href={isLoggedIn ? '/my-account/orders' : '/login?returnUrl=/my-account/orders'}
                 onClick={() => setOpen(false)}

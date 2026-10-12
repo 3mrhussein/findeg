@@ -1,4 +1,10 @@
 {
+  "HomeCollections": {
+    "Title": "Curated Collections",
+    "ViewAll": "View all",
+    "Subtitle": "Discover premium curated collections.",
+    "Badge": "Collection"
+  },
   "Common": {
     "LogoAriaLabel": "FindEg.com Homepage",
     "LogoSubtitle": "School & Stationery",

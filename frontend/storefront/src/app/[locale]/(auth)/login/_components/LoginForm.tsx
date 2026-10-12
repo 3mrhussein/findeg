@@ -1,5 +1,7 @@
 'use client';
 
+import { safeReturnTarget } from '@lib/return-target';
+
 import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,9 +34,6 @@ interface LoginFormProps {
   emailLocked?: boolean;
   returnTo?: string;
 }
-
-const safeReturnTarget = (value?: string) =>
-  value?.startsWith('/') && !value.startsWith('//') ? value : '/my-account';
 
 export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);

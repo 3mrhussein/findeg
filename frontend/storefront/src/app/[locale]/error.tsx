@@ -4,16 +4,16 @@ import ErrorPage from '@components/shared/ErrorPage';
 
 export default function Error({
   error: _error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   return (
     <ErrorPage
       title="Something went wrong!"
       subtitle="We apologize for the inconvenience. Please try again later."
-      onRetry={() => reset()}
+      onRetry={() => retry()}
       retryLabel="Try again"
     />
   );

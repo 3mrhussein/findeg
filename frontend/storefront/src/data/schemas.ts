@@ -13,11 +13,14 @@ import { z } from 'zod';
 // ============================================================================
 
 export const UpdateProfileInputSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be at most 100 characters')
-    .trim(),
+  name: z.union([
+    z
+      .string()
+      .trim()
+      .min(2, 'Name must be at least 2 characters')
+      .max(100, 'Name must be at most 100 characters'),
+    z.literal(''),
+  ]),
   phone: z.string().max(20, 'Phone must be at most 20 characters').trim().optional(),
 });
 

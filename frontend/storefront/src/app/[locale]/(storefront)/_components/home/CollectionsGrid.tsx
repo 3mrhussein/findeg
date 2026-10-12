@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
 import Image from 'next/image';
 import { getHomePageData } from '@/data/catalog/queries';
@@ -17,6 +18,7 @@ interface CollectionsGridProps {
  *   isolation and for next-intl compatibility).
  */
 export async function CollectionsGrid({ locale }: CollectionsGridProps) {
+  const t = await getTranslations({ locale, namespace: 'HomeCollections' });
   const { collections } = await getHomePageData(locale);
   const visibleCollections = collections.filter((c) => c.isActive !== false).slice(0, 3);
 
@@ -27,13 +29,14 @@ export async function CollectionsGrid({ locale }: CollectionsGridProps) {
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-8">
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Curated Collections
+            {t('Title')}
           </h2>
           <Link
             href="/collections"
             className="hidden sm:flex items-center gap-1 text-sm font-bold text-primary hover:text-primary/80"
           >
-            View all <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            {t('ViewAll')}{' '}
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -43,10 +46,7 @@ export async function CollectionsGrid({ locale }: CollectionsGridProps) {
               collection.localizedTitle?.[locKey] ||
               collection.localizedTitle?.en ||
               collection.slug;
-            const subtitle =
-              collection.localizedSubtitle?.[locKey] ||
-              collection.localizedSubtitle?.en ||
-              'Discover premium curated collections.';
+            const subtitle = collection.localizedSubtitle?.[locKey] || t('Subtitle');
 
             return (
               <Link
@@ -63,7 +63,7 @@ export async function CollectionsGrid({ locale }: CollectionsGridProps) {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent p-6 flex flex-col justify-end">
                   <span className="mb-2 inline-block rounded bg-white/20 px-2 py-1 text-xs font-bold text-white backdrop-blur-md w-fit">
-                    Collection
+                    {t('Badge')}
                   </span>
                   <h3 className="text-2xl font-bold text-white">{title}</h3>
                   <p className="mt-1 text-sm text-slate-200 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">

@@ -49,7 +49,7 @@ export async function updateProfile(formData: FormData) {
   await backendUpdateProfile(session.userId, {
     firstName,
     lastName,
-    phone: phone || undefined,
+    phone: phone || '',
   });
 
   // Revalidate the account and settings pages to reflect updated data

@@ -15,7 +15,6 @@ import {
   createBrandService,
   createSearchService,
   createCollectionService,
-  createInventoryService,
 } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import type {
@@ -30,7 +29,8 @@ import type {
   ProductDetailPageData,
   CollectionsPageData,
 } from './types';
-import { mapBrandOptions, mapCategoryOptions, mapProduct } from '../helpers/mappers';
+import { mapBrandOptions, mapCategoryOptions } from '../helpers/mappers';
+import { mapProductsWithInventory } from './inventory';
 import { parseShopPlpQuery } from './plp-query';
 
 /**
@@ -75,7 +75,7 @@ export async function getShopPlpViewModel(
     resolvedLocale,
   );
 
-  const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
+  const mappedProducts = await mapProductsWithInventory(result.products, resolvedLocale);
   const priceBounds = await productService.getPriceBounds(category?.id);
   const minPriceBound = priceBounds.minPrice;
   const maxPriceBound = priceBounds.maxPrice;
@@ -159,7 +159,7 @@ export async function getSearchPageViewModel(
     offset,
   });
 
-  const mappedItems = result.items.map((p) => mapProduct(p, resolvedLocale));
+  const mappedItems = await mapProductsWithInventory(result.items, resolvedLocale);
   const priceBounds = await productService.getPriceBounds();
 
   return {
@@ -237,7 +237,6 @@ export async function getProductPdp(
   const productService = createProductService();
   const brandService = createBrandService();
   const categoryService = createCategoryService();
-  const inventoryService = createInventoryService();
 
   const product = await productService.getBySlug(slug, resolvedLocale);
   if (!product) return null;
@@ -252,29 +251,9 @@ export async function getProductPdp(
     : [];
   const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
 
-  const variantsWithInventory = await Promise.all(
-    (product.variants || []).map(async (v) => {
-      const balances = await inventoryService.getWarehouseBalances(v.id);
-      return {
-        ...v,
-        inventory: balances.map((b) => ({
-          warehouseActive: true,
-          onHand: b.onHand,
-          reserved: b.reserved,
-          warehouseId: b.warehouseId,
-          warehouseCode: b.warehouseCode,
-        })),
-      };
-    }),
-  );
-
-  const hydratedProduct = {
-    ...product,
-    variants: variantsWithInventory,
-  };
-
-  const mappedProduct = mapProduct(hydratedProduct, resolvedLocale);
-  const mappedRelated = related.map((p) => mapProduct(p, resolvedLocale));
+  const [mappedProduct] = await mapProductsWithInventory([product], resolvedLocale);
+  const mappedRelated = await mapProductsWithInventory(related, resolvedLocale);
+  if (!mappedProduct) return null;
 
   const totalAvailable = (mappedProduct.variants || []).reduce((variantSum, v) => {
     const freeInVariant = (v.inventory || [])
@@ -333,10 +312,10 @@ export async function getProductDetailPageData(
   if (!product) return null;
 
   const related = await productService.getRelatedProducts(product, 4, locale);
-  const mappedRelated = related.map((p) => mapProduct(p, locale));
+  const mappedRelated = await mapProductsWithInventory(related, locale);
 
   return {
-    product: mapProduct(product, locale),
+    product: (await mapProductsWithInventory([product], locale))[0]!,
     relatedProducts: mappedRelated,
     reviewSummary: {
       averageRating: product.rating || 0,
@@ -374,7 +353,7 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
   const categories = await categoryService.getAll(locale);
   const collections = await collectionService.getAllCollections();
 
-  const mappedProducts = products.map((p) => mapProduct(p, locale));
+  const mappedProducts = await mapProductsWithInventory(products, locale);
 
   return {
     featuredProducts: mappedProducts.slice(0, 8),
@@ -397,7 +376,7 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
   const products = await productService.getAll(locale);
   const categories = await categoryService.getAll(locale);
 
-  const mappedProducts = products.map((p) => mapProduct(p, locale));
+  const mappedProducts = await mapProductsWithInventory(products, locale);
 
   return {
     products: mappedProducts,
@@ -448,7 +427,7 @@ export async function getCollectionPageViewModel(
     (collection as unknown as { tags?: { id: number }[] }).tags?.map((t) => t.id) || [];
   const products =
     tagIds.length > 0 ? await productService.getProductsByTagIds(tagIds, resolvedLocale) : [];
-  const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
+  const mappedProducts = await mapProductsWithInventory(products, resolvedLocale);
   const priceBounds = await productService.getPriceBounds();
 
   return {

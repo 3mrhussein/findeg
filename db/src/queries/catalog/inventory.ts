@@ -21,6 +21,7 @@ export interface InventoryBalanceResult {
   variantId: number;
   warehouseId: number;
   warehouseCode: string;
+  isActive: boolean;
   onHand: number;
   reserved: number;
   available: number;
@@ -272,6 +273,7 @@ export async function getLowStock(threshold = LOW_STOCK_MAX_UNITS) {
       variantId: row.balance.variantId,
       warehouseId: row.balance.warehouseId,
       warehouseCode: row.warehouseCode,
+      isActive: row.isActive,
       onHand: row.balance.onHand,
       reserved: row.balance.reserved,
       available: availableStock(

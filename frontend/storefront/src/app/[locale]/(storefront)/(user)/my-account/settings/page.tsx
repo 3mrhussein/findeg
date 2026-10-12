@@ -23,8 +23,7 @@ export default async function SettingsPage({ params }: Props) {
   const session = await requireAuth(locale);
   const user = await getUserProfile(session.userId);
 
-  const displayName =
-    [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;
+  const storedName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
 
   return (
     <div className="space-y-6">
@@ -54,7 +53,7 @@ export default async function SettingsPage({ params }: Props) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="name">{t('NameLabel')}</Label>
-                <Input id="name" name="name" defaultValue={displayName} required minLength={2} />
+                <Input id="name" name="name" defaultValue={storedName} minLength={2} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">{t('PhoneLabel')}</Label>

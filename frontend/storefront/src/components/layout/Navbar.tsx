@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link } from '@i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { MapPin, User, Heart, Menu, Flame, Sparkles } from 'lucide-react';
+import { MapPin, User, Menu, Flame, Sparkles } from 'lucide-react';
 import { useUser } from '@hooks/useUser';
 
 import ToggleLanguage from '@components/shared/ToggleLanguage';
@@ -114,12 +114,6 @@ export function Navbar() {
                 label={isLoggedIn ? t('MyAccount') : t('SignIn')}
                 size={20}
               />
-            </div>
-          </Link>
-
-          <Link href={isLoggedIn ? '/my-account' : '/login?returnUrl=/my-account'}>
-            <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
-              <IconTooltip icon={Heart} label={t('SavedItems')} size={20} />
             </div>
           </Link>
 

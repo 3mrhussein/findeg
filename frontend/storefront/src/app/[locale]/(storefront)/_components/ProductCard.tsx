@@ -29,7 +29,6 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
   const isOutOfStock = useMemo(() => {
     if (!defaultVariant) return true;
     const inventory = defaultVariant.inventory || [];
-    if (inventory.length === 0) return false;
     const availableUnits = inventory
       .filter((inv) => inv.warehouseActive !== false)
       .reduce((acc, inv) => acc + Math.max(0, (inv.onHand || 0) - (inv.reserved || 0)), 0);

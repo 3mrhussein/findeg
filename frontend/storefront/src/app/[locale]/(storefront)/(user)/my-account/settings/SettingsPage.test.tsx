@@ -38,6 +38,7 @@ vi.mock('@data/user/actions', () => ({
   updateProfileAction: vi.fn(),
 }));
 
+import { getUserProfile } from '@data/user/queries';
 import SettingsPage from './page';
 
 describe('SettingsPage', () => {
@@ -74,5 +75,24 @@ describe('SettingsPage', () => {
     expect(screen.queryByText(/Change Password/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Current Password/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/New Password/i)).not.toBeInTheDocument();
+  });
+  it('leaves the name blank and optional when only an email is stored', async () => {
+    vi.mocked(getUserProfile).mockResolvedValueOnce({
+      id: 42,
+      email: 'user@example.com',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      verifiedPhone: false,
+      portalRole: 'customer',
+      emailVerified: null,
+      image: null,
+      isActive: true,
+      createdAt: new Date(0),
+      updatedAt: new Date(0),
+    });
+    render(await SettingsPage({ params: Promise.resolve({ locale: 'en' }) }));
+    expect(screen.getByLabelText('Full Name')).toHaveValue('');
+    expect(screen.getByLabelText('Full Name')).not.toBeRequired();
   });
 });
