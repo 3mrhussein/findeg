@@ -113,7 +113,7 @@ flowchart TD
     P2_5 -->|Insert Order: Status=Pending, Payment=Unpaid| D_Orders[("D4: Orders Store")]
     P2_5 -->|Insert OrderLines: Frozen names, SKUs, piaster prices| D_Orders
     P2_5 -->|Insert AttributedOrder: Partner & List linkage| D_Orders
-    P2_5 -->|Insert StockReservation: Hold units at warehouse| D_Inventory
+    P2_5 -->|Recheck available stock under row locks; insert StockReservation| D_Inventory
     P2_5 -->|Insert OutboxMessage: Order Confirmation Email| D_Outbox[("D7: Outbox Store")]
 
     P2_5 -->|Return FE-xxxxxx Order Reference| Customer
