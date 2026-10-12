@@ -113,11 +113,13 @@ function readDomainSets() {
     }
     return exported;
   }
-  const sets = new Map();
+  // Public subpaths can export different arrays under the same name (especially default).
+  // Preserve each exported set rather than letting a later entry overwrite an earlier one.
+  const sets = [];
   function entryPoints(value) {
     if (typeof value === 'string') {
       for (const [name, values] of exportsOf(resolveSource(domainDirectory, value)))
-        sets.set(name, new Set(values));
+        sets.push([name, new Set(values)]);
     } else if (value && typeof value === 'object') {
       for (const entry of Object.values(value)) entryPoints(entry);
     }
