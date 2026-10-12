@@ -1,23 +1,18 @@
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from 'next-intl';
 import { Link } from '@i18n/navigation';
+import { CurrentYear } from './CurrentYear';
 
 interface FooterProps {
   locale: Locale;
 }
 
 /**
- * Cached site-wide footer.
- *
- * Uses `'use cache'` with `cacheLife('max')` — footer links and text
- * change only with code deployments. CURRENT_YEAR is captured at
- * cache time (build or first revalidation), which is acceptable for
- * a footer copyright string.
+ * Site-wide footer.
  */
 export async function Footer({ locale }: FooterProps) {
   // ✅ locale + namespace together — next-intl skips headers() call
   const t = await getTranslations({ locale, namespace: 'Layout.Footer' });
-  const year = new Date().getFullYear();
 
   return (
     <footer className="w-full bg-slate-900 text-slate-400 py-16 lg:py-24">
@@ -134,7 +129,7 @@ export async function Footer({ locale }: FooterProps) {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row text-sm">
           <p>
-            &copy; {year} FindEg. {t('Copyright')}
+            &copy; <CurrentYear /> FindEg. {t('Copyright')}
           </p>
           <div className="flex gap-4">
             <span className="material-symbols-outlined text-[24px]">payments</span>

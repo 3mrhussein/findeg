@@ -1,12 +1,13 @@
+'use cache';
+
+import 'server-only';
 /**
  * Categories Data Layer (Storefront)
  *
  * Provides cached data for the storefront category features.
  * Adheres to Next.js 16 "use cache" standards.
  */
-'use cache';
 
-import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
 import {
   createCategoryService,

@@ -3,10 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, Container, Separator } from '
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from 'next-intl';
 import { redirect } from '@i18n/navigation';
-import {
-  GUEST_ORDER_COOKIE,
-  createGuestAccessService,
-} from '@findeg/backend/features/guest-access';
+import { GUEST_ORDER_COOKIE, getGuestOrder } from '@data/order/queries';
 
 interface GuestOrderPageProps {
   params: Promise<{ locale: Locale; reference: string }>;
@@ -19,7 +16,7 @@ export default async function GuestOrderPage({ params }: GuestOrderPageProps) {
   const t = await getTranslations({ locale, namespace: 'Pages.GuestOrder' });
 
   const token = (await cookies()).get(GUEST_ORDER_COOKIE)?.value;
-  const order = await createGuestAccessService().getOrder(token, decodeURIComponent(reference));
+  const order = await getGuestOrder(token, decodeURIComponent(reference));
   if (!order) return redirect({ href: '/order-lookup', locale });
 
   const money = (amount: string | null) => `${order.currency} ${Number(amount ?? 0).toFixed(2)}`;

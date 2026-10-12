@@ -1,12 +1,13 @@
+'use cache';
+
+import 'server-only';
 /**
  * Catalog Data Layer (Storefront)
  *
  * Provides cached data for the storefront catalog features.
  * Adheres to Next.js 16 "use cache" standards.
  */
-'use cache';
 
-import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
 import {
   createProductService,
@@ -43,87 +44,79 @@ export async function getShopPlpViewModel(
   cacheTag('products', 'categories', `plp-${resolvedLocale}-${slug.join('-')}`);
   cacheLife('hours');
 
-  try {
-    const productService = createProductService();
-    const categoryService = createCategoryService();
-    const brandService = createBrandService();
+  const productService = createProductService();
+  const categoryService = createCategoryService();
+  const brandService = createBrandService();
 
-    let category = null;
-    let currentCategoryName = '';
+  let category = null;
+  let currentCategoryName = '';
 
-    if (slug.length > 0) {
-      const categorySlug = slug[slug.length - 1];
-      category = await categoryService.getBySlug(categorySlug, resolvedLocale);
-      if (!category) return null;
-      currentCategoryName = category.name;
-    }
-
-    const listing = parseShopPlpQuery(query);
-    const offset = (listing.page - 1) * listing.perPage;
-    const result = await productService.getFilteredProducts(
-      {
-        limit: listing.perPage,
-        offset,
-        isActive: true,
-        categoryId: category?.id,
-        brandIds: listing.brandIds,
-        minPrice: listing.minPrice,
-        maxPrice: listing.maxPrice,
-        sort: listing.backendSort,
-      },
-      resolvedLocale,
-    );
-
-    const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
-    const minPriceBound = 0;
-    const maxPriceBound = 1000;
-
-    return {
-      products: mappedProducts,
-      category,
-      currentCategoryName,
-      categoryOptions: mapCategoryOptions(
-        await categoryService.getTree(resolvedLocale),
-        {}, // TODO: Pass real counts if available
-        resolvedLocale,
-      ),
-      brandOptions: mapBrandOptions(
-        await brandService.getAll(true, resolvedLocale),
-        {}, // Empty counts for now
-      ),
-      minPriceBound,
-      maxPriceBound,
-      facetCounts: {
-        categories: {},
-        brands: {},
-        ratings: {},
-        discounts: {
-          onSale: 0,
-          bundleDeals: 0,
-        },
-      },
-      total: result.total,
-      totalPages: Math.ceil(result.total / listing.perPage),
-      page: listing.page,
-      perPage: listing.perPage,
-      from: mappedProducts.length > 0 ? offset + 1 : 0,
-      to: mappedProducts.length > 0 ? offset + mappedProducts.length : 0,
-      locale: resolvedLocale,
-      query: String(query.q || '') || '',
-      categorySlugPath: slug,
-      filters: {
-        minPrice: listing.minPrice ?? minPriceBound,
-        maxPrice: listing.maxPrice ?? maxPriceBound,
-        brandIds: listing.brandIds,
-        inStockOnly: query.inStock === 'true',
-        discounts: [],
-      },
-      sort: listing.sort,
-    };
-  } catch (error) {
-    console.error(`Failed to load shop PLP for locale ${locale}, slug ${slug.join('/')}:`, error);
-    return null;
+  if (slug.length > 0) {
+    const categorySlug = slug[slug.length - 1];
+    category = await categoryService.getBySlug(categorySlug, resolvedLocale);
+    if (!category) return null;
+    currentCategoryName = category.name;
   }
+
+  const listing = parseShopPlpQuery(query);
+  const offset = (listing.page - 1) * listing.perPage;
+  const result = await productService.getFilteredProducts(
+    {
+      limit: listing.perPage,
+      offset,
+      isActive: true,
+      categoryId: category?.id,
+      brandIds: listing.brandIds,
+      minPrice: listing.minPrice,
+      maxPrice: listing.maxPrice,
+      sort: listing.backendSort,
+    },
+    resolvedLocale,
+  );
+
+  const mappedProducts = result.products.map((p) => mapProduct(p, resolvedLocale));
+  const minPriceBound = 0;
+  const maxPriceBound = 1000;
+
+  return {
+    products: mappedProducts,
+    category,
+    currentCategoryName,
+    categoryOptions: mapCategoryOptions(
+      await categoryService.getTree(resolvedLocale),
+      {},
+      resolvedLocale,
+    ),
+    brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
+    minPriceBound,
+    maxPriceBound,
+    facetCounts: {
+      categories: {},
+      brands: {},
+      ratings: {},
+      discounts: {
+        onSale: 0,
+        bundleDeals: 0,
+      },
+    },
+    total: result.total,
+    totalPages: Math.ceil(result.total / listing.perPage),
+    page: listing.page,
+    perPage: listing.perPage,
+    from: mappedProducts.length > 0 ? offset + 1 : 0,
+    to: mappedProducts.length > 0 ? offset + mappedProducts.length : 0,
+    locale: resolvedLocale,
+    query: String(query.q || '') || '',
+    categorySlugPath: slug,
+    filters: {
+      minPrice: listing.minPrice ?? minPriceBound,
+      maxPrice: listing.maxPrice ?? maxPriceBound,
+      brandIds: listing.brandIds,
+      inStockOnly: query.inStock === 'true',
+      discounts: [],
+    },
+    sort: listing.sort,
+  };
 }
 
 /**
@@ -138,92 +131,56 @@ export async function getSearchPageViewModel(
   cacheTag('products', 'categories', `search-${resolvedLocale}-${rawQuery}`);
   cacheLife('hours');
 
-  try {
-    const searchService = createSearchService();
-    const categoryService = createCategoryService();
-    const brandService = createBrandService();
-    const result = await searchService.search({
-      query: rawQuery,
-      locale: resolvedLocale,
-      limit: 20,
-    });
+  const searchService = createSearchService();
+  const categoryService = createCategoryService();
+  const brandService = createBrandService();
+  const result = await searchService.search({
+    query: rawQuery,
+    locale: resolvedLocale,
+    limit: 20,
+  });
 
-    const mappedItems = result.items.map((p) => mapProduct(p, resolvedLocale));
+  const mappedItems = result.items.map((p) => mapProduct(p, resolvedLocale));
 
-    return {
-      mode: mappedItems.length > 0 ? 'search' : 'fallback',
-      query: rawQuery,
-      products: mappedItems,
-      categoryOptions: mapCategoryOptions(
-        await categoryService.getTree(resolvedLocale),
-        {},
-        resolvedLocale,
-      ),
-      brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
-      minPriceBound: 0,
-      maxPriceBound: 1000,
-      facetCounts: {
-        categories: {},
-        brands: {},
-        ratings: {},
-        discounts: {
-          onSale: 0,
-          bundleDeals: 0,
-        },
+  return {
+    mode: mappedItems.length > 0 ? 'search' : 'fallback',
+    query: rawQuery,
+    products: mappedItems,
+    categoryOptions: mapCategoryOptions(
+      await categoryService.getTree(resolvedLocale),
+      {},
+      resolvedLocale,
+    ),
+    brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
+    minPriceBound: 0,
+    maxPriceBound: 1000,
+    facetCounts: {
+      categories: {},
+      brands: {},
+      ratings: {},
+      discounts: {
+        onSale: 0,
+        bundleDeals: 0,
       },
-      total: result.total,
-      totalPages: Math.ceil(result.total / 20),
-      page: 1,
-      perPage: 20,
-      from: 1,
-      to: mappedItems.length,
-      exactCount: true,
-      locale: resolvedLocale,
-      categorySlugPath: [],
-      filters: {
-        minPrice: 0,
-        maxPrice: 1000,
-        brandIds: [],
-        inStockOnly: false,
-        discounts: [],
-      },
-      sort: 'newest',
-    };
-  } catch (error) {
-    console.error(`Failed to search for "${rawQuery}" in locale ${locale}:`, error);
-    return {
-      mode: 'fallback',
-      query: rawQuery,
-      products: [],
-      categoryOptions: [],
-      brandOptions: [],
-      minPriceBound: 0,
-      maxPriceBound: 1000,
-      facetCounts: {
-        categories: {},
-        brands: {},
-        ratings: {},
-        discounts: { onSale: 0, bundleDeals: 0 },
-      },
-      total: 0,
-      totalPages: 0,
-      page: 1,
-      perPage: 20,
-      from: 0,
-      to: 0,
-      exactCount: false,
-      locale: resolvedLocale,
-      categorySlugPath: [],
-      filters: {
-        minPrice: 0,
-        maxPrice: 1000,
-        brandIds: [],
-        inStockOnly: false,
-        discounts: [],
-      },
-      sort: 'newest',
-    };
-  }
+    },
+    total: result.total,
+    totalPages: Math.ceil(result.total / 20),
+    page: 1,
+    perPage: 20,
+    from: 1,
+    to: mappedItems.length,
+    exactCount: true,
+    locale: resolvedLocale,
+    categorySlugPath: [],
+    filters: {
+      minPrice: 0,
+      maxPrice: 1000,
+      brandIds: [],
+      inStockOnly: false,
+      discounts: [],
+    },
+    sort: 'newest',
+  };
 }
 
 /**
@@ -231,33 +188,21 @@ export async function getSearchPageViewModel(
  */
 export async function getProductBySlugOrIdForMetadata(locale: string, slug: string) {
   const resolvedLocale = parse(locale);
+  const products = createProductService();
 
-  try {
-    const products = createProductService();
-
-    // Try by ID first if numeric, then by slug
-    if (/^\d+$/.test(slug)) {
-      return await products.getById(Number(slug), resolvedLocale);
-    }
-    return await products.getBySlug(slug, resolvedLocale);
-  } catch (error) {
-    console.error(`Failed to get product metadata for slug/id ${slug}:`, error);
-    return null;
+  if (/^\d+$/.test(slug)) {
+    return await products.getById(Number(slug), resolvedLocale);
   }
+  return await products.getBySlug(slug, resolvedLocale);
 }
 
 /**
  * Top product slugs for static params
  */
 export async function getTopProductSlugsForStaticParams(limit: number = 100) {
-  try {
-    const products = createProductService();
-    const allProducts = await products.getAll('en');
-    return allProducts.slice(0, limit).map((p) => p.slug || String(p.id));
-  } catch (error) {
-    console.error(`Failed to get top product slugs (limit ${limit}):`, error);
-    return [];
-  }
+  const products = createProductService();
+  const allProducts = await products.getAll('en');
+  return allProducts.slice(0, limit).map((p) => p.slug || String(p.id));
 }
 
 /**
@@ -270,64 +215,59 @@ export async function getProductPdp(
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = parse(locale);
 
-  try {
-    const productService = createProductService();
-    const brandService = createBrandService();
-    const categoryService = createCategoryService();
+  const productService = createProductService();
+  const brandService = createBrandService();
+  const categoryService = createCategoryService();
 
-    const product = await productService.getBySlug(slug, resolvedLocale);
-    if (!product) return null;
+  const product = await productService.getBySlug(slug, resolvedLocale);
+  if (!product) return null;
 
-    const brand = product.brandId
-      ? await brandService.getById(product.brandId, resolvedLocale)
-      : null;
-    const categories = product.categoryId
-      ? [await categoryService.getById(product.categoryId, resolvedLocale)].filter(
-          (category): category is Category => category !== null,
-        )
-      : [];
-    const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
+  const brand = product.brandId
+    ? await brandService.getById(product.brandId, resolvedLocale)
+    : null;
+  const categories = product.categoryId
+    ? [await categoryService.getById(product.categoryId, resolvedLocale)].filter(
+        (category): category is Category => category !== null,
+      )
+    : [];
+  const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
 
-    const mappedProduct = mapProduct(product, resolvedLocale);
-    const mappedRelated = related.map((p) => mapProduct(p, resolvedLocale));
+  const mappedProduct = mapProduct(product, resolvedLocale);
+  const mappedRelated = related.map((p) => mapProduct(p, resolvedLocale));
 
-    return {
-      product: mappedProduct,
-      selectedVariant:
-        ((mappedProduct.variants?.find((v) => v.isDefault) ||
-          mappedProduct.variants?.[0]) as Variant) || null,
-      canonicalSlug: slug,
-      brand,
-      categories,
-      relatedProducts: mappedRelated,
-      reviewSummary: {
-        averageRating: product.rating || 0,
-        totalReviews: product.reviewsCount || 0,
-        verifiedReviews: 0,
-        histogram: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-      },
-      initialReviews: [],
-      reviewTotal: product.reviewsCount || 0,
-      shouldRedirect: false,
-      canonicalPath: `/shop/products/${slug}`,
-      stockSnapshot: {
-        inStock: mappedProduct.variants?.some((v) => (v.inventory?.[0]?.onHand || 0) > 0) || false,
-        quantity:
-          mappedProduct.variants?.reduce((acc, v) => acc + (v.inventory?.[0]?.onHand || 0), 0) || 0,
-      },
-      breadcrumbs: [
-        { label: 'Home', href: '/' },
-        { label: 'Shop', href: '/shop' },
-        ...(categories[0]
-          ? [{ label: categories[0].name, href: `/shop?categoryId=${categories[0].id}` }]
-          : []),
-        { label: mappedProduct.name },
-      ],
-    };
-  } catch (error) {
-    console.error(`Failed to load product PDP for slug ${slug}, locale ${locale}:`, error);
-    return null;
-  }
+  return {
+    product: mappedProduct,
+    selectedVariant:
+      ((mappedProduct.variants?.find((v) => v.isDefault) ||
+        mappedProduct.variants?.[0]) as Variant) || null,
+    canonicalSlug: slug,
+    brand,
+    categories,
+    relatedProducts: mappedRelated,
+    reviewSummary: {
+      averageRating: product.rating || 0,
+      totalReviews: product.reviewsCount || 0,
+      verifiedReviews: 0,
+      histogram: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+    },
+    initialReviews: [],
+    reviewTotal: product.reviewsCount || 0,
+    shouldRedirect: false,
+    canonicalPath: `/shop/products/${slug}`,
+    stockSnapshot: {
+      inStock: mappedProduct.variants?.some((v) => (v.inventory?.[0]?.onHand || 0) > 0) || false,
+      quantity:
+        mappedProduct.variants?.reduce((acc, v) => acc + (v.inventory?.[0]?.onHand || 0), 0) || 0,
+    },
+    breadcrumbs: [
+      { label: 'Home', href: '/' },
+      { label: 'Shop', href: '/shop' },
+      ...(categories[0]
+        ? [{ label: categories[0].name, href: `/shop?categoryId=${categories[0].id}` }]
+        : []),
+      { label: mappedProduct.name },
+    ],
+  };
 }
 
 /**
@@ -341,47 +281,34 @@ export async function getProductDetailPageData(
   cacheTag('products', `product-${productId}`, `product-${productId}-${locale}`);
   cacheLife('hours');
 
-  try {
-    const productService = createProductService();
-    const product = await productService.getById(productId, locale);
-    if (!product) return null;
+  const productService = createProductService();
+  const product = await productService.getById(productId, locale);
+  if (!product) return null;
 
-    const related = await productService.getRelatedProducts(product, 4, locale);
-    const mappedRelated = related.map((p) => mapProduct(p, locale));
+  const related = await productService.getRelatedProducts(product, 4, locale);
+  const mappedRelated = related.map((p) => mapProduct(p, locale));
 
-    return {
-      product: mapProduct(product, locale),
-      relatedProducts: mappedRelated,
-      reviewSummary: {
-        averageRating: product.rating || 0,
-        totalReviews: product.reviewsCount || 0,
-        verifiedReviews: 0,
-        histogram: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-      },
-      initialReviews: [],
-      reviewTotal: product.reviewsCount || 0,
-    };
-  } catch (error) {
-    console.error(
-      `Failed to get product detail page for product ${productId}, language ${language}:`,
-      error,
-    );
-    return null;
-  }
+  return {
+    product: mapProduct(product, locale),
+    relatedProducts: mappedRelated,
+    reviewSummary: {
+      averageRating: product.rating || 0,
+      totalReviews: product.reviewsCount || 0,
+      verifiedReviews: 0,
+      histogram: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+    },
+    initialReviews: [],
+    reviewTotal: product.reviewsCount || 0,
+  };
 }
 
 /**
  * Product IDs for Static Params
  */
 export async function getProductIdsForStaticParams(): Promise<number[]> {
-  try {
-    const products = createProductService();
-    const all = await products.getAll('en');
-    return all.map((p) => p.id);
-  } catch (error) {
-    console.error('Failed to get product IDs for static params:', error);
-    return [];
-  }
+  const products = createProductService();
+  const all = await products.getAll('en');
+  return all.map((p) => p.id);
 }
 
 /**
@@ -392,32 +319,22 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
   cacheTag('home-page', 'products', 'categories', `home-${locale}`);
   cacheLife('hours');
 
-  try {
-    const productService = createProductService();
-    const categoryService = createCategoryService();
-    const collectionService = createCollectionService();
+  const productService = createProductService();
+  const categoryService = createCategoryService();
+  const collectionService = createCollectionService();
 
-    const products = await productService.getAll(locale);
-    const categories = await categoryService.getAll(locale);
-    const collections = await collectionService.getAllCollections();
+  const products = await productService.getAll(locale);
+  const categories = await categoryService.getAll(locale);
+  const collections = await collectionService.getAllCollections();
 
-    const mappedProducts = products.map((p) => mapProduct(p, locale));
+  const mappedProducts = products.map((p) => mapProduct(p, locale));
 
-    return {
-      featuredProducts: mappedProducts.slice(0, 8),
-      heroProducts: mappedProducts.slice(0, 3),
-      categories: categories.filter((c) => c.parentId === null) as Category[],
-      collections: collections, // Cast for now
-    };
-  } catch (error) {
-    console.error(`Failed to load home page data for language ${language}:`, error);
-    return {
-      featuredProducts: [],
-      heroProducts: [],
-      categories: [],
-      collections: [],
-    };
-  }
+  return {
+    featuredProducts: mappedProducts.slice(0, 8),
+    heroProducts: mappedProducts.slice(0, 3),
+    categories: categories.filter((c) => c.parentId === null) as Category[],
+    collections: collections,
+  };
 }
 
 /**
@@ -428,27 +345,18 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
   cacheTag('products', `shop-${locale}`);
   cacheLife('hours');
 
-  try {
-    const productService = createProductService();
-    const categoryService = createCategoryService();
-    const products = await productService.getAll(locale);
-    const categories = await categoryService.getAll(locale);
+  const productService = createProductService();
+  const categoryService = createCategoryService();
+  const products = await productService.getAll(locale);
+  const categories = await categoryService.getAll(locale);
 
-    const mappedProducts = products.map((p) => mapProduct(p, locale));
+  const mappedProducts = products.map((p) => mapProduct(p, locale));
 
-    return {
-      products: mappedProducts,
-      categories: categories as Category[],
-      total: products.length,
-    };
-  } catch (error) {
-    console.error(`Failed to load shop page data for language ${language}:`, error);
-    return {
-      products: [],
-      categories: [],
-      total: 0,
-    };
-  }
+  return {
+    products: mappedProducts,
+    categories: categories as Category[],
+    total: products.length,
+  };
 }
 
 /**
@@ -459,23 +367,15 @@ export async function getCollectionsPage(language: string): Promise<CollectionsP
   cacheTag('collections', 'categories', `collections-${locale}`);
   cacheLife('days');
 
-  try {
-    const collectionService = createCollectionService();
-    const categoryService = createCategoryService();
-    const collections = await collectionService.getAllCollections();
-    const categories = await categoryService.getAll(locale);
+  const collectionService = createCollectionService();
+  const categoryService = createCategoryService();
+  const collections = await collectionService.getAllCollections();
+  const categories = await categoryService.getAll(locale);
 
-    return {
-      collections,
-      trendingCategories: categories.slice(0, 6) as Category[],
-    };
-  } catch (error) {
-    console.error(`Failed to load collections page for language ${language}:`, error);
-    return {
-      collections: [],
-      trendingCategories: [],
-    };
-  }
+  return {
+    collections,
+    trendingCategories: categories.slice(0, 6) as Category[],
+  };
 }
 
 /**
@@ -490,58 +390,53 @@ export async function getCollectionPageViewModel(
   cacheTag('products', 'collections', `collection-${resolvedLocale}-${slug}`);
   cacheLife('hours');
 
-  try {
-    const collectionService = createCollectionService();
-    const productService = createProductService();
-    const categoryService = createCategoryService();
-    const brandService = createBrandService();
-    const collection = await collectionService.getCollectionBySlug(slug);
-    if (!collection) return null;
+  const collectionService = createCollectionService();
+  const productService = createProductService();
+  const categoryService = createCategoryService();
+  const brandService = createBrandService();
+  const collection = await collectionService.getCollectionBySlug(slug);
+  if (!collection) return null;
 
-    const products = await productService.getByCategory(collection.id, resolvedLocale);
-    const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
+  const products = await productService.getByCategory(collection.id, resolvedLocale);
+  const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
 
-    return {
-      collection: collection,
-      products: mappedProducts,
-      categoryOptions: mapCategoryOptions(
-        await categoryService.getTree(resolvedLocale),
-        {},
-        resolvedLocale,
-      ),
-      brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
-      minPriceBound: 0,
-      maxPriceBound: 1000,
-      facetCounts: {
-        categories: {},
-        brands: {},
-        ratings: {},
-        discounts: {
-          onSale: 0,
-          bundleDeals: 0,
-        },
+  return {
+    collection: collection,
+    products: mappedProducts,
+    categoryOptions: mapCategoryOptions(
+      await categoryService.getTree(resolvedLocale),
+      {},
+      resolvedLocale,
+    ),
+    brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
+    minPriceBound: 0,
+    maxPriceBound: 1000,
+    facetCounts: {
+      categories: {},
+      brands: {},
+      ratings: {},
+      discounts: {
+        onSale: 0,
+        bundleDeals: 0,
       },
-      total: products.length,
-      totalPages: 1,
-      page: 1,
-      perPage: mappedProducts.length,
-      from: 1,
-      to: mappedProducts.length,
-      locale: resolvedLocale,
-      categorySlugPath: [],
-      filters: {
-        minPrice: 0,
-        maxPrice: 1000,
-        brandIds: [],
-        inStockOnly: false,
-        discounts: [],
-      },
-      sort: 'newest',
-    };
-  } catch (error) {
-    console.error(`Failed to load collection page for slug ${slug}, locale ${locale}:`, error);
-    return null;
-  }
+    },
+    total: products.length,
+    totalPages: 1,
+    page: 1,
+    perPage: mappedProducts.length,
+    from: 1,
+    to: mappedProducts.length,
+    locale: resolvedLocale,
+    categorySlugPath: [],
+    filters: {
+      minPrice: 0,
+      maxPrice: 1000,
+      brandIds: [],
+      inStockOnly: false,
+      discounts: [],
+    },
+    sort: 'newest',
+  };
 }
 
 /**
@@ -552,22 +447,17 @@ export async function getCategoryTree(locale: string = 'en') {
   cacheTag('categories');
   cacheLife('hours');
 
-  try {
-    const categories = createCategoryService();
-    const tree = await categories.getTree(resolvedLocale);
+  const categories = createCategoryService();
+  const tree = await categories.getTree(resolvedLocale);
 
-    return tree.map((c) => ({
-      id: c.id,
-      slug: c.slug,
-      name: c.name,
-      parentId: c.parentId || undefined,
-      icon: c.icon,
-      image: c.image,
-    }));
-  } catch (error) {
-    console.error(`Failed to get category tree for locale ${locale}:`, error);
-    return [];
-  }
+  return tree.map((c) => ({
+    id: c.id,
+    slug: c.slug,
+    name: c.name,
+    parentId: c.parentId || undefined,
+    icon: c.icon,
+    image: c.image,
+  }));
 }
 
 /**
@@ -580,27 +470,19 @@ export async function getProductPricing(payload: { productId: number; variantId:
   cacheTag('products');
   cacheLife('minutes');
 
-  try {
-    const products = createProductService();
-    const product = await products.getById(payload.productId);
+  const products = createProductService();
+  const product = await products.getById(payload.productId);
 
-    if (!product) return { success: false, error: 'Product not found' };
+  if (!product) return { success: false, error: 'Product not found' };
 
-    const variant = product.variants?.find((v) => v.id === payload.variantId);
-    if (!variant) return { success: false, error: 'Variant not found' };
+  const variant = product.variants?.find((v) => v.id === payload.variantId);
+  if (!variant) return { success: false, error: 'Variant not found' };
 
-    return {
-      success: true,
-      data: {
-        unitPrice: variant.basePrice,
-        currency: 'EGP',
-      },
-    };
-  } catch (error) {
-    console.error(
-      `Failed to get pricing for product ${payload.productId}, variant ${payload.variantId}:`,
-      error,
-    );
-    return { success: false, error: 'Failed to fetch pricing' };
-  }
+  return {
+    success: true,
+    data: {
+      unitPrice: variant.basePrice,
+      currency: 'EGP',
+    },
+  };
 }

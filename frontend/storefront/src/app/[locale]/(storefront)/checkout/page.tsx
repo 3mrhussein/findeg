@@ -1,7 +1,7 @@
 import { CheckoutClient } from './CheckoutClient';
 import { getCheckoutPrefill } from '@/data/order/queries';
 import { notFound } from 'next/navigation';
-import { createSchoolSupplyListReader } from '@findeg/backend/features/school';
+import { getSchoolSupplyListByPublicCode } from '@/data/school/queries';
 
 /**
  *
@@ -16,12 +16,10 @@ export default async function CheckoutPage({
   const [prefill, checkoutSource] = await Promise.all([
     getCheckoutPrefill(),
     query.source === 'list' && query.publicCode
-      ? createSchoolSupplyListReader()
-          .getByPublicCode(query.publicCode)
-          .then((result) => {
-            if (!result.success || result.data.status !== 'published') notFound();
-            return { source: 'list' as const, publicCode: query.publicCode!, list: result.data };
-          })
+      ? getSchoolSupplyListByPublicCode(query.publicCode).then((list) => {
+          if (!list || list.status !== 'published') notFound();
+          return { source: 'list' as const, publicCode: query.publicCode!, list };
+        })
       : Promise.resolve({ source: 'cart' as const }),
   ]);
   return <CheckoutClient initialPrefill={prefill} checkoutSource={checkoutSource} />;

@@ -1,9 +1,10 @@
-/**
- * Cart Data Layer (Storefront)
- */
 'use cache';
 
 import 'server-only';
+/**
+ * Cart Data Layer (Storefront)
+ */
+
 import { cacheTag, cacheLife } from 'next/cache';
 import { createCartServices } from '@findeg/backend/features/cart';
 
@@ -17,16 +18,6 @@ export async function getCart(cartId: string) {
   cacheTag(`cart-${cartId}`);
   cacheLife('minutes');
 
-  try {
-    const { cart } = createCartServices();
-    return await cart.getCart(cartId);
-  } catch (error) {
-    console.error(`Failed to retrieve cart ${cartId}:`, error);
-    // Return empty cart on error to prevent UI breakage
-    return {
-      items: [],
-      subtotal: 0,
-      itemCount: 0,
-    };
-  }
+  const { cart } = createCartServices();
+  return await cart.getCart(cartId);
 }

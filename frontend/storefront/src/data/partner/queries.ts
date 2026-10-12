@@ -32,3 +32,17 @@ export const getCachedPartnerContext = cache(async (code: string) =>
 export const getCachedActivePartnerMemberships = cache(async () =>
   createPartnerMembershipServices().memberships.listActiveMemberships(await getPartnerSession()),
 );
+
+/** Read a partner invitation by token. */
+export async function getInvitationByToken(token: string) {
+  return createPartnerMembershipServices().invitations.getInvitation(token);
+}
+
+/** Check partner role requirements. */
+export function requirePartnerRole(
+  context: import('@findeg/backend/features/partner-membership').PartnerContext,
+  roles: readonly import('@findeg/backend/features/partner-membership').PartnerRole[] | 'any',
+  action: import('@findeg/backend/features/partner-membership').PartnerAction,
+) {
+  return createPartnerMembershipServices().memberships.requireRole(context, roles, action);
+}

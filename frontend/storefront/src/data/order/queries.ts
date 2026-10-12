@@ -1,7 +1,14 @@
+import 'server-only';
 import type { SessionPayload } from '@findeg/backend/features/core';
 import { getSession } from '@/lib/session';
 import { createOrders } from '@findeg/orders';
 import { createIdentityServices } from '@findeg/backend/features/identity';
+import {
+  GUEST_ORDER_COOKIE,
+  createGuestAccessService,
+} from '@findeg/backend/features/guest-access';
+
+export { GUEST_ORDER_COOKIE };
 
 /**
  * Checkout prefill data shape
@@ -62,4 +69,9 @@ export async function getCustomerAccount(session: SessionPayload) {
 export async function getCustomerOrder(session: SessionPayload, orderId: number) {
   const order = await createOrders().get(orderId);
   return order?.userId === session.userId ? order : null;
+}
+
+/** Read a guest order via signed guest order cookie. */
+export async function getGuestOrder(token: string | undefined, reference: string) {
+  return createGuestAccessService().getOrder(token, reference);
 }

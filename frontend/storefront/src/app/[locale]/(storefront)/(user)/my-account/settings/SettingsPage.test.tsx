@@ -24,16 +24,13 @@ vi.mock('@lib/auth-guard', () => ({
   requireAuth: vi.fn().mockResolvedValue({ userId: 42 }),
 }));
 
-vi.mock('@findeg/backend', () => ({
-  getMyAccountData: vi.fn().mockResolvedValue({
-    user: {
-      id: 42,
-      email: 'user@example.com',
-      firstName: 'Fatma',
-      lastName: 'Mohamed',
-      phone: '+201098765432',
-    },
-    orders: [],
+vi.mock('@data/user/queries', () => ({
+  getUserProfile: vi.fn().mockResolvedValue({
+    id: 42,
+    email: 'user@example.com',
+    firstName: 'Fatma',
+    lastName: 'Mohamed',
+    phone: '+201098765432',
   }),
 }));
 

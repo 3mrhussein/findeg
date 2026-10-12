@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { setRequestLocale } from 'next-intl/server';
 import type { Locale } from 'next-intl';
-import { createSchoolSupplyListReader } from '@findeg/backend/features/school';
+import { getSchoolSupplyListByPublicCode } from '@data/school/queries';
 import { SupplyListView } from './_components/SupplyListView';
 
 interface PageProps {
@@ -35,8 +35,8 @@ async function PublicListContent({ params }: PageProps) {
   setRequestLocale(locale as Locale);
   await connection();
 
-  const result = await createSchoolSupplyListReader().getByPublicCode(publicCode);
-  if (!result.success) notFound();
+  const list = await getSchoolSupplyListByPublicCode(publicCode);
+  if (!list) notFound();
 
-  return <SupplyListView list={result.data} locale={locale} />;
+  return <SupplyListView list={list} locale={locale} />;
 }

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@find
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
-import { getMyAccountData } from '@findeg/backend';
+import { getUserProfile } from '@data/user/queries';
 import { requireAuth } from '@lib/auth-guard';
 import { updateProfileAction } from '@data/user/actions';
 
@@ -21,7 +21,7 @@ export default async function SettingsPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'Pages.MyAccount' });
   const tCommon = await getTranslations({ locale, namespace: 'Common' });
   const session = await requireAuth(locale);
-  const { user } = await getMyAccountData(session.userId);
+  const user = await getUserProfile(session.userId);
 
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;
