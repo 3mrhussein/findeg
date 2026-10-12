@@ -14,6 +14,7 @@ import { ProductAttributeValueSchema } from './Attribute';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
 import { pick } from '../../../core/domain/value-objects';
 import { ID, IdSchema, Locale, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
+import { defaultVariant, isNewArrival } from '@findeg/domain/catalog';
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
   description: TranslationMapSchema,
@@ -120,13 +121,12 @@ export class ProductEntity {
     return this.product.variants || [];
   }
 
-  /** Returns the default variant (joined or filtered from list) */
+  /** The Default Variant, as the domain chooses it: the flagged variant, else the first in order. */
   getDefaultVariant(): Variant | undefined {
     if (this.product.hydratedDefaultVariant) {
       return this.product.hydratedDefaultVariant;
     }
-    const variants = this.getVariants();
-    return variants.find((v) => v.isDefault) || variants[0];
+    return defaultVariant(this.getVariants());
   }
 
   getVariantByKey(key: string): Variant | undefined {
@@ -182,8 +182,9 @@ export class ProductEntity {
 
   // ─── Status ───────────────────────────────────────────────────────
 
+  /** A New Arrival carries the `new-arrival` tag, whatever its group. */
   isNew(): boolean {
-    return this.product.tags?.some((t) => t.key === 'campaign:new-arrival') ?? false;
+    return isNewArrival(this.product.tags ?? []);
   }
 
   // ─── Data ─────────────────────────────────────────────────────────

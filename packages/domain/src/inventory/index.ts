@@ -3,7 +3,13 @@ import type { ActiveStatus, Id } from '../common';
 import type { VariantId } from '../catalog';
 import type { OrderId } from '../orders';
 
-export { LOW_STOCK_MAX_UNITS, STOCK_LEVELS, availableStock, stockLevel } from './availability';
+export {
+  LOW_STOCK_MAX_UNITS,
+  STOCK_LEVELS,
+  availableStock,
+  freeUnits,
+  stockLevel,
+} from './availability';
 export type { StockLevel } from './availability';
 export { InventoryError } from './inventory-error';
 export type { InventoryErrorCode } from './inventory-error';

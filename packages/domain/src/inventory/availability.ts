@@ -20,7 +20,7 @@ export function activeWarehouseIds(warehouses: readonly Warehouse[]): ReadonlySe
 }
 
 /** Units of one balance free to sell: on hand less reserved, never below zero. */
-export function freeUnits(balance: StockBalance): number {
+export function freeUnits(balance: Pick<StockBalance, 'onHand' | 'reserved'>): number {
   return Math.max(balance.onHand - balance.reserved, 0);
 }
 

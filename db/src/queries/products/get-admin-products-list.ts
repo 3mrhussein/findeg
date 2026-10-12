@@ -4,6 +4,9 @@ import { brands, categories, products } from '../../schema';
 import { and, asc, Column, count, desc, eq, inArray, or, sql, SQL } from 'drizzle-orm';
 import type { AdminProductListQueryFilters, AdminProductListQueryResult } from './types';
 
+/**
+ * Queries a paginated list of admin products including the default variant SKU, price, and inventory.
+ */
 export async function getAdminProductsListRaw(
   filters: AdminProductListQueryFilters,
 ): Promise<AdminProductListQueryResult> {
@@ -11,10 +14,19 @@ export async function getAdminProductsListRaw(
   const pageSize = filters.pageSize ?? 20;
   const offset = (page - 1) * pageSize;
 
+  // The product's Default Variant, chosen as the domain chooses it: the flagged variant, else the
+  // first in display order. The same ordering the listing price uses.
+  const defaultVariantSql = sql`
+    SELECT dv."sku", dv."base_price"
+    FROM "catalog"."product_variants" dv
+    WHERE dv."product_id" = ${products.id}
+    ORDER BY dv."is_default" DESC, dv."sort_order" ASC, dv."id" ASC
+    LIMIT 1
+  `;
+
   const pricingAndVariants = sql`
     (SELECT 
       "product_id",
-      MAX(CASE WHEN "is_default" = true THEN CAST("base_price" AS DECIMAL) ELSE NULL END) as default_price,
       MIN(CAST("base_price" AS DECIMAL)) as min_price,
       COUNT("id") as v_count,
       MAX(CASE WHEN "is_active" = true THEN 1 ELSE 0 END) as has_active_v
@@ -141,7 +153,8 @@ export async function getAdminProductsListRaw(
       brandName: sql<string | null>`${brands.localizedName}->>'en'`,
       isActive: products.isActive,
       updatedAt: products.updatedAt,
-      defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,
+      defaultVariantSku: sql<string | null>`dv_stats.sku`,
+      defaultVariantPrice: sql<number | null>`dv_stats.base_price`,
       variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,
       totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,
       hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,
@@ -151,6 +164,7 @@ export async function getAdminProductsListRaw(
     .leftJoin(categories, eq(products.categoryId, categories.id))
     .leftJoin(brands, eq(products.brandId, brands.id))
     .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))
+    .leftJoin(sql`lateral (${defaultVariantSql}) dv_stats`, sql`true`)
     .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))
     .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))
     .where(where)
@@ -173,6 +187,7 @@ export async function getAdminProductsListRaw(
       brandName: row.brandName ?? null,
       isActive: row.isActive,
       updatedAt: row.updatedAt,
+      defaultVariantSku: row.defaultVariantSku ?? null,
       defaultVariantPrice: row.defaultVariantPrice != null ? Number(row.defaultVariantPrice) : null,
       variantCount: Number(row.variantCount),
       totalStock: Number(row.totalStock),

@@ -8,6 +8,9 @@
  */
 
 import { z } from 'zod';
+import { discountPercentage } from '@findeg/domain/catalog';
+import { freeUnits, stockLevel } from '@findeg/domain/inventory';
+import { moneyFromDecimal } from '@findeg/domain/common';
 import { IdSchema, TranslationMapSchema, type Locale } from '../../../core/domain/types/common';
 import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
 import {
@@ -33,6 +36,8 @@ export type VariantImage = z.infer<typeof VariantImageSchema>;
 export const InventoryBalanceSchema = z.object({
   warehouseId: IdSchema.optional(),
   warehouseCode: z.string().optional(),
+  /** Only active warehouses are sold from. Unknown warehouses are not. */
+  warehouseActive: z.boolean().optional(),
   onHand: z.number().int().nonnegative().default(0),
   reserved: z.number().int().nonnegative().default(0),
 });
@@ -109,26 +114,38 @@ export class VariantEntity {
     return toMoney(Number(this.variant.strikePrice), currency as CurrencyCode);
   }
 
+  /**
+   * Returns discount percentage against the compare-at price, rounded to the nearest whole number.
+   */
   getDiscountPercentage(): number {
-    const strikePrice = Number(this.variant.strikePrice || 0);
-    const basePrice = Number(this.variant.basePrice);
-    if (!strikePrice || strikePrice <= basePrice) return 0;
-    return Math.round(((strikePrice - basePrice) / strikePrice) * 100);
+    return discountPercentage({
+      price: moneyFromDecimal(Number(this.variant.basePrice).toFixed(2)),
+      compareAtPrice:
+        this.variant.strikePrice != null
+          ? moneyFromDecimal(Number(this.variant.strikePrice).toFixed(2))
+          : null,
+    });
   }
 
+  /** Units a Customer can buy: free units summed over active warehouses (domain availableStock). */
   getAvailableStock(): number {
-    if (!this.variant.inventory || this.variant.inventory.length === 0) return 0;
-    return this.variant.inventory.reduce((sum, bal) => sum + (bal.onHand - bal.reserved), 0);
+    return (this.variant.inventory ?? [])
+      .filter((bal) => bal.warehouseActive)
+      .reduce((sum, bal) => sum + freeUnits(bal), 0);
   }
 
+  /**
+   * Indicates whether the variant has sellable units available in active warehouses.
+   */
   isInStock(): boolean {
-    return this.getAvailableStock() > 0;
+    return stockLevel(this.getAvailableStock()) !== 'out-of-stock';
   }
 
+  /**
+   * Indicates whether the available stock is within the low stock threshold (1 to 5 units).
+   */
   isLowStock(): boolean {
-    const available = this.getAvailableStock();
-    // Default low stock threshold for MVP
-    return available > 0 && available <= 5;
+    return stockLevel(this.getAvailableStock()) === 'low-stock';
   }
 
   getData(): Variant {

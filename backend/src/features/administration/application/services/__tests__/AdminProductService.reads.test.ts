@@ -42,6 +42,7 @@ describe('AdminProductService reads', () => {
           isActive: true,
           updatedAt: new Date('2026-05-01T00:00:00.000Z'),
           defaultVariantPrice: null,
+          defaultVariantSku: 'NB-001',
           totalStock: 0,
           variantCount: 1,
           hasImages: false,
@@ -57,6 +58,7 @@ describe('AdminProductService reads', () => {
           isActive: false,
           updatedAt: new Date('2026-05-02T00:00:00.000Z'),
           defaultVariantPrice: 15,
+          defaultVariantSku: 'PEN-BLUE',
           totalStock: 9,
           variantCount: 2,
           hasImages: true,
@@ -75,7 +77,7 @@ describe('AdminProductService reads', () => {
       products: [
         {
           id: 1,
-          sku: 'N/A',
+          sku: 'NB-001',
           localizedName: { en: 'Notebook', ar: 'دفتر' },
           categoryId: null,
           categoryName: null,
@@ -92,7 +94,7 @@ describe('AdminProductService reads', () => {
         },
         {
           id: 2,
-          sku: 'N/A',
+          sku: 'PEN-BLUE',
           localizedName: { en: 'Pen', ar: 'قلم' },
           categoryId: 10,
           categoryName: 'Writing',

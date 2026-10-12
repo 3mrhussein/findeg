@@ -17,6 +17,7 @@ export interface Product extends Omit<BaseProduct, 'variants'> {
 
 export interface Variant extends BaseVariant {
   inventory?: {
+    warehouseActive?: boolean;
     onHand: number;
     reserved: number;
     warehouseId?: number;
