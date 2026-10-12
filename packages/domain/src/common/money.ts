@@ -10,7 +10,7 @@ declare const egp: unique symbol;
  */
 export type Money = bigint & { readonly [egp]: 'EGP' };
 
-export type MoneyErrorCode = 'INVALID_MONEY_AMOUNT' | 'NEGATIVE_MONEY';
+export type MoneyErrorCode = 'INVALID_MONEY_AMOUNT' | 'NEGATIVE_MONEY' | 'INVALID_QUANTITY';
 
 /** An amount that is not valid Money. */
 export class MoneyError extends DomainError<MoneyErrorCode> {
@@ -64,4 +64,37 @@ export function moneyToDecimal(amount: Money): string {
   const pounds = hundredths / HUNDREDTHS_PER_POUND;
   const fraction = (hundredths % HUNDREDTHS_PER_POUND).toString().padStart(2, '0');
   return `${pounds}.${fraction}`;
+}
+
+/** Zero pounds. */
+export const ZERO_MONEY: Money = money(0n);
+
+export function addMoney(a: Money, b: Money): Money {
+  return money(a + b);
+}
+
+/** `a - b`. A result below zero is refused: Money is never negative. */
+export function subtractMoney(a: Money, b: Money): Money {
+  return money(a - b);
+}
+
+/** The amount for a whole, non-negative quantity, e.g. a unit price times a line quantity. */
+export function multiplyMoney(amount: Money, quantity: number): Money {
+  if (!Number.isSafeInteger(quantity) || quantity < 0) {
+    throw new MoneyError(
+      'INVALID_QUANTITY',
+      `Expected a whole, non-negative quantity, received ${quantity}`,
+    );
+  }
+  return money(amount * BigInt(quantity));
+}
+
+export function sumMoney(amounts: readonly Money[]): Money {
+  return amounts.reduce(addMoney, ZERO_MONEY);
+}
+
+/** -1 when `a` is less than `b`, 0 when equal, 1 when greater. */
+export function compareMoney(a: Money, b: Money): -1 | 0 | 1 {
+  if (a < b) return -1;
+  return a > b ? 1 : 0;
 }

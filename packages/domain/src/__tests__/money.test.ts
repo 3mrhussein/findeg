@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError, MoneyError, money, moneyFromDecimal, moneyToDecimal } from '@findeg/domain';
+import {
+  DomainError,
+  MoneyError,
+  addMoney,
+  compareMoney,
+  money,
+  moneyFromDecimal,
+  moneyToDecimal,
+  multiplyMoney,
+  subtractMoney,
+  sumMoney,
+} from '@findeg/domain';
 
 /** The error code a call fails with, or `undefined` when it does not fail. */
 function codeOf(run: () => unknown): string | undefined {
@@ -121,5 +132,57 @@ describe('Money from hundredths', () => {
 
   it('refuses a number at runtime instead of mixing types', () => {
     expect(() => money(3750 as unknown as bigint)).toThrow(TypeError);
+  });
+});
+
+describe('Money arithmetic', () => {
+  const egp = moneyFromDecimal;
+
+  it('adds exactly where float maths drifts', () => {
+    expect(0.1 + 0.2).not.toBe(0.3);
+    expect(moneyToDecimal(addMoney(egp('0.10'), egp('0.20')))).toBe('0.30');
+  });
+
+  // Ported from checkout's sumQuote: ten 0.10 lines sum to 1.00, not 0.9999999999999999.
+  it('sums many amounts exactly', () => {
+    const lines = Array.from({ length: 10 }, () => egp('0.10'));
+    expect(moneyToDecimal(sumMoney(lines))).toBe('1.00');
+    expect(moneyToDecimal(addMoney(sumMoney(lines), egp('50.00')))).toBe('51.00');
+  });
+
+  it('sums nothing to zero', () => {
+    expect(moneyToDecimal(sumMoney([]))).toBe('0.00');
+  });
+
+  it('subtracts down to zero', () => {
+    expect(moneyToDecimal(subtractMoney(egp('12.99'), egp('2.99')))).toBe('10.00');
+    expect(moneyToDecimal(subtractMoney(egp('12.99'), egp('12.99')))).toBe('0.00');
+  });
+
+  // Rule change (approved 2026-10-12): Money is never negative.
+  it('refuses a subtraction that would go below zero', () => {
+    expect(codeOf(() => subtractMoney(egp('1.00'), egp('1.01')))).toBe('NEGATIVE_MONEY');
+  });
+
+  it.each([
+    ['12.99', 0, '0.00'],
+    ['12.99', 1, '12.99'],
+    ['12.99', 3, '38.97'],
+    ['0.10', 999, '99.90'],
+  ])('multiplies %s by quantity %s to %s', (amount, quantity, total) => {
+    expect(moneyToDecimal(multiplyMoney(egp(amount), quantity))).toBe(total);
+  });
+
+  it.each([[-1], [1.5], [Number.NaN], [Number.POSITIVE_INFINITY]])(
+    'refuses to multiply by the quantity %s',
+    (quantity) => {
+      expect(codeOf(() => multiplyMoney(egp('1.00'), quantity))).toBe('INVALID_QUANTITY');
+    },
+  );
+
+  it('compares amounts', () => {
+    expect(compareMoney(egp('1.00'), egp('2.00'))).toBe(-1);
+    expect(compareMoney(egp('2.00'), egp('2'))).toBe(0);
+    expect(compareMoney(egp('2.01'), egp('2.00'))).toBe(1);
   });
 });

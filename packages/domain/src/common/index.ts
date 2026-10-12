@@ -1,7 +1,18 @@
 export * from './locale';
 export * from './governorates';
 export type { Id } from './identity';
-export { MoneyError, money, moneyFromDecimal, moneyToDecimal } from './money';
+export {
+  MoneyError,
+  ZERO_MONEY,
+  addMoney,
+  compareMoney,
+  money,
+  moneyFromDecimal,
+  moneyToDecimal,
+  multiplyMoney,
+  subtractMoney,
+  sumMoney,
+} from './money';
 export type { Money, MoneyErrorCode } from './money';
 export { DomainError } from './domain-error';
 
