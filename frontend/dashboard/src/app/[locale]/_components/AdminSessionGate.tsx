@@ -1,7 +1,7 @@
 import { requireAdmin } from '@lib/auth-guard';
 import { PermissionsProvider } from '@providers/PermissionsProvider';
 import { SessionProvider } from '@providers/SessionProvider';
-import { type Locale } from '@findeg/backend/features/core';
+import { type Locale } from '@findeg/domain';
 
 interface AdminSessionGateProps {
   children: React.ReactNode;

@@ -1,3 +1,4 @@
+import { sumMoney, moneyFromDecimal, multiplyMoney, moneyToDecimal } from '@findeg/domain';
 import { cart, addToCart, setCartQuantity, removeFromCart } from '@findeg/domain/orders';
 import type { VariantId } from '@findeg/domain/catalog';
 /**
@@ -125,7 +126,15 @@ export class CartEntity {
    * Simple: unitPrice × quantity for each item.
    */
   getTotalPrice(): number {
-    return this.items.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
+    return Number(
+      moneyToDecimal(
+        sumMoney(
+          this.items.map((item) =>
+            multiplyMoney(moneyFromDecimal(String(item.unitPrice)), item.quantity),
+          ),
+        ),
+      ),
+    );
   }
 
   /** Clear all items from the cart */

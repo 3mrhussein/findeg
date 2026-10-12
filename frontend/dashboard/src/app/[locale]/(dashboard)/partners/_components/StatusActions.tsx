@@ -1,4 +1,5 @@
 'use client';
+import type { Locale } from '@findeg/domain';
 
 import { useState, useTransition } from 'react';
 import { Button } from '@findeg/ui';
@@ -27,7 +28,7 @@ export function StatusActions({
   current: Status;
   targets: readonly Status[];
 }) {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const [state, setState] = useState<StatusActionState>({ status: 'idle' });
   const [busy, startTransition] = useTransition();
 

@@ -13,7 +13,8 @@ import { TagSchema } from './Tag';
 import { ProductAttributeValueSchema } from './Attribute';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
 import { pick } from '../../../core/domain/value-objects';
-import { ID, IdSchema, Locale, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
+import { ID, IdSchema, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
+import { Locale } from '@findeg/domain';
 import { defaultVariant, isNewArrival } from '@findeg/domain/catalog';
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,

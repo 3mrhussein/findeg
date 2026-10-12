@@ -1,8 +1,9 @@
+import { type ActiveStatus } from '@findeg/domain';
 export interface AdminProductListQueryFilters {
   search?: string;
   categoryIds?: number[];
   brandIds?: number[];
-  status?: 'active' | 'inactive';
+  status?: ActiveStatus;
   completeness?: 'complete' | 'no-category' | 'no-images' | 'no-price' | 'draft';
   sortBy?: 'name' | 'price' | 'stock' | 'updatedAt';
   sortDir?: 'asc' | 'desc';

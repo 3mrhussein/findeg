@@ -14,8 +14,8 @@ import {
   schoolSupplyLists,
   variantAttributes,
   warehouses,
-  type PartnerStatus,
 } from '@findeg/db/schema';
+import { type BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 import {
   connectToTestDatabase,
   runConcurrently,

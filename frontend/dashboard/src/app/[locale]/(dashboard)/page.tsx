@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 /**
  * Admin Dashboard Page (Phase 6: Nested Suspense)
  *
@@ -28,7 +29,7 @@ import {
 } from './_components/DashboardSkeletons';
 
 interface AdminDashboardPageProps {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }
 
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {

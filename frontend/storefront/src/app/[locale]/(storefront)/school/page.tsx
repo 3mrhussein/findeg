@@ -2,7 +2,7 @@ import { Container } from '@findeg/ui';
 import { FadeIn } from '@providers/animation-provider';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { SchoolListLookupForm } from './_components/SchoolListLookupForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 

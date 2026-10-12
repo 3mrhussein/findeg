@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';

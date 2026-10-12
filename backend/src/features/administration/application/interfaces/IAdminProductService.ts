@@ -1,3 +1,4 @@
+import { type ActiveStatus } from '@findeg/domain';
 /**
  * Admin Product Service Interface
  *
@@ -6,7 +7,7 @@
  */
 
 import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
-import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { Locale } from '@findeg/domain';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
@@ -25,7 +26,7 @@ export interface ProductListFilters {
   search?: string;
   categoryIds?: number[];
   brandIds?: number[];
-  status?: 'active' | 'inactive';
+  status?: ActiveStatus;
   completeness?: 'complete' | 'no-category' | 'no-images' | 'no-price' | 'draft';
   sortBy?: 'name' | 'price' | 'stock' | 'updatedAt';
   sortDir?: 'asc' | 'desc';

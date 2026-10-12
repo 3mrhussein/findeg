@@ -6,10 +6,7 @@ import {
   type CurrencyCode,
 } from '@findeg/domain/common';
 import { ACCEPTED_PAYMENT_TYPES } from '@findeg/domain/orders';
-import {
-  ShippingAddressSchema as StoredShippingAddressSchema,
-  type CheckoutReceipt,
-} from '@findeg/db/types';
+import { StoredShippingAddressSchema, type CheckoutReceipt } from '@findeg/db/types';
 
 export { type CheckoutReceipt };
 export const ShippingAddressSchema = StoredShippingAddressSchema.extend({

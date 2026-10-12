@@ -1,7 +1,7 @@
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/orders';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as schema from '@findeg/db/schema';
-import type { ShippingAddress, VariantSnapshot } from '@findeg/db/types';
+import type { StoredShippingAddress as ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 import type { OrderStatusUpdate } from './schemas';
 import type { OrderStaffActor } from './OrderStaffActor';
 import type { OrderStatusTransitionResult, PaymentStatusTransitionResult } from './errors';
@@ -47,7 +47,7 @@ export interface Order {
   discountTotal: bigint;
   totalAmount: bigint;
   currency: string;
-  paymentMethod: 'cod' | 'card' | null;
+  paymentMethod: PaymentMethod | null;
   shippingAddressSnapshot: ShippingAddress | null;
   trackingNumber: string | null;
   adminNotes: string | null;

@@ -6,6 +6,7 @@
  */
 
 import { z } from 'zod';
+import { ORDER_STATUSES, LINE_QUANTITY_MIN, LINE_QUANTITY_MAX } from '@findeg/domain';
 
 // ============================================================================
 // User Schemas
@@ -95,20 +96,16 @@ export const OrderItemSchema = z.object({
   productId: z.string().uuid('Invalid product ID'),
   productName: z.string().min(1).max(500),
   variantId: z.string().uuid().nullable().optional(),
-  quantity: z.number().int().min(1, 'Quantity must be at least 1'),
+  quantity: z
+    .number()
+    .int()
+    .min(LINE_QUANTITY_MIN, 'Quantity must be at least 1')
+    .max(LINE_QUANTITY_MAX),
   unitPrice: z.number().min(0, 'Unit price must be non-negative'),
   totalPrice: z.number().min(0, 'Total price must be non-negative'),
 });
 
-export const OrderStatusSchema = z.enum([
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled',
-  'refunded',
-]);
+export const OrderStatusSchema = z.enum(ORDER_STATUSES);
 
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 

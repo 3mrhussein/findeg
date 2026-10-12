@@ -43,7 +43,7 @@ export type {
   UpdateMembershipError,
   UpdateMembershipInput,
 } from './application/interfaces/IMembershipService';
-export { PARTNER_ADMINISTRATOR } from '@findeg/db/schema';
+export { PARTNER_ADMINISTRATOR } from '@findeg/domain';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,

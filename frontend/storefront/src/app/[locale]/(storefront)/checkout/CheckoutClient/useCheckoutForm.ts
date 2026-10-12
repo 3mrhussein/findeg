@@ -1,3 +1,4 @@
+import { type PaymentMethod } from '@findeg/domain';
 import { useState } from 'react';
 
 export type CheckoutValidationError =
@@ -40,7 +41,7 @@ export function useCheckoutForm({
     guestEmail: initialValues?.guestEmail || '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [touchedFields, setTouchedFields] = useState<
     Partial<Record<keyof CheckoutFormValues, boolean>>
   >({});

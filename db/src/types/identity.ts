@@ -20,7 +20,8 @@ export const PortalRoleSchema = z.enum(PORTAL_ROLE_VALUES);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
 /**
- * Global registry of permission strings used throughout the application.
+ * Complete shared Staff permission registry, including School Supply List authoring.
+ * db owns the registry; Backend consumes it without copying codes (#399, owner decision 2026-10-12).
  */
 export const PERMISSION_CODES = {
   // Portal & System

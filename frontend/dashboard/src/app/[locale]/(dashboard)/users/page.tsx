@@ -1,7 +1,7 @@
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { AdminUsersList } from './_components/AdminUsersList';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getAdminUsers, getSystemRoles } from '@data/access/queries';
 
 export const metadata = {

@@ -1,3 +1,4 @@
+import { type Locale } from '@findeg/domain';
 /**
  * TagChips Component
  *
@@ -7,7 +8,7 @@
  * Location: src/components/shared/ (cross-cutting)
  */
 
-'use client';
+('use client');
 
 import * as React from 'react';
 import { Badge } from '@findeg/ui';
@@ -30,7 +31,7 @@ export interface TagChipsProps {
   /** Enable remove functionality (for edit mode) */
   onRemove?: (tagId: number) => void;
   /** Current locale for bilingual support */
-  locale?: 'en' | 'ar';
+  locale?: Locale;
   /** Additional CSS classes */
   className?: string;
 }

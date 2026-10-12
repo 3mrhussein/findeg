@@ -1,4 +1,4 @@
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { RegistrationContent } from './_components/RegistrationContent';
 

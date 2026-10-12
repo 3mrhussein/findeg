@@ -7,14 +7,6 @@ import { z } from 'zod';
  * and prevent circular dependencies with the backend package.
  */
 
-// ─── Locale ─────────────────────────────────────────────────────────────────
-
-import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_CURRENCY } from '@findeg/domain';
-export { SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_CURRENCY };
-export type { Locale } from '@findeg/domain';
-
-export const LocaleSchema = z.enum(SUPPORTED_LOCALES);
-
 // ─── Translations ───────────────────────────────────────────────────────────
 
 export const TranslationMapSchema = z.object({
@@ -24,44 +16,11 @@ export const TranslationMapSchema = z.object({
 
 export type TranslationMap = z.infer<typeof TranslationMapSchema>;
 
-// ─── Money & Currency ───────────────────────────────────────────────────────
-
-export const CurrencyCodeSchema = z
-  .string()
-  .trim()
-  .toUpperCase()
-  .regex(/^[A-Z]{3}$/, 'Currency must be a 3-letter code');
-
-export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
-
-export const MoneyAmountSchema = z.number().finite().nonnegative();
-export type MoneyAmount = z.infer<typeof MoneyAmountSchema>;
-
-export const MoneySchema = z.object({
-  amount: MoneyAmountSchema,
-  currency: CurrencyCodeSchema.default(DEFAULT_CURRENCY),
-});
-
-export type Money = z.infer<typeof MoneySchema>;
-
 // ─── Core Primitives ────────────────────────────────────────────────────────
 
 /** Unique identifier across domain entities */
 export const IdSchema = z.coerce.number().int().positive();
 export type ID = z.infer<typeof IdSchema>;
-
-/** Stock Keeping Unit - unique alphanumeric product code */
-export const SkuSchema = z
-  .string()
-  .regex(/^[A-Za-z0-9\-_]*$/, 'Invalid SKU format')
-  .optional();
-
-export const SkuRequiredSchema = z
-  .string()
-  .min(1)
-  .regex(/^[A-Za-z0-9\-_]+$/, 'Invalid SKU format');
-
-export type Sku = string;
 
 export const EmailSchema = z.string().email();
 export type Email = z.infer<typeof EmailSchema>;

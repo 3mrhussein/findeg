@@ -10,7 +10,7 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createCategoryService, createTagService } from '@findeg/backend/features/catalog';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import type { Locale } from '@findeg/backend/features/core';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Get all categories with hierarchy

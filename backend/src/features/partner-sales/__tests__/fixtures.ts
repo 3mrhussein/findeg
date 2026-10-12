@@ -10,8 +10,8 @@ import {
   schoolSupplyListItems,
   schoolSupplyLists,
   users,
-  type PartnerRole,
 } from '@findeg/db/schema';
+import { type PartnerRole } from '@findeg/domain';
 import type { TestDatabase } from '../../../testing/postgres';
 
 type OrderStatus = (typeof orders.$inferInsert)['status'];

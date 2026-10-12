@@ -5,7 +5,7 @@ import { requireAuth } from '@lib/auth-guard';
 import { getCachedActivePartnerMemberships } from '@data/partner/queries';
 import { adminSession } from '@findeg/backend/features/core';
 import { AdminAccessForbidden } from '@components/shared/AdminAccessForbidden';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Dashboard Layout

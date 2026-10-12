@@ -1,5 +1,5 @@
 import { OrderSnapshotTotals } from '@components/orders/OrderSnapshotTotals';
-import { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
