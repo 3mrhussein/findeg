@@ -1,9 +1,13 @@
 /**
  * Business Partner vocabulary (GLOSSARY: Business Partner, Partner School, Partner Membership,
- * Partner Role, Partner Invitation, Partner Report; ADR-0003, ADR-0010, ADR-0012).
+ * Partner Role, Partner Invitation; ADR-0003, ADR-0010, ADR-0012).
  */
-import type { Customer } from '../customers';
-import type { Locale, LocalizedText } from '../common';
+import type { CustomerId } from '../customers';
+import type { Governorate, Id, Locale, LocalizedText } from '../common';
+
+export type BusinessPartnerId = Id<'BusinessPartner'>;
+export type PartnerMembershipId = Id<'PartnerMembership'>;
+export type PartnerInvitationId = Id<'PartnerInvitation'>;
 
 /** Where a Business Partner stands with FindEg. `closed` is final. */
 export const BUSINESS_PARTNER_STATUSES = ['onboarding', 'active', 'suspended', 'closed'] as const;
@@ -62,39 +66,8 @@ export const PARTNER_INVITATION_STATUS_TRANSITIONS: Readonly<
 /** An invitation's link is valid for this many days after it is sent. */
 export const PARTNER_INVITATION_VALID_DAYS = 7;
 
-/** A Partner Report suppresses any month with fewer attributed Orders than this (ADR-0010). */
+/** A Partner Report row with fewer distinct Orders than this rolls up into "Other items" (ADR-0010). */
 export const PARTNER_REPORT_MIN_ORDERS = 3;
-
-export const GOVERNORATES = [
-  'Cairo',
-  'Giza',
-  'Alexandria',
-  'Dakahlia',
-  'Red Sea',
-  'Beheira',
-  'Faiyum',
-  'Gharbia',
-  'Ismailia',
-  'Menofia',
-  'Minya',
-  'Qalyubia',
-  'New Valley',
-  'Suez',
-  'Aswan',
-  'Assiut',
-  'Beni Suef',
-  'Port Said',
-  'Damietta',
-  'Sharqia',
-  'South Sinai',
-  'Kafr El Sheikh',
-  'Matrouh',
-  'Luxor',
-  'Qena',
-  'North Sinai',
-  'Sohag',
-] as const;
-export type Governorate = (typeof GOVERNORATES)[number];
 
 export const SCHOOL_TYPES = [
   'National',
@@ -119,7 +92,7 @@ export type AcademicSystem = (typeof ACADEMIC_SYSTEMS)[number];
 
 /** A Business Partner: the organisation FindEg has a commercial relationship with. */
 export interface BusinessPartner {
-  id: number;
+  id: BusinessPartnerId;
   code: string;
   name: LocalizedText;
   status: BusinessPartnerStatus;
@@ -127,7 +100,7 @@ export interface BusinessPartner {
 
 /** A Business Partner that is a school, with the details shown in the Partner School directory. */
 export interface PartnerSchoolProfile {
-  businessPartnerId: number;
+  businessPartnerId: BusinessPartnerId;
   governorate: Governorate;
   area: LocalizedText;
   schoolType: SchoolType;
@@ -137,26 +110,19 @@ export interface PartnerSchoolProfile {
 
 /** A person's Partner Membership in one Business Partner. */
 export interface PartnerMembership {
-  businessPartnerId: number;
-  customerId: Customer['id'];
+  id: PartnerMembershipId;
+  businessPartnerId: BusinessPartnerId;
+  customerId: CustomerId;
   roles: readonly PartnerRole[];
   status: PartnerMembershipStatus;
 }
 
 /** An emailed offer to join a Business Partner with specific roles. Opening it never accepts it. */
 export interface PartnerInvitation {
-  id: number;
-  businessPartnerId: number;
+  id: PartnerInvitationId;
+  businessPartnerId: BusinessPartnerId;
   email: string;
   roles: readonly PartnerRole[];
   status: PartnerInvitationStatus;
   locale: Locale;
-}
-
-/** Monthly sales of one Business Partner's School Supply Lists, as its members see them. */
-export interface PartnerReport {
-  businessPartnerId: number;
-  /** Calendar month, `YYYY-MM`. */
-  month: string;
-  attributedOrderCount: number;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import * as schema from '../index';
+import * as schema from '@findeg/domain';
 
 /**
  * Pinned domain values. A change here is a business decision: update GLOSSARY.md and the
@@ -41,14 +41,12 @@ describe('pinned business values', () => {
   it('school supply lists and partner schools', () => {
     expect(schema.SUPPLY_LIST_STATUSES).toEqual(['draft', 'published', 'archived']);
     expect(schema.PUBLIC_SUPPLY_LIST_STATUSES).toEqual(['published', 'archived']);
-    expect(schema.GOVERNORATES).toHaveLength(27);
     expect(schema.SCHOOL_TYPES).toHaveLength(5);
     expect(schema.ACADEMIC_SYSTEMS).toHaveLength(8);
   });
 
   it('money, locale and offers', () => {
     expect(schema.DEFAULT_CURRENCY).toBe('EGP');
-    expect(schema.PIASTERS_PER_POUND).toBe(100);
     expect(schema.LOCALES).toEqual(['en', 'ar']);
     expect(schema.LIST_OFFER_MAX_BASIS_POINTS).toBe(10000);
   });
@@ -111,10 +109,40 @@ describe('public list projection', () => {
 });
 
 describe('payment options', () => {
-  it('only cash on delivery is accepted in phase one; card is defined for phase two', () => {
+  it('only cash on delivery is accepted; card is defined but not allowed', () => {
     expect(schema.PAYMENT_OPTIONS).toEqual([
-      { type: 'cod', allowed: true, phase: 1 },
-      { type: 'card', allowed: false, phase: 2 },
+      { type: 'cod', allowed: true },
+      { type: 'card', allowed: false },
     ]);
+  });
+});
+
+describe('common values', () => {
+  it('lists the 27 governorates of Egypt in the common area', async () => {
+    const common = await import('@findeg/domain/common');
+    expect(common.GOVERNORATES).toHaveLength(27);
+    expect(new Set(common.GOVERNORATES).size).toBe(27);
+    expect(common.GOVERNORATES).toContain('Cairo');
+    expect(common.GOVERNORATES).toContain('Kafr El Sheikh');
+  });
+});
+
+describe('only business domain is exported', () => {
+  it.each([
+    ['the Outbox', 'OUTBOX_STATUSES'],
+    ['portal roles', 'PORTAL_ROLES'],
+    ['the money unit constant (Money owns it)', 'PIASTERS_PER_POUND'],
+  ])('%s is gone', (_name, exported) => {
+    expect(schema).not.toHaveProperty(exported);
+  });
+
+  it('the Outbox area has no entry', async () => {
+    await expect(import(/* @vite-ignore */ '@findeg/domain/' + 'outbox')).rejects.toThrow();
+  });
+
+  it('non-domain entities are not on the map', () => {
+    for (const entity of ['OutboxMessage', 'GuestOrderAccess', 'PartnerReport']) {
+      expect(Object.keys(schema.ENTITY_DOMAINS)).not.toContain(entity);
+    }
   });
 });
