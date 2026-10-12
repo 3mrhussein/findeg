@@ -206,6 +206,24 @@ describe('stock allocation', () => {
     ]);
   });
 
+  // CA-9: free units are floored at zero per warehouse row, so an over-reserved row neither
+  // gives units nor takes them from another warehouse's row.
+  it('floors free units per warehouse row: an over-reserved row takes nothing from the others', () => {
+    const balances = [balance(pen, cairo, 1, 3), balance(pen, giza, 2)];
+    expect(allocateStock([{ variantId: pen, quantity: 2 }], balances, warehouses)).toEqual([
+      { variantId: pen, warehouseId: giza, quantity: 2 },
+    ]);
+    let error: unknown;
+    try {
+      allocateStock([{ variantId: pen, quantity: 3 }], balances, warehouses);
+    } catch (caught) {
+      error = caught;
+    }
+    expect((error as InsufficientStockError).shortfalls).toEqual([
+      { variantId: pen, requested: 3, available: 2 },
+    ]);
+  });
+
   it('sums duplicate lines of one variant before allocating', () => {
     const lines = [
       { variantId: pen, quantity: 2 },

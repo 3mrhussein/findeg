@@ -61,7 +61,7 @@ The units of one variant physically in one warehouse, and how many of them are h
 _Avoid_: Inventory row, stock record
 
 **Available Stock**:
-What can still be sold of a variant: units on hand minus units reserved, over its active warehouses, never below zero.
+What can still be sold of a variant: in each active warehouse, units on hand minus units reserved, never below zero, summed over those warehouses. A warehouse with more reserved than on hand counts as zero.
 _Avoid_: Stock, quantity, on hand
 
 **Stock Level**:

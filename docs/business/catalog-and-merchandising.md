@@ -80,7 +80,7 @@ A gift guide is a Collection, not a separate concept.
 - **CA-6** _(unconfirmed)_ A new Review appears immediately; nothing holds it for moderation.
 - **CA-7** _(unconfirmed)_ A Product's rating and review count follow its Reviews.
 - **CA-8** Removing a product or variant never changes past Orders: Orders keep their own frozen names and prices.
-- **CA-9** A variant's Available Stock is its units on hand minus its reserved units, summed over active warehouses and never below zero. Inactive warehouses are never sold from.
+- **CA-9** A variant's Available Stock is, for each active warehouse, its units on hand there minus its units reserved there, floored at zero, then summed over those warehouses. The floor is per warehouse: a warehouse with more units reserved than on hand counts as zero and never takes units from another warehouse. Order Acceptance allocates from the same per-warehouse free units. Inactive warehouses are never sold from.
 - **CA-10** A variant is out of stock with no Available Stock, low on stock with 1 to 5 units, and in stock above that. Every screen uses the same levels.
 - **CA-11** Products, variants, categories, brands, tags, collections and warehouses are Active or Inactive. "Draft" belongs only to School Supply Lists.
 - **CA-12** A Product is a New Arrival exactly when it carries the `new-arrival` tag.
