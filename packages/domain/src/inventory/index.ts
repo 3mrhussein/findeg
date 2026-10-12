@@ -5,6 +5,10 @@ import type { OrderId } from '../orders';
 
 export { LOW_STOCK_MAX_UNITS, STOCK_LEVELS, availableStock, stockLevel } from './availability';
 export type { StockLevel } from './availability';
+export { InventoryError } from './inventory-error';
+export type { InventoryErrorCode } from './inventory-error';
+export { RESERVATION_STATES, reservationSettlement, reservationState } from './reservation';
+export type { ReservationSettlement, ReservationState } from './reservation';
 
 export type WarehouseId = Id<'Warehouse'>;
 
