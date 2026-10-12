@@ -42,6 +42,7 @@ export * from './shared/EmptyState';
 export * from './shared/Grid';
 export * from './shared/Icon';
 export * from './shared/Logo';
+export * from './lib/money';
 export * from './shared/Pagination';
 export * from './shared/Price';
 export * from './shared/ToggleTheme';
