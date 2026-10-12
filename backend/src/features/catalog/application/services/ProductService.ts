@@ -6,6 +6,7 @@ import { type Variant } from '@findeg/backend/features/catalog/domain/entities/V
 import { type Locale } from '@findeg/backend/features/core/domain/value-objects';
 import type { ProductInput } from '../dtos/ProductInput';
 import { productQueries } from '@findeg/db/queries';
+import { defaultVariant as domainDefaultVariant } from '@findeg/domain/catalog';
 import {
   asTranslationMap,
   pick,
@@ -117,7 +118,7 @@ export class ProductService implements IProductService {
       const productVariantsList = (variantsMap[row.product.id] || []).map((v) =>
         this.mapVariantToDomain(v),
       );
-      const defaultVariant = productVariantsList.find((v) => v.isDefault) || productVariantsList[0];
+      const defaultVariant = domainDefaultVariant(productVariantsList);
 
       const catName = row.category
         ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
@@ -156,7 +157,7 @@ export class ProductService implements IProductService {
     const productVariantsList = (variants[id as number] || []).map((v) =>
       this.mapVariantToDomain(v),
     );
-    const defaultVariant = productVariantsList.find((v) => v.isDefault) || productVariantsList[0];
+    const defaultVariant = domainDefaultVariant(productVariantsList);
 
     const catName = result.category
       ? pick(asTranslationMap(result.category.localizedName ?? { en: '' }), lang)
@@ -200,7 +201,7 @@ export class ProductService implements IProductService {
       const row = rowById.get(id);
       if (!row) continue;
       const variants = (variantsMap[id] || []).map((v) => this.mapVariantToDomain(v));
-      const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
+      const defaultVariant = domainDefaultVariant(variants);
       const catName = row.category
         ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
         : undefined;

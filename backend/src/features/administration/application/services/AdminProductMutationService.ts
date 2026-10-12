@@ -12,7 +12,28 @@ import {
   duplicateProductWithVariants,
   updateProductWithVariantsInDb,
 } from '@findeg/db/queries';
-import { ensureBrandExists, ensureCategoryExists, getExistingProductOrThrow } from './helpers';
+import {
+  assertCatalogueWriteRules,
+  ensureBrandExists,
+  ensureCategoryExists,
+  getExistingProductOrThrow,
+  type CatalogueWriteRow,
+} from './helpers';
+
+/** The SKU and price fields a write sets on each variant, with shared pricing applied. */
+function priceRowsOf(input: {
+  pricingMode?: 'shared' | 'per-variant';
+  sharedBasePrice?: number;
+  sharedStrikePrice?: number | null;
+  variants?: ReadonlyArray<{ sku?: string; basePrice?: number; strikePrice?: number | null }>;
+}): CatalogueWriteRow[] {
+  const shared = input.pricingMode === 'shared';
+  return (input.variants ?? []).map((variant) => ({
+    sku: variant.sku,
+    basePrice: shared ? input.sharedBasePrice : variant.basePrice,
+    strikePrice: shared ? input.sharedStrikePrice : variant.strikePrice,
+  }));
+}
 
 interface AdminProductMutationDependencies {
   auditLogService?: IAuditLogService;
@@ -32,6 +53,7 @@ export class AdminProductMutationService {
     input: CreateProductWithVariantsInput,
     adminUserId?: number,
   ): Promise<{ productId: number }> {
+    assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
     await ensureBrandExists(input.brandId);
 
@@ -54,6 +76,7 @@ export class AdminProductMutationService {
     adminUserId?: number,
   ): Promise<void> {
     await getExistingProductOrThrow(id);
+    assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
 
     await updateProductWithVariantsInDb(id as number, input);

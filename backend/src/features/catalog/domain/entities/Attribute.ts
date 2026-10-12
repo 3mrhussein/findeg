@@ -5,9 +5,10 @@
  */
 
 import { z } from 'zod';
+import { ATTRIBUTE_DATA_TYPES } from '@findeg/domain/catalog';
 import { IdSchema, TranslationMapSchema } from '../../../core/domain/types/common';
 
-export const AttributeDataTypeSchema = z.enum(['string', 'number', 'boolean', 'enum']);
+export const AttributeDataTypeSchema = z.enum(ATTRIBUTE_DATA_TYPES);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
 
 export const AttributeSchema = z.object({

@@ -10,7 +10,12 @@ export { CatalogError } from './catalog-error';
 export type { CatalogErrorCode } from './catalog-error';
 export { sku } from './sku';
 export type { Sku } from './sku';
-export { defaultVariant, discountPercentage, productVariant } from './variant-rules';
+export {
+  checkCompareAtPrice,
+  defaultVariant,
+  discountPercentage,
+  productVariant,
+} from './variant-rules';
 export type { ProductVariantProps } from './variant-rules';
 export { NEW_ARRIVAL_TAG_KEY, isNewArrival } from './product-rules';
 

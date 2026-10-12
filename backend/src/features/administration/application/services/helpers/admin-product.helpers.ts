@@ -126,7 +126,7 @@ export function buildVariantKeyUpdates(
   }));
 }
 
-function mapAdminProductListItem(row: ProductListRow): ProductListItem {
+function mapAdminProductListItem({ defaultVariantSku, ...row }: ProductListRow): ProductListItem {
   let completeness: ProductListItem['completeness'] = 'complete';
 
   if (!row.categoryId) completeness = 'no-category';
@@ -136,7 +136,7 @@ function mapAdminProductListItem(row: ProductListRow): ProductListItem {
 
   return {
     ...row,
-    sku: 'N/A',
+    sku: defaultVariantSku ?? '',
     localizedName: {
       en: row.localizedName.en ?? '',
       ar: row.localizedName.ar ?? '',

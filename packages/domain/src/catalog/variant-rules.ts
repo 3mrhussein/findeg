@@ -1,4 +1,4 @@
-import { moneyToDecimal } from '../common';
+import { moneyToDecimal, type Money } from '../common';
 import { CatalogError } from './catalog-error';
 import { sku } from './sku';
 import type { ProductVariant } from './index';
@@ -12,14 +12,21 @@ export type ProductVariantProps = Omit<ProductVariant, 'sku'> & { sku: string };
  * always a real saving.
  */
 export function productVariant(props: ProductVariantProps): ProductVariant {
-  const { compareAtPrice, price } = props;
+  checkCompareAtPrice(props.price, props.compareAtPrice);
+  return { ...props, sku: sku(props.sku) };
+}
+
+/**
+ * The compare-at rule on its own: a compare-at price, when present, must be strictly above the
+ * price. Equal prices are refused, so no strike-through shows without a saving.
+ */
+export function checkCompareAtPrice(price: Money, compareAtPrice: Money | null): void {
   if (compareAtPrice !== null && compareAtPrice <= price) {
     throw new CatalogError(
       'COMPARE_AT_PRICE_NOT_ABOVE_PRICE',
       `Compare-at price ${moneyToDecimal(compareAtPrice)} must be above the price ${moneyToDecimal(price)}`,
     );
   }
-  return { ...props, sku: sku(props.sku) };
 }
 
 /**
