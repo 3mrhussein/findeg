@@ -36,3 +36,20 @@ export async function upsertListOffer(
 export async function deleteListOffer(tx: SchoolSupplyListTransaction, listId: number) {
   await tx.delete(listOffers).where(eq(listOffers.listId, listId));
 }
+
+/** A replacement list starts with the offer of the list it replaces. */
+export async function copyListOffer(
+  tx: SchoolSupplyListTransaction,
+  fromListId: number,
+  toListId: number,
+  now: Date,
+) {
+  const source = await getListOffer(tx, fromListId);
+  if (!source) return;
+  await upsertListOffer(
+    tx,
+    toListId,
+    { basisPoints: source.basisPoints, startsAt: source.startsAt, endsAt: source.endsAt },
+    now,
+  );
+}

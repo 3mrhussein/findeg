@@ -1,3 +1,4 @@
+import { GOVERNORATES } from '@findeg/domain/common';
 import {
   getPartnerSchoolByCode,
   getPartnerSchoolFilterOptions,
@@ -34,6 +35,10 @@ export class SchoolDirectory implements ISchoolDirectory {
   }
 
   async getFilterOptions(): Promise<SchoolFilterOptions> {
-    return getPartnerSchoolFilterOptions(await this.getDb());
+    const options = await getPartnerSchoolFilterOptions(await this.getDb());
+    return {
+      ...options,
+      governorates: [...new Set([...GOVERNORATES, ...options.governorates])].sort(),
+    };
   }
 }
