@@ -191,7 +191,7 @@ A School Supply List's lifecycle state. Draft is freely editable. Published free
 _Avoid_: Active/inactive (conflates status with visibility)
 
 **School Supply List Item**:
-One line of a School Supply List: a default variant, a prescribed quantity, required or optional, and either no Specification (an Exact Item) or a Specification its choices must match.
+One line of a School Supply List: a default variant, a prescribed quantity, required or optional, and either no Specification (an Exact Item) or a Specification its choices must match. An unfinished Draft may lack its default variant; publishing requires it, and every published item has one.
 _Avoid_: School List Item
 
 **Exact Item**:
