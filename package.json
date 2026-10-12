@@ -1,6 +1,6 @@
 {
   "name": "findeg-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "packageManager": "pnpm@11.24.0",
   "type": "module",
@@ -14,6 +14,7 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "test:integration": "pnpm --filter @findeg/backend test:integration",
+    "test:architecture": "node --test scripts/architecture/*.test.mjs",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v ",
     "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",

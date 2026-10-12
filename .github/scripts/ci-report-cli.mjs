@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// CLI entry point for rendering CI reports. All logic lives in ci-report.mjs.
+// CLI entry point for rendering CI reports. All logic lives in report/report.mjs.
 //
 // Usage:
 //   node .github/scripts/ci-report-cli.mjs render --template <name> --status <status> [--tokens <json file>] [--env] [--config <dir>]
@@ -11,7 +11,12 @@
 import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { coreTokensFromEnv, loadReportConfig, renderTemplate, resolveTheme } from './ci-report.mjs';
+import {
+  coreTokensFromEnv,
+  loadReportConfig,
+  renderTemplate,
+  resolveTheme,
+} from './report/report.mjs';
 
 const DEFAULT_CONFIG_DIR = fileURLToPath(new URL('../config', import.meta.url));
 

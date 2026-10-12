@@ -21,7 +21,7 @@ import {
   loadReportConfig,
   renderTemplate,
   resolveTheme,
-} from './ci-report.mjs';
+} from './report/report.mjs';
 import {
   buildPromotionBody,
   decideBranchName,

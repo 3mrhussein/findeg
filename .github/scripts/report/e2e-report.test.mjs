@@ -9,7 +9,7 @@ import {
   planPrune,
   buildE2eTokens,
   readEvidenceDir,
-} from './ci-e2e-report.mjs';
+} from './e2e-report.mjs';
 
 const passed = `@findeg/storefront:test:e2e: (Run Finished)
 @findeg/storefront:test:e2e:       Spec                         Tests  Passing  Failing  Pending  Skipped
@@ -231,7 +231,7 @@ test('evidence directory helper lists files and treats a missing directory as em
   const files = await readEvidenceDir(new URL('.', import.meta.url));
   assert.ok(
     files.some(
-      (file) => file.path.endsWith('ci-e2e-report.test.mjs') && Number.isFinite(file.mtimeMs),
+      (file) => file.path.endsWith('e2e-report.test.mjs') && Number.isFinite(file.mtimeMs),
     ),
   );
   assert.ok(files.every((file) => typeof file.path === 'string' && typeof file.spec === 'string'));

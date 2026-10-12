@@ -21,6 +21,6 @@ _Please verify all architectural boundaries are respected before submitting._
 
 ## Testing
 
-- [ ] Unit Tests pass (`npm run test`)
-- [ ] Build & Type-check pass (`npm run type-check && pnpm build`)
-- [ ] E2E Tests pass
+- [ ] Unit Tests pass (`pnpm test`)
+- [ ] Build & Type-check pass (`pnpm type-check && pnpm build`)
+- [ ] E2E Tests pass (`pnpm test:e2e`)

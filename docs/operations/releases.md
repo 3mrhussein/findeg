@@ -37,6 +37,8 @@ Local configuration checks do not certify GitHub rulesets, App permissions, work
 
 ## Spec and ticket coverage (2026-10-06)
 
+> **Historical record.** Written before CI merged into one workflow (ADR-0015, second amendment). `CI · Release`, the tier guard, `Fast / CI OK` and `Strict / CI OK` no longer exist: one `CI` workflow reports `CI / Gate`, which both rulesets require alongside `PR title` and `Branch policy`.
+
 This implementation covers the strict-workflow amendment in [#312](https://github.com/3mrhussein/findeg/issues/312#issuecomment-5999884779): `CI` targets `develop`, `CI · Release` targets `main`, both call `CI jobs`, and the tier guard rejects a caller mismatch. Retargeting a PR triggers the newly selected tier. The gate rejects an absent or skipped plan, an unknown tier, failed or cancelled jobs, and strict E2E without success.
 
 | Ticket | Delivered code or verified repository state                                                                                                                                                                                                                                                                                          | Remaining live evidence                                                                                     |
