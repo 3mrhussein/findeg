@@ -11,6 +11,7 @@ export const boundaries = [
     plugins: { local },
     rules: {
       'local/declared-workspace-dependencies': [severity('local/declared-workspace-dependencies')],
+      'local/no-domain-value-set-copies': 'error',
     },
   },
 ];
