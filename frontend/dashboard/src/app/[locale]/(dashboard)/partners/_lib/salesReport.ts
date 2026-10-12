@@ -1,4 +1,4 @@
-import { piastersToEgp } from '@findeg/money';
+import { formatEgp } from '@findeg/ui';
 import {
   sumSalesFigures,
   type StaffPartnerReportView,
@@ -35,12 +35,12 @@ export function toSalesReportProps(report: StaffPartnerReportView): SalesReportP
       productName: row.productName,
       variantLabel: row.variantLabel,
       quantity: row.quantity,
-      egp: piastersToEgp(row.chargedPiasters),
+      egp: formatEgp(row.chargedPiasters),
       orderCount: row.orderCount,
     })),
     total: {
       quantity: total.quantity,
-      egp: piastersToEgp(total.chargedPiasters),
+      egp: formatEgp(total.chargedPiasters),
     },
   };
 }

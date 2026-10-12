@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { Link } from '@i18n/navigation';
 import type { Product } from '@/data/catalog/types';
 import { useCart } from '@hooks/useCart';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import { formatEgpDecimal } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 
@@ -19,11 +20,10 @@ interface ProductCardProps {
 export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
   const { addToCart } = useCart();
   const t = useTranslations('Pages.ProductCard');
-  const locale = useLocale();
 
   const variants = product.variants || [];
   const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
-  const displayPrice = Number(defaultVariant?.basePrice ?? 0);
+  const displayPrice = String(defaultVariant?.basePrice ?? '0');
   const imageUrl =
     defaultVariant?.images?.[0]?.url || `https://picsum.photos/seed/${product.id}/600/600`;
 
@@ -72,10 +72,7 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
               className="text-lg font-black text-slate-900 dark:text-white"
               data-testid={`product-card-price-${product.id}`}
             >
-              {new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
-                style: 'currency',
-                currency: 'EGP',
-              }).format(displayPrice)}
+              {`EGP ${formatEgpDecimal(displayPrice)}`}
             </p>
             <Button
               onClick={() =>
@@ -146,10 +143,7 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
           className="text-sm font-bold text-slate-900 dark:text-white shrink-0"
           data-testid={`product-card-price-${product.id}`}
         >
-          {new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
-            style: 'currency',
-            currency: 'EGP',
-          }).format(displayPrice)}
+          {`EGP ${formatEgpDecimal(displayPrice)}`}
         </p>
       </div>
     </div>

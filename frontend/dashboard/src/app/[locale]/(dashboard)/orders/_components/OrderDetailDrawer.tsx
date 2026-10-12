@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { piastersToEgp } from '@findeg/money';
+import { addMoney, money } from '@findeg/domain';
+import { formatEgp } from '@findeg/ui';
 
 import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
 import { StatusBadge } from '@components/shared/StatusBadge';
@@ -33,7 +34,7 @@ export function OrderDetailDrawer({
   const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
   const t = useTranslations('Common');
-  const totalAmount = `${order.currency || 'EGP'} ${piastersToEgp(order.totalAmount)}`;
+  const totalAmount = `${order.currency || 'EGP'} ${formatEgp(order.totalAmount)}`;
 
   return (
     <SlideOver
@@ -121,11 +122,11 @@ export function OrderDetailDrawer({
                   )}
                   <div className="text-xs text-muted-foreground">
                     {item.quantity} {item.uomCode || 'unit'} × {order.currency || 'EGP'}{' '}
-                    {piastersToEgp(item.unitPrice)}
+                    {formatEgp(item.unitPrice)}
                   </div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || 'EGP'} {piastersToEgp(item.lineTotal)}
+                  {order.currency || 'EGP'} {formatEgp(item.lineTotal)}
                 </div>
               </div>
             ))}
@@ -136,20 +137,21 @@ export function OrderDetailDrawer({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.subtotal + order.discountTotal)}
+                {order.currency || 'EGP'}{' '}
+                {formatEgp(addMoney(money(order.subtotal), money(order.discountTotal)))}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || 'EGP'} {piastersToEgp(order.shippingCost)}
+                {order.currency || 'EGP'} {formatEgp(money(order.shippingCost))}
               </span>
             </div>
             {order.discountTotal > 0n && (
               <div className="flex justify-between text-sm text-destructive">
                 <span>{t('Discount')}</span>
                 <span>
-                  -{order.currency} {piastersToEgp(order.discountTotal)}
+                  -{order.currency} {formatEgp(money(order.discountTotal))}
                 </span>
               </div>
             )}

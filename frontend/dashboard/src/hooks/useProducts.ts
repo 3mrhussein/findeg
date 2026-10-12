@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { isNewProduct, type Product } from '@findeg/backend/features/catalog';
 import type { SortOption } from '@lib/types';
+import { compareMoney, moneyFromDecimal } from '@findeg/domain';
 
 /**
  * Custom hook for managing product filtering and sorting.
@@ -19,15 +20,19 @@ export const useProducts = (initialProducts: Product[]) => {
         sortable.sort((a, b) => (isNewProduct(b) ? 1 : -1) - (isNewProduct(a) ? 1 : -1));
         break;
       case 'price-asc':
-        sortable.sort(
-          (a, b) =>
-            Number(a.variants?.[0]?.basePrice ?? 0) - Number(b.variants?.[0]?.basePrice ?? 0),
+        sortable.sort((a, b) =>
+          compareMoney(
+            moneyFromDecimal(String(a.variants?.[0]?.basePrice || '0')),
+            moneyFromDecimal(String(b.variants?.[0]?.basePrice || '0')),
+          ),
         );
         break;
       case 'price-desc':
-        sortable.sort(
-          (a, b) =>
-            Number(b.variants?.[0]?.basePrice ?? 0) - Number(a.variants?.[0]?.basePrice ?? 0),
+        sortable.sort((a, b) =>
+          compareMoney(
+            moneyFromDecimal(String(b.variants?.[0]?.basePrice || '0')),
+            moneyFromDecimal(String(a.variants?.[0]?.basePrice || '0')),
+          ),
         );
         break;
       case 'featured':

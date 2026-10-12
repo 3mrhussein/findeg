@@ -1,4 +1,4 @@
-import { piastersToEgp } from '@findeg/money';
+import { formatEgp } from '@findeg/ui';
 import { sumSalesFigures, type PartnerReportView } from '@findeg/backend/features/partner-sales';
 
 export interface SalesFigureProps {
@@ -55,17 +55,17 @@ export function toPartnerReportProps(
       productName: row.productName,
       variantLabel: row.variantLabel,
       quantity: row.quantity,
-      egp: piastersToEgp(row.chargedPiasters),
+      egp: formatEgp(row.chargedPiasters),
     })),
     otherItems: report.otherItems
       ? {
           quantity: report.otherItems.quantity,
-          egp: piastersToEgp(report.otherItems.chargedPiasters),
+          egp: formatEgp(report.otherItems.chargedPiasters),
         }
       : null,
     total: {
       quantity: total.quantity,
-      egp: piastersToEgp(total.chargedPiasters),
+      egp: formatEgp(total.chargedPiasters),
     },
   };
 }

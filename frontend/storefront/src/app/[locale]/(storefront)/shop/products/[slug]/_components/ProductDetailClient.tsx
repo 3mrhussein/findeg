@@ -17,6 +17,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
+import { discountPercentage, moneyFromDecimal } from '@findeg/domain';
 import { IconTooltip } from '@findeg/ui';
 import { useCart } from '@hooks/useCart';
 import { useUser } from '@hooks/useUser';
@@ -36,11 +37,12 @@ function getProductStatusBadge({
   product: Product;
 }) {
   if (lowStock) return { kind: 'low-stock' as const };
-  const strike = Number(variant.strikePrice);
-  const base = Number(variant.basePrice);
-  if (strike && strike > base) {
-    const percent = Math.round(((strike - base) / strike) * 100);
-    return { kind: 'sale' as const, percent };
+  if (variant.strikePrice && variant.basePrice) {
+    const percent = discountPercentage({
+      price: moneyFromDecimal(String(variant.basePrice)),
+      compareAtPrice: moneyFromDecimal(String(variant.strikePrice)),
+    });
+    if (percent > 0) return { kind: 'sale' as const, percent };
   }
   return null;
 }

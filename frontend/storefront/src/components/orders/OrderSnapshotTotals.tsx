@@ -1,4 +1,5 @@
-import { piastersToEgp } from '@findeg/money';
+import { addMoney, money } from '@findeg/domain';
+import { formatEgp } from '@findeg/ui';
 import type { Order } from '@findeg/orders';
 
 /** Exact historical Customer totals. Acceptance stores subtotal after discounts. */
@@ -17,25 +18,25 @@ export function OrderSnapshotTotals({
       <div className="flex justify-between">
         <dt>{labels.subtotal}</dt>
         <dd data-testid="order-gross-subtotal">
-          {currency} {piastersToEgp(subtotal + discountTotal)}
+          {currency} {formatEgp(addMoney(money(subtotal), money(discountTotal)))}
         </dd>
       </div>
       <div className="flex justify-between">
         <dt>{labels.discount}</dt>
         <dd data-testid="order-discount-total">
-          {currency} {piastersToEgp(discountTotal)}
+          {currency} {formatEgp(money(discountTotal))}
         </dd>
       </div>
       <div className="flex justify-between">
         <dt>{labels.shipping}</dt>
         <dd>
-          {currency} {piastersToEgp(shippingCost)}
+          {currency} {formatEgp(money(shippingCost))}
         </dd>
       </div>
       <div className="flex justify-between font-semibold">
         <dt>{labels.total}</dt>
         <dd data-testid="order-total">
-          {currency} {piastersToEgp(totalAmount)}
+          {currency} {formatEgp(money(totalAmount))}
         </dd>
       </div>
     </dl>
