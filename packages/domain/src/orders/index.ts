@@ -1,6 +1,7 @@
 /**
  * Order vocabulary (GLOSSARY: Order, Order Acceptance, Order Reference, Quote, Confirmation,
- * List Offer, Cancellation, Refund, Attributed Order; ADR-0005, ADR-0007).
+ * Cancellation, Refund, Attributed Order; ADR-0005, ADR-0007). List Offer pricing lives here;
+ * the List Offer itself belongs to School Supply Lists.
  */
 import type { CurrencyCode, Id } from '../common';
 import type { BusinessPartnerId } from '../partners';
@@ -11,7 +12,6 @@ import type { OrderSource, OrderTotals, QuoteLine } from './quote';
 
 export type OrderId = Id<'Order'>;
 export type OrderLineId = Id<'OrderLine'>;
-export type ListOfferId = Id<'ListOffer'>;
 
 export const ORDER_STATUSES = [
   'pending',
@@ -154,22 +154,8 @@ export interface AttributedOrder {
 export const DISCOUNT_SOURCES = ['list-offer'] as const;
 export type DiscountSource = (typeof DISCOUNT_SOURCES)[number];
 
-export {
-  LIST_OFFER_MAX_BASIS_POINTS,
-  LIST_OFFER_MIN_BASIS_POINTS,
-  ListOfferError,
-  priceListOfferLine,
-} from './list-offer-pricing';
+export { priceListOfferLine } from './list-offer-pricing';
 export type { ListOfferLinePrice } from './list-offer-pricing';
-
-/** A percentage discount on one School Supply List, active for a time window. Basis points: 100 = 1%. */
-export interface ListOffer {
-  id: ListOfferId;
-  supplyListId: SupplyListId;
-  basisPoints: number;
-  startsAt: Date;
-  endsAt: Date | null;
-}
 
 export { FLAT_SHIPPING_FEE, priceQuote } from './quote';
 export type {

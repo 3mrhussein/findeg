@@ -1,10 +1,10 @@
 import type { VariantId } from '../catalog';
 import { availableStock, stockLevel, type StockBalance, type Warehouse } from '../inventory';
-import type { ListOffer } from '../orders';
 import type { BusinessPartnerStatus } from '../partners';
 import { isEligibleVariant, type CandidateVariant } from './eligibility';
 import type { SchoolSupplyList, SchoolSupplyListItem, SupplyListItemId } from './index';
 import { archiveSupplyList } from './lifecycle';
+import type { ListOffer } from './list-offer';
 import type { PublicCode } from './public-code';
 import { assertStaffListAuthoring } from './staff-authoring';
 import { SupplyListError } from './supply-list-error';

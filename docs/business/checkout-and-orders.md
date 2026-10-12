@@ -24,7 +24,7 @@ Turn a Cart or a List Selection into an accepted cash-on-delivery Order, at exac
 
 **Confirmation**: The terms of a Quote that the Customer agrees to: lines, per-line discounts, List Offer, list and Public Code, shipping, total and currency. An Order is accepted only if a fresh Quote still has the same terms. _Avoid_: Price token, checksum.
 
-**List Offer**: A percentage discount on one School Supply List, active from its start until its end, or open-ended when it has no end. A list has at most one. It applies to every line bought from that list. _Avoid_: List discount, coupon, promotion.
+The List Offer (a list's percentage discount) is defined in [School Supply Lists](school-supply-lists.md); CO-8 says how a Quote applies it.
 
 **Order Acceptance**: The single all-or-nothing moment an Order comes into existence: re-priced, stock reserved, prices and attribution frozen. It is not an Order Status. _Avoid_: Order placement, order creation, confirmed order.
 

@@ -42,7 +42,7 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 
 **List Completeness**: Whether a List Selection covers every required item at its prescribed quantity, with any allowed substitute counting. Advisory only: it never blocks checkout and never changes the List Offer. _Avoid_: List validation, list progress.
 
-The List Offer (a list's percentage discount) is defined in [Checkout & Orders](checkout-and-orders.md).
+**List Offer**: A percentage discount on one School Supply List, active from its start until its end, or open-ended when it has no end. A list has at most one. It applies to every line bought from that list. Its rules are SL-16; Checkout applies it to the Quote (CO-8). _Avoid_: List discount, coupon, promotion.
 
 ## Capabilities
 

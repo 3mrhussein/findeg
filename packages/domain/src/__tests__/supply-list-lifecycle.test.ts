@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { DomainError, type ActiveStatus } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
 import type { StockBalance, Warehouse, WarehouseId } from '@findeg/domain/inventory';
-import type { ListOffer, ListOfferId } from '@findeg/domain/orders';
 import {
   BUSINESS_PARTNER_STATUSES,
   type BusinessPartnerId,
@@ -16,6 +15,8 @@ import {
   publicCode,
   publishSupplyList,
   type CandidateVariant,
+  type ListOffer,
+  type ListOfferId,
   type PublishSupplyListInput,
   type SchoolSupplyList,
   type SchoolSupplyListItem,

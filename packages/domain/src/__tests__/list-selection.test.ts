@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { money } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
-import { priceListOfferLine, type ListOfferId } from '@findeg/domain/orders';
+import { priceListOfferLine } from '@findeg/domain/orders';
 import {
   checkoutBlockingItemIds,
   chooseSelectionVariant,
   isDefaultListSelection,
   isSubstitute,
   listOfferBasisPointsAt,
+  type ListOfferId,
   listCompleteness,
   orderedSelectionLines,
   reconcileListSelection,

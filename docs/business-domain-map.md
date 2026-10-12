@@ -10,8 +10,8 @@ The map of FindEg's business areas and how they relate. The relations themselves
 | Catalogue | `Product`, `ProductVariant`, `Category`, `Brand`, `Tag`, `Collection`, `Attribute` | Product, Product Variant, Default Variant, Compare-at Price, Category, Brand, Tag, New Arrival, Collection, Attribute |
 | Inventory | `Warehouse`, `StockBalance`, `StockReservation` | Warehouse, Stock Balance, Available Stock, Stock Level, Stock Reservation |
 | Business Partners | `BusinessPartner`, `PartnerSchoolProfile`, `PartnerMembership`, `PartnerInvitation` | Business Partner, Partner Code, Partner School, Partner Membership, Partner Invitation, Partner Report (a read model, not an entity) |
-| School Supply Lists | `SchoolSupplyList`, `SchoolSupplyListItem`, `ListSelection` | School Supply List, Exact Item, Specification, Allowed Alternative, Substitute, Slot, Public Code, List Replacement, List Selection, List Completeness |
-| Orders | `ListOffer`, `Order`, `OrderLine`, `AttributedOrder` | Cart, Quote, Confirmation, Order, Order Status, Payment Status, Order Reference, List Offer, Attributed Order |
+| School Supply Lists | `SchoolSupplyList`, `SchoolSupplyListItem`, `ListSelection`, `ListOffer` | School Supply List, Exact Item, Specification, Allowed Alternative, Substitute, Slot, Public Code, List Replacement, List Selection, List Completeness, List Offer |
+| Orders | `Order`, `OrderLine`, `AttributedOrder` | Cart, Quote, Confirmation, Order, Order Status, Payment Status, Order Reference, Attributed Order |
 
 The Cart, the Quote and the Confirmation are values without an identity of their own, so they are not entities in the map.
 
@@ -48,9 +48,9 @@ flowchart LR
     SchoolSupplyList
     SchoolSupplyListItem
     ListSelection
+    ListOffer
   end
   subgraph orders["Orders"]
-    ListOffer
     Order
     OrderLine
     AttributedOrder
@@ -58,7 +58,7 @@ flowchart LR
   partners -- "1 link" --> customers
   school_lists -- "1 link" --> partners
   school_lists -- "2 links" --> catalog
-  orders -- "4 links" --> school_lists
+  orders -- "3 links" --> school_lists
   orders -- "1 link" --> customers
   orders -- "1 link" --> catalog
   orders -- "1 link" --> partners

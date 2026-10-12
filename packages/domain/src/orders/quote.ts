@@ -11,11 +11,12 @@ import {
 import {
   isSubstitute,
   listOfferBasisPointsAt,
+  type ListOffer,
   type PublicCode,
   type SupplyListId,
   type SupplyListItemId,
 } from '../school-lists';
-import type { DiscountSource, ListOffer } from './index';
+import type { DiscountSource } from './index';
 import { priceListOfferLine } from './list-offer-pricing';
 import { OrderError } from './order-error';
 

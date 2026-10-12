@@ -18,7 +18,7 @@ export const ENTITY_DOMAINS = {
   SchoolSupplyList: 'school-lists',
   SchoolSupplyListItem: 'school-lists',
   ListSelection: 'school-lists',
-  ListOffer: 'orders',
+  ListOffer: 'school-lists',
   Product: 'catalog',
   ProductVariant: 'catalog',
   Category: 'catalog',

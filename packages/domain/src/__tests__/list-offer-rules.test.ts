@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { DomainError } from '@findeg/domain/common';
-import type { ListOffer, ListOfferId } from '@findeg/domain/orders';
 import {
+  LIST_OFFER_MAX_BASIS_POINTS,
+  LIST_OFFER_MIN_BASIS_POINTS,
+  ListOfferError,
   isListOfferActive,
   listOffer,
   listOfferBasisPointsAt,
+  type ListOffer,
+  type ListOfferId,
   type SupplyListId,
 } from '@findeg/domain/school-lists';
 
@@ -38,6 +42,17 @@ describe('List Offer (ADR-0007)', () => {
 
     it.each([-1, 10001, 1.5, Number.NaN])('refuses %d basis points', (basisPoints) => {
       expect(codeOf(() => listOffer({ ...offer, basisPoints }))).toBe('INVALID_BASIS_POINTS');
+    });
+
+    it('bounds an offer from 0 to 10000 basis points', () => {
+      expect([LIST_OFFER_MIN_BASIS_POINTS, LIST_OFFER_MAX_BASIS_POINTS]).toEqual([0, 10000]);
+    });
+
+    it.each([
+      ['its basis points', { basisPoints: 10001 }],
+      ['its window', { endsAt: startsAt }],
+    ])('refuses a bad offer for %s with a ListOfferError', (_name, over) => {
+      expect(() => listOffer({ ...offer, ...over })).toThrow(ListOfferError);
     });
 
     it('accepts an open-ended offer', () => {

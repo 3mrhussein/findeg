@@ -1,6 +1,6 @@
 /**
  * School Supply List vocabulary (GLOSSARY: School Supply List, List Selection, Exact Item,
- * Allowed Alternative, List Replacement; ADR-0004, ADR-0011).
+ * Allowed Alternative, List Replacement, List Offer; ADR-0004, ADR-0007, ADR-0011).
  */
 import type { Id, LocalizedText } from '../common';
 import type { CategoryId, VariantId } from '../catalog';
@@ -23,8 +23,16 @@ export {
 export type { StaffListAuthoringAction } from './staff-authoring';
 export { archiveSupplyList, assertDraftEditable, cloneSupplyList } from './lifecycle';
 export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './lifecycle';
-export { isListOfferActive, listOffer, listOfferBasisPointsAt } from './list-offer';
-export type { ListOfferWindow } from './list-offer';
+export {
+  LIST_OFFER_MAX_BASIS_POINTS,
+  LIST_OFFER_MIN_BASIS_POINTS,
+  ListOfferError,
+  isListOfferActive,
+  listOffer,
+  listOfferBasisPoints,
+  listOfferBasisPointsAt,
+} from './list-offer';
+export type { ListOffer, ListOfferErrorCode, ListOfferId, ListOfferWindow } from './list-offer';
 export {
   checkoutBlockingItemIds,
   chooseSelectionVariant,

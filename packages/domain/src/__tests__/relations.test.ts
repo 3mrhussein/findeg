@@ -249,6 +249,10 @@ describe('Order links', () => {
 });
 
 describe('School Supply List links', () => {
+  it('keeps the List Offer in the School Supply Lists area (story 51)', () => {
+    expect(ENTITY_DOMAINS.ListOffer).toBe('school-lists');
+  });
+
   it('gives a list at most one List Offer', () => {
     expect(RELATIONS).toContainEqual({
       from: 'ListOffer',

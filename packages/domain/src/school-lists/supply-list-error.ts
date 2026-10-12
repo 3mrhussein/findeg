@@ -9,10 +9,9 @@ export type SupplyListErrorCode =
   | 'EMPTY_LIST'
   | 'DEFAULT_UNAVAILABLE'
   | 'DEFAULT_INELIGIBLE'
-  | 'SLOT_TAKEN'
-  | 'INVALID_LIST_OFFER_WINDOW';
+  | 'SLOT_TAKEN';
 
-/** A School Supply List, item, List Offer or authoring step that breaks a list rule. */
+/** A School Supply List, item or authoring step that breaks a list rule. */
 export class SupplyListError extends DomainError<SupplyListErrorCode> {
   constructor(code: SupplyListErrorCode, message: string) {
     super(code, message);
