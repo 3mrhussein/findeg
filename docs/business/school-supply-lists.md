@@ -1,6 +1,6 @@
 # School Supply Lists
 
-As of 2026-10-11 · Clarity: **Clear**
+As of 2026-10-12 · Clarity: **Clear**
 
 ## Purpose
 
@@ -24,21 +24,23 @@ The School Supply List is the Partner Service for schools, the first Partner Seg
 
 **School Supply List Item**: One line of a list: either an Exact Item or a Specification a Customer's choice must satisfy. Each item is required or optional and has a prescribed quantity and a default variant. _Avoid_: School List Item.
 
-**Exact Item**: A list item that names one product variant with no substitution allowed.
+**Exact Item**: A list item with no Specification: only its default variant is accepted, with no substitution.
 
 **Specification**: What a non-exact list item asks for: a category plus attribute values. It is frozen when the list is published.
 
-**Allowed Alternative**: Any product variant that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
+**Allowed Alternative**: Any active variant of an active product that matches an item's Specification, computed when the Customer chooses, never pre-picked by Staff. _Avoid_: Curated alternative.
+
+**Substitute**: A list line whose chosen variant is not its item's default variant. _Avoid_: Swap.
 
 **Slot**: The place a published list occupies: one Partner School, one academic year, one grade. A slot holds at most one published list.
 
 **Public Code**: The long, unguessable code in a list's link. Each published version gets its own code. Holding it is the only way to reach the list.
 
-**List Replacement**: A newly published list that takes over its source's slot. The source becomes Archived: still viewable, never buyable. A copy published into another slot replaces nothing.
+**List Replacement**: A newly published list that takes over its source's slot and inherits its List Offer. The source becomes Archived: still viewable, never buyable. A copy published into another slot replaces nothing.
 
 **List Selection**: A Customer's in-progress choices for one published list (a variant and quantity per item), kept on their device, apart from the Cart and every other list, and checked out as its own Order. _Avoid_: Cart, list cart, kit.
 
-**List Completeness**: Whether a List Selection covers every required item at its prescribed quantity, with any allowed substitute counting. Advisory only. _Avoid_: List validation, list progress.
+**List Completeness**: Whether a List Selection covers every required item at its prescribed quantity, with any allowed substitute counting. Advisory only: it never blocks checkout and never changes the List Offer. _Avoid_: List validation, list progress.
 
 The List Offer (a list's percentage discount) is defined in [Checkout & Orders](checkout-and-orders.md).
 
@@ -67,8 +69,8 @@ The List Offer (a list's percentage discount) is defined in [Checkout & Orders](
 - **SL-1** A list is Draft, Published or Archived. Archived is final: to reuse an archived list, copy it.
 - **SL-2** Only a Draft can be edited. Publishing freezes its items, Specifications, default variants and quantities, with no exceptions.
 - **SL-3** A slot holds at most one published list.
-- **SL-4** Publishing a copy into the slot its source still holds archives the source in the same step and links the two as a List Replacement. A copy published into a free slot stands alone. A copy of an older version cannot displace a newer list in its slot.
-- **SL-5** Publishing is refused for an empty list or for an item whose default variant is missing, inactive or not allowed by its Specification. Out-of-stock defaults only produce a warning.
+- **SL-4** Publishing a copy into the slot its source still holds archives the source in the same step, links the two as a List Replacement and copies the source's List Offer to the new list. A copy published into a free slot stands alone. A copy of an older version cannot displace a newer list in its slot.
+- **SL-5** Publishing is refused for an empty list or for an item whose default variant is missing, inactive, on an inactive product or not allowed by its Specification. Out-of-stock defaults only produce a warning.
 - **SL-6** Publishing creates the Public Code. Drafts are never reachable by Customers.
 - **SL-7** An archived list stays readable through its old link, shows a link to its replacement if there is one, and can never be checked out.
 - **SL-8** Eligibility has one definition: an Exact Item allows only its default variant; an item without a Specification allows only its default; otherwise a variant is allowed when its category matches and it has every specified attribute value. The list page and checkout use the same definition, and the Customer's device never decides it.
@@ -76,9 +78,20 @@ The List Offer (a list's percentage discount) is defined in [Checkout & Orders](
 - **SL-10** A List Selection belongs to one published version on one device. It never merges with the Cart or another list, and it is never carried into a replacement.
 - **SL-11** A selected variant that stops being allowed is flagged "choose again", never swapped automatically. Checkout is disabled while any line is flagged.
 - **SL-12** List Completeness never blocks checkout and is never stored on the Order.
-- **SL-13** Business Partner Status limits authoring only: publishing or replacing needs an onboarding or active partner, drafting is refused once the partner is closed, and archiving is always allowed. Reading, selecting and buying never depend on the status.
+- **SL-13** The Staff list-authoring rule. Business Partner Status limits Staff authoring only, by this rule, which is separate from the partner action table (PA-3):
+
+  | Partner status | Draft and edit a list | Publish or replace a list | Archive a list |
+  |---|---|---|---|
+  | Onboarding | yes | yes | yes |
+  | Active | yes | yes | yes |
+  | Suspended | yes | no | yes |
+  | Closed | no | no | yes |
+
+  Setting a List Offer has no status check. Reading, selecting and buying never depend on the status.
 - **SL-14** Only FindEg Staff author lists and Partner School Profiles.
-- **SL-15** A Partner School Profile is never removed. Governorate, school type and academic system are required; area and logo are optional.
+- **SL-15** A Partner School Profile is never removed. Governorate (one of Egypt's 27), school type and academic system are required; area and logo are optional. The logo is an image reference.
+- **SL-16** A list has at most one List Offer, set by Staff: 0 to 100% (in basis points, 0 to 10000), active from its start until its end, or open-ended when it has no end. An end, when set, comes after the start. The offer applies to every line of the list's Order, Substitutes included, whether or not the selection is complete.
+- **SL-17** An item's quantity is a whole number from 1 to 999.
 
 ## Lifecycle
 
@@ -105,7 +118,8 @@ Each item names a suggested owner. Tick it when the answer is recorded on this p
 - [ ] **Milestone release criteria** (Business, Product): What must be true to release the school milestone?
   Suggested: both Known gaps closed and the Staff Role question settled (see [Identity & Administration](identity-and-administration.md)).
 - [ ] **First schools and timing** (Business): Which schools and which academic year does the milestone launch with? Back-to-school timing sets the deadline.
-- [ ] **Governorates** (Business): Is the 16-governorate list intentionally partial? Egypt has 27.
+- [x] **Governorates** (Business): Is the 16-governorate list intentionally partial? Egypt has 27.
+  Answered 2026-10-12: no; all 27 governorates are used, shared with shipping addresses.
 - [ ] **"Verified School"** (Business): What does the label promise, and is a verification step planned?
 - [ ] **Deactivated default variant** (Business): What happens to a published list whose default variant is deactivated? The list is frozen, so that item can no longer be bought as specified.
 - [ ] **Partner view of lists** (Business): Should a Partner School see its own published lists, read-only, in its Partner Workspace?
