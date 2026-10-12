@@ -65,8 +65,18 @@ function readDomainSets() {
       if (statement.type === 'ImportDeclaration' && statement.source.value.startsWith('.')) {
         const source = exportsOf(resolveSource(path.dirname(file), statement.source.value));
         for (const binding of statement.specifiers) {
-          if (binding.type === 'ImportSpecifier' && source.has(binding.imported.name))
-            locals.set(binding.local.name, source.get(binding.imported.name));
+          const imported =
+            binding.type === 'ImportDefaultSpecifier'
+              ? 'default'
+              : binding.type === 'ImportSpecifier'
+                ? (binding.imported.name ?? binding.imported.value)
+                : null;
+          if (
+            statement.importKind !== 'type' &&
+            binding.importKind !== 'type' &&
+            source.has(imported)
+          )
+            locals.set(binding.local.name, source.get(imported));
         }
       }
     }
@@ -75,7 +85,14 @@ function readDomainSets() {
         for (const [name, values] of exportsOf(
           resolveSource(path.dirname(file), statement.source.value),
         ))
-          exported.set(name, values);
+          if (name !== 'default') exported.set(name, values);
+      } else if (statement.type === 'ExportDefaultDeclaration') {
+        const declaration = statement.declaration;
+        const values =
+          declaration.type === 'Identifier'
+            ? locals.get(declaration.name)
+            : constValues(declaration);
+        if (values) exported.set('default', values);
       } else if (statement.type === 'ExportNamedDeclaration' && statement.exportKind !== 'type') {
         if (statement.declaration?.type === 'VariableDeclaration') {
           for (const variable of statement.declaration.declarations) {
@@ -87,8 +104,10 @@ function readDomainSets() {
           ? exportsOf(resolveSource(path.dirname(file), statement.source.value))
           : locals;
         for (const binding of statement.specifiers) {
-          if (binding.exportKind !== 'type' && source.has(binding.local.name))
-            exported.set(binding.exported.name, source.get(binding.local.name));
+          const local = binding.local.name ?? binding.local.value;
+          const name = binding.exported.name ?? binding.exported.value;
+          if (binding.exportKind !== 'type' && source.has(local))
+            exported.set(name, source.get(local));
         }
       }
     }

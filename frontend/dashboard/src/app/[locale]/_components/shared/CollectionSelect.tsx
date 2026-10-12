@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@findeg/domain';
 /**
  * CollectionSelect Component
@@ -7,8 +9,6 @@ import { type Locale } from '@findeg/domain';
  *
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
-
-('use client');
 
 import * as React from 'react';
 import { ChevronsUpDown } from 'lucide-react';

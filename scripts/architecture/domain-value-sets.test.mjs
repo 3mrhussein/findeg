@@ -227,3 +227,85 @@ test('SQL comments between list members cannot hide a copied set', async () => {
   ])
     assert.equal((await copies(code)).length, 1, code);
 });
+
+test('default-exported domain arrays are protected through public defaults and aliases, but not wildcard exports', async () => {
+  const cases = [
+    {
+      name: 'direct default',
+      entry: "export default ['future-a', 'future-b', 'future-c'] as const;",
+      expected: 'default',
+    },
+    {
+      name: 'identifier default',
+      entry: "const VALUES = ['future-a', 'future-b', 'future-c'] as const; export default VALUES;",
+      expected: 'default',
+    },
+    {
+      name: 'reexported default alias',
+      entry: "export { default as FUTURE_PUBLIC } from './values';",
+      values: "export default ['future-a', 'future-b', 'future-c'] as const;",
+      expected: 'FUTURE_PUBLIC',
+    },
+    {
+      name: 'imported default alias',
+      entry: "import VALUES from './values'; export { VALUES as FUTURE_PUBLIC };",
+      values:
+        "const VALUES = ['future-a', 'future-b', 'future-c'] as const; export default VALUES;",
+      expected: 'FUTURE_PUBLIC',
+    },
+    {
+      name: 'named default alias',
+      entry:
+        "const VALUES = ['future-a', 'future-b', 'future-c'] as const; export { VALUES as default };",
+      expected: 'default',
+    },
+    {
+      name: 'wildcard excludes default',
+      entry: "export * from './values';",
+      values: "export default ['future-a', 'future-b', 'future-c'] as const;",
+      expected: null,
+    },
+  ];
+  for (const scenario of cases) {
+    const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-default-'));
+    try {
+      const config = path.join(fixture, 'packages/config');
+      const domain = path.join(fixture, 'packages/domain');
+      fs.mkdirSync(path.join(config, 'eslint/rules'), { recursive: true });
+      fs.mkdirSync(path.join(domain, 'src'), { recursive: true });
+      fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}');
+      fs.symlinkSync(
+        path.join(root, 'packages/config/node_modules'),
+        path.join(config, 'node_modules'),
+      );
+      fs.copyFileSync(
+        path.join(root, 'packages/config/eslint/rules/no-domain-value-set-copies.js'),
+        path.join(config, 'eslint/rules/no-domain-value-set-copies.js'),
+      );
+      fs.writeFileSync(
+        path.join(domain, 'package.json'),
+        JSON.stringify({ exports: { '.': './src/index.ts' } }),
+      );
+      fs.writeFileSync(path.join(domain, 'src/index.ts'), scenario.entry);
+      if (scenario.values) fs.writeFileSync(path.join(domain, 'src/values.ts'), scenario.values);
+      fs.writeFileSync(
+        path.join(config, 'eslint.config.js'),
+        "import tseslint from 'typescript-eslint'; import { noDomainValueSetCopiesRule } from './eslint/rules/no-domain-value-set-copies.js'; export default [{files:['**/*.ts'],languageOptions:{parser:tseslint.parser},plugins:{local:{rules:{'no-domain-value-set-copies':noDomainValueSetCopiesRule}}},rules:{'local/no-domain-value-set-copies':'error'}}];",
+      );
+      const eslint = new ESLint({
+        cwd: fixture,
+        overrideConfigFile: path.join(config, 'eslint.config.js'),
+      });
+      const [result] = await eslint.lintText(
+        "const future = ['future-c', 'future-a', 'future-b'];",
+        { filePath: path.join(fixture, 'backend/src/values.ts') },
+      );
+      assert.equal(result.fatalErrorCount, 0, scenario.name);
+      assert.equal(result.messages.length, scenario.expected ? 1 : 0, scenario.name);
+      if (scenario.expected)
+        assert.match(result.messages[0].message, new RegExp(scenario.expected), scenario.name);
+    } finally {
+      fs.rmSync(fixture, { recursive: true, force: true });
+    }
+  }
+});
