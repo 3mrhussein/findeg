@@ -7,6 +7,7 @@ import type { CustomerId } from '../customers';
 import type { VariantId } from '../catalog';
 import type { BusinessPartnerId } from '../partners';
 import type { SupplyListId, SupplyListItemId } from '../school-lists';
+import type { OrderReference } from './order-reference';
 
 export type OrderId = Id<'Order'>;
 export type OrderLineId = Id<'OrderLine'>;
@@ -45,14 +46,15 @@ export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from './notified-statu
 export type { NotifiedOrderStatus } from './notified-statuses';
 export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
 
-/** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
-export const ORDER_REFERENCE_PREFIX = 'FE-';
-export const ORDER_REFERENCE_BODY_LENGTH = 6;
-export const CROCKFORD_BASE32_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-export const ORDER_REFERENCE_PATTERN = new RegExp(
-  `^${ORDER_REFERENCE_PREFIX}[${CROCKFORD_BASE32_ALPHABET}]{${ORDER_REFERENCE_BODY_LENGTH}}$`,
-);
-export type OrderReference = string;
+export {
+  CROCKFORD_BASE32_ALPHABET,
+  ORDER_REFERENCE_BODY_LENGTH,
+  ORDER_REFERENCE_PATTERN,
+  ORDER_REFERENCE_PREFIX,
+  generateOrderReference,
+  orderReference,
+} from './order-reference';
+export type { OrderReference } from './order-reference';
 
 export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
