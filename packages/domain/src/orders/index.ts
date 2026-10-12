@@ -36,11 +36,6 @@ export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly Ord
   refunded: [],
 };
 
-/** Statuses that release the Order's Stock Reservation (Cancellation). */
-export const ORDER_STATUSES_RELEASING_STOCK = [
-  'cancelled',
-] as const satisfies readonly OrderStatus[];
-
 /** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
 export const ORDER_REFERENCE_PREFIX = 'FE-';
 export const ORDER_REFERENCE_BODY_LENGTH = 6;
