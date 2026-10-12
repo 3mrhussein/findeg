@@ -14,8 +14,8 @@ const statusSelect = '[data-testid="order-status-select"]:visible';
 const paymentBadge = '[data-testid="order-payment-badge"]:visible';
 
 /**
- * Opens an Order detail page and waits until React has hydrated it, so a click is never
- * swallowed by server-rendered markup that has no handlers yet.
+ * Waits until React has hydrated the Order controls, so a click is never swallowed by
+ * server-rendered markup that has no handlers yet.
  */
 function waitForOrderHydration(): void {
   cy.get(statusSelect).should(($el) => {
