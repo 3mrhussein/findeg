@@ -26,8 +26,10 @@ export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './li
 export { isListOfferActive, listOffer, listOfferBasisPointsAt } from './list-offer';
 export type { ListOfferWindow } from './list-offer';
 export {
+  checkoutBlockingItemIds,
   chooseSelectionVariant,
   isDefaultListSelection,
+  isSubstitute,
   listCompleteness,
   orderedSelectionLines,
   reconcileListSelection,

@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
+import { money } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
+import { priceListOfferLine, type ListOfferId } from '@findeg/domain/orders';
 import {
+  checkoutBlockingItemIds,
   chooseSelectionVariant,
   isDefaultListSelection,
+  isSubstitute,
+  listOfferBasisPointsAt,
   listCompleteness,
   orderedSelectionLines,
   reconcileListSelection,
@@ -189,5 +194,65 @@ describe('List Completeness is advisory (ADR-0011)', () => {
 
   it('treats an item with no line as missing', () => {
     expect(complete([item(1)], []).missing).toHaveLength(1);
+  });
+});
+
+describe('stale choices block checkout (SL-11); completeness never does', () => {
+  const l = list([item(1), item(2, { required: false, quantity: 2 })]);
+
+  it('blocks checkout on a stale line that is switched on', () => {
+    const stale = selection([line(1, 999, 3), line(2, 20, 0)]);
+    expect(checkoutBlockingItemIds(l, stale)).toEqual([itemId(1)]);
+  });
+
+  it('does not block on a switched-off stale line until it is turned on', () => {
+    const off = selection([line(1, 10, 3), line(2, 999, 0)]);
+    expect(checkoutBlockingItemIds(l, off)).toEqual([]);
+    const on = setSelectionItemEnabled(off, l, itemId(2), true);
+    expect(checkoutBlockingItemIds(l, on)).toEqual([itemId(2)]);
+  });
+
+  it('unblocks once an eligible variant is chosen', () => {
+    const stale = selection([line(1, 999, 3), line(2, 20, 0)]);
+    const fixed = chooseSelectionVariant(stale, itemId(1), variantId(11));
+    expect(checkoutBlockingItemIds(l, fixed)).toEqual([]);
+  });
+
+  it('does not block an incomplete selection', () => {
+    const short = selection([line(1, 10, 1), line(2, 20, 0)]);
+    expect(listCompleteness(l, short).completed).toBe(0);
+    expect(checkoutBlockingItemIds(l, short)).toEqual([]);
+  });
+});
+
+describe('substitute flag', () => {
+  it('is false for the default variant and true for any other choice', () => {
+    expect(isSubstitute(item(1), variantId(10))).toBe(false);
+    expect(isSubstitute(item(1), variantId(11))).toBe(true);
+  });
+});
+
+describe('List Offer applies to every line (ADR-0007)', () => {
+  const l = list([item(1), item(2)]);
+  const at = new Date('2026-10-15T00:00:00.000Z');
+  const offer = {
+    id: 1 as ListOfferId,
+    supplyListId: LIST,
+    basisPoints: 1000,
+    startsAt: new Date('2026-10-01T00:00:00.000Z'),
+    endsAt: null,
+  };
+
+  it('discounts the default and a substitute alike, whether or not the list is complete', () => {
+    // Item 1 takes a substitute; item 2 is the default but short of its prescription.
+    const s = selection([line(1, 11, 3), line(2, 20, 1)]);
+    expect(listCompleteness(l, s).completed).toBe(1);
+    expect(isSubstitute(item(1), variantId(11))).toBe(true);
+
+    const basisPoints = listOfferBasisPointsAt(offer, at);
+    const discounts = orderedSelectionLines(s).map(
+      (ordered) => priceListOfferLine(money(1000n), ordered.quantity, basisPoints).discount,
+    );
+    expect(discounts).toEqual([money(300n), money(100n)]);
   });
 });

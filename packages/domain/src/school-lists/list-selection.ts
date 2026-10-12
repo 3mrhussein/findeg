@@ -102,6 +102,30 @@ function staleSelectionItemIds(list: SelectableList, selection: ListSelection): 
   });
 }
 
+/**
+ * The stale choices that block checkout (SL-11): stale lines that are switched on. A switched-off
+ * optional line was never chosen, so it blocks only once it is turned on. Completeness never
+ * blocks.
+ */
+export function checkoutBlockingItemIds(
+  list: SelectableList,
+  selection: ListSelection,
+): SupplyListItemId[] {
+  const enabled = new Set(orderedSelectionLines(selection).map((line) => line.supplyListItemId));
+  return staleSelectionItemIds(list, selection).filter((id) => enabled.has(id));
+}
+
+/**
+ * Whether a list line is a substitute: its chosen variant is not the item's default. Order
+ * attribution and Partner Reports record it on every list line.
+ */
+export function isSubstitute(
+  item: { defaultVariantId: VariantId | null },
+  variantId: VariantId,
+): boolean {
+  return item.defaultVariantId !== variantId;
+}
+
 function mapLine(
   selection: ListSelection,
   supplyListItemId: SupplyListItemId,
