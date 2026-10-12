@@ -90,7 +90,7 @@ This area is the Partner Program (B2B2C): FindEg serves the biggest business cus
 - **PA-15** Attributed Orders are the only link between a partner and Orders. Nothing about rewards is calculated or stored when an Order is placed or changes status.
 - **PA-16** A partner's clients are Customers. The Partner Program does not model who a Customer buys for, such as a student.
 - **PA-17** A partner moves only: onboarding → active or closed; active → suspended or closed; suspended → active or closed. An active partner never returns to onboarding. Activating a partner needs an active Partner Administrator, and asking for the status a partner already has is refused.
-- **PA-18** The Partner School directory lists a Partner School only when it has at least one published list, whatever its status.
+- **PA-18** The Partner School directory lists a Partner School only when it has at least one published list, whatever its status: onboarding, active, suspended and closed partners are listed alike (ADR-0012). To take a closed partner out of the directory, Staff archive its lists.
 
 ## Lifecycle
 
