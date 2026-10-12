@@ -260,6 +260,25 @@ test('default-exported domain arrays are protected through public defaults and a
       expected: 'default',
     },
     {
+      name: 'distinct defaults on two public entries',
+      entry: "export default ['future-a', 'future-b', 'future-c'] as const;",
+      otherEntry:
+        "const VALUES = ['other-a', 'other-b', 'other-c'] as const; export default VALUES;",
+      consumer:
+        "const first = ['future-c', 'future-a', 'future-b']; const second = ['other-c', 'other-a', 'other-b'];",
+      expected: 'default',
+      expectedCount: 2,
+    },
+    {
+      name: 'distinct named values on two public entries',
+      entry: "export const VALUES = ['future-a', 'future-b', 'future-c'] as const;",
+      otherEntry: "export const VALUES = ['other-a', 'other-b', 'other-c'] as const;",
+      consumer:
+        "const first = ['future-c', 'future-a', 'future-b']; const second = ['other-c', 'other-a', 'other-b'];",
+      expected: 'VALUES',
+      expectedCount: 2,
+    },
+    {
       name: 'wildcard excludes default',
       entry: "export * from './values';",
       values: "export default ['future-a', 'future-b', 'future-c'] as const;",
@@ -284,9 +303,16 @@ test('default-exported domain arrays are protected through public defaults and a
       );
       fs.writeFileSync(
         path.join(domain, 'package.json'),
-        JSON.stringify({ exports: { '.': './src/index.ts' } }),
+        JSON.stringify({
+          exports: {
+            '.': './src/index.ts',
+            ...(scenario.otherEntry ? { './other': './src/other.ts' } : {}),
+          },
+        }),
       );
       fs.writeFileSync(path.join(domain, 'src/index.ts'), scenario.entry);
+      if (scenario.otherEntry)
+        fs.writeFileSync(path.join(domain, 'src/other.ts'), scenario.otherEntry);
       if (scenario.values) fs.writeFileSync(path.join(domain, 'src/values.ts'), scenario.values);
       fs.writeFileSync(
         path.join(config, 'eslint.config.js'),
@@ -297,11 +323,15 @@ test('default-exported domain arrays are protected through public defaults and a
         overrideConfigFile: path.join(config, 'eslint.config.js'),
       });
       const [result] = await eslint.lintText(
-        "const future = ['future-c', 'future-a', 'future-b'];",
+        scenario.consumer ?? "const future = ['future-c', 'future-a', 'future-b'];",
         { filePath: path.join(fixture, 'backend/src/values.ts') },
       );
       assert.equal(result.fatalErrorCount, 0, scenario.name);
-      assert.equal(result.messages.length, scenario.expected ? 1 : 0, scenario.name);
+      assert.equal(
+        result.messages.length,
+        scenario.expectedCount ?? (scenario.expected ? 1 : 0),
+        scenario.name,
+      );
       if (scenario.expected)
         assert.match(result.messages[0].message, new RegExp(scenario.expected), scenario.name);
     } finally {
