@@ -4,6 +4,7 @@ import { ProductEntity, isNewProduct, type Product } from '../domain/entities/Pr
 import { VariantEntity, getVariantAvailableStock, type Variant } from '../domain/entities/Variant';
 import type { Tag } from '../domain/entities/Tag';
 
+/** Builds an active tag fixture with the given key and a campaign group by default. */
 function tag(key: string, group = 'campaign'): Tag {
   return {
     id: 1,
@@ -15,6 +16,7 @@ function tag(key: string, group = 'campaign'): Tag {
   } as unknown as Tag;
 }
 
+/** Builds a product fixture with no tags or variants unless supplied by the test. */
 function product(overrides: Partial<Product>): Product {
   return {
     id: 1,
@@ -29,6 +31,7 @@ function product(overrides: Partial<Product>): Product {
   } as unknown as Product;
 }
 
+/** Builds an active, non-default variant fixture with test-specific overrides. */
 function variant(overrides: Partial<Variant>): Variant {
   return {
     id: 1,
@@ -100,6 +103,7 @@ describe('Stock availability', () => {
   });
 
   it('treats 1 to 5 available units as low stock, and 6 as not low', () => {
+    /** Builds a variant entity with the given unreserved stock in one active warehouse. */
     const withUnits = (units: number) =>
       new VariantEntity(
         variant({

@@ -24,6 +24,7 @@ vi.mock('@findeg/db/schema', () => ({
   attributes: {},
 }));
 
+/** Builds a product creation input with valid defaults and overrides for its single variant. */
 function input(variantOverrides: Partial<CreateProductWithVariantsInput['variants'][number]>) {
   return {
     localizedName: { en: 'Notebook', ar: 'دفتر' },
