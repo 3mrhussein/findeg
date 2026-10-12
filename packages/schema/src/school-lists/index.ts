@@ -39,6 +39,12 @@ export interface SchoolSupplyList {
   status: SupplyListStatus;
   /** Public, unguessable code that Customers use instead of a login. */
   publicCode: string;
+  /** Set on a clone: the list it was copied from (content provenance only). */
+  sourceListId?: SchoolSupplyList['id'];
+  /** Set when this list supersedes a published list for the same partner, year and grade (List Replacement). */
+  replacesListId?: SchoolSupplyList['id'];
+  /** Set on the superseded list, pointing at its replacement. */
+  replacedById?: SchoolSupplyList['id'];
 }
 
 /** One line of a School Supply List. Required or optional per item. */

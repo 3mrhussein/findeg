@@ -8,11 +8,13 @@
     ".": "./src/index.ts",
     "./common": "./src/common/index.ts",
     "./customers": "./src/customers/index.ts",
+    "./catalog": "./src/catalog/index.ts",
     "./partners": "./src/partners/index.ts",
     "./school-lists": "./src/school-lists/index.ts",
     "./orders": "./src/orders/index.ts",
     "./inventory": "./src/inventory/index.ts",
-    "./outbox": "./src/outbox/index.ts"
+    "./outbox": "./src/outbox/index.ts",
+    "./relations": "./src/relations/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
