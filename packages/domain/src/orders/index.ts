@@ -170,3 +170,5 @@ export type {
   QuoteLine,
   QuoteLineRequest,
 } from './quote';
+export { ReconfirmationRequiredError, confirmQuote, confirmationTerms } from './confirmation';
+export type { ConfirmationLine, ConfirmationTerms } from './confirmation';
