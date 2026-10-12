@@ -23,6 +23,13 @@ export {
 export type { StaffListAuthoringAction } from './staff-authoring';
 export { archiveSupplyList, assertDraftEditable, cloneSupplyList } from './lifecycle';
 export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './lifecycle';
+export { isSameSupplyListSlot, publishSupplyList } from './publish';
+export type {
+  CopiedListOffer,
+  DefaultOutOfStockWarning,
+  PublishSupplyListInput,
+  PublishedSupplyList,
+} from './publish';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
