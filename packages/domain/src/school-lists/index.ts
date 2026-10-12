@@ -5,6 +5,7 @@
 import type { Id, LocalizedText } from '../common';
 import type { CategoryId, VariantId } from '../catalog';
 import type { BusinessPartnerId } from '../partners';
+import type { PublicCode } from './public-code';
 
 export { eligibleVariants, isEligibleVariant } from './eligibility';
 export type { CandidateVariant, EligibilityItem } from './eligibility';
@@ -20,6 +21,8 @@ export {
   staffListAuthoringAllows,
 } from './staff-authoring';
 export type { StaffListAuthoringAction } from './staff-authoring';
+export { archiveSupplyList, assertDraftEditable, cloneSupplyList } from './lifecycle';
+export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './lifecycle';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
@@ -53,14 +56,14 @@ export interface SchoolSupplyList {
   grade: string;
   title: LocalizedText;
   status: SupplyListStatus;
-  /** Public, unguessable code that Customers use instead of a login. */
-  publicCode: string;
+  /** Public, unguessable code that Customers use instead of a login. Set on publishing. */
+  publicCode: PublicCode | null;
   /** Set on a clone: the list it was copied from (content provenance only). */
-  sourceListId?: SupplyListId;
+  sourceListId: SupplyListId | null;
   /** Set when this list supersedes a published list for the same partner, year and grade (List Replacement). */
-  replacesListId?: SupplyListId;
+  replacesListId: SupplyListId | null;
   /** Set on the superseded list, pointing at its replacement. */
-  replacedById?: SupplyListId;
+  replacedById: SupplyListId | null;
 }
 
 /**
