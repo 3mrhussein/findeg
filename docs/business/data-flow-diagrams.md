@@ -206,7 +206,7 @@ flowchart TB
     P5_6 -->|Fold into 'Other Items' aggregate row| P5_7
 
     P5_7 -->|Render Anonymized Partner Report| SchoolBursar
-    P5_7 -.->|Guaranteed Invariant: No customer names, no order references, no order counts| PrivacyAudit[Zero Re-identification Guarantee]
+    P5_7 -.->|Privacy Control: No customer names, no order references, no order counts| PrivacyAudit[Bounded Re-identification Mitigation]
 ```
 
 ---
