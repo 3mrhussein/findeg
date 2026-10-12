@@ -55,6 +55,13 @@ export {
   orderReference,
 } from './order-reference';
 export type { OrderReference } from './order-reference';
+export {
+  EGYPTIAN_MOBILE_PATTERN,
+  egyptianMobile,
+  guestBuyer,
+  shippingAddress,
+} from './order-contact';
+export type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
 
 export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];

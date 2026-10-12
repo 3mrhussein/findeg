@@ -7,7 +7,10 @@ export type OrderErrorCode =
   | 'PAID_BEFORE_DELIVERY'
   | 'PAYMENT_REFUND_NEEDS_ORDER_REFUND'
   | 'REFUND_NEEDS_PAID_ORDER'
-  | 'INVALID_ORDER_REFERENCE';
+  | 'INVALID_ORDER_REFERENCE'
+  | 'INVALID_PHONE'
+  | 'INVALID_SHIPPING_ADDRESS'
+  | 'INVALID_GUEST_EMAIL';
 
 /** An Order, or a request to make or change one, that breaks an Order rule. */
 export class OrderError extends DomainError<OrderErrorCode> {
