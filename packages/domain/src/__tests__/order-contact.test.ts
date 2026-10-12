@@ -59,7 +59,7 @@ describe('shipping address', () => {
   });
 
   it('change: needs a governorate, one of the 27', () => {
-    const { governorate: _omitted, ...withoutGovernorate } = address;
+    const withoutGovernorate = { ...address, governorate: undefined };
     expect(codeOf(() => shippingAddress(withoutGovernorate as never))).toBe(
       'INVALID_SHIPPING_ADDRESS',
     );

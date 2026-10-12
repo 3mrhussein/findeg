@@ -13,7 +13,8 @@ export type OrderErrorCode =
   | 'INVALID_GUEST_EMAIL'
   | 'EMPTY_ORDER'
   | 'MIXED_ORDER_SOURCE'
-  | 'INVALID_LINE_QUANTITY';
+  | 'INVALID_LINE_QUANTITY'
+  | 'UNSUPPORTED_PAYMENT_METHOD';
 
 /** An Order, or a request to make or change one, that breaks an Order rule. */
 export class OrderError extends DomainError<OrderErrorCode> {

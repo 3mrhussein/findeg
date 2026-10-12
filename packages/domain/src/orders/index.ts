@@ -2,12 +2,12 @@
  * Order vocabulary (GLOSSARY: Order, Order Acceptance, Order Reference, Quote, Confirmation,
  * List Offer, Cancellation, Refund, Attributed Order; ADR-0005, ADR-0007).
  */
-import type { CurrencyCode, Id, Money } from '../common';
-import type { CustomerId } from '../customers';
-import type { VariantId } from '../catalog';
+import type { CurrencyCode, Id } from '../common';
 import type { BusinessPartnerId } from '../partners';
-import type { SupplyListId, SupplyListItemId } from '../school-lists';
+import type { SupplyListId } from '../school-lists';
+import type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
 import type { OrderReference } from './order-reference';
+import type { OrderSource, OrderTotals, QuoteLine } from './quote';
 
 export type OrderId = Id<'Order'>;
 export type OrderLineId = Id<'OrderLine'>;
@@ -109,27 +109,37 @@ export const ACCEPTED_PAYMENT_TYPES: readonly PaymentMethodType[] = PAYMENT_OPTI
 
 export type PaymentMethod = PaymentMethodType;
 
-/** An accepted Order. Its status and payment status change after acceptance. */
-export interface Order {
-  id: OrderId;
+/**
+ * An Order as Order Acceptance makes it, before it is stored and given ids. Its buyer, contact,
+ * source, lines and totals are a frozen snapshot; only its status and payment status change.
+ */
+export interface AcceptedOrder {
   reference: OrderReference;
-  customerId?: CustomerId;
-  guestEmail?: string;
+  buyer: OrderBuyer;
+  contactPhone: EgyptianMobile;
+  shippingAddress: ShippingAddress;
+  source: OrderSource;
+  lines: readonly QuoteLine[];
+  totals: OrderTotals;
+  paymentMethod: PaymentMethod;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
-  paymentMethod: PaymentMethod;
   currency: CurrencyCode;
 }
 
-/** One product variant on an Order, priced at acceptance. */
-export interface OrderLine {
+/** An accepted Order. Its status and payment status change after acceptance; nothing else does. */
+export interface Order extends Omit<AcceptedOrder, 'lines'> {
+  id: OrderId;
+  lines: readonly OrderLine[];
+}
+
+/**
+ * One variant on an Order: its name, SKU, unit price, discounts and line total as accepted, the
+ * list item it fulfils and whether it substitutes for that item's default (`null` on cart lines).
+ */
+export interface OrderLine extends QuoteLine {
   id: OrderLineId;
   orderId: OrderId;
-  variantId: VariantId;
-  quantity: number;
-  unitPrice: Money;
-  /** Set when the line came from a School Supply List (Exact Item or Allowed Alternative). */
-  supplyListItemId?: SupplyListItemId;
 }
 
 /** An Order fixed to exactly one School Supply List, recording its Partner School's Business Partner. */
@@ -172,3 +182,5 @@ export type {
 } from './quote';
 export { ReconfirmationRequiredError, confirmQuote, confirmationTerms } from './confirmation';
 export type { ConfirmationLine, ConfirmationTerms } from './confirmation';
+export { acceptOrder, acceptedPaymentMethod } from './acceptance';
+export type { OrderAcceptance, OrderAcceptanceRequest } from './acceptance';
