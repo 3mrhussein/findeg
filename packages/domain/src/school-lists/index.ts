@@ -11,6 +11,8 @@ export type { CandidateVariant, EligibilityItem } from './eligibility';
 export { SupplyListError } from './supply-list-error';
 export type { SupplyListErrorCode } from './supply-list-error';
 export { isExactItem, supplyListItem } from './item';
+export { PUBLIC_CODE_PATTERN, generatePublicCode, publicCode } from './public-code';
+export type { PublicCode, RandomBytes } from './public-code';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;

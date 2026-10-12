@@ -3,7 +3,9 @@ import { DomainError, type ActiveStatus } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
 import {
   eligibleVariants,
+  generatePublicCode,
   isExactItem,
+  publicCode,
   supplyListItem,
   type CandidateVariant,
   type ItemSpecification,
@@ -155,5 +157,43 @@ describe('School Supply List Item', () => {
 
   it.each([0, -1, 1000, 1.5, Number.NaN])('refuses quantity %d', (quantity) => {
     expect(codeOf(() => supplyListItem({ ...props, quantity }))).toBe('INVALID_ITEM_QUANTITY');
+  });
+});
+
+describe('public code (SL-6)', () => {
+  const bytes = (values: number[]) => () => Uint8Array.from(values);
+
+  it('is 32 lowercase hex characters from 16 bytes of the supplied random source', () => {
+    const requested: number[] = [];
+    const random = (length: number) => {
+      requested.push(length);
+      return Uint8Array.from({ length }, (_, i) => i * 17);
+    };
+    expect(generatePublicCode(random)).toBe('00112233445566778899aabbccddeeff');
+    expect(requested).toEqual([16]);
+  });
+
+  it('keeps leading zero nibbles', () => {
+    expect(generatePublicCode(bytes(Array(16).fill(1)))).toBe('01'.repeat(16));
+  });
+
+  it('refuses a random source that returns the wrong number of bytes', () => {
+    expect(() => generatePublicCode(bytes([1, 2, 3]))).toThrow(TypeError);
+  });
+
+  it('parses a valid code', () => {
+    expect(publicCode('a'.repeat(32))).toBe('a'.repeat(32));
+  });
+
+  it.each([
+    ['too short', 'a'.repeat(31)],
+    ['too long', 'a'.repeat(33)],
+    ['uppercase', 'A'.repeat(32)],
+    ['not hex', 'g'.repeat(32)],
+    ['a UUID with dashes', '01234567-89ab-cdef-0123-456789abcdef'],
+    ['padded', ` ${'a'.repeat(31)}`],
+    ['empty', ''],
+  ])('refuses a code that is %s', (_name, text) => {
+    expect(codeOf(() => publicCode(text))).toBe('INVALID_PUBLIC_CODE');
   });
 });
