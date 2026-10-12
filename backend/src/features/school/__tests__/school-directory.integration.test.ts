@@ -250,6 +250,21 @@ describe('Partner School directory on real Postgres', () => {
 
     const options = await directory.getFilterOptions();
 
+    expect(options.governorates).toEqual(
+      expect.arrayContaining([
+        'North Sinai',
+        'South Sinai',
+        'Matrouh',
+        'New Valley',
+        'Menofia',
+        'Port Said',
+        'Damietta',
+        'Kafr El Sheikh',
+        'Suez',
+        'Ismailia',
+        'Beni Suef',
+      ]),
+    );
     expect(options.governorates).toContain(`${tag}-gov`);
     expect(options.governorates).toContain(`${tag}-closed-gov`);
     expect(options.schoolTypes).toContain(`${tag}-type`);

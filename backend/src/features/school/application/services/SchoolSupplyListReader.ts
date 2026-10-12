@@ -14,7 +14,7 @@ import type {
   PublicSupplyListVariant,
 } from '../interfaces/ISchoolSupplyListReader';
 
-const PUBLIC_CODE = /^[0-9a-f]{32}$/;
+import { PUBLIC_CODE_PATTERN } from '@findeg/domain/school-lists';
 
 function differingAttributes(
   candidate: Record<string, string>,
@@ -33,7 +33,7 @@ export class SchoolSupplyListReader implements ISchoolSupplyListReader {
   constructor(private readonly getDb: () => Promise<SchoolSupplyListDatabase>) {}
 
   async getByPublicCode(publicCode: string): Promise<PublicSupplyListResult> {
-    if (!PUBLIC_CODE.test(publicCode)) return { success: false, error: 'not-found' };
+    if (!PUBLIC_CODE_PATTERN.test(publicCode)) return { success: false, error: 'not-found' };
     const db = await this.getDb();
     // One snapshot so items, candidates and stock agree with each other.
     return db.transaction(

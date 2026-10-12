@@ -12,6 +12,7 @@ import {
   schoolSupplyLists,
   warehouses,
 } from '../../schema';
+import { mapStockBalance, mapWarehouse } from '../../mapping';
 import type { SchoolSupplyListExecutor } from './index';
 
 /** A published or archived list by its public code, with its school and replacement code. */
@@ -105,4 +106,23 @@ export async function getVariantDisplayDetails(
     .innerJoin(products, eq(products.id, productVariants.productId))
     .leftJoin(brands, eq(brands.id, products.brandId))
     .where(inArray(productVariants.id, variantIds));
+}
+
+/** Raw inventory facts for the domain publication decision, read within the list transaction. */
+export async function getSupplyListStockFacts(
+  executor: SchoolSupplyListExecutor,
+  variantIds: number[],
+) {
+  if (variantIds.length === 0) return { balances: [], warehouses: [] };
+  const rows = await executor
+    .select({ balance: inventoryBalances, warehouse: warehouses })
+    .from(inventoryBalances)
+    .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
+    .where(inArray(inventoryBalances.variantId, variantIds));
+  return {
+    balances: rows.map(({ balance }) => mapStockBalance(balance)),
+    warehouses: [
+      ...new Map(rows.map(({ warehouse }) => [warehouse.id, mapWarehouse(warehouse)])).values(),
+    ],
+  };
 }

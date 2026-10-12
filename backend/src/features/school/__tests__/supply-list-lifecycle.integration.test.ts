@@ -651,6 +651,31 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     },
   );
 
+  it('refuses an older copy after a newer replacement takes the published slot', async () => {
+    const { list } = await readyDraft();
+    data(await service.publish(staff, list.id));
+    const olderCopy = data(await service.cloneToDraft(staff, list.id));
+    const newerCopy = data(await service.cloneToDraft(staff, list.id));
+    data(await service.publish(staff, newerCopy.id));
+    expect(await service.publish(staff, olderCopy.id)).toEqual({
+      success: false,
+      error: 'slot-taken',
+    });
+    expect(data(await service.getById(staff, olderCopy.id)).status).toBe('draft');
+    expect(data(await service.getById(staff, newerCopy.id)).status).toBe('published');
+  });
+
+  it('preserves an Arabic-only title through editing, publication and cloning', async () => {
+    const { list } = await readyDraft();
+    data(await service.updateDraft(staff, list.id, { localizedTitle: { ar: 'قائمة المدرسة' } }));
+    expect(data(await service.publish(staff, list.id)).list.localizedTitle).toEqual({
+      ar: 'قائمة المدرسة',
+    });
+    expect(data(await service.cloneToDraft(staff, list.id)).localizedTitle).toEqual({
+      ar: 'قائمة المدرسة',
+    });
+  });
+
   it('archives without a replacement, never un-archives, and can clone an archived version with a new code', async () => {
     const { list } = await readyDraft();
     expect(await service.archive(staff, list.id)).toEqual({
@@ -945,16 +970,27 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       },
     );
 
-    it("still lets Staff archive, read and set the offer of a closed Business Partner's list", async () => {
-      const { list } = await readyDraft();
-      data(await service.publish(staff, list.id));
-      await setStatus(list.businessPartnerId, 'closed');
+    it.each(statuses)(
+      '$status: Staff can read, set/clear offers and archive',
+      async ({ status }) => {
+        const { list } = await readyDraft();
+        data(await service.publish(staff, list.id));
+        await setStatus(list.businessPartnerId, status);
 
-      expect(data(await service.getById(staff, list.id)).status).toBe('published');
-      data(
-        await service.setOffer(staff, list.id, { basisPoints: 1000, startsAt: now, endsAt: null }),
-      );
-      expect(data(await service.archive(staff, list.id)).status).toBe('archived');
-    });
+        expect(data(await service.getById(staff, list.id)).status).toBe('published');
+        data(
+          await service.setOffer(staff, list.id, {
+            basisPoints: 1000,
+            startsAt: now,
+            endsAt: null,
+          }),
+        );
+        expect(data(await service.listForPartner(staff, list.businessPartnerId))).toHaveLength(1);
+        expect(data(await service.getOffer(staff, list.id))).toMatchObject({ basisPoints: 1000 });
+        data(await service.clearOffer(staff, list.id));
+        expect(data(await service.getOffer(staff, list.id))).toBeNull();
+        expect(data(await service.archive(staff, list.id)).status).toBe('archived');
+      },
+    );
   });
 });
