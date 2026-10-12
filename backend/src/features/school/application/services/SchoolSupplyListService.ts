@@ -33,7 +33,7 @@ import {
   type SchoolSupplyListDatabase,
   type SchoolSupplyListTransaction,
 } from '@findeg/db/queries/school-supply-lists';
-import type { SchoolSupplyListRow, SchoolSupplyListItemRow } from '@findeg/db/schema';
+import type { SchoolSupplyListRow } from '@findeg/db/schema';
 import { toCandidateVariant } from '../../domain/eligibleVariants';
 import { schoolListFailure } from '../../domain/errors';
 import { domainId, mapSupplyList, mapSupplyListItem } from '@findeg/db';
