@@ -8,7 +8,7 @@ The first launch is the stationery store. It waits on the dashboard, which Staff
 
 This folder documents the business only: what each area is for, who uses it, what it can do, and the rules it must keep.
 
-As of 2026-10-11.
+As of 2026-10-12.
 
 ## Positioning
 
@@ -19,6 +19,7 @@ As of 2026-10-11.
 | 2026-10-11 | Schools are the first Partner Segment; other segments are not planned for the near future. |
 | 2026-10-11 | In the Partner Program, a partner's clients are Customers (families, who buy). Students are not modelled. A school buying for its own use is not part of the program. |
 | 2026-10-11 | The money relationship between FindEg and a partner is not settled. The program is defined by its service to families and schools. |
+| 2026-10-12 | Every business value, entity, relation and rule is declared once, in the domain package ([ADR-0018](../adr/0018-domain-package-is-the-pure-rich-business-domain.md)). The owner approved the rule changes and defaults it settles; they are recorded on the area pages and in the [business-domain map](../business-domain-map.md). |
 
 ## First launch: the stationery store
 
@@ -40,18 +41,18 @@ A blog, other Staff Roles and the school milestone come after launch.
 
 | Area | Business clarity | Terms | Known gaps | Main open point |
 |---|---|---|---|---|
-| [Catalog & Merchandising](catalog-and-merchandising.md) | Launch scope decided; model not documented | 10 proposed, 3 decided | 3 | No definition of Product, Variant, Category, Collection, Review |
-| [Checkout & Orders](checkout-and-orders.md) | Clear | 13 | 3 (2 launch blockers) | Card payment design, after launch |
-| [Identity & Administration](identity-and-administration.md) | Launch roles decided; rest not documented | 3 decided, 6 proposed | 1 | Exactly what each Staff Role may do |
+| [Catalog & Merchandising](catalog-and-merchandising.md) | Launch scope and model decided; reviews not documented | 13 decided, 2 proposed | 5 | Who may review, and whether reviews are moderated |
+| [Checkout & Orders](checkout-and-orders.md) | Clear | 14 | 7 (2 launch blockers) | Card payment design, after launch |
+| [Identity & Administration](identity-and-administration.md) | Launch roles decided; rest not documented | 4 decided, 5 proposed | 1 | Exactly what each Staff Role may do |
 
 ### Growth: Partner Program (first segment: schools)
 
 | Area | Business clarity | Terms | Known gaps | Main open point |
 |---|---|---|---|---|
-| [Partners](partners.md) | Clear, except money | 14 | 1 | Money between FindEg and a partner |
-| [School Supply Lists](school-supply-lists.md) | Clear | 12 | 2 | The list page never shows the List Offer |
+| [Partners](partners.md) | Clear, except money | 14 | 2 | Money between FindEg and a partner |
+| [School Supply Lists](school-supply-lists.md) | Clear | 13 | 2 | The list page never shows the List Offer |
 
-The core business is the least documented part, while the extension is the best documented.
+The catalog model is now decided, so Identity & Administration is the least documented area.
 
 **Clarity**: _Clear_ means the terms and rules are decided. _Not documented_ means the page only describes how the product behaves today; every rule on it is unconfirmed until the business decides it.
 
@@ -61,11 +62,11 @@ Each area page ends with its own checklist of open questions, each with a sugges
 
 | Page | Before launch | Later |
 |---|---|---|
-| [Catalog & Merchandising](catalog-and-merchandising.md) | 7 | 5 |
-| [Checkout & Orders](checkout-and-orders.md) | 10 | 2 |
+| [Catalog & Merchandising](catalog-and-merchandising.md) | 6 | 4 |
+| [Checkout & Orders](checkout-and-orders.md) | 7 | 1 |
 | [Identity & Administration](identity-and-administration.md) | 5 | 1 |
-| [Partners](partners.md) | 0 | 6 |
-| [School Supply Lists](school-supply-lists.md) | 0 | 6 |
+| [Partners](partners.md) | 0 | 5 |
+| [School Supply Lists](school-supply-lists.md) | 0 | 5 |
 
 Questions that span every area:
 

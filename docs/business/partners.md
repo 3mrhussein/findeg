@@ -1,6 +1,6 @@
 # Partners
 
-As of 2026-10-11 · Clarity: **Clear, except money**
+As of 2026-10-12 · Clarity: **Clear, except money**
 
 ## Purpose
 
@@ -36,15 +36,15 @@ This area is the Partner Program (B2B2C): FindEg serves the biggest business cus
 
 **Partner Administrator**: A member with the partner administrator role: the only role that manages invitations and memberships. _Avoid_: Partner admin, owner.
 
-**Partner Invitation**: An emailed offer, valid 7 days, to join a Business Partner with specific Partner Roles. Opening its link never accepts it. _Avoid_: Invite link, signup link.
+**Partner Invitation**: An emailed offer, valid 7 days from when it was last sent, to join a Business Partner with specific Partner Roles. Opening its link never accepts it. _Avoid_: Invite link, signup link.
 
 **Partner Workspace**: The area of the FindEg website where members work for their partner. _Avoid_: Partner portal, partner dashboard.
 
 **Partner Access History**: The permanent record of changes to a partner and its invitations and memberships: who did what, when.
 
-**Attributed Order**: An Order placed from a School Supply List, recording that list and its Partner School. It is the only link between a Business Partner and Orders. _Avoid_: Partner order, referral, commission order.
+**Attributed Order**: An Order placed from a School Supply List, recording that list, its Public Code and its Partner School. It is the only link between a Business Partner and Orders. _Avoid_: Partner order, referral, commission order.
 
-**Partner Report**: What a partner's members see of the sales from its lists, in monthly totals. It never identifies a Customer or an Order. _Avoid_: Dashboard, analytics, statement.
+**Partner Report**: What a partner's members see of the sales from its lists: quantities and amounts per month, list, item and variant. It never identifies a Customer or an Order, and never counts Orders. _Avoid_: Dashboard, analytics, statement.
 
 ## Capabilities
 
@@ -66,30 +66,31 @@ This area is the Partner Program (B2B2C): FindEg serves the biggest business cus
 
 - **PA-1** A Business Partner starts onboarding. Closed is final.
 - **PA-2** The Partner Code can change only while the partner is onboarding.
-- **PA-3** Business Partner Status limits only the partner's own access:
+- **PA-3** Business Partner Status limits only the partner's own access, by the partner action table:
 
-  | Status | Workspace | Membership changes | Reports | Publish or replace a list | Draft a list |
-  |---|---|---|---|---|---|
-  | Onboarding | yes | yes | yes | yes | yes |
-  | Active | yes | yes | yes | yes | yes |
-  | Suspended | read-only, with notice | no | yes | no | yes |
-  | Closed | no | no | yes | no | no |
+  | Status | Workspace | Membership changes | Reports |
+  |---|---|---|---|
+  | Onboarding | yes | yes | yes |
+  | Active | yes | yes | yes |
+  | Suspended | read-only, with notice | no | yes |
+  | Closed | no | no | yes |
 
-  Closing a partner changes none of its lists; Staff archive them deliberately.
+  Staff list authoring is a separate rule, SL-13 in [School Supply Lists](school-supply-lists.md). Closing a partner changes none of its lists; Staff archive them deliberately.
 - **PA-4** Partner Membership is per Business Partner, never changes the person's account type, and is separate from Staff access.
 - **PA-5** There are exactly four Partner Roles, and a membership can hold several.
 - **PA-6** Only Partner Administrators, and Staff allowed to manage partners, manage invitations and memberships.
 - **PA-7** A partner that is not closed always keeps at least one active Partner Administrator. Any change that would remove the last one is refused.
 - **PA-8** A membership is active, suspended or ended. Ended is final. A person has at most one current membership per partner.
-- **PA-9** An invitation lasts 7 days, and a partner has at most one pending invitation per email. Opening the link never accepts it: the invitee signs in with the invited email and accepts explicitly. Resending keeps earlier links valid. Invitation links are secret, and FindEg never keeps a readable copy of them.
+- **PA-9** An invitation lasts 7 days from when it was sent; resending restarts the 7 days, even for an invitation that had expired. It is expired from the moment its 7 days end. A partner has at most one pending invitation per email. Opening the link never accepts it: the invitee signs in with the invited email and accepts explicitly. Resending keeps earlier links valid. Invitation links are secret, and FindEg never keeps a readable copy of them.
 - **PA-10** People who are not members see a Partner Workspace as not found.
 - **PA-11** An edit based on an out-of-date view of a membership is refused.
 - **PA-12** Every partner, invitation and membership change is recorded in the Partner Access History, which can never be edited or deleted. Report reads are not recorded.
 - **PA-13** Only Partner Administrators and report viewers read the Partner Report, with an active membership, in every partner status.
-- **PA-14** The Partner Report shows monthly sales by list item and variant, in Cairo time. It never shows a Customer, an Order Reference or an Order count. A row built from fewer than 3 distinct Orders is folded into "Other items", so totals still add up. Cancelled and refunded Orders are left out.
+- **PA-14** The Partner Report shows sales with one row per month, list, item and variant, with months in Cairo time. It never shows a Customer, an Order Reference or an Order count. Each row built from fewer than 3 distinct Orders is folded into "Other items", so totals still add up. Only Live Orders count: cancelled and refunded Orders are left out. Before a partner's first Order, only the current month can be read.
 - **PA-15** Attributed Orders are the only link between a partner and Orders. Nothing about rewards is calculated or stored when an Order is placed or changes status.
 - **PA-16** A partner's clients are Customers. The Partner Program does not model who a Customer buys for, such as a student.
-- **PA-17** _(unconfirmed)_ A partner moves only: onboarding → active or closed; active → suspended or closed; suspended → active or closed. An active partner never returns to onboarding.
+- **PA-17** A partner moves only: onboarding → active or closed; active → suspended or closed; suspended → active or closed. An active partner never returns to onboarding. Activating a partner needs an active Partner Administrator, and asking for the status a partner already has is refused.
+- **PA-18** The Partner School directory lists a Partner School only when it has at least one published list, whatever its status: onboarding, active, suspended and closed partners are listed alike (ADR-0012). To take a closed partner out of the directory, Staff archive its lists.
 
 ## Lifecycle
 
@@ -121,6 +122,7 @@ stateDiagram-v2
 | # | Rule | What happens today |
 |---|---|---|
 | 1 | PA-8 | The Workspace members list offers Reactivate for any member who is not active, and shows ended memberships as "Suspended", although an ended membership can never be reactivated. |
+| 2 | PA-18 | The directory also lists Partner Schools with no published list unless the caller asks for listed schools only. |
 
 ## Open questions
 
@@ -131,5 +133,6 @@ Each item names a suggested owner. Tick it when the answer is recorded on this p
   Suggested: Staff-led only for the first segment.
 - [ ] **Next segment** (Business): When are schools "stable" enough to start the next Partner Segment, and how is that measured?
 - [ ] **Collection staff role** (Business): What is the collection staff role for? It can be held but grants nothing.
-- [ ] **Partner status changes** (Business): Is PA-17 the intended set of partner status changes?
+- [x] **Partner status changes** (Business): Is PA-17 the intended set of partner status changes?
+  Answered 2026-10-12: yes, and activation needs an active Partner Administrator.
 - [ ] **Attributed Orders screen** (Business): Does Staff need a screen for a partner's Attributed Orders before money is settled?

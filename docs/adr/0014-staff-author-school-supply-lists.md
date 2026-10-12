@@ -22,3 +22,16 @@ ADR-0003 defines a `list-manager` Partner Role, and ADR-0012 left open who autho
 ## Consequences
 
 - If Partner self-authoring is ever wanted, it returns as a fresh effort. It would put a Partner actor beside the Staff actor on the same lifecycle operations.
+
+## Amendment: Staff list authoring is its own named rule
+
+Decided in [#402](https://github.com/3mrhussein/findeg/issues/402). The list columns of ADR-0012's matrix are not part of the partner's own access: they are the **Staff list-authoring rule**, declared in `@findeg/domain` apart from the ADR-0012 partner action table (Workspace read, membership changes, reports). The two rules answer different questions, so neither reads the other.
+
+| Partner status | Draft and edit a list | Publish or replace a list | Archive a list |
+| --- | --- | --- | --- |
+| `onboarding` | yes | yes | yes |
+| `active` | yes | yes | yes |
+| `suspended` | yes | no | yes |
+| `closed` | no | no | yes |
+
+Drafting while `suspended` stays allowed, so Staff can prepare a list before the partner is reinstated. Reading a list, setting its List Offer and archiving it have no status check. The behaviour is unchanged; only its ownership moves.
