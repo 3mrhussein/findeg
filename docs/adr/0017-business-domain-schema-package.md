@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0018
 ---
 
 # The Business Domain Schema is a dependency-free leaf package, separate from the database

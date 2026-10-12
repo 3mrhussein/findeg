@@ -1,6 +1,6 @@
 # Checkout & Orders
 
-As of 2026-10-11 · Clarity: **Clear**
+As of 2026-10-12 · Clarity: **Clear**
 
 ## Purpose
 
@@ -16,13 +16,15 @@ Turn a Cart or a List Selection into an accepted cash-on-delivery Order, at exac
 
 ## Terms
 
-**Cart**: The ordinary catalog items a Customer intends to buy. It never contains List Selections.
+**Cart**: The catalog variants and quantities a Customer intends to buy. It carries no prices and never contains List Selections. _Avoid_: Basket, bag.
 
-**Quote**: FindEg's authoritative pricing of a set of lines at a moment in time: unit prices, discounts, shipping and total, plus a Confirmation. Discounts are per-line entries tagged by their source. _Avoid_: Estimate, cart total.
+**Quote**: FindEg's authoritative pricing of a set of lines at a moment in time: unit prices, discounts, line totals, shipping and total, plus a Confirmation. Discounts are per-line entries tagged by their source. _Avoid_: Estimate, cart total.
 
-**Confirmation**: A fingerprint of a Quote's terms that the Customer agrees to. An Order is accepted only if a fresh Quote still produces the same Confirmation. _Avoid_: Price token, checksum.
+**Order Totals**: The money of a Quote or Order: the gross subtotal before discounts, the discount, the net subtotal after it, the shipping fee and the total (net subtotal plus shipping).
 
-**List Offer**: A percentage discount on one School Supply List, active for a time window, applied to every line bought from that list. _Avoid_: List discount, coupon, promotion.
+**Confirmation**: The terms of a Quote that the Customer agrees to: lines, per-line discounts, List Offer, list and Public Code, shipping, total and currency. An Order is accepted only if a fresh Quote still has the same terms. _Avoid_: Price token, checksum.
+
+The List Offer (a list's percentage discount) is defined in [School Supply Lists](school-supply-lists.md); CO-8 says how a Quote applies it.
 
 **Order Acceptance**: The single all-or-nothing moment an Order comes into existence: re-priced, stock reserved, prices and attribution frozen. It is not an Order Status. _Avoid_: Order placement, order creation, confirmed order.
 
@@ -30,15 +32,15 @@ Turn a Cart or a List Selection into an accepted cash-on-delivery Order, at exac
 
 **Order Reference**: The short, public, readable identifier of an Order: `FE-` plus 6 characters. It is not a secret. _Avoid_: Order number, order id, tracking code.
 
-**Order Status**: Where an Order is in fulfilment: pending, confirmed, processing, shipped, delivered, cancelled or refunded. **Confirmed** means Staff phoned the Customer and the Customer confirmed the cash-on-delivery Order; it is not Order Acceptance.
+**Order Status**: Where an Order is in fulfilment: pending, confirmed, processing, shipped, delivered, cancelled or refunded. **Confirmed** means Staff phoned the Customer and the Customer confirmed the cash-on-delivery Order. Customers see it. It is not Order Acceptance.
 
-**Payment Status**: Whether the Order's money has been collected: unpaid, paid or refunded. It is separate from Order Status and has no stock effect.
+**Payment Status**: Whether the Order's money has been collected: unpaid, paid or refunded. It is separate from Order Status and has no stock effect, but it becomes paid only once the Order is delivered and refunded only with the Order.
 
 **Stock Reservation**: Units held for an accepted Order at a specific warehouse, from Order Acceptance until they are consumed at delivery or released by Cancellation. _Avoid_: Allocation, hold.
 
-**Cancellation**: Stopping an Order before delivery, including a parcel refused at the door or returned. It releases the Stock Reservation. _Avoid_: Refund (before delivery), void.
+**Cancellation**: Stopping an Order before delivery, including a parcel refused at the door or returned. It releases the Stock Reservation. A shipped Order is cancelled only when Staff state that the parcel is back in the warehouse. _Avoid_: Refund (before delivery), void.
 
-**Refund**: Returning a Customer's money after delivery. It has no stock effect; returned goods are restocked by a manual inventory adjustment. _Avoid_: Cancellation, return.
+**Refund**: Returning a Customer's money for a delivered, paid Order. The Order and its payment both become refunded, together. It has no stock effect; returned goods are restocked by a manual inventory adjustment. _Avoid_: Cancellation, return.
 
 **Guest Order Access**: How a Customer without an account views an Order: they give its Order Reference and email, and prove it with a one-time code emailed on request. _Avoid_: Order tracking, guest login.
 
@@ -108,18 +110,20 @@ sequenceDiagram
 - **CO-4** Order Acceptance is all or nothing: re-price, reserve stock and freeze prices and attribution in one step. Not enough stock rejects the whole Order. There is no partial acceptance and no backorder.
 - **CO-5** Retrying the same checkout never creates a second Order: it returns the original. A retry that changes the request is rejected.
 - **CO-6** Phase one accepts cash on delivery only.
-- **CO-7** Shipping is one flat fee (50 EGP by default), with no delivery zones.
-- **CO-8** The List Offer is the only discount. It applies to every line of the list's Order, including substitutes, and each line is rounded half-up to a piaster.
-- **CO-9** Money is EGP, counted exactly in piasters.
+- **CO-7** Shipping is one flat fee of 50.00 EGP for every Order and payment method, with no delivery zones, no free-shipping threshold and no minimum order value. It is a business constant, not a setting.
+- **CO-8** The List Offer is the only discount. It applies to every line of the list's Order, including substitutes, and each line is rounded half-up to two decimals.
+- **CO-9** Money is EGP with exactly two decimals (`12.00`, `12.99`), any two-decimal amount being valid. It is never negative, and an amount with more decimals is refused, never rounded. Prices include VAT.
 - **CO-10** An accepted Order's prices, discounts, shipping and attribution never change, and Orders and their lines are never deleted.
 - **CO-11** Stock is reserved at acceptance, consumed when the Order is delivered and released when it is cancelled. A Refund changes no stock.
-- **CO-12** Order Status moves only along: pending → confirmed or cancelled; confirmed → processing or cancelled; processing → shipped or cancelled; shipped → delivered or cancelled; delivered → refunded. Cancelled and refunded are final, and nothing returns to pending.
-- **CO-13** A Refund follows only delivery. Stopping an Order before delivery is always a Cancellation. A shipped Order is cancelled only when the parcel is back in the warehouse.
+- **CO-12** Order Status moves only along: pending → confirmed or cancelled; confirmed → processing or cancelled; processing → shipped or cancelled; shipped → delivered or cancelled; delivered → refunded. Cancelled and refunded are final, and nothing returns to pending. Payment Status moves unpaid → paid, only once the Order is delivered, and paid → refunded only through a Refund. Asking for the status an Order or payment already has changes nothing.
+- **CO-13** A Refund follows only delivery, needs a paid Order, and moves the Order and its payment to refunded together; a payment is never refunded alone. Stopping an Order before delivery is always a Cancellation. A shipped Order is cancelled only when Staff state that the parcel is back in the warehouse, and the product refuses the cancellation without that statement.
 - **CO-14** Every Order has an Order Reference. Knowing it alone grants nothing.
 - **CO-15** Guest Order Access: the lookup always answers the same way, so it never reveals whether an Order exists. A code is valid for 15 minutes and 5 tries, and an Order allows 3 code requests per hour.
-- **CO-16** Order emails are sent only after the change is saved, and are retried until delivered: the confirmation at acceptance, and shipped, delivered and cancelled at most once each.
+- **CO-16** Order emails are sent only after the change is saved, and are retried until delivered: the confirmation at acceptance, and shipped, delivered and cancelled at most once each. No other status, Refund included, sends an email.
 - **CO-17** Business Partner Status never affects checkout, acceptance or fulfilment.
-- **CO-18** An Order becomes confirmed only after Staff have phoned the Customer and the Customer confirmed it.
+- **CO-18** An Order becomes confirmed only after Staff have phoned the Customer and the Customer confirmed it. Confirmed is shown to Customers.
+- **CO-19** Every Order has an Egyptian mobile number, so Staff can phone to confirm, and a shipping address in one of Egypt's 27 governorates. A guest Order also has an email.
+- **CO-20** A Cart line is one variant with 1 to 999 units. Adding a variant already in the Cart adds to its line. An Order line holds 1 to 999 units too, the same bound as a list item (SL-17), since every Order comes from the Cart or one list; a larger line is refused.
 
 ## Lifecycle
 
@@ -179,6 +183,10 @@ stateDiagram-v2
 | 1 | CO-6 | **Launch blocker.** Card still appears as a payment option at checkout, but it cannot be paid. |
 | 2 | CO-7 | **Launch blocker.** Checkout shows 30 EGP shipping for card and 50 for cash on delivery, while the Order is always charged the flat fee. |
 | 3 | Order Status term | Order emails can show a "returned" status that does not exist. |
+| 4 | CO-7 | The flat fee can be overridden by an environment setting. |
+| 5 | CO-12, CO-13 | A payment can be marked paid before delivery, or refunded without its Order; a Refund leaves the payment as it was; a shipped Order can be cancelled without stating that the parcel is back. |
+| 6 | CO-19 | The phone check accepts some invalid Egyptian numbers and refuses real ones starting `+2010`, and a guest's email and phone are not required in every layer. The shipping address has no governorate. |
+| 7 | CO-20 | Not every client limits a Cart line to 1 to 999 units, and an Order line has no upper bound. |
 
 ## Open questions
 
@@ -188,19 +196,23 @@ Each item names a suggested owner. Tick it when the answer is recorded on this p
 
 - [ ] **Unreachable Customer** (Operations): How many call attempts, over how long, before an unconfirmed Order is cancelled?
   Suggested: three attempts within 48 hours, then cancel with the reason "Customer unreachable".
-- [ ] **Phone number** (Product): Is a phone number required at checkout for every Customer? Confirmation by phone (CO-18) needs one.
-  Suggested: required.
+- [x] **Phone number** (Product): Is a phone number required at checkout for every Customer? Confirmation by phone (CO-18) needs one.
+  Answered 2026-10-12: required on every Order, as an Egyptian mobile number (CO-19).
 - [ ] **"Returned" in emails** (Product): Is removing the non-existent "returned" status from Order emails a launch blocker?
   Suggested: yes; Customers would see a status FindEg never uses.
 - [ ] **Delivery coverage** (Operations): Which governorates does FindEg deliver to at launch, with what delivery-time promise, and through which courier?
-- [ ] **Shipping fee** (Business): Is 50 EGP the launch flat fee? Is there a free-shipping threshold or a minimum order value?
+- [x] **Shipping fee** (Business): Is 50 EGP the launch flat fee? Is there a free-shipping threshold or a minimum order value?
+  Answered 2026-10-12: 50.00 EGP flat, with no threshold and no minimum (CO-7).
 - [ ] **VAT and receipts** (Finance): Do prices include VAT, and what must the Order confirmation show?
+  Partly answered 2026-10-12: prices include VAT (CO-9). A VAT breakdown on the confirmation is out of scope for now.
 - [ ] **Returns policy** (Business, Legal): Within how many days can a delivered Order be returned, for which reasons, and who pays return shipping? The returns Content Page and Refunds depend on it.
 - [ ] **Customer cancellation** (Business): Can a Customer cancel their own Order before it ships, or only by contacting FindEg?
 - [ ] **Cash collection** (Finance, Operations): Who marks an Order paid once the courier collects the cash, and how is courier cash reconciled?
-- [ ] **Returned parcels** (Operations): Is "cancel a shipped Order only once the parcel is back" checked by the product, or a Staff instruction?
+- [x] **Returned parcels** (Operations): Is "cancel a shipped Order only once the parcel is back" checked by the product, or a Staff instruction?
+  Answered 2026-10-12: the product checks it: Staff must state that the parcel is back (CO-13).
 
 ### After launch
 
 - [ ] **Card payment** (Business, Product): When card returns, what shape does a payment option take, and how does it change the Quote?
-- [ ] **Refund and payment** (Finance): Should a Refund always set the Payment Status to refunded?
+- [x] **Refund and payment** (Finance): Should a Refund always set the Payment Status to refunded?
+  Answered 2026-10-12: yes; the Order and its payment are refunded together (CO-13).

@@ -113,7 +113,7 @@ graph TD
 | **@findeg/money**                                        | `packages/money`          | Piaster/EGP money helpers.                                                                    | N/A                                    |
 | **@findeg/domain-errors**                                | `packages/domain-errors`  | Shared domain error classes.                                                                  | N/A                                    |
 | **@findeg/env**                                          | `packages/env`            | Validated environment variables.                                                              | N/A                                    |
-| **@findeg/schema**                                       | `packages/schema`         | Business Domain Schema: dependency-free domain values ([ADR-0017](docs/adr/0017-business-domain-schema-package.md)). | N/A                                    |
+| **@findeg/domain**                                       | `packages/domain`         | Business domain: pure values, value objects and rules, depending only on zod ([ADR-0018](docs/adr/0018-domain-package-is-the-pure-rich-business-domain.md)). | N/A                                    |
 | [**@findeg/config**](packages/config/README.md)         | `packages/config`         | Shared lint profiles.                                                                         | N/A                                    |
 
 ---
