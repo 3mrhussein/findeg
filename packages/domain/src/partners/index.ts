@@ -8,3 +8,4 @@ export * from './partner-access';
 export * from './membership';
 export * from './invitation';
 export * from './report';
+export * from './directory';
