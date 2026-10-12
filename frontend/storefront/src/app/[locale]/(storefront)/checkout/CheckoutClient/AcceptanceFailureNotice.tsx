@@ -33,8 +33,8 @@ function quoteLineKey(line: Pick<CheckoutQuoteLine, 'listItemId' | 'variantId'>)
     : `list-item:${line.listItemId}`;
 }
 
-function money(currency: string, amount: number) {
-  return `${currency} ${amount.toFixed(2)}`;
+function money(currency: string, amount: string) {
+  return `${currency} ${amount}`;
 }
 
 function discountsSignature(line: CheckoutQuoteLine | undefined) {

@@ -1,3 +1,5 @@
+import { checkCompareAtPrice } from '@findeg/domain/catalog';
+import { moneyFromDecimal } from '@findeg/domain/common';
 import { eq, inArray } from 'drizzle-orm';
 import { db } from '../../connection';
 import { products, productTags, productVariants, variantImages } from '../../schema';
@@ -94,8 +96,50 @@ export async function updateProductWithVariantsInDb(
       await tx.delete(productVariants).where(inArray(productVariants.id, input.variantsToDelete));
     }
 
+    // Acquire price locks in a stable order before checking or writing any variant.
+    const priceUpdateIds = (input.variants ?? []).flatMap((variant) =>
+      'id' in variant && (variant.basePrice !== undefined || variant.strikePrice !== undefined)
+        ? [variant.id]
+        : [],
+    );
+    const priceRows = priceUpdateIds.length
+      ? await tx
+          .select()
+          .from(productVariants)
+          .where(inArray(productVariants.id, priceUpdateIds))
+          .orderBy(productVariants.id)
+          .for('update')
+      : [];
+    const persistedPrices = new Map(priceRows.map((row) => [row.id, row]));
+
     for (const variant of input.variants ?? []) {
       if ('id' in variant) {
+        const current = persistedPrices.get(variant.id);
+        if (current) {
+          const basePrice =
+            variant.basePrice === undefined ? current.basePrice : variant.basePrice.toFixed(2);
+          const strikePrice =
+            variant.strikePrice === undefined
+              ? current.strikePrice
+              : variant.strikePrice === null
+                ? null
+                : variant.strikePrice.toFixed(2);
+          checkCompareAtPrice(
+            moneyFromDecimal(basePrice),
+            strikePrice === null ? null : moneyFromDecimal(strikePrice),
+          );
+        }
+        if (current) {
+          persistedPrices.set(variant.id, {
+            ...current,
+            basePrice:
+              variant.basePrice === undefined ? current.basePrice : variant.basePrice.toFixed(2),
+            strikePrice:
+              variant.strikePrice === undefined
+                ? current.strikePrice
+                : nullablePrice(variant.strikePrice)!,
+          });
+        }
         await tx
           .update(productVariants)
           .set({

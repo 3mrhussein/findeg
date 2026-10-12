@@ -1,4 +1,6 @@
 import { sql } from 'drizzle-orm';
+import { LIST_OFFER_MIN_BASIS_POINTS, LIST_OFFER_MAX_BASIS_POINTS } from '@findeg/domain';
+import { sqlLiteral } from '../sql-values';
 import { check, integer, timestamp } from 'drizzle-orm/pg-core';
 import { salesSchema } from '../schemas';
 import { schoolSupplyLists } from '../school-engine/school-supply-lists';
@@ -22,7 +24,10 @@ export const listOffers = salesSchema.table(
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    check('ck_list_offers_basis_points', sql`${table.basisPoints} between 0 and 10000`),
+    check(
+      'ck_list_offers_basis_points',
+      sql`${table.basisPoints} between ${sqlLiteral(LIST_OFFER_MIN_BASIS_POINTS)} and ${sqlLiteral(LIST_OFFER_MAX_BASIS_POINTS)}`,
+    ),
     check(
       'ck_list_offers_window',
       sql`${table.endsAt} is null or ${table.endsAt} > ${table.startsAt}`,

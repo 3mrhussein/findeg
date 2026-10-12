@@ -1,11 +1,7 @@
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as schema from '@findeg/db/schema';
-import type {
-  OrderStatus,
-  PaymentStatus,
-  ShippingAddress,
-  VariantSnapshot,
-} from '@findeg/db/types';
+import type { ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 import type { OrderStatusUpdate } from './schemas';
 import type { OrderStaffActor } from './OrderStaffActor';
 import type { OrderStatusTransitionResult, PaymentStatusTransitionResult } from './errors';
@@ -106,6 +102,7 @@ export interface Orders {
     id: number,
     update: OrderStatusUpdate,
   ): Promise<OrderStatusTransitionResult>;
+  refund(actor: OrderStaffActor, id: number): Promise<OrderStatusTransitionResult>;
   changePaymentStatus(
     actor: OrderStaffActor,
     id: number,

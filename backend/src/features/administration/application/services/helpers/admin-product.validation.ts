@@ -1,3 +1,6 @@
+import { checkCompareAtPrice, sku as domainSku } from '@findeg/domain/catalog';
+import { DomainError, moneyFromDecimal } from '@findeg/domain/common';
+import { ValidationError } from '../../../../core/domain/errors/ValidationError';
 import { getCategoryById, getBrandById, getProductById } from '@findeg/db/queries';
 import type { ID } from '../../../../core/domain/types/common';
 
@@ -26,4 +29,37 @@ export async function getExistingProductOrThrow(id: ID) {
   if (!existing) throw new Error(`Product ${id} not found`);
 
   return existing;
+}
+
+/** The price and SKU fields a catalogue write carries. Absent fields are not checked. */
+export interface CatalogueWriteRow {
+  sku?: string;
+  basePrice?: number;
+  strikePrice?: number | null;
+}
+
+/**
+ * Checks a catalogue write against the domain's rules: SKUs are non-empty with no padding, and
+ * a compare-at price is strictly above its price. This is the one place the admin product
+ * feature maps a domain error to the application's ValidationError.
+ */
+export function assertCatalogueWriteRules(rows: readonly CatalogueWriteRow[]): void {
+  try {
+    for (const row of rows) {
+      if (row.sku !== undefined) domainSku(row.sku);
+      if (row.basePrice === undefined) continue;
+      checkCompareAtPrice(
+        moneyFromDecimal(row.basePrice.toFixed(2)),
+        row.strikePrice != null ? moneyFromDecimal(row.strikePrice.toFixed(2)) : null,
+      );
+    }
+  } catch (error) {
+    rethrowCatalogueWriteError(error);
+  }
+}
+
+/** Map a catalogue rule rejection from either preflight validation or the locked writer. */
+export function rethrowCatalogueWriteError(error: unknown): never {
+  if (error instanceof DomainError) throw new ValidationError('variants', error.message);
+  throw error;
 }

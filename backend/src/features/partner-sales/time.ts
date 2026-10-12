@@ -1,22 +1,7 @@
-/** Every calendar day and month in Partner Sales is Egypt time (ADR-0010, ADR-0013). */
-export const PARTNER_SALES_TIME_ZONE = 'Africa/Cairo';
+/** Month and date keys for Partner Sales. Business time is the domain's (`BUSINESS_TIME_ZONE`). */
 
 const MONTH_KEY = /^(\d{4})-(0[1-9]|1[0-2])$/;
 const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-const monthFormat = new Intl.DateTimeFormat('en-US', {
-  timeZone: PARTNER_SALES_TIME_ZONE,
-  year: 'numeric',
-  month: '2-digit',
-});
-
-/** `YYYY-MM` of an instant in Cairo time. */
-export function cairoMonthOf(instant: Date): string {
-  const parts = monthFormat.formatToParts(instant);
-  const year = parts.find((part) => part.type === 'year')?.value;
-  const month = parts.find((part) => part.type === 'month')?.value;
-  return `${year}-${month}`;
-}
 
 export function isMonthKey(value: unknown): value is string {
   return typeof value === 'string' && MONTH_KEY.test(value);

@@ -12,7 +12,29 @@ import {
   duplicateProductWithVariants,
   updateProductWithVariantsInDb,
 } from '@findeg/db/queries';
-import { ensureBrandExists, ensureCategoryExists, getExistingProductOrThrow } from './helpers';
+import {
+  assertCatalogueWriteRules,
+  rethrowCatalogueWriteError,
+  ensureBrandExists,
+  ensureCategoryExists,
+  getExistingProductOrThrow,
+  type CatalogueWriteRow,
+} from './helpers';
+
+/** The SKU and price fields a write sets on each variant, with shared pricing applied. */
+function priceRowsOf(input: {
+  pricingMode?: 'shared' | 'per-variant';
+  sharedBasePrice?: number;
+  sharedStrikePrice?: number | null;
+  variants?: ReadonlyArray<{ sku?: string; basePrice?: number; strikePrice?: number | null }>;
+}): CatalogueWriteRow[] {
+  const shared = input.pricingMode === 'shared';
+  return (input.variants ?? []).map((variant) => ({
+    sku: variant.sku,
+    basePrice: shared ? input.sharedBasePrice : variant.basePrice,
+    strikePrice: shared ? input.sharedStrikePrice : variant.strikePrice,
+  }));
+}
 
 interface AdminProductMutationDependencies {
   auditLogService?: IAuditLogService;
@@ -28,10 +50,14 @@ interface AdminProductMutationDependencies {
 export class AdminProductMutationService {
   constructor(private dependencies: AdminProductMutationDependencies) {}
 
+  /**
+   * Creates a product with variants after validating catalogue domain rules and relations.
+   */
   async createProduct(
     input: CreateProductWithVariantsInput,
     adminUserId?: number,
   ): Promise<{ productId: number }> {
+    assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
     await ensureBrandExists(input.brandId);
 
@@ -48,15 +74,19 @@ export class AdminProductMutationService {
     return { productId };
   }
 
+  /**
+   * Updates an existing product and its variants after validating catalogue domain rules.
+   */
   async updateProduct(
     id: ID,
     input: UpdateProductWithVariantsInput,
     adminUserId?: number,
   ): Promise<void> {
     await getExistingProductOrThrow(id);
+    assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
 
-    await updateProductWithVariantsInDb(id as number, input);
+    await updateProductWithVariantsInDb(id as number, input).catch(rethrowCatalogueWriteError);
 
     await this.dependencies.auditLogService?.logAction({
       entityType: 'product',

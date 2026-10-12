@@ -1,5 +1,15 @@
-import { PARTNER_ADMINISTRATOR, type PartnerRole } from '@findeg/db/schema';
 import { getActiveMembershipRoles, getBusinessPartnerById } from '@findeg/db/queries/partners';
+import {
+  BUSINESS_TIME_ZONE,
+  businessMonthOf,
+  canReadPartnerReport,
+  LIVE_ORDER_STATUSES,
+  money,
+  PARTNER_REPORT_MIN_ORDERS,
+  PARTNER_REPORT_ROLES as DOMAIN_PARTNER_REPORT_ROLES,
+  rollUpPartnerReport,
+  type PartnerRole,
+} from '@findeg/domain';
 import {
   getFirstAttributedOrderMonth,
   listAttributedSalesRows,
@@ -15,40 +25,23 @@ import {
   type PartnerSalesResult,
   type PartnerSalesStaffActor,
 } from './access';
-import type { AttributedOrderStatus, AttributedPaymentStatus } from './attributed-orders';
-import {
-  cairoMonthOf,
-  isMonthKey,
-  monthRange,
-  monthsBetween,
-  PARTNER_SALES_TIME_ZONE,
-} from './time';
+import type { AttributedPaymentStatus } from './attributed-orders';
+import { isMonthKey, monthRange, monthsBetween } from './time';
 
 /** A sales row is shown to a Partner only when at least this many distinct Orders contributed. */
-export const MIN_DISTINCT_ORDERS_PER_SALES_ROW = 3;
+export const MIN_DISTINCT_ORDERS_PER_SALES_ROW = PARTNER_REPORT_MIN_ORDERS;
 
 /** The Partner Roles that read Partner Reports. `list-manager` and `collection-staff` do not. */
-export const PARTNER_REPORT_ROLES: readonly PartnerRole[] = [
-  PARTNER_ADMINISTRATOR,
-  'report-viewer',
-];
+export const PARTNER_REPORT_ROLES: readonly PartnerRole[] = DOMAIN_PARTNER_REPORT_ROLES;
 
-/** Whether a member holding `roles` reads Partner Reports. The one definition of that rule. */
+/** Whether a member holding `roles` reads Partner Reports (ADR-0010, delegated to the domain). */
 export const canReadPartnerReports = (roles: readonly PartnerRole[]) =>
-  roles.some((role) => PARTNER_REPORT_ROLES.includes(role));
+  canReadPartnerReport({ status: 'active', roles });
 
 /**
- * The Orders a Partner Report counts as sales: every Attributed Order that is not cancelled or
- * refunded. An Order counts in the month it was accepted, so a later cancellation or refund
- * removes it from that month.
+ * Payment statuses a Partner Report counts alongside live Order statuses (`LIVE_ORDER_STATUSES`).
+ * A delivered Order whose payment was refunded stays out of the report.
  */
-export const REPORTED_ORDER_STATUSES: readonly AttributedOrderStatus[] = [
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-];
 export const REPORTED_PAYMENT_STATUSES: readonly AttributedPaymentStatus[] = ['unpaid', 'paid'];
 
 export type ReportLocale = 'en' | 'ar';
@@ -141,32 +134,32 @@ export function toSalesRowView(row: AttributedSalesRow, locale: ReportLocale): S
   };
 }
 
-/** Applies the suppression threshold and the "Other items" roll-up to the shared sales rows. */
+/**
+ * Applies the suppression threshold and the "Other items" roll-up (ADR-0010) with the domain's
+ * `rollUpPartnerReport`, so totals still add up. Shown rows lose their ids and Order counts.
+ */
 export function projectPartnerSales(sales: readonly SalesRowView[]) {
-  const shown: PartnerSalesRowView[] = [];
-  const suppressed: SalesRowView[] = [];
-  for (const row of sales) {
-    if (row.orderCount < MIN_DISTINCT_ORDERS_PER_SALES_ROW) {
-      suppressed.push(row);
-      continue;
-    }
-    shown.push({
-      listName: row.listName,
-      listItemLabel: row.listItemLabel,
-      productName: row.productName,
-      variantLabel: row.variantLabel,
+  const { rows, otherItems } = rollUpPartnerReport(
+    sales.map((row) => ({
+      ...row,
+      distinctOrders: row.orderCount,
       quantity: row.quantity,
-      chargedPiasters: row.chargedPiasters,
-    });
-  }
-  const otherItems: OtherItemsView | null =
-    suppressed.length === 0
-      ? null
-      : {
-          quantity: suppressed.reduce((sum, row) => sum + row.quantity, 0),
-          chargedPiasters: suppressed.reduce((sum, row) => sum + row.chargedPiasters, 0n),
-        };
-  return { sales: shown, otherItems };
+      charged: money(row.chargedPiasters),
+    })),
+  );
+  const shown: PartnerSalesRowView[] = rows.map((row) => ({
+    listName: row.listName,
+    listItemLabel: row.listItemLabel,
+    productName: row.productName,
+    variantLabel: row.variantLabel,
+    quantity: row.quantity,
+    chargedPiasters: row.charged,
+  }));
+  const other: OtherItemsView | null = otherItems && {
+    quantity: otherItems.quantity,
+    chargedPiasters: otherItems.charged,
+  };
+  return { sales: shown, otherItems: other };
 }
 
 /**
@@ -178,12 +171,8 @@ async function readMonthlySales(
   businessPartnerId: number,
   input: { month?: string; locale: ReportLocale; asOf: Date },
 ): Promise<MonthlySalesView | undefined> {
-  const currentMonth = cairoMonthOf(input.asOf);
-  const firstMonth = await getFirstAttributedOrderMonth(
-    tx,
-    businessPartnerId,
-    PARTNER_SALES_TIME_ZONE,
-  );
+  const currentMonth = businessMonthOf(input.asOf);
+  const firstMonth = await getFirstAttributedOrderMonth(tx, businessPartnerId, BUSINESS_TIME_ZONE);
   const months =
     firstMonth && firstMonth <= currentMonth ? monthsBetween(firstMonth, currentMonth) : [];
   const month = input.month ?? currentMonth;
@@ -192,8 +181,8 @@ async function readMonthlySales(
   const rows = await listAttributedSalesRows(tx, {
     businessPartnerId,
     ...monthRange(month),
-    timeZone: PARTNER_SALES_TIME_ZONE,
-    orderStatuses: REPORTED_ORDER_STATUSES,
+    timeZone: BUSINESS_TIME_ZONE,
+    orderStatuses: LIVE_ORDER_STATUSES,
     paymentStatuses: REPORTED_PAYMENT_STATUSES,
   });
   return {

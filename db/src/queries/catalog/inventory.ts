@@ -1,3 +1,6 @@
+import { availableStockByVariant } from '../inventory/availability';
+import { availableStock, LOW_STOCK_MAX_UNITS } from '@findeg/domain';
+import { domainId, mapStockBalance, mapWarehouse } from '../../mapping';
 /**
  * Inventory Query Primitives
  *
@@ -49,6 +52,8 @@ export async function getBalance(
       variantId: inventoryBalances.variantId,
       warehouseId: inventoryBalances.warehouseId,
       warehouseCode: warehouses.code,
+      warehouseName: warehouses.name,
+      isActive: warehouses.isActive,
       onHand: inventoryBalances.onHand,
       reserved: inventoryBalances.reserved,
     })
@@ -61,7 +66,17 @@ export async function getBalance(
 
   return {
     ...result,
-    available: result.onHand - result.reserved,
+    available: availableStock(
+      domainId<'ProductVariant'>(result.variantId),
+      [mapStockBalance(result)],
+      [
+        mapWarehouse({
+          id: result.warehouseId,
+          name: result.warehouseName,
+          isActive: result.isActive,
+        }),
+      ],
+    ),
   };
 }
 
@@ -74,6 +89,8 @@ export async function getAllBalances(variantId: number): Promise<InventoryBalanc
       variantId: inventoryBalances.variantId,
       warehouseId: inventoryBalances.warehouseId,
       warehouseCode: warehouses.code,
+      warehouseName: warehouses.name,
+      isActive: warehouses.isActive,
       onHand: inventoryBalances.onHand,
       reserved: inventoryBalances.reserved,
     })
@@ -83,7 +100,11 @@ export async function getAllBalances(variantId: number): Promise<InventoryBalanc
 
   return results.map((r) => ({
     ...r,
-    available: r.onHand - r.reserved,
+    available: availableStock(
+      domainId<'ProductVariant'>(r.variantId),
+      [mapStockBalance(r)],
+      [mapWarehouse({ id: r.warehouseId, name: r.warehouseName, isActive: r.isActive })],
+    ),
   }));
 }
 
@@ -149,7 +170,15 @@ export async function reserveStock(
       )
       .for('update');
 
-    const available = (balance?.onHand || 0) - (balance?.reserved || 0);
+    const [warehouse] = await tx.select().from(warehouses).where(eq(warehouses.id, warehouseId));
+    const available =
+      balance && warehouse
+        ? availableStock(
+            domainId<'ProductVariant'>(variantId),
+            [mapStockBalance(balance)],
+            [mapWarehouse(warehouse)],
+          )
+        : 0;
     if (available < quantity) return false;
 
     // Update reservation (the row exists: available > 0 was read from it)
@@ -213,35 +242,49 @@ export async function releaseReservation(
   });
 }
 
-/**
- * Get low stock variants (available quantity below threshold)
- */
-export async function getLowStock(threshold?: number) {
+/** Low stock is measured per variant across active warehouses, never per balance. */
+export async function getLowStock(threshold = LOW_STOCK_MAX_UNITS) {
+  const availability = availableStockByVariant();
   const results = await db
     .select({
       variant: productVariants,
       balance: inventoryBalances,
       warehouseCode: warehouses.code,
+      warehouseName: warehouses.name,
+      isActive: warehouses.isActive,
+      available: availability.available,
     })
-    .from(inventoryBalances)
-    .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))
-    .innerJoin(warehouses, eq(inventoryBalances.warehouseId, warehouses.id))
+    .from(productVariants)
+    .innerJoin(availability, eq(availability.variantId, productVariants.id))
+    .innerJoin(inventoryBalances, eq(inventoryBalances.variantId, productVariants.id))
+    .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
     .where(
-      threshold !== undefined
-        ? sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= ${threshold}`
-        : sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= 5`,
+      and(
+        eq(warehouses.isActive, true),
+        sql`${availability.available} > 0 and ${availability.available} <= ${threshold}`,
+      ),
     )
-    .orderBy(desc(productVariants.id));
-
-  return results.map((r) => ({
-    variant: r.variant,
+    .orderBy(desc(productVariants.id), inventoryBalances.warehouseId);
+  return results.map((row) => ({
+    variant: row.variant,
+    available: row.available,
     balance: {
-      variantId: r.balance.variantId,
-      warehouseId: r.balance.warehouseId,
-      warehouseCode: r.warehouseCode,
-      onHand: r.balance.onHand,
-      reserved: r.balance.reserved,
-      available: r.balance.onHand - r.balance.reserved,
+      variantId: row.balance.variantId,
+      warehouseId: row.balance.warehouseId,
+      warehouseCode: row.warehouseCode,
+      onHand: row.balance.onHand,
+      reserved: row.balance.reserved,
+      available: availableStock(
+        domainId<'ProductVariant'>(row.balance.variantId),
+        [mapStockBalance(row.balance)],
+        [
+          mapWarehouse({
+            id: row.balance.warehouseId,
+            name: row.warehouseName,
+            isActive: row.isActive,
+          }),
+        ],
+      ),
     },
   }));
 }

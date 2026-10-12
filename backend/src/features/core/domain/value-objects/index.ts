@@ -54,7 +54,6 @@ export {
   AppliedDiscountSchema,
   ResolvedPricingSchema,
   deriveStrikePrice,
-  resolvePricing,
   type PersistedPricing,
   type DiscountType,
   type DiscountRule,

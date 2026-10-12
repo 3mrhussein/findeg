@@ -1,21 +1,13 @@
 import { z } from 'zod';
-import { OrderStatusSchema } from '@findeg/db/types';
-export {
-  ShippingAddressSchema,
-  VariantSnapshotSchema,
-  OrderStatusSchema,
-  PaymentStatusSchema,
-} from '@findeg/db/types';
-export type {
-  ShippingAddress,
-  VariantSnapshot,
-  OrderStatus,
-  PaymentStatus,
-} from '@findeg/db/types';
-export * from './order-status-transitions';
-export * from './order-payment-status-transitions';
+import { ORDER_STATUSES, PAYMENT_STATUSES } from '@findeg/domain/orders';
+export const OrderStatusSchema = z.enum(ORDER_STATUSES);
+export const PaymentStatusSchema = z.enum(PAYMENT_STATUSES);
+export { ShippingAddressSchema, VariantSnapshotSchema } from '@findeg/db/types';
+export type { ShippingAddress, VariantSnapshot } from '@findeg/db/types';
+export type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 export const OrderStatusUpdateSchema = z.object({
   status: OrderStatusSchema,
+  parcelBackInWarehouse: z.boolean().optional(),
   trackingNumber: z.string().optional(),
   adminNotes: z.string().optional(),
 });

@@ -347,7 +347,7 @@ describe('Outbox on real Postgres', () => {
 
     it('delivers a confirmation carrying the Order Reference after accepting an order, retrying through a provider failure', async () => {
       const variantId = await createVariantWithStock();
-      const checkout = createCheckoutService({ shippingFee: 50 });
+      const checkout = createCheckoutService({});
       const quote = await checkout.validate({
         source: 'cart',
         lines: [{ variantId, quantity: 2 }],
@@ -397,7 +397,7 @@ describe('Outbox on real Postgres', () => {
     it('does not enqueue a confirmation when acceptance rolls back', async () => {
       const variantId = await createVariantWithStock();
       const before = await testDb.db.select().from(outbox);
-      const checkout = createCheckoutService({ shippingFee: 50 });
+      const checkout = createCheckoutService({});
 
       const rejected = await checkout.accept(
         {

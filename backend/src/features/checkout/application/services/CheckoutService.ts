@@ -1,36 +1,38 @@
+import { randomBytes } from 'node:crypto';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '@findeg/db/connection';
+import { domainId, mapStockBalance } from '@findeg/db';
 import { products, productVariants, type CheckoutIdempotency } from '@findeg/db/schema';
 import {
   type DbTransaction,
   orderQueries,
-  reserveOrderStock,
-  InsufficientStockError,
+  lockOrderStock,
+  persistOrderStock,
   checkoutIdempotencyQueries,
 } from '@findeg/db/queries';
-import { piastersToDecimal, toPiasters } from '@findeg/money';
-import { computeConfirmation } from '../../domain/confirmation';
+import { moneyFromDecimal, moneyToDecimal, sumMoney } from '@findeg/domain/common';
+import { sku, type VariantId } from '@findeg/domain/catalog';
 import {
-  lineDiscount,
-  priceLine,
-  shippingFeeToPiasters,
-  sumQuote,
-  toCheckoutQuote,
-  type PiasterQuote,
-  type PiasterQuoteLine,
-} from '../../domain/piasters';
+  acceptOrder,
+  acceptedPaymentMethod,
+  cart,
+  egyptianMobile,
+  guestBuyer,
+  shippingAddress,
+  generateOrderReference,
+  priceQuote,
+  type Quote,
+} from '@findeg/domain/orders';
+import { computeConfirmation } from '../../domain/confirmation';
+import { toCheckoutQuote } from '../quote-mapping';
+import { mapDomainError } from '../domain-error';
 import { computeOrderFingerprint } from '../../domain/fingerprint';
 import {
   buildIdempotencyScope,
   MAX_IDEMPOTENCY_SCOPE_LENGTH,
 } from '../../domain/idempotency-scope';
 import { enqueue, orderAcceptedId, ORDER_ACCEPTED_KIND } from '../../../outbox';
-import {
-  ListUnavailableError,
-  ReconfirmationRequiredError,
-  SelectionInvalidError,
-  UnavailableVariantError,
-} from '../../domain/errors';
+import { ListUnavailableError, SelectionInvalidError, UnavailableVariantError } from '../errors';
 import { calculateListQuote, type ListAttribution } from './listCheckout';
 import {
   CheckoutOrderSchema,
@@ -51,12 +53,9 @@ import type {
 } from '../interfaces/ICheckoutService';
 
 export interface CheckoutServiceOptions {
-  shippingFee?: number;
   /** Source of the acceptance time that decides whether a List Offer is active. */
   clock?: () => Date;
 }
-
-export const DEFAULT_FLAT_SHIPPING_FEE = 50;
 
 /** Validated, normalized accept request with its derived idempotency scope and fingerprint. */
 type AcceptRequest = (
@@ -64,6 +63,7 @@ type AcceptRequest = (
   | { source: 'list'; publicCode: string; lines: ListCheckoutLine[] }
 ) & {
   confirmation: string;
+  paymentMethod: string;
   address: ShippingAddress;
   userId?: number;
   guestEmail?: string;
@@ -82,14 +82,10 @@ function rejected(
 }
 
 export class CheckoutService implements ICheckoutService {
-  private readonly shippingFee: bigint;
   private readonly clock: () => Date;
 
   constructor(options?: CheckoutServiceOptions) {
     this.clock = options?.clock ?? (() => new Date());
-    this.shippingFee = shippingFeeToPiasters(
-      options?.shippingFee ?? (process.env.CHECKOUT_FLAT_SHIPPING_FEE || DEFAULT_FLAT_SHIPPING_FEE),
-    );
   }
 
   async validate(input: CheckoutValidateInput): Promise<CheckoutValidateResult> {
@@ -108,10 +104,12 @@ export class CheckoutService implements ICheckoutService {
     try {
       const { quote } =
         parsed.data.source === 'list'
-          ? await calculateListQuote(parsed.data, this.shippingFee, undefined, this.clock())
+          ? await calculateListQuote(parsed.data, undefined, this.clock())
           : await this.calculateQuote(parsed.data.lines);
       return { success: true, data: toCheckoutQuote(quote) };
     } catch (err: unknown) {
+      const mapped = mapDomainError(err);
+      if (mapped) return mapped;
       if (err instanceof ListUnavailableError) {
         return {
           success: false,
@@ -181,8 +179,12 @@ export class CheckoutService implements ICheckoutService {
     }
 
     // Check payment method before parsing to return specific error if not COD
-    if (input.paymentMethod !== 'cod') {
-      return reject('unsupported-payment-method', 'Only Cash on Delivery (cod) is accepted');
+    try {
+      acceptedPaymentMethod(input.paymentMethod);
+    } catch (err) {
+      const failure = mapDomainError(err);
+      if (failure) return { ok: false, failure };
+      throw err;
     }
 
     // Signed-in orders ignore guestEmail entirely, so drop it before it can fail validation
@@ -204,6 +206,23 @@ export class CheckoutService implements ICheckoutService {
         'validation-error',
         'Either a signed-in session or guestEmail must be provided',
       );
+    }
+
+    try {
+      egyptianMobile(parsed.data.address.phone);
+      shippingAddress({
+        ...parsed.data.address,
+        governorate: parsed.data.address.governorate ?? parsed.data.address.city,
+      });
+      if (!userId) guestBuyer(guestEmail!);
+      if (parsed.data.source === 'cart')
+        cart(
+          parsed.data.lines.map((line) => ({ ...line, variantId: line.variantId as VariantId })),
+        );
+    } catch (err) {
+      const failure = mapDomainError(err);
+      if (failure) return { ok: false, failure };
+      throw err;
     }
 
     // Header-only (ADR-0005): the key is never read from the request body.
@@ -248,6 +267,7 @@ export class CheckoutService implements ICheckoutService {
 
     const common = {
       confirmation,
+      paymentMethod: parsed.data.paymentMethod,
       address,
       userId,
       guestEmail: effectiveGuestEmail,
@@ -301,6 +321,7 @@ export class CheckoutService implements ICheckoutService {
       publicCode,
       lines,
       confirmation,
+      paymentMethod,
       address,
       userId,
       guestEmail,
@@ -325,7 +346,6 @@ export class CheckoutService implements ICheckoutService {
     if (source === 'list') {
       const listCalculation = await calculateListQuote(
         { publicCode, lines: lines as ListCheckoutLine[] },
-        this.shippingFee,
         tx,
         this.clock(),
       );
@@ -336,71 +356,104 @@ export class CheckoutService implements ICheckoutService {
     }
     const { quote: freshQuote, variantMap } = calculation;
 
-    // 3. Price confirmation check
-    if (freshQuote.confirmation !== confirmation) {
-      throw new ReconfirmationRequiredError(toCheckoutQuote(freshQuote));
-    }
+    // Domain confirms canonical terms and allocates against balances held FOR UPDATE.
+    const balances = await lockOrderStock(
+      freshQuote.lines.map((line) => line.variantId),
+      tx,
+    );
+    const acceptance = acceptOrder({
+      reference: generateOrderReference(randomBytes),
+      buyer: userId
+        ? { kind: 'customer', customerId: domainId<'Customer'>(userId) }
+        : guestBuyer(guestEmail!),
+      contactPhone: egyptianMobile(address.phone),
+      shippingAddress: shippingAddress({
+        ...address,
+        governorate: address.governorate ?? address.city,
+      }),
+      paymentMethod,
+      quote: freshQuote,
+      confirmation,
+      digestTerms: computeConfirmation,
+      stock: {
+        balances: balances.map(mapStockBalance),
+        // lockOrderStock reads only balances at active warehouses.
+        warehouses: [...new Set(balances.map((balance) => balance.warehouseId))].map((id) => ({
+          id: domainId<'Warehouse'>(id),
+          name: '',
+          status: 'active',
+        })),
+      },
+    });
+    const accepted = acceptance.order;
 
     // 4. Create the Order and Order Items (reuses variantMap without redundant second query)
-    const { order } = await orderQueries.create(
-      {
-        userId,
-        guestEmail,
-        status: 'pending',
-        paymentStatus: 'unpaid',
-        subtotal: piastersToDecimal(freshQuote.subtotal),
-        shippingCost: piastersToDecimal(freshQuote.shipping),
-        totalAmount: piastersToDecimal(freshQuote.total),
-        listOfferBasisPoints: attribution?.listOfferBasisPoints ?? undefined,
-        discountTotal: piastersToDecimal(
-          freshQuote.lines.reduce((sum, line) => sum + lineDiscount(line), 0n),
-        ),
-        currency: freshQuote.currency,
-        paymentMethod: 'cod',
-        schoolSupplyListId: attribution?.schoolSupplyListId,
-        schoolSupplyListPublicCode: attribution?.schoolSupplyListPublicCode,
-        schoolSupplyListPublishedAt: attribution?.schoolSupplyListPublishedAt,
-        businessPartnerId: attribution?.businessPartnerId,
-        shippingAddressSnapshot: address,
-        items: freshQuote.lines.map((line) => {
-          const meta = variantMap.get(line.variantId);
-          if (!meta || !meta.productId || !meta.sku) {
-            throw new Error(`Catalog metadata missing or incomplete for variant ${line.variantId}`);
-          }
-          const productName =
-            (meta.productName as Record<string, string>)?.en ||
-            (meta.productName as Record<string, string>)?.ar ||
-            '';
-          return {
-            productId: meta.productId,
-            variantId: line.variantId,
-            quantity: line.quantity,
-            unitPriceSnapshot: piastersToDecimal(line.unitPrice),
-            totalPrice: piastersToDecimal(line.lineTotal),
-            unitPrice: piastersToDecimal(line.unitPrice),
-            discountAmount: piastersToDecimal(lineDiscount(line)),
-            lineTotal: piastersToDecimal(line.lineTotal),
-            productNameSnapshot: productName,
-            productSkuSnapshot: meta.sku,
-            variantSkuSnapshot: meta.sku,
-            variantSnapshot: (meta.localizedLabel as Record<string, unknown>) ?? {},
-            schoolSupplyListItemId: line.listItemId,
-            isSubstitute:
-              line.listItemId === undefined
-                ? undefined
-                : attribution?.items.get(line.listItemId)?.defaultVariantId !== line.variantId,
-          };
-        }),
-      },
-      tx,
-    );
+    const create = (reference: string) =>
+      orderQueries.create(
+        {
+          orderReference: reference,
+          userId,
+          guestEmail,
+          status: accepted.status,
+          paymentStatus: accepted.paymentStatus,
+          subtotal: moneyToDecimal(accepted.totals.netSubtotal),
+          shippingCost: moneyToDecimal(accepted.totals.shipping),
+          totalAmount: moneyToDecimal(accepted.totals.total),
+          listOfferBasisPoints: attribution?.listOfferBasisPoints ?? undefined,
+          discountTotal: moneyToDecimal(accepted.totals.discount),
+          currency: accepted.currency,
+          paymentMethod: accepted.paymentMethod,
+          schoolSupplyListId: attribution?.schoolSupplyListId,
+          schoolSupplyListPublicCode: attribution?.schoolSupplyListPublicCode,
+          schoolSupplyListPublishedAt: attribution?.schoolSupplyListPublishedAt,
+          businessPartnerId: attribution?.businessPartnerId,
+          shippingAddressSnapshot: { ...accepted.shippingAddress, phone: accepted.contactPhone },
+          items: accepted.lines.map((line) => {
+            const meta = variantMap.get(line.variantId);
+            if (!meta || !meta.productId || !meta.sku) {
+              throw new Error(
+                `Catalog metadata missing or incomplete for variant ${line.variantId}`,
+              );
+            }
+            return {
+              productId: meta.productId,
+              variantId: line.variantId,
+              quantity: line.quantity,
+              unitPriceSnapshot: moneyToDecimal(line.unitPrice),
+              totalPrice: moneyToDecimal(line.lineTotal),
+              unitPrice: moneyToDecimal(line.unitPrice),
+              discountAmount: moneyToDecimal(
+                sumMoney(line.discounts.map((discount) => discount.amount)),
+              ),
+              lineTotal: moneyToDecimal(line.lineTotal),
+              productNameSnapshot: line.productName,
+              productSkuSnapshot: line.sku,
+              variantSkuSnapshot: line.sku,
+              variantSnapshot: (meta.localizedLabel as Record<string, unknown>) ?? {},
+              schoolSupplyListItemId: line.supplyListItemId ?? undefined,
+              isSubstitute: line.isSubstitute ?? undefined,
+            };
+          }),
+        },
+        tx,
+      );
 
-    // 5. Reserve stock inside the same transaction (throws InsufficientStockError on shortfall)
-    await reserveOrderStock(
-      order.id,
-      lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity })),
-      tx,
-    );
+    // Keep reference collision retries within savepoints, as before.
+    let stored;
+    let reference = accepted.reference;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        stored = await create(reference);
+        break;
+      } catch (err) {
+        if (!orderQueries.isOrderReferenceConflict(err) || attempt === 4) throw err;
+        reference = generateOrderReference(randomBytes);
+      }
+    }
+    if (!stored) throw new Error('Failed to create order');
+    const { order } = stored;
+
+    await persistOrderStock(order.id, acceptance.stock, tx);
 
     // 6. Confirmation email goes to the outbox in this transaction; delivery happens afterwards
     await enqueue(tx, orderAcceptedId(order.orderReference), ORDER_ACCEPTED_KIND, {
@@ -461,25 +514,14 @@ export class CheckoutService implements ICheckoutService {
       );
     }
 
-    if (err instanceof ReconfirmationRequiredError) {
-      return rejected(
-        409,
-        'reconfirmation-required',
-        'Quote terms have changed; reconfirmation required',
-        { quote: err.quote },
-      );
-    }
+    const mapped = mapDomainError(err);
+    if (mapped) return mapped;
     if (err instanceof ListUnavailableError) {
       return rejected(409, 'list-unavailable', err.message);
     }
     if (err instanceof SelectionInvalidError) {
       return rejected(422, 'selection-invalid', err.message, {
         listItemIds: err.listItemIds,
-      });
-    }
-    if (err instanceof InsufficientStockError) {
-      return rejected(409, 'insufficient-stock', 'Insufficient stock for requested items', {
-        shortfalls: err.shortfalls,
       });
     }
     if (err instanceof UnavailableVariantError) {
@@ -496,7 +538,7 @@ export class CheckoutService implements ICheckoutService {
     lines: Array<{ variantId: number; quantity: number }>,
     tx?: Parameters<Parameters<typeof db.transaction>[0]>[0],
   ): Promise<{
-    quote: PiasterQuote;
+    quote: Quote;
     variantMap: Map<
       number,
       {
@@ -510,16 +552,8 @@ export class CheckoutService implements ICheckoutService {
   }> {
     const executor = tx ?? db;
 
-    // Aggregate duplicate variant lines
-    const quantitiesByVariant = new Map<number, number>();
-    for (const line of lines) {
-      quantitiesByVariant.set(
-        line.variantId,
-        (quantitiesByVariant.get(line.variantId) ?? 0) + line.quantity,
-      );
-    }
-
-    const variantIds = [...quantitiesByVariant.keys()];
+    const merged = cart(lines.map((line) => ({ ...line, variantId: line.variantId as VariantId })));
+    const variantIds = merged.lines.map((line) => line.variantId);
 
     const query = executor
       .select({
@@ -548,43 +582,21 @@ export class CheckoutService implements ICheckoutService {
       throw new UnavailableVariantError();
     }
 
-    const priceMap = new Map(availableVariants.map((v) => [v.id, toPiasters(v.basePrice)]));
     const variantMap = new Map(availableVariants.map((v) => [v.id, v]));
-
-    const quoteLines: PiasterQuoteLine[] = variantIds.map((variantId) => {
-      const quantity = quantitiesByVariant.get(variantId)!;
-      const unitPrice = priceMap.get(variantId)!;
-      const priced = priceLine(unitPrice, quantity, null);
-      return {
-        variantId,
-        quantity,
-        unitPrice,
-        discounts: [],
-        lineTotal: priced.lineTotal,
-      };
-    });
-
-    const { subtotal, shipping, total } = sumQuote(quoteLines, this.shippingFee);
-    const currency = 'EGP' as const;
-
-    const confirmation = computeConfirmation({
-      currency,
-      shipping,
-      subtotal,
-      total,
-      lines: quoteLines,
-    });
-
-    return {
-      quote: {
-        lines: quoteLines,
-        shipping,
-        subtotal,
-        total,
-        currency,
-        confirmation,
-      },
-      variantMap,
-    };
+    const quote = priceQuote(
+      { kind: 'cart' },
+      merged.lines.map((line) => {
+        const variant = variantMap.get(line.variantId)!;
+        const name = variant.productName as Record<string, string>;
+        return {
+          ...line,
+          unitPrice: moneyFromDecimal(variant.basePrice),
+          sku: sku(variant.sku),
+          productName: name.en || name.ar || '',
+        };
+      }),
+      this.clock(),
+    );
+    return { quote, variantMap };
   }
 }

@@ -13,12 +13,21 @@ import {
   lockBusinessPartnerById,
   setPartnerInvitationExpiry,
   setPartnerInvitationStatus,
+  type BusinessPartnerRow,
   type PartnerDatabase,
   type PartnerExecutor,
   type PartnerInvitationRow,
   type PartnerTransaction,
 } from '@findeg/db/queries/partners';
-import { PARTNER_ROLES } from '@findeg/db/schema';
+import {
+  isPartnerInvitationExpired,
+  issuePartnerInvitation,
+  partnerInvitationState,
+  partnerStatusAllows,
+  PARTNER_ROLES,
+  resendPartnerInvitation,
+  revokePartnerInvitation,
+} from '@findeg/domain';
 import type { PartnerResult } from '../interfaces/IPartnerService';
 import type {
   EnqueueInvitation,
@@ -33,13 +42,13 @@ import type {
   ResendError,
   RevokeError,
 } from '../interfaces/IInvitationService';
-import { canManagePartners, fail, isActivePartnerAdministrator, isOpen, ok } from './shared';
+import { partnerFailure } from './domain-failures';
+import { canManagePartners, fail, isActivePartnerAdministrator, ok } from './shared';
 
-const INVITATION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-
+/** Shape only: the domain checks the email, the roles and the partner's status. */
 const inviteSchema = z.object({
-  email: z.string().trim().toLowerCase().pipe(z.email().max(255)),
-  roles: z.array(z.enum(PARTNER_ROLES)).min(1),
+  email: z.string(),
+  roles: z.array(z.enum(PARTNER_ROLES)),
 });
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -85,27 +94,42 @@ export class InvitationService implements IInvitationService {
       const partner = await lockBusinessPartnerById(tx, partnerId);
       const denied = await this.authorize(tx, actor, partner);
       if (denied) return fail(denied);
+      if (!partner) return fail('not-found');
       const parsed = inviteSchema.safeParse(input);
       if (!parsed.success) return fail('invalid-input');
-      const { email, roles } = parsed.data;
-      const uniqueRoles = [...new Set(roles)];
-      if (!partner || !isOpen(partner)) return fail('partner-not-open');
 
-      if (await getCurrentPartnerMembershipByEmail(tx, partnerId, email)) {
-        return fail('already-member');
+      const alreadyMember =
+        (await getCurrentPartnerMembershipByEmail(
+          tx,
+          partnerId,
+          parsed.data.email.trim().toLowerCase(),
+        )) !== undefined;
+      let issued: ReturnType<typeof issuePartnerInvitation>;
+      try {
+        issued = issuePartnerInvitation(
+          { email: parsed.data.email, roles: parsed.data.roles },
+          { partnerStatus: partner.status, now: this.clock(), alreadyMember },
+        );
+      } catch (error) {
+        return partnerFailure(error);
       }
-      const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, email);
+
+      const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, issued.email);
       if (replaced) {
-        const revoked = await setPartnerInvitationStatus(tx, replaced.id, 'revoked');
+        const revoked = await setPartnerInvitationStatus(
+          tx,
+          replaced.id,
+          revokePartnerInvitation(replaced, { partnerStatus: partner.status }).status,
+        );
         await this.audit(tx, actor, partnerId, 'invitation.revoked', replaced, revoked);
       }
 
       const created = await insertPartnerInvitation(tx, {
         businessPartnerId: partnerId,
-        email,
-        roles: uniqueRoles,
+        email: issued.email,
+        roles: issued.roles,
         invitedByUserId: actor.userId,
-        expiresAt: new Date(this.clock().getTime() + INVITATION_TTL_MS),
+        expiresAt: issued.expiresAt,
       });
       await this.audit(tx, actor, partnerId, 'invitation.issued', null, created);
       const token = await this.mintAndEnqueue(tx, created.id);
@@ -118,13 +142,18 @@ export class InvitationService implements IInvitationService {
     return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, ResendError>> => {
       const locked = await this.lockPending(tx, actor, invitationId, partnerId);
       if (!locked.success) return locked;
-      const { invitation } = locked.data;
+      const { invitation, partner } = locked.data;
 
-      const updated = await setPartnerInvitationExpiry(
-        tx,
-        invitation.id,
-        new Date(this.clock().getTime() + INVITATION_TTL_MS),
-      );
+      let renewed: PartnerInvitationRow;
+      try {
+        renewed = resendPartnerInvitation(invitation, {
+          partnerStatus: partner.status,
+          now: this.clock(),
+        });
+      } catch (error) {
+        return partnerFailure(error);
+      }
+      const updated = await setPartnerInvitationExpiry(tx, invitation.id, renewed.expiresAt);
       await this.audit(
         tx,
         actor,
@@ -143,9 +172,15 @@ export class InvitationService implements IInvitationService {
     return db.transaction(async (tx): Promise<PartnerResult<PartnerInvitation, RevokeError>> => {
       const locked = await this.lockPending(tx, actor, invitationId, partnerId);
       if (!locked.success) return locked;
-      const { invitation } = locked.data;
+      const { invitation, partner } = locked.data;
 
-      const revoked = await setPartnerInvitationStatus(tx, invitation.id, 'revoked');
+      let withdrawn: PartnerInvitationRow;
+      try {
+        withdrawn = revokePartnerInvitation(invitation, { partnerStatus: partner.status });
+      } catch (error) {
+        return partnerFailure(error);
+      }
+      const revoked = await setPartnerInvitationStatus(tx, invitation.id, withdrawn.status);
       await this.audit(
         tx,
         actor,
@@ -170,10 +205,10 @@ export class InvitationService implements IInvitationService {
     return db.transaction(async (tx) => {
       const found = await getPartnerInvitationById(tx, invitationId);
       const partner = found && (await lockBusinessPartnerById(tx, found.businessPartnerId));
-      if (!partner || !isOpen(partner)) return null;
+      if (!partner || !partnerStatusAllows(partner.status, 'membership-change')) return null;
       const invitation = await getPartnerInvitationById(tx, invitationId);
       if (!invitation || invitation.status !== 'pending') return null;
-      if (invitation.expiresAt <= this.clock()) return null;
+      if (isPartnerInvitationExpired(invitation, this.clock())) return null;
 
       const token = await this.mint(tx, invitation.id);
       return {
@@ -192,26 +227,28 @@ export class InvitationService implements IInvitationService {
     const partner = await getBusinessPartnerById(db, invitation.businessPartnerId);
     if (!partner) return fail('not-found');
 
-    const expired = invitation.status === 'pending' && invitation.expiresAt <= this.clock();
     return ok({
       partner: { code: partner.code, nameEn: partner.nameEn, nameAr: partner.nameAr },
       email: invitation.email,
       roles: invitation.roles,
       expiresAt: invitation.expiresAt,
-      state: expired ? 'expired' : invitation.status,
+      state: partnerInvitationState(invitation, this.clock()),
     });
   }
 
   /**
    * Locks the invitation's Business Partner, then re-reads the invitation under
-   * the lock so a concurrent change to it is seen.
+   * the lock so a concurrent change to it is seen. The caller's domain rule then
+   * checks the partner's status and that the invitation is pending.
    */
   private async lockPending(
     tx: PartnerTransaction,
     actor: InvitationActor,
     invitationId: number,
     partnerId?: number,
-  ): Promise<PartnerResult<{ invitation: PartnerInvitationRow }, ResendError>> {
+  ): Promise<
+    PartnerResult<{ invitation: PartnerInvitationRow; partner: BusinessPartnerRow }, ResendError>
+  > {
     const found = await getPartnerInvitationById(tx, invitationId);
     // An invitation of another partner than the caller scoped to reads as missing.
     const unlocked =
@@ -221,11 +258,11 @@ export class InvitationService implements IInvitationService {
     const partner = unlocked && (await lockBusinessPartnerById(tx, unlocked.businessPartnerId));
     const denied = await this.authorize(tx, actor, partner || undefined);
     if (denied) return fail(denied);
-    if (!partner || !isOpen(partner)) return fail('partner-not-open');
+    if (!partner) return fail('not-found');
 
     const invitation = await getPartnerInvitationById(tx, invitationId);
-    if (!invitation || invitation.status !== 'pending') return fail('invitation-not-pending');
-    return ok({ invitation });
+    if (!invitation) return fail('invitation-not-pending');
+    return ok({ invitation, partner });
   }
 
   private async mint(tx: PartnerTransaction, invitationId: number): Promise<string> {

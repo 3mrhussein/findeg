@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
-import type { ShippingAddress } from '@findeg/db/types';
+import type { ShippingAddress } from '../schemas';
+import { cart } from '@findeg/domain/orders';
+import type { VariantId } from '@findeg/domain/catalog';
 
 export interface OrderFingerprintInput {
   source?: 'cart' | 'list';
@@ -32,6 +34,7 @@ export function computeOrderFingerprint(input: OrderFingerprintInput): string {
 
   const normalizedAddress = {
     fullName: input.address.fullName?.trim() ?? '',
+    ...(input.address.governorate ? { governorate: input.address.governorate } : {}),
     phone: input.address.phone?.trim() ?? '',
     city: input.address.city?.trim() ?? '',
     area: input.address.area?.trim() ?? '',
@@ -57,14 +60,9 @@ export function computeOrderFingerprint(input: OrderFingerprintInput): string {
 }
 
 function normalizeCartLines(lines: OrderFingerprintInput['lines']) {
-  const quantitiesByVariant = new Map<number, number>();
-  for (const line of lines) {
-    quantitiesByVariant.set(
-      line.variantId,
-      (quantitiesByVariant.get(line.variantId) ?? 0) + line.quantity,
-    );
-  }
-  return [...quantitiesByVariant.entries()]
-    .sort(([a], [b]) => a - b)
-    .map(([variantId, quantity]) => ({ variantId, quantity }));
+  return [
+    ...cart(
+      lines.map((line) => ({ variantId: line.variantId as VariantId, quantity: line.quantity })),
+    ).lines,
+  ].sort((a, b) => a.variantId - b.variantId);
 }

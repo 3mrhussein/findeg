@@ -2,7 +2,7 @@
  * OrderDetailControls — shared types & interfaces
  */
 
-import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 
 export interface OrderDetailControlsProps {
   orderId: number | string;

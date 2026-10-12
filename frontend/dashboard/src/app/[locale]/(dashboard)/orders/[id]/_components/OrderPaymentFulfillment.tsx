@@ -9,9 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
 import {
+  confirmStatusUpdate,
   getAllowedOrderStatusTransitions,
   getAllowedPaymentStatusTransitions,
-} from '@findeg/orders/schemas';
+} from '@lib/order-presentation';
 import {
   updateOrderStatusAction as adminUpdateOrderStatusAction,
   updateOrderPaymentStatusAction,
@@ -20,13 +21,7 @@ import {
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
-/**
- * OrderStatus type (local definition)
- */
-type OrderStatus =
-  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-
-type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 
 interface OrderPaymentFulfillmentProps {
   order: import('@findeg/orders').Order;
@@ -52,7 +47,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
   const router = useRouter();
   const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || '');
   const allowedTargets = getAllowedOrderStatusTransitions(order.status);
-  const paymentTargets = getAllowedPaymentStatusTransitions(order.paymentStatus ?? 'unpaid');
+  const paymentTargets = getAllowedPaymentStatusTransitions(order);
   // A delivered Order's only next status is refunded, which the header's refund action owns.
   const hasSelectableTarget = STATUS_FLOW.some((s) => allowedTargets.includes(s.value));
 
@@ -84,15 +79,18 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
     });
   };
 
-  const handleStatusChange = (newStatus: string) =>
+  const handleStatusChange = (newStatus: string) => {
+    const update = confirmStatusUpdate(order.status, newStatus as OrderStatus);
+    if (!update) return;
     runUpdate(
       () =>
         adminUpdateOrderStatusAction(Number(order.id), {
-          status: newStatus as OrderStatus,
+          ...update,
           trackingNumber: trackingNumber || undefined,
         }),
       'Order status updated',
     );
+  };
 
   const handleUpdateTracking = () =>
     runUpdate(

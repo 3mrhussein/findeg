@@ -1,3 +1,13 @@
+import {
+  SUPPLY_LIST_STATUSES,
+  SUPPLY_LIST_ITEM_QUANTITY_MIN,
+  SUPPLY_LIST_ITEM_QUANTITY_MAX,
+  PUBLIC_CODE_PATTERN,
+} from '@findeg/domain';
+import type { SupplyListStatus } from '@findeg/domain';
+export { SUPPLY_LIST_STATUSES } from '@findeg/domain';
+export type { SupplyListStatus } from '@findeg/domain';
+import { inList, sqlLiteral } from '../sql-values';
 import { sql } from 'drizzle-orm';
 import {
   type AnyPgColumn,
@@ -15,9 +25,6 @@ import { businessPartners } from '../identity/partners';
 import { productVariants } from '../catalog/product-variants';
 import type { TranslationMap } from '../catalog/types';
 import { schoolEngineSchema } from '../schemas';
-
-export const SUPPLY_LIST_STATUSES = ['draft', 'published', 'archived'] as const;
-export type SupplyListStatus = (typeof SUPPLY_LIST_STATUSES)[number];
 
 export interface SupplyListSpecification {
   categoryId: number;
@@ -69,12 +76,12 @@ export const schoolSupplyLists = schoolEngineSchema.table(
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
   (table) => [
-    check('ck_supply_list_status', sql`${table.status} in ('draft', 'published', 'archived')`),
+    check('ck_supply_list_status', sql`${table.status} in (${inList(SUPPLY_LIST_STATUSES)})`),
     check(
       'ck_supply_list_publication',
       sql`(${table.status} = 'draft' and ${table.publicCode} is null and ${table.publishedAt} is null and ${table.archivedAt} is null)
-        or (${table.status} = 'published' and ${table.publicCode} ~ '^[0-9a-f]{32}$' and ${table.publicCode} is not null and ${table.publishedAt} is not null and ${table.archivedAt} is null)
-        or (${table.status} = 'archived' and ${table.publicCode} ~ '^[0-9a-f]{32}$' and ${table.publicCode} is not null and ${table.publishedAt} is not null and ${table.archivedAt} is not null)`,
+        or (${table.status} = 'published' and ${table.publicCode} ~ ${sqlLiteral(PUBLIC_CODE_PATTERN.source)} and ${table.publicCode} is not null and ${table.publishedAt} is not null and ${table.archivedAt} is null)
+        or (${table.status} = 'archived' and ${table.publicCode} ~ ${sqlLiteral(PUBLIC_CODE_PATTERN.source)} and ${table.publicCode} is not null and ${table.publishedAt} is not null and ${table.archivedAt} is not null)`,
     ),
     uniqueIndex('uq_supply_list_published_slot')
       .on(table.businessPartnerId, table.academicYear, table.grade)
@@ -106,7 +113,10 @@ export const schoolSupplyListItems = schoolEngineSchema.table(
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
   (table) => [
-    check('ck_supply_list_item_quantity', sql`${table.quantity} between 1 and 999`),
+    check(
+      'ck_supply_list_item_quantity',
+      sql`${table.quantity} between ${sqlLiteral(SUPPLY_LIST_ITEM_QUANTITY_MIN)} and ${sqlLiteral(SUPPLY_LIST_ITEM_QUANTITY_MAX)}`,
+    ),
     index('idx_supply_list_item_list').on(table.listId),
   ],
 );

@@ -23,7 +23,7 @@ const notAuthorized = { code: 'NOT_AUTHORIZED', message: 'Not authorized to chan
 describe('Staff authorization for Dashboard order writes', () => {
   let testDb: TestDatabase;
   let sequence = 0;
-  const checkout = createCheckoutService({ shippingFee: 50 });
+  const checkout = createCheckoutService({});
   const readOnlyStaff: OrderStaffActor = {
     kind: 'staff',
     userId: 1,

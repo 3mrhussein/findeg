@@ -1,6 +1,8 @@
 export { getLowStockCountRaw } from './low-stock';
 export {
   reserveOrderStock,
+  lockOrderStock,
+  persistOrderStock,
   consumeOrderStock,
   releaseOrderStock,
   InsufficientStockError,

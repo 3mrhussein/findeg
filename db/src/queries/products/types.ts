@@ -19,6 +19,7 @@ export interface AdminProductListRowRaw {
   brandName: string | null;
   isActive: boolean;
   updatedAt: Date;
+  defaultVariantSku: string | null;
   defaultVariantPrice: number | null;
   variantCount: number;
   totalStock: number;

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatusSchema, PaymentStatusSchema } from '@findeg/db/types';
+import { OrderStatusSchema, PaymentStatusSchema } from './schemas';
 export const positiveId = z.number().int().positive().max(2_147_483_647);
 /** Largest page an Order list returns. */
 export const MAX_ORDER_PAGE_SIZE = 100;

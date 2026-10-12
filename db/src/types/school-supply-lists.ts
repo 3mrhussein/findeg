@@ -1,4 +1,10 @@
 import { z } from 'zod';
+import {
+  SUPPLY_LIST_ITEM_QUANTITY_MIN,
+  SUPPLY_LIST_ITEM_QUANTITY_MAX,
+  LIST_OFFER_MIN_BASIS_POINTS,
+  LIST_OFFER_MAX_BASIS_POINTS,
+} from '@findeg/domain/school-lists';
 
 /** Shared, transport-neutral input contracts for lifecycle services and persistence. */
 export const SupplyListIdSchema = z.number().int().positive();
@@ -32,7 +38,12 @@ export const SupplyListItemSchema = z
       .nullable()
       .optional(),
     required: z.boolean().optional(),
-    quantity: z.number().int().min(1).max(999).optional(),
+    quantity: z
+      .number()
+      .int()
+      .min(SUPPLY_LIST_ITEM_QUANTITY_MIN)
+      .max(SUPPLY_LIST_ITEM_QUANTITY_MAX)
+      .optional(),
     localizedLabel: labelSchema,
     localizedNote: translationSchema.nullable().optional(),
     sortOrder: z.number().int().nonnegative().optional(),
@@ -46,7 +57,7 @@ export type SupplyListItemInput = z.infer<typeof SupplyListItemSchema>;
 /** Staff input for a List Offer: basis points 0 to 10000 and a window with `endsAt` after `startsAt`. */
 export const ListOfferSchema = z
   .object({
-    basisPoints: z.number().int().min(0).max(10000),
+    basisPoints: z.number().int().min(LIST_OFFER_MIN_BASIS_POINTS).max(LIST_OFFER_MAX_BASIS_POINTS),
     startsAt: z.date(),
     endsAt: z.date().nullable(),
   })

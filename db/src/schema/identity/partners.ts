@@ -1,3 +1,29 @@
+import {
+  BUSINESS_PARTNER_STATUSES as PARTNER_STATUSES,
+  PARTNER_ROLES,
+  PARTNER_INVITATION_STATUSES,
+  PARTNER_MEMBERSHIP_STATUSES,
+} from '@findeg/domain';
+import type {
+  BusinessPartnerStatus as PartnerStatus,
+  PartnerRole,
+  PartnerInvitationStatus,
+  PartnerMembershipStatus,
+} from '@findeg/domain';
+export {
+  BUSINESS_PARTNER_STATUSES as PARTNER_STATUSES,
+  PARTNER_ROLES,
+  PARTNER_ADMINISTRATOR,
+  PARTNER_INVITATION_STATUSES,
+  PARTNER_MEMBERSHIP_STATUSES,
+} from '@findeg/domain';
+export type {
+  BusinessPartnerStatus as PartnerStatus,
+  PartnerRole,
+  PartnerInvitationStatus,
+  PartnerMembershipStatus,
+} from '@findeg/domain';
+import { inList } from '../sql-values';
 import { sql } from 'drizzle-orm';
 import {
   check,
@@ -12,9 +38,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { identitySchema } from '../schemas';
 import { users } from './users';
-
-export const PARTNER_STATUSES = ['onboarding', 'active', 'suspended', 'closed'] as const;
-export type PartnerStatus = (typeof PARTNER_STATUSES)[number];
 
 export const PARTNER_ACTOR_KINDS = ['staff', 'partner', 'self'] as const;
 export type PartnerActorKind = (typeof PARTNER_ACTOR_KINDS)[number];
@@ -34,9 +57,6 @@ export const PARTNER_ACCESS_ACTIONS = [
   'membership.left',
 ] as const;
 export type PartnerAccessAction = (typeof PARTNER_ACCESS_ACTIONS)[number];
-
-const inList = (values: readonly string[]) =>
-  sql.raw(values.map((value) => `'${value}'`).join(', '));
 
 /**
  * Business Partner: the organization a Partner Workspace belongs to.
@@ -104,19 +124,6 @@ export const partnerAccessHistory = identitySchema.table(
   ],
 );
 
-export const PARTNER_ROLES = [
-  'partner-administrator',
-  'list-manager',
-  'collection-staff',
-  'report-viewer',
-] as const;
-export type PartnerRole = (typeof PARTNER_ROLES)[number];
-/** The role that manages a Business Partner's members; every partner must keep one active. */
-export const PARTNER_ADMINISTRATOR = 'partner-administrator' satisfies PartnerRole;
-
-export const PARTNER_INVITATION_STATUSES = ['pending', 'accepted', 'revoked'] as const;
-export type PartnerInvitationStatus = (typeof PARTNER_INVITATION_STATUSES)[number];
-
 /**
  * A Partner Invitation: an email invited to a Business Partner with one or more
  * Partner Roles. `email` is stored trimmed and lowercased. Only one invitation
@@ -169,9 +176,6 @@ export const partnerInvitationTokens = identitySchema.table('partner_invitation_
   tokenDigest: varchar('token_digest', { length: 64 }).notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
-
-export const PARTNER_MEMBERSHIP_STATUSES = ['active', 'suspended', 'ended'] as const;
-export type PartnerMembershipStatus = (typeof PARTNER_MEMBERSHIP_STATUSES)[number];
 
 /**
  * A user's access to one Business Partner. Ended memberships remain as history;

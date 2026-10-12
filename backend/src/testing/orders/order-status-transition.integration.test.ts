@@ -33,7 +33,7 @@ describe('transitionOrderStatus on real Postgres', () => {
     id: number,
     update: Parameters<ReturnType<typeof createOrders>['changeStatus']>[2],
   ) => createOrders({ db: testDb.db }).changeStatus(writer, id, update);
-  const checkout = createCheckoutService({ shippingFee: 50 });
+  const checkout = createCheckoutService({});
 
   beforeAll(async () => {
     testDb = connectToTestDatabase();
@@ -253,18 +253,36 @@ describe('transitionOrderStatus on real Postgres', () => {
     expect(order.status).toBe(from);
   });
 
+  it('refuses shipped cancellation until Staff assert the parcel is back', async () => {
+    const { orderId, variantId } = await acceptOrder();
+    for (const status of ['confirmed', 'processing', 'shipped'] as const)
+      await transitionOrderStatus(orderId, { status });
+    const api = createOrders({ db: testDb.db });
+    const before = await api.detail(orderId);
+    const stockBefore = await stockEffect(orderId, variantId);
+    await expect(transitionOrderStatus(orderId, { status: 'cancelled' })).rejects.toBeInstanceOf(
+      InvalidOrderStatusTransitionError,
+    );
+    expect(await api.detail(orderId)).toEqual(before);
+    expect(await stockEffect(orderId, variantId)).toEqual(stockBefore);
+  });
+
   it('cancelling a shipped Order releases the reservation exactly once', async () => {
     const { orderId, variantId } = await acceptOrder(2);
     await transitionOrderStatus(orderId, { status: 'confirmed' });
     await transitionOrderStatus(orderId, { status: 'processing' });
     await transitionOrderStatus(orderId, { status: 'shipped' });
 
-    expect(await transitionOrderStatus(orderId, { status: 'cancelled' })).toMatchObject({
+    expect(
+      await transitionOrderStatus(orderId, { status: 'cancelled', parcelBackInWarehouse: true }),
+    ).toMatchObject({
       changed: true,
       previousStatus: 'shipped',
       status: 'cancelled',
     });
-    expect(await transitionOrderStatus(orderId, { status: 'cancelled' })).toMatchObject({
+    expect(
+      await transitionOrderStatus(orderId, { status: 'cancelled', parcelBackInWarehouse: true }),
+    ).toMatchObject({
       changed: false,
     });
 
@@ -280,7 +298,8 @@ describe('transitionOrderStatus on real Postgres', () => {
       await transitionOrderStatus(orderId, { status: step });
     }
 
-    expect(await transitionOrderStatus(orderId, { status: 'refunded' })).toMatchObject({
+    await createOrders({ db: testDb.db }).changePaymentStatus(writer, orderId, 'paid');
+    expect(await createOrders({ db: testDb.db }).refund(writer, orderId)).toMatchObject({
       changed: true,
       previousStatus: 'delivered',
       status: 'refunded',

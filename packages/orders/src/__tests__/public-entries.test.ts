@@ -1,7 +1,8 @@
 import { createRequire } from 'node:module';
 import { describe, expect, it, vi } from 'vitest';
-import { OrderStatusUpdateSchema, getAllowedOrderStatusTransitions } from '@findeg/orders/schemas';
-import { isNotifiedOrderStatus, orderStatusId } from '@findeg/orders/events';
+import { OrderStatusUpdateSchema } from '@findeg/orders/schemas';
+import { orderStatusId } from '@findeg/orders/events';
+import { isNotifiedOrderStatus } from '@findeg/domain/orders';
 
 vi.mock('@findeg/db/connection', () => {
   throw new Error('Pure entries must not load the connection');
@@ -22,17 +23,10 @@ describe('public package resolution', () => {
       status: 'shipped',
       trackingNumber: 'ABC',
     });
-    expect(getAllowedOrderStatusTransitions('shipped')).toEqual(['delivered', 'cancelled']);
   });
   it('the status protocol retains durable message identity and customer-facing policy', () => {
     expect(orderStatusId('FE-000001', 'shipped')).toBe('order-status:FE-000001:shipped');
     expect(isNotifiedOrderStatus('shipped')).toBe(true);
     expect(isNotifiedOrderStatus('processing')).toBe(false);
   });
-});
-
-it('callers cannot change the lifecycle policy by editing returned options', () => {
-  const targets = getAllowedOrderStatusTransitions('pending');
-  targets.push('delivered');
-  expect(getAllowedOrderStatusTransitions('pending')).toEqual(['confirmed', 'cancelled']);
 });

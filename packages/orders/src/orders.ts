@@ -1,22 +1,20 @@
 import { and, count, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm';
 import { auditLog, orders, orderItems, users, products } from '@findeg/db/schema';
-import { PaymentStatusSchema } from '@findeg/db/types';
+import {
+  ORDER_STATUSES,
+  changeOrderStatus,
+  changePaymentStatus,
+  refundOrder,
+  isNotifiedOrderStatus,
+} from '@findeg/domain/orders';
 import { enqueue } from '@findeg/db/queries/outbox';
 import { consumeOrderStock, releaseOrderStock } from '@findeg/db/queries/stock-reservations';
 import { toPiasters } from '@findeg/money';
 import { assertCanWriteOrders } from './orderWritePermission';
-import {
-  OrderStatusUpdateSchema,
-  ORDER_STATUS_OPTIONS,
-  getAllowedOrderStatusTransitions,
-  getAllowedPaymentStatusTransitions,
-} from './schemas';
-import {
-  InvalidOrderStatusTransitionError,
-  InvalidPaymentStatusTransitionError,
-  OrderNotFoundError,
-} from './errors';
-import { isNotifiedOrderStatus, ORDER_STATUS_KIND, orderStatusId } from './events';
+import { OrderStatusUpdateSchema, PaymentStatusSchema, type OrderStatusUpdate } from './schemas';
+import type { OrderStaffActor } from './OrderStaffActor';
+import { mapOrderRuleError, OrderNotFoundError } from './errors';
+import { ORDER_STATUS_KIND, orderStatusId } from './events';
 import { mapOrder } from './mapper';
 import { filtersSchema, orderId, positiveId, statsOptionsSchema } from './validation';
 import type {
@@ -88,6 +86,69 @@ export function createOrders({
       byOrder.set(item.orderId, group);
     }
     return rows.map((row) => mapOrder(row.order, byOrder.get(row.order.id) ?? [], row.user));
+  }
+
+  async function applyStatusChange(
+    actor: OrderStaffActor,
+    id: number,
+    input: OrderStatusUpdate,
+    isRefund = false,
+  ) {
+    assertCanWriteOrders(actor);
+    positiveId.parse(id);
+    const update = OrderStatusUpdateSchema.parse(input);
+    const db = await database();
+    return db.transaction(async (tx) => {
+      const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for('update');
+      if (!order) throw new OrderNotFoundError(id);
+      let progress;
+      try {
+        progress = isRefund ? refundOrder(order) : changeOrderStatus(order, update.status, update);
+      } catch (error) {
+        throw mapOrderRuleError(error, order, update.status);
+      }
+      if (!progress.changed)
+        return { changed: false, previousStatus: order.status, status: order.status };
+      if (progress.stockSettlement === 'consume') await consumeOrderStock(id, tx);
+      else if (progress.stockSettlement === 'release') await releaseOrderStock(id, tx);
+      const oldValues: Record<string, unknown> = { status: order.status };
+      const newValues: Record<string, unknown> = { status: update.status };
+      if (progress.paymentStatus !== order.paymentStatus) {
+        oldValues.paymentStatus = order.paymentStatus;
+        newValues.paymentStatus = progress.paymentStatus;
+      }
+      const changedAt = now();
+      const fields: Partial<typeof orders.$inferInsert> = {
+        status: progress.status,
+        paymentStatus: progress.paymentStatus,
+        updatedAt: changedAt,
+      };
+      for (const key of ['trackingNumber', 'adminNotes'] as const) {
+        if (update[key] !== undefined) {
+          fields[key] = update[key];
+          if (update[key] !== order[key]) {
+            oldValues[key] = order[key];
+            newValues[key] = update[key];
+          }
+        }
+      }
+      await tx.update(orders).set(fields).where(eq(orders.id, id));
+      if (isNotifiedOrderStatus(update.status))
+        await enqueue(tx, orderStatusId(order.orderReference, update.status), ORDER_STATUS_KIND, {
+          orderId: id,
+          status: update.status,
+        });
+      await tx.insert(auditLog).values({
+        adminUserId: actor.userId,
+        entityType: 'order',
+        entityId: String(id),
+        action: update.status === 'refunded' ? 'refund' : 'update_status',
+        oldValues,
+        newValues,
+        createdAt: changedAt,
+      });
+      return { changed: true, previousStatus: order.status, status: update.status };
+    });
   }
 
   const api: Orders = {
@@ -205,8 +266,8 @@ export function createOrders({
             .where(range)
             .groupBy(orders.status);
           const ordersByStatus = Object.fromEntries(
-            ORDER_STATUS_OPTIONS.map((status) => [status, 0]),
-          ) as Record<(typeof ORDER_STATUS_OPTIONS)[number], number>;
+            ORDER_STATUSES.map((status) => [status, 0]),
+          ) as Record<(typeof ORDER_STATUSES)[number], number>;
           for (const row of statuses) ordersByStatus[row.status] = row.count;
           const trend = await tx.execute<{ date: string; revenue: string }>(sql`
           with dates as (
@@ -250,53 +311,10 @@ export function createOrders({
       );
     },
     async changeStatus(actor, id, input) {
-      assertCanWriteOrders(actor);
-      positiveId.parse(id);
-      const update = OrderStatusUpdateSchema.parse(input);
-      const db = await database();
-      return db.transaction(async (tx) => {
-        const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for('update');
-        if (!order) throw new OrderNotFoundError(id);
-        if (order.status === update.status)
-          return { changed: false, previousStatus: order.status, status: order.status };
-        const allowed = getAllowedOrderStatusTransitions(order.status);
-        if (!allowed.includes(update.status))
-          throw new InvalidOrderStatusTransitionError(order.status, update.status, allowed);
-        if (update.status === 'delivered') await consumeOrderStock(id, tx);
-        else if (update.status === 'cancelled') await releaseOrderStock(id, tx);
-        const oldValues: Record<string, unknown> = { status: order.status };
-        const newValues: Record<string, unknown> = { status: update.status };
-        const changedAt = now();
-        const fields: Partial<typeof orders.$inferInsert> = {
-          status: update.status,
-          updatedAt: changedAt,
-        };
-        for (const key of ['trackingNumber', 'adminNotes'] as const) {
-          if (update[key] !== undefined) {
-            fields[key] = update[key];
-            if (update[key] !== order[key]) {
-              oldValues[key] = order[key];
-              newValues[key] = update[key];
-            }
-          }
-        }
-        await tx.update(orders).set(fields).where(eq(orders.id, id));
-        if (isNotifiedOrderStatus(update.status))
-          await enqueue(tx, orderStatusId(order.orderReference, update.status), ORDER_STATUS_KIND, {
-            orderId: id,
-            status: update.status,
-          });
-        await tx.insert(auditLog).values({
-          adminUserId: actor.userId,
-          entityType: 'order',
-          entityId: String(id),
-          action: 'update_status',
-          oldValues,
-          newValues,
-          createdAt: changedAt,
-        });
-        return { changed: true, previousStatus: order.status, status: update.status };
-      });
+      return applyStatusChange(actor, id, input);
+    },
+    async refund(actor, id) {
+      return applyStatusChange(actor, id, { status: 'refunded' }, true);
     },
     async changePaymentStatus(actor, id, input) {
       assertCanWriteOrders(actor);
@@ -306,11 +324,14 @@ export function createOrders({
       return db.transaction(async (tx) => {
         const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for('update');
         if (!order) throw new OrderNotFoundError(id);
-        if (order.paymentStatus === status)
+        let progress;
+        try {
+          progress = changePaymentStatus(order, status);
+        } catch (error) {
+          throw mapOrderRuleError(error, order, undefined, status);
+        }
+        if (!progress.changed)
           return { changed: false, previousStatus: order.paymentStatus, status };
-        const allowed = getAllowedPaymentStatusTransitions(order.paymentStatus);
-        if (!allowed.includes(status))
-          throw new InvalidPaymentStatusTransitionError(order.paymentStatus, status, allowed);
         const changedAt = now();
         await tx
           .update(orders)

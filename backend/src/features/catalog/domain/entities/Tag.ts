@@ -5,6 +5,7 @@
  */
 
 import { z } from 'zod';
+import { TAG_SCOPES } from '@findeg/domain/catalog';
 import { IdSchema } from '../../../core/domain/types/common';
 
 /**
@@ -19,14 +20,7 @@ export type TagGroup = z.infer<typeof TagGroupSchema>;
  * Tag Visibility/Scope.
  * Defines where the tag is applicable.
  */
-export const TagScopeSchema = z.enum([
-  'catalog',
-  'school',
-  'campaign',
-  'system',
-  'search',
-  'editorial',
-]);
+export const TagScopeSchema = z.enum(TAG_SCOPES);
 export type TagScope = z.infer<typeof TagScopeSchema>;
 
 export const TagSchema = z.object({

@@ -1,3 +1,5 @@
+import { cart, addToCart, setCartQuantity, removeFromCart } from '@findeg/domain/orders';
+import type { VariantId } from '@findeg/domain/catalog';
 /**
  * Domain Entity: Cart
  *
@@ -52,44 +54,63 @@ export class CartEntity {
   /**
    *
    */
-  constructor(private items: CartItem[] = []) {}
+  constructor(private items: CartItem[] = []) {
+    const normalized = cart(
+      items.map((item) => ({ variantId: item.variantId as VariantId, quantity: item.quantity })),
+    );
+    this.items = normalized.lines.map((line) => ({
+      ...items.find((item) => item.variantId === line.variantId)!,
+      quantity: line.quantity,
+    }));
+  }
+
+  private domainCart() {
+    return cart(
+      this.items.map((item) => ({
+        variantId: item.variantId as VariantId,
+        quantity: item.quantity,
+      })),
+    );
+  }
 
   /**
    * Add a variant to the cart or increment quantity if already present.
    * Matches by variantId.
    */
   addItem(item: CartItem): CartItem[] {
-    const existingIndex = this.items.findIndex((existing) => existing.variantId === item.variantId);
-
-    if (existingIndex >= 0) {
-      const updatedItems = [...this.items];
-      updatedItems[existingIndex] = {
-        ...updatedItems[existingIndex],
-        quantity: updatedItems[existingIndex].quantity + item.quantity,
-      };
-      return updatedItems;
-    }
-
-    return [...this.items, item];
+    const next = addToCart(this.domainCart(), {
+      variantId: item.variantId as VariantId,
+      quantity: item.quantity,
+    });
+    return next.lines.map((line) => ({
+      ...(this.items.find((current) => current.variantId === line.variantId) ?? item),
+      quantity: line.quantity,
+    }));
   }
 
   /**
    * Remove an item from the cart by variantId.
    */
   removeItem(variantId: number): CartItem[] {
-    return this.items.filter((item) => item.variantId !== variantId);
+    const next = removeFromCart(this.domainCart(), variantId as VariantId);
+    return next.lines.map((line) => this.items.find((item) => item.variantId === line.variantId)!);
   }
 
   /**
    * Update the quantity of a specific item.
-   * Removes the item if quantity is 0 or negative.
+   * Domain validates the line quantity.
    */
   updateItemQuantity(variantId: number, quantity: number): CartItem[] {
-    if (quantity <= 0) {
-      return this.removeItem(variantId);
+    // Keep the legacy no-op when the variant is absent; validate quantities through Domain.
+    if (!this.items.some((item) => item.variantId === variantId)) {
+      cart([{ variantId: variantId as VariantId, quantity }]);
+      return [...this.items];
     }
-
-    return this.items.map((item) => (item.variantId === variantId ? { ...item, quantity } : item));
+    const next = setCartQuantity(this.domainCart(), variantId as VariantId, quantity);
+    return next.lines.map((line) => ({
+      ...this.items.find((item) => item.variantId === line.variantId)!,
+      quantity: line.quantity,
+    }));
   }
 
   /**
