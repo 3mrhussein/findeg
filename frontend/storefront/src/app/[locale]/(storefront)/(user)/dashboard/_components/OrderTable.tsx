@@ -1,11 +1,17 @@
 'use client';
 
-import { piastersToEgp } from '@findeg/money';
-
 import React from 'react';
 import type { Order } from '@findeg/orders';
 import { useTranslations } from 'next-intl';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  formatEgp,
+} from '@findeg/ui';
 
 /**
  *
@@ -52,7 +58,7 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
             {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}
           </TableCell>
           <TableCell>
-            {order.currency} {piastersToEgp(order.totalAmount)}
+            {order.currency} {formatEgp(order.totalAmount)}
           </TableCell>
           <TableCell>
             <OrderStatusBadge status={order.status} />

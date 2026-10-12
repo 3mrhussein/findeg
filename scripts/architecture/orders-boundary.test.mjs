@@ -163,7 +163,7 @@ test('if the extracted package exists, its export map and dependency direction a
       ['@findeg/backend', '@findeg/dashboard', '@findeg/storefront', 'next'].includes(name),
     ),
   );
-  for (const dependency of ['@findeg/money', '@findeg/domain-errors', '@findeg/db']) {
+  for (const dependency of ['@findeg/domain', '@findeg/domain-errors', '@findeg/db']) {
     assert.equal(
       manifest.dependencies?.[dependency],
       'workspace:*',

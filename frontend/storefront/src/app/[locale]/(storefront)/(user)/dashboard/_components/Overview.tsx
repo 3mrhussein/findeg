@@ -1,11 +1,10 @@
-import { piastersToEgp } from '@findeg/money';
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { StatCard } from './StatCard';
 import { SalesChart } from './SalesChart';
 import { UserActivityChart } from './UserActivityChart';
 import { DeviceUsageChart } from './DeviceUsageChart';
-import { Icon } from '@findeg/ui';
+import { Icon, formatEgp } from '@findeg/ui';
 import { OrderTable } from './OrderTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import type { Product } from '@findeg/backend/features/catalog';
@@ -59,9 +58,8 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
         <StatCard
           title={t('Pages.Dashboard.TotalRevenue')}
-          value={piastersToEgp(totalRevenue)}
+          value={formatEgp(totalRevenue)}
           prefix="EGP "
-          decimals={2}
           icon={<Icon name="dashboard" className="w-6 h-6" />}
         />
         <StatCard
