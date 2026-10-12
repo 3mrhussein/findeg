@@ -79,31 +79,10 @@ export async function reserveOrderStock(
   if (wanted.length === 0) return [];
 
   return withTransaction(tx, async (tx) => {
-    const balances = await tx
-      .select({
-        variantId: inventoryBalances.variantId,
-        warehouseId: inventoryBalances.warehouseId,
-        onHand: inventoryBalances.onHand,
-        reserved: inventoryBalances.reserved,
-      })
-      .from(inventoryBalances)
-      .where(
-        and(
-          inArray(
-            inventoryBalances.variantId,
-            wanted.map((line) => line.variantId),
-          ),
-          // A subquery, not a join: Postgres rejects the schema-qualified
-          // `FOR UPDATE OF` Drizzle emits for joined tables.
-          inArray(
-            inventoryBalances.warehouseId,
-            tx.select({ id: warehouses.id }).from(warehouses).where(eq(warehouses.isActive, true)),
-          ),
-        ),
-      )
-      .orderBy(asc(inventoryBalances.variantId), asc(inventoryBalances.warehouseId))
-      .for('update');
-
+    const balances = await lockOrderStock(
+      wanted.map((line) => line.variantId),
+      tx,
+    );
     const reservedLines: ReservedStock[] = [];
     const shortfalls: StockShortfall[] = [];
     for (const { variantId, quantity } of wanted) {
@@ -122,31 +101,66 @@ export async function reserveOrderStock(
     }
     if (shortfalls.length > 0) throw new InsufficientStockError(shortfalls);
 
-    await tx.insert(stockReservations).values(reservedLines.map((a) => ({ orderId, ...a })));
-    for (const a of reservedLines) {
-      await tx
-        .update(inventoryBalances)
-        .set({ reserved: sql`${inventoryBalances.reserved} + ${a.quantity}` })
-        .where(
-          and(
-            eq(inventoryBalances.variantId, a.variantId),
-            eq(inventoryBalances.warehouseId, a.warehouseId),
-          ),
-        );
-    }
-    await tx.insert(stockMovements).values(
-      reservedLines.map((a) => ({
-        variantId: a.variantId,
-        warehouseId: a.warehouseId,
-        movementType: 'reserve',
-        quantity: a.quantity,
-        referenceType: 'order',
-        referenceId: String(orderId),
-        notes: `Reservation for order ${orderId}`,
-      })),
-    );
+    await persistOrderStock(orderId, reservedLines, tx);
     return reservedLines;
   });
+}
+
+/** Locks authoritative balances in deterministic order before Domain allocates them. */
+export async function lockOrderStock(variantIds: number[], tx: DbTransaction) {
+  return tx
+    .select({
+      variantId: inventoryBalances.variantId,
+      warehouseId: inventoryBalances.warehouseId,
+      onHand: inventoryBalances.onHand,
+      reserved: inventoryBalances.reserved,
+    })
+    .from(inventoryBalances)
+    .where(
+      and(
+        inArray(inventoryBalances.variantId, variantIds),
+        // A subquery, not a join: Postgres rejects the schema-qualified
+        // `FOR UPDATE OF` Drizzle emits for joined tables.
+        inArray(
+          inventoryBalances.warehouseId,
+          tx.select({ id: warehouses.id }).from(warehouses).where(eq(warehouses.isActive, true)),
+        ),
+      ),
+    )
+    .orderBy(asc(inventoryBalances.variantId), asc(inventoryBalances.warehouseId))
+    .for('update');
+}
+
+/** Persists the allocation already decided by Domain, under the caller's balance locks. */
+export async function persistOrderStock(
+  orderId: number,
+  reservedLines: ReservedStock[],
+  tx: DbTransaction,
+): Promise<void> {
+  if (reservedLines.length === 0) return;
+  await tx.insert(stockReservations).values(reservedLines.map((a) => ({ orderId, ...a })));
+  for (const a of reservedLines) {
+    await tx
+      .update(inventoryBalances)
+      .set({ reserved: sql`${inventoryBalances.reserved} + ${a.quantity}` })
+      .where(
+        and(
+          eq(inventoryBalances.variantId, a.variantId),
+          eq(inventoryBalances.warehouseId, a.warehouseId),
+        ),
+      );
+  }
+  await tx.insert(stockMovements).values(
+    reservedLines.map((a) => ({
+      variantId: a.variantId,
+      warehouseId: a.warehouseId,
+      movementType: 'reserve',
+      quantity: a.quantity,
+      referenceType: 'order',
+      referenceId: String(orderId),
+      notes: `Reservation for order ${orderId}`,
+    })),
+  );
 }
 
 type Settlement = 'consume' | 'release';

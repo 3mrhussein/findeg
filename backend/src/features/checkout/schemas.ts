@@ -1,15 +1,26 @@
 import { z } from 'zod';
 import {
-  ShippingAddressSchema,
+  LINE_QUANTITY_MIN,
+  LINE_QUANTITY_MAX,
+  GOVERNORATES,
+  type CurrencyCode,
+} from '@findeg/domain/common';
+import { ACCEPTED_PAYMENT_TYPES } from '@findeg/domain/orders';
+import {
+  ShippingAddressSchema as StoredShippingAddressSchema,
   type CheckoutReceipt,
-  type ShippingAddress,
 } from '@findeg/db/types';
 
-export { ShippingAddressSchema, type CheckoutReceipt, type ShippingAddress };
+export { type CheckoutReceipt };
+export const ShippingAddressSchema = StoredShippingAddressSchema.extend({
+  // Legacy city-only input must name a governorate; explicit governorate supports towns.
+  governorate: z.enum(GOVERNORATES).optional(),
+});
+export type ShippingAddress = z.infer<typeof ShippingAddressSchema>;
 
 export const CheckoutLineSchema = z.object({
   variantId: z.number().int().positive(),
-  quantity: z.number().int().min(1).max(999),
+  quantity: z.number().int().min(LINE_QUANTITY_MIN).max(LINE_QUANTITY_MAX),
 });
 
 export type CheckoutLine = z.infer<typeof CheckoutLineSchema>;
@@ -42,7 +53,7 @@ export const CheckoutValidateSchema = CheckoutSourceSchema.and(
   z.object({
     address: ShippingAddressSchema.optional(),
     paymentMethod: z.string().optional(),
-    guestEmail: z.string().email().optional(),
+    guestEmail: z.string().trim().toLowerCase().pipe(z.email().max(255)).optional(),
   }),
 );
 
@@ -51,10 +62,10 @@ export type CheckoutValidateInput = z.infer<typeof CheckoutValidateSchema>;
 export const CheckoutOrderSchema = CheckoutSourceSchema.and(
   z.object({
     confirmation: z.string().min(1, 'Confirmation digest is required'),
-    paymentMethod: z.literal('cod'),
+    paymentMethod: z.enum(ACCEPTED_PAYMENT_TYPES),
     deliveryMethod: z.string().optional(),
     address: ShippingAddressSchema,
-    guestEmail: z.string().email().optional(),
+    guestEmail: z.string().trim().toLowerCase().pipe(z.email().max(255)).optional(),
   }),
 );
 
@@ -70,17 +81,17 @@ export interface CheckoutQuoteLine {
   listItemId?: number;
   variantId: number;
   quantity: number;
-  unitPrice: number;
-  discounts: Array<{ source: string; amount: number }>;
-  lineTotal: number;
+  unitPrice: string;
+  discounts: Array<{ source: string; amount: string }>;
+  lineTotal: string;
 }
 
 export interface CheckoutQuote {
   lines: CheckoutQuoteLine[];
-  shipping: number;
-  subtotal: number;
-  total: number;
-  currency: 'EGP';
+  shipping: string;
+  subtotal: string;
+  total: string;
+  currency: CurrencyCode;
   confirmation: string;
 }
 

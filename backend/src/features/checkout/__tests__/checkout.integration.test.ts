@@ -17,7 +17,7 @@ import {
   listOffers,
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../index';
-import { isValidOrderReference } from '../domain/order-reference';
+import { ORDER_REFERENCE_PATTERN } from '@findeg/domain/orders';
 import { computeOrderFingerprint } from '../domain/fingerprint';
 import { checkoutIdempotencyQueries, orderQueries } from '@findeg/db/queries';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
@@ -25,7 +25,7 @@ import { connectToTestDatabase, type TestDatabase } from '../../../testing/postg
 describe('Checkout feature integration tests on real Postgres', () => {
   let testDb: TestDatabase;
   let sequence = 0;
-  const checkoutService = createCheckoutService({ shippingFee: 50 });
+  const checkoutService = createCheckoutService({});
 
   beforeAll(() => {
     testDb = connectToTestDatabase();
@@ -186,23 +186,23 @@ describe('Checkout feature integration tests on real Postgres', () => {
       if (!result.success) return;
 
       expect(result.data.currency).toBe('EGP');
-      expect(result.data.shipping).toBe(50);
-      expect(result.data.subtotal).toBe(125); // (2 * 40) + (3 * 15) = 80 + 45 = 125
-      expect(result.data.total).toBe(175); // 125 + 50 = 175
+      expect(result.data.shipping).toBe('50.00');
+      expect(result.data.subtotal).toBe('125.00'); // (2 * 40) + (3 * 15) = 80 + 45 = 125
+      expect(result.data.total).toBe('175.00'); // 125 + 50 = 175
       expect(result.data.lines).toHaveLength(2);
       expect(result.data.lines[0]).toMatchObject({
         variantId: item1.variantId,
         quantity: 2,
-        unitPrice: 40,
+        unitPrice: '40.00',
         discounts: [],
-        lineTotal: 80,
+        lineTotal: '80.00',
       });
       expect(result.data.lines[1]).toMatchObject({
         variantId: item2.variantId,
         quantity: 3,
-        unitPrice: 15,
+        unitPrice: '15.00',
         discounts: [],
-        lineTotal: 45,
+        lineTotal: '45.00',
       });
       expect(result.data.confirmation).toMatch(/^[0-9a-f]{64}$/);
     });
@@ -218,8 +218,8 @@ describe('Checkout feature integration tests on real Postgres', () => {
 
       expect(result.success).toBe(true);
       if (!result.success) return;
-      expect(result.data.lines[0].unitPrice).toBe(100);
-      expect(result.data.total).toBe(150); // 100 + 50 shipping
+      expect(result.data.lines[0].unitPrice).toBe('100.00');
+      expect(result.data.total).toBe('150.00'); // 100 + 50 shipping
     });
 
     it('generates a stable confirmation digest independent of input line ordering', async () => {
@@ -290,6 +290,138 @@ describe('Checkout feature integration tests on real Postgres', () => {
     });
   });
 
+  describe('Domain acceptance boundaries', () => {
+    it('refuses merged duplicates 998+2 in validate and accept, without writes', async () => {
+      const item = await createVariantWithStock({ onHand: 2000 });
+      const lines = [
+        { variantId: item.variantId, quantity: 998 },
+        { variantId: item.variantId, quantity: 2 },
+      ];
+      expect(await checkoutService.validate({ source: 'cart', lines })).toMatchObject({
+        success: false,
+        status: 400,
+        error: { code: 'validation-error' },
+      });
+      expect(
+        await checkoutService.accept(
+          {
+            source: 'cart',
+            lines,
+            confirmation: 'unused',
+            paymentMethod: 'cod',
+            address: validAddress,
+            guestEmail: 'bounds@example.com',
+          },
+          { idempotencyKey: 'merged-overflow' },
+        ),
+      ).toMatchObject({ success: false, status: 400, error: { code: 'validation-error' } });
+      expect(
+        await testDb.db
+          .select()
+          .from(checkoutIdempotency)
+          .where(eq(checkoutIdempotency.key, 'merged-overflow')),
+      ).toEqual([]);
+      const [balance] = await testDb.db
+        .select()
+        .from(inventoryBalances)
+        .where(eq(inventoryBalances.variantId, item.variantId));
+      expect(balance.reserved).toBe(0);
+    });
+
+    it.each([0, -1, 1.5])('refuses a quantity of %s at the command boundary', async (quantity) => {
+      const item = await createVariantWithStock();
+      const input = { source: 'cart' as const, lines: [{ variantId: item.variantId, quantity }] };
+      expect(await checkoutService.validate(input)).toMatchObject({ success: false, status: 400 });
+      expect(
+        await checkoutService.accept(
+          {
+            ...input,
+            confirmation: 'unused',
+            paymentMethod: 'cod',
+            address: validAddress,
+            guestEmail: 'bounds@example.com',
+          },
+          { idempotencyKey: `lower-${quantity}` },
+        ),
+      ).toMatchObject({ success: false, status: 400 });
+    });
+
+    it.each([
+      '01012345678',
+      '01112345678',
+      '01212345678',
+      '01512345678',
+      '+201012345678',
+      '+201112345678',
+      '+201212345678',
+      '+201512345678',
+    ])('accepts corrected Egyptian phone %s and replays once', async (phone) => {
+      const item = await createVariantWithStock();
+      const lines = [{ variantId: item.variantId, quantity: 1 }];
+      const quote = await checkoutService.validate({ source: 'cart', lines });
+      if (!quote.success) throw new Error('Quote failed');
+      const input = {
+        source: 'cart' as const,
+        lines,
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod' as const,
+        address: { ...validAddress, phone },
+        guestEmail: 'phone@example.com',
+      };
+      const context = { idempotencyKey: `phone-${phone}` };
+      const accepted = await checkoutService.accept(input, context);
+      expect(accepted.success).toBe(true);
+      expect(await checkoutService.accept(input, context)).toEqual(accepted);
+      const [balance] = await testDb.db
+        .select()
+        .from(inventoryBalances)
+        .where(eq(inventoryBalances.variantId, item.variantId));
+      expect(balance.reserved).toBe(1);
+    });
+
+    it.each([
+      '',
+      '01312345678',
+      '+201312345678',
+      '0101234567',
+      '010123456789',
+      ' 01012345678',
+      '010abcdefgh',
+    ])('refuses missing or malformed phone %s', async (phone) => {
+      const item = await createVariantWithStock();
+      expect(
+        await checkoutService.accept(
+          {
+            source: 'cart',
+            lines: [{ variantId: item.variantId, quantity: 1 }],
+            confirmation: 'unused',
+            paymentMethod: 'cod',
+            address: { ...validAddress, phone },
+            guestEmail: 'phone@example.com',
+          },
+          { idempotencyKey: `bad-phone-${phone}` },
+        ),
+      ).toMatchObject({ success: false, status: 400, error: { code: 'validation-error' } });
+    });
+
+    it.each([undefined, '', 'malformed'])('requires a valid guest email %s', async (guestEmail) => {
+      const item = await createVariantWithStock();
+      expect(
+        await checkoutService.accept(
+          {
+            source: 'cart',
+            lines: [{ variantId: item.variantId, quantity: 1 }],
+            confirmation: 'unused',
+            paymentMethod: 'cod',
+            address: validAddress,
+            guestEmail,
+          },
+          { idempotencyKey: `bad-email-${guestEmail}` },
+        ),
+      ).toMatchObject({ success: false, status: 400, error: { code: 'validation-error' } });
+    });
+  });
+
   describe('POST /checkout/order seam', () => {
     it('accepts order, reserves stock, freezes snapshots and returns Order Reference in one transaction', async () => {
       const item = await createVariantWithStock({ price: '60.00', onHand: 10 });
@@ -320,7 +452,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(orderData.status).toBe('pending');
       expect(orderData.paymentStatus).toBe('unpaid');
       expect(orderData.totalAmount).toBe('170.00'); // 120 + 50
-      expect(isValidOrderReference(orderData.orderReference)).toBe(true);
+      expect(ORDER_REFERENCE_PATTERN.test(orderData.orderReference)).toBe(true);
 
       // Verify row in database
       const [orderRow] = await testDb.db.select().from(orders).where(eq(orders.id, orderData.id));
@@ -511,8 +643,8 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(acceptResult.status).toBe(409);
       expect(acceptResult.error.code).toBe('reconfirmation-required');
       expect(acceptResult.error.quote).toBeDefined();
-      expect(acceptResult.error.quote?.lines[0].unitPrice).toBe(75);
-      expect(acceptResult.error.quote?.total).toBe(125); // 75 + 50
+      expect(acceptResult.error.quote?.lines[0].unitPrice).toBe('75.00');
+      expect(acceptResult.error.quote?.total).toBe('125.00'); // 75 + 50
     });
 
     it('returns 409 insufficient-stock and rolls back whole transaction when stock runs out', async () => {
@@ -1550,8 +1682,8 @@ describe('Checkout feature integration tests on real Postgres', () => {
           listItemId: source.items[0].id,
           variantId: variant.variantId,
           quantity: 5,
-          unitPrice: 37.5,
-          lineTotal: 187.5,
+          unitPrice: '37.50',
+          lineTotal: '187.50',
         }),
       ]);
     });
@@ -1794,7 +1926,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
     const offerStart = new Date('2026-10-01T00:00:00.000Z');
     const offerEnd = new Date('2026-11-01T00:00:00.000Z');
     let clockNow = new Date('2026-10-15T12:00:00.000Z');
-    const offerService = createCheckoutService({ shippingFee: 50, clock: () => clockNow });
+    const offerService = createCheckoutService({ clock: () => clockNow });
 
     async function setOffer(
       listId: number,
@@ -1869,18 +2001,18 @@ describe('Checkout feature integration tests on real Postgres', () => {
       // 1005 x 0.9 = 904.5 -> 905 (half rounds up); 999 x 0.9 = 899.1 -> 899
       expect(quote.lines).toEqual([
         expect.objectContaining({
-          unitPrice: 10.05,
-          discounts: [{ source: 'list-offer', amount: 1 }],
-          lineTotal: 9.05,
+          unitPrice: '10.05',
+          discounts: [{ source: 'list-offer', amount: '1.00' }],
+          lineTotal: '9.05',
         }),
         expect.objectContaining({
-          unitPrice: 3.33,
-          discounts: [{ source: 'list-offer', amount: 1 }],
-          lineTotal: 8.99,
+          unitPrice: '3.33',
+          discounts: [{ source: 'list-offer', amount: '1.00' }],
+          lineTotal: '8.99',
         }),
       ]);
-      expect(quote.subtotal).toBe(18.04);
-      expect(quote.total).toBe(68.04);
+      expect(quote.subtotal).toBe('18.04');
+      expect(quote.total).toBe('68.04');
     });
 
     it('rounds exact half piasters up and 0 and 10000 basis points to the extremes', async () => {
@@ -1890,17 +2022,17 @@ describe('Checkout feature integration tests on real Postgres', () => {
 
       await setOffer(source.list.id, 5000);
       // 3 x 0.5 = 1.5 piasters -> 2
-      expect((await quoteList(source, lines)).quote.lines[0].lineTotal).toBe(0.02);
+      expect((await quoteList(source, lines)).quote.lines[0].lineTotal).toBe('0.02');
 
       await setOffer(source.list.id, 0);
       const zero = (await quoteList(source, lines)).quote.lines[0];
-      expect(zero.lineTotal).toBe(0.03);
+      expect(zero.lineTotal).toBe('0.03');
       expect(zero.discounts).toEqual([]);
 
       await setOffer(source.list.id, 10000);
       const full = (await quoteList(source, lines)).quote.lines[0];
-      expect(full.lineTotal).toBe(0);
-      expect(full.discounts).toEqual([{ source: 'list-offer', amount: 0.03 }]);
+      expect(full.lineTotal).toBe('0.00');
+      expect(full.discounts).toEqual([{ source: 'list-offer', amount: '0.03' }]);
     });
 
     it('applies only while starts_at <= acceptance time < ends_at', async () => {
@@ -1913,13 +2045,13 @@ describe('Checkout feature integration tests on real Postgres', () => {
         return (await quoteList(source, lines)).quote.lines[0].lineTotal;
       };
 
-      expect(await totalAt(new Date(offerStart.getTime() - 1))).toBe(100);
-      expect(await totalAt(offerStart)).toBe(75);
-      expect(await totalAt(new Date(offerEnd.getTime() - 1))).toBe(75);
-      expect(await totalAt(offerEnd)).toBe(100);
+      expect(await totalAt(new Date(offerStart.getTime() - 1))).toBe('100.00');
+      expect(await totalAt(offerStart)).toBe('75.00');
+      expect(await totalAt(new Date(offerEnd.getTime() - 1))).toBe('75.00');
+      expect(await totalAt(offerEnd)).toBe('100.00');
 
       await setOffer(source.list.id, 2500, { endsAt: null });
-      expect(await totalAt(new Date('2099-01-01T00:00:00.000Z'))).toBe(75);
+      expect(await totalAt(new Date('2099-01-01T00:00:00.000Z'))).toBe('75.00');
       clockNow = new Date('2026-10-15T12:00:00.000Z');
     });
 
@@ -1941,7 +2073,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
         { itemIndex: 1, variantId: substitute.variantId, quantity: 1 },
       ]);
 
-      expect(quote.lines.map((line) => line.lineTotal)).toEqual([18, 27]);
+      expect(quote.lines.map((line) => line.lineTotal)).toEqual(['18.00', '27.00']);
       expect(quote.lines.every((line) => line.discounts[0]?.source === 'list-offer')).toBe(true);
     });
 
@@ -1960,7 +2092,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
         error: { code: 'reconfirmation-required' },
       });
       if (!afterChange.success) {
-        expect(afterChange.error.quote?.lines[0].lineTotal).toBe(80);
+        expect(afterChange.error.quote?.lines[0].lineTotal).toBe('80.00');
       }
 
       // Created after the Quote
@@ -2118,9 +2250,9 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(quote.success).toBe(true);
       if (!quote.success) return;
       // 0.30 + 1.40 + 259.87 = 261.57; +50 shipping
-      expect(quote.data.subtotal).toBe(261.57);
-      expect(quote.data.shipping).toBe(50);
-      expect(quote.data.total).toBe(311.57);
+      expect(quote.data.subtotal).toBe('261.57');
+      expect(quote.data.shipping).toBe('50.00');
+      expect(quote.data.total).toBe('311.57');
 
       const accepted = await checkoutService.accept(
         {
@@ -2160,13 +2292,12 @@ describe('Checkout feature integration tests on real Postgres', () => {
       const quote = await checkoutService.validate({ source: 'cart', lines });
       expect(quote.success).toBe(true);
       if (!quote.success) return;
-      expect(quote.data.subtotal).toBe(1.2);
-      expect(quote.data.total).toBe(51.2);
+      expect(quote.data.subtotal).toBe('1.20');
+      expect(quote.data.total).toBe('51.20');
     });
 
-    it('persists List amounts exactly as quoted, with a fractional shipping fee and an offer', async () => {
+    it('persists List amounts exactly as quoted, with a flat shipping fee and an offer', async () => {
       const service = createCheckoutService({
-        shippingFee: 49.99,
         clock: () => new Date('2026-10-15T12:00:00.000Z'),
       });
       const a = await createVariantWithStock({ price: '10.05', onHand: 20 });
@@ -2197,9 +2328,9 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(quote.success).toBe(true);
       if (!quote.success) return;
       // 3015x0.9=2713.5->2714; 30x0.9=27; 60x0.9=54 => 2795 piasters
-      expect(quote.data.subtotal).toBe(27.95);
-      expect(quote.data.shipping).toBe(49.99);
-      expect(quote.data.total).toBe(77.94);
+      expect(quote.data.subtotal).toBe('27.95');
+      expect(quote.data.shipping).toBe('50.00');
+      expect(quote.data.total).toBe('77.95');
 
       const accepted = await service.accept(
         {
@@ -2219,8 +2350,8 @@ describe('Checkout feature integration tests on real Postgres', () => {
         .from(orders)
         .where(eq(orders.id, accepted.data.order.id));
       expect(order.subtotal).toBe('27.95');
-      expect(order.shippingCost).toBe('49.99');
-      expect(order.totalAmount).toBe('77.94');
+      expect(order.shippingCost).toBe('50.00');
+      expect(order.totalAmount).toBe('77.95');
       // gross 3015+30+60 = 3105 piasters, net 2795, discount 310
       expect(order.discountTotal).toBe('3.10');
       const listItems = await testDb.db
@@ -2236,7 +2367,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
       );
     });
 
-    it('reads the CHECKOUT_FLAT_SHIPPING_FEE override once as piasters', async () => {
+    it('ignores the CHECKOUT_FLAT_SHIPPING_FEE override', async () => {
       const previous = process.env.CHECKOUT_FLAT_SHIPPING_FEE;
       process.env.CHECKOUT_FLAT_SHIPPING_FEE = '35.5';
       try {
@@ -2246,20 +2377,13 @@ describe('Checkout feature integration tests on real Postgres', () => {
           source: 'cart',
           lines: [{ variantId: v.variantId, quantity: 1 }],
         });
-        expect(quote.success && quote.data.shipping).toBe(35.5);
+        expect(quote.success && quote.data.shipping).toBe('50.00');
         process.env.CHECKOUT_FLAT_SHIPPING_FEE = '1.005';
-        expect(() => createCheckoutService()).toThrow(/Invalid shipping fee/);
+        expect(() => createCheckoutService()).not.toThrow();
       } finally {
         if (previous === undefined) delete process.env.CHECKOUT_FLAT_SHIPPING_FEE;
         else process.env.CHECKOUT_FLAT_SHIPPING_FEE = previous;
       }
-    });
-
-    it('refuses to start with a fractional-piaster or invalid shipping fee', () => {
-      expect(() => createCheckoutService({ shippingFee: 10.005 })).toThrow(/Invalid shipping fee/);
-      expect(() => createCheckoutService({ shippingFee: Number.NaN })).toThrow(
-        /Invalid shipping fee/,
-      );
     });
   });
 });
