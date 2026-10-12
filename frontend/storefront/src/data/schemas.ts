@@ -1,3 +1,4 @@
+import { LOCALES } from '@findeg/domain';
 /**
  * Storefront Input Validation Schemas
  *
@@ -33,7 +34,7 @@ export const AddToCartInputSchema = z.object({
     .int()
     .min(1, 'Quantity must be at least 1')
     .max(999, 'Quantity must be at most 999'),
-  locale: z.enum(['en', 'ar']).optional(),
+  locale: z.enum([...LOCALES]).optional(),
 });
 
 export type AddToCartInput = z.infer<typeof AddToCartInputSchema>;
@@ -57,7 +58,7 @@ export type CartId = z.infer<typeof CartIdSchema>;
 // CATALOG SCHEMAS
 // ============================================================================
 
-export const LocaleSchema = z.enum(['en', 'ar']).default('en');
+export const LocaleSchema = z.enum([...LOCALES]).default('en');
 
 export type Locale = z.infer<typeof LocaleSchema>;
 

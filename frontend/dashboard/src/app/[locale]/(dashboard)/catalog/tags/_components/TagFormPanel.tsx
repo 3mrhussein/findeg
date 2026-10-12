@@ -1,4 +1,5 @@
 'use client';
+import { type Locale } from '@findeg/domain';
 
 import React, { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -66,7 +67,7 @@ const PRESET_ICONS = [
 
 export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFormPanelProps) {
   const t = useTranslations('Administration.Catalog.Tags');
-  const locale = useLocale() as 'en' | 'ar';
+  const locale = useLocale() as Locale;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSlugChecking, setIsSlugChecking] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);

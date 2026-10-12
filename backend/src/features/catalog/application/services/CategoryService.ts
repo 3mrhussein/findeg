@@ -2,11 +2,8 @@ import { categoryQueries } from '@findeg/db/queries';
 import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
 import type { ICategoryService } from '@findeg/backend/features/catalog/application/interfaces/ICategoryService';
 import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
-import {
-  DEFAULT_LOCALE,
-  asTranslationMap,
-  type Locale,
-} from '@findeg/backend/features/core/domain/value-objects';
+import { asTranslationMap } from '@findeg/backend/features/core/domain/value-objects';
+import { DEFAULT_LOCALE, type Locale } from '@findeg/domain';
 import type { CategoryInput } from '../dtos/CategoryInput';
 
 export class CategoryService implements ICategoryService {

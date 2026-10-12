@@ -1,4 +1,7 @@
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale } from '@findeg/db/types';
+import { z } from 'zod';
+import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale } from '@findeg/domain';
+
+const LocaleSchema = z.enum(SUPPORTED_LOCALES);
 
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale };
 

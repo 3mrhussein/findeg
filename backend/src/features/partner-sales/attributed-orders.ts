@@ -6,7 +6,12 @@ import {
   type AttributedOrderTotalsRow,
   type PartnerSalesDatabase,
 } from '@findeg/db/queries/partner-sales';
-import { orderStatusEnum, paymentStatusEnum } from '@findeg/db/schema';
+import {
+  ORDER_STATUSES,
+  PAYMENT_STATUSES,
+  type OrderStatus,
+  type PaymentStatus,
+} from '@findeg/domain';
 import {
   canViewPartnerReports,
   fail,
@@ -18,8 +23,8 @@ import {
 import { BUSINESS_TIME_ZONE } from '@findeg/domain';
 import { isDateKey } from './time';
 
-export type AttributedOrderStatus = (typeof orderStatusEnum.enumValues)[number];
-export type AttributedPaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
+export type AttributedOrderStatus = OrderStatus;
+export type AttributedPaymentStatus = PaymentStatus;
 
 export interface AttributedOrdersFilter {
   /** First day, `YYYY-MM-DD` in Cairo time, inclusive. */
@@ -66,8 +71,8 @@ export function isValidAttributedOrdersFilter(filter: AttributedOrdersFilter): b
     isDateKey(filter.from) &&
     isDateKey(filter.to) &&
     filter.from <= filter.to &&
-    isStatusList(filter.orderStatuses, orderStatusEnum.enumValues) &&
-    isStatusList(filter.paymentStatuses, paymentStatusEnum.enumValues)
+    isStatusList(filter.orderStatuses, ORDER_STATUSES) &&
+    isStatusList(filter.paymentStatuses, PAYMENT_STATUSES)
   );
 }
 

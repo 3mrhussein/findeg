@@ -1,12 +1,8 @@
 import { brandQueries } from '@findeg/db/queries';
 import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
 import { Brand } from '@findeg/backend/features/catalog/domain/entities/Brand';
-import {
-  DEFAULT_LOCALE,
-  asTranslationMap,
-  type Locale,
-  pick,
-} from '@findeg/backend/features/core/domain/value-objects';
+import { asTranslationMap, pick } from '@findeg/backend/features/core/domain/value-objects';
+import { DEFAULT_LOCALE, type Locale } from '@findeg/domain';
 import { BrandCreateInput, BrandUpdateInput } from '../interfaces/IBrandRepository';
 import { IBrandService } from '../interfaces/IBrandService';
 

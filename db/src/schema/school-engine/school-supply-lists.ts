@@ -5,8 +5,6 @@ import {
   PUBLIC_CODE_PATTERN,
 } from '@findeg/domain';
 import type { SupplyListStatus } from '@findeg/domain';
-export { SUPPLY_LIST_STATUSES } from '@findeg/domain';
-export type { SupplyListStatus } from '@findeg/domain';
 import { inList, sqlLiteral } from '../sql-values';
 import { sql } from 'drizzle-orm';
 import {

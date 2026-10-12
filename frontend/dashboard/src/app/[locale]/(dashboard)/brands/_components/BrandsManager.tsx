@@ -1,4 +1,5 @@
 'use client';
+import { type ActiveStatus } from '@findeg/domain';
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
@@ -39,7 +40,7 @@ export function BrandsManager({
   }
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | ActiveStatus>('all');
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);

@@ -4,7 +4,7 @@ import { getProductDetailPageData, getProductIdsForStaticParams } from '@/data/c
 
 import { setRequestLocale } from 'next-intl/server';
 import { formatEgpDecimal } from '@findeg/ui';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { ProductGallery } from './_components/ProductGallery';
 import { AddToCartSection } from './_components/AddToCartSection';
 import { ProductTabs } from './_components/ProductTabs';

@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { parse } from '@findeg/backend/features/core';

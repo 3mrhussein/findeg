@@ -3,7 +3,7 @@ import { requireAdmin } from '@lib/auth-guard';
 import { SessionProvider } from '@providers/SessionProvider';
 import { PermissionsProvider } from '@providers/PermissionsProvider';
 import { AdminShell } from '../_components/shell/AdminShell';
-import type { Locale } from '@findeg/backend/features/core';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Protected Admin Dashboard Layout

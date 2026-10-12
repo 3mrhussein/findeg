@@ -1,4 +1,5 @@
 'use client';
+import { type Locale } from '@findeg/domain';
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Tag } from '@findeg/backend/features/catalog';
@@ -19,7 +20,7 @@ interface TagCardProps {
 
 export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
   const t = useTranslations('Administration.Catalog.Tags');
-  const locale = useLocale() as 'en' | 'ar';
+  const locale = useLocale() as Locale;
   const displayName = getTagDisplayName(tag.key, locale);
 
   // Dynamically render the icon

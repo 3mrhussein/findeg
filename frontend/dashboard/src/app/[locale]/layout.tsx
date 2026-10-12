@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 import { Toaster } from '@findeg/ui';
 import { routing } from '@i18n/routing';
 import { notFound } from 'next/navigation';
-import { type Locale } from '@findeg/backend/features/core';
+import { type Locale } from '@findeg/domain';
 import '../globals.css';
 
 export const metadata: Metadata = {

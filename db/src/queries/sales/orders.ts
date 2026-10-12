@@ -1,3 +1,10 @@
+import {
+  LIVE_ORDER_STATUSES,
+  type PaymentMethod,
+  type CurrencyCode,
+  type OrderStatus,
+  type PaymentStatus,
+} from '@findeg/domain';
 /**
  * Query Primitives for Sales Orders
  *
@@ -18,7 +25,7 @@ import {
 } from '../../schema';
 import { eq, and, gte, lte, ilike, or, inArray, desc, sql, count as sqlCount } from 'drizzle-orm';
 import { withTransaction, type DbTransaction } from '../transaction';
-import { type ID, type OrderStatus, type PaymentStatus } from '@findeg/db/types';
+import { type ID } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -143,13 +150,7 @@ export async function getByUserId(userId: ID): Promise<OrderWithItems[]> {
  * Check if user has purchased a specific product
  */
 export async function hasPurchasedProduct(userId: ID, productId: ID): Promise<boolean> {
-  const purchasableStatuses: OrderStatus[] = [
-    'pending',
-    'confirmed',
-    'processing',
-    'shipped',
-    'delivered',
-  ];
+  const purchasableStatuses = [...LIVE_ORDER_STATUSES];
 
   const rows = await db
     .select({ id: orderItems.id })
@@ -318,7 +319,7 @@ export async function create(
     subtotal: string;
     shippingCost: string;
     totalAmount: string;
-    currency?: string;
+    currency?: CurrencyCode;
     paymentMethod?: string;
     schoolSupplyListId?: number;
     schoolSupplyListPublicCode?: string;
@@ -372,7 +373,7 @@ export async function create(
               shippingCost: orderData.shippingCost,
               totalAmount: orderData.totalAmount,
               currency: orderData.currency || 'EGP',
-              paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
+              paymentMethod: (orderData.paymentMethod as PaymentMethod) || null,
               schoolSupplyListId: orderData.schoolSupplyListId,
               schoolSupplyListPublicCode: orderData.schoolSupplyListPublicCode,
               schoolSupplyListPublishedAt: orderData.schoolSupplyListPublishedAt,

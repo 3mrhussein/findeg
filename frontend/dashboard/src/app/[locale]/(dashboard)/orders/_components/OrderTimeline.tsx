@@ -1,11 +1,7 @@
 import { Check, Circle, X } from 'lucide-react';
 import { cn } from '@lib/utils';
 
-/**
- * OrderStatus type (local definition)
- */
-type OrderStatus =
-  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+import type { OrderStatus } from '@findeg/domain';
 
 interface OrderTimelineProps {
   currentStatus: OrderStatus;

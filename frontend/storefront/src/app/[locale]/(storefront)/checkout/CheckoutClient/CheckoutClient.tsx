@@ -1,4 +1,5 @@
 'use client';
+import { type PaymentMethod } from '@findeg/domain';
 
 import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@hooks/useCart';
@@ -34,7 +35,7 @@ import {
 
 /** The order body as sent: the form still offers 'card', which the backend rejects until supported. */
 type PendingOrderPayload = Omit<CheckoutOrderInput, 'paymentMethod'> & {
-  paymentMethod: 'cod' | 'card';
+  paymentMethod: PaymentMethod;
 };
 
 interface PendingAttempt {

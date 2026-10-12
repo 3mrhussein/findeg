@@ -10,15 +10,9 @@
 import { z } from 'zod';
 import { discountPercentage } from '@findeg/domain/catalog';
 import { freeUnits, stockLevel } from '@findeg/domain/inventory';
-import { moneyFromDecimal } from '@findeg/domain/common';
+import { moneyFromDecimal, type Money } from '@findeg/domain';
 import { IdSchema, TranslationMapSchema, type Locale } from '../../../core/domain/types/common';
-import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
-import {
-  DEFAULT_CURRENCY,
-  toMoney,
-  pick,
-  ResponsiveMediaSetSchema,
-} from '../../../core/domain/value-objects';
+import { pick, ResponsiveMediaSetSchema } from '../../../core/domain/value-objects';
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -105,13 +99,13 @@ export class VariantEntity {
     return pick(this.variant.localizedLabel, locale);
   }
 
-  getDisplayPrice(currency: string = DEFAULT_CURRENCY): Money {
-    return toMoney(Number(this.variant.basePrice), currency as CurrencyCode);
+  getDisplayPrice(): Money {
+    return moneyFromDecimal(String(this.variant.basePrice));
   }
 
-  getStrikePrice(currency: string = DEFAULT_CURRENCY): Money | undefined {
+  getStrikePrice(): Money | undefined {
     if (this.variant.strikePrice === undefined) return undefined;
-    return toMoney(Number(this.variant.strikePrice), currency as CurrencyCode);
+    return moneyFromDecimal(String(this.variant.strikePrice));
   }
 
   /**

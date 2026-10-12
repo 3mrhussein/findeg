@@ -15,7 +15,7 @@ import {
   type ProductListResult,
 } from '@findeg/backend/features/administration';
 import { createProductService } from '@findeg/backend/features/catalog';
-import { type Locale } from '@findeg/backend/features/core';
+import { type Locale } from '@findeg/domain';
 
 /**
  * Get all products with optional filters

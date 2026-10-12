@@ -1,4 +1,5 @@
 'use client';
+import { type Locale } from '@findeg/domain';
 
 import { Collection } from '@findeg/backend/features/catalog';
 import { useSortable } from '@dnd-kit/sortable';
@@ -29,7 +30,7 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
     zIndex: isDragging ? 50 : undefined,
   };
 
-  const title = collection.localizedTitle?.[locale as 'en' | 'ar'] || collection.slug;
+  const title = collection.localizedTitle?.[locale as Locale] || collection.slug;
 
   return (
     <div
@@ -87,9 +88,9 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
           </span>
         </div>
 
-        {collection.localizedSubtitle?.[locale as 'en' | 'ar'] && (
+        {collection.localizedSubtitle?.[locale as Locale] && (
           <p className="mt-1 text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 line-clamp-1 max-w-sm italic pr-20">
-            {collection.localizedSubtitle[locale as 'en' | 'ar']}
+            {collection.localizedSubtitle[locale as Locale]}
           </p>
         )}
       </div>

@@ -3,7 +3,7 @@
 import { requireAdmin } from '@lib/auth-guard';
 import { revalidateTag } from 'next/cache';
 import { createIdentityServices } from '@findeg/backend/features/identity';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**

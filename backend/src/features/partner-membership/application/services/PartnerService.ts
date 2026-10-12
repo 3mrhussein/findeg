@@ -13,7 +13,7 @@ import {
   type BusinessPartnerRow,
   type PartnerDatabase,
 } from '@findeg/db/queries/partners';
-import type { PartnerStatus } from '@findeg/db/schema';
+import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 import {
   allowedPartnerStatusChanges,
   changePartnerCode,

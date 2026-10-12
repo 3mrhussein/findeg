@@ -10,19 +10,6 @@ import type {
   PartnerInvitationStatus,
   PartnerMembershipStatus,
 } from '@findeg/domain';
-export {
-  BUSINESS_PARTNER_STATUSES as PARTNER_STATUSES,
-  PARTNER_ROLES,
-  PARTNER_ADMINISTRATOR,
-  PARTNER_INVITATION_STATUSES,
-  PARTNER_MEMBERSHIP_STATUSES,
-} from '@findeg/domain';
-export type {
-  BusinessPartnerStatus as PartnerStatus,
-  PartnerRole,
-  PartnerInvitationStatus,
-  PartnerMembershipStatus,
-} from '@findeg/domain';
 import { inList } from '../sql-values';
 import { sql } from 'drizzle-orm';
 import {

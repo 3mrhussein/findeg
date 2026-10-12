@@ -3,7 +3,8 @@ import type { SchoolSupplyListRow } from '@findeg/db/schema';
 /** Localized text as stored on a list (`en` and `ar`, either may be absent). */
 type TranslationMap = SchoolSupplyListRow['localizedTitle'];
 
-export type PublicSupplyListStatus = 'published' | 'archived';
+import { PUBLIC_SUPPLY_LIST_STATUSES } from '@findeg/domain';
+export type PublicSupplyListStatus = (typeof PUBLIC_SUPPLY_LIST_STATUSES)[number];
 
 export interface PublicSupplyListVariant {
   variantId: number;

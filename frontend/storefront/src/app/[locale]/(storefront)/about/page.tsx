@@ -1,6 +1,6 @@
 import { Container } from '@findeg/ui';
 import { getTranslations } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 interface AboutPageProps {
   params: Promise<{ locale: string }>;

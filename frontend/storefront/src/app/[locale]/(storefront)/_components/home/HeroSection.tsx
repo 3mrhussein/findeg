@@ -2,7 +2,7 @@ import { Link } from '@i18n/navigation';
 import { Button } from '@findeg/ui';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 
 interface HeroSectionProps {
   locale?: Locale;

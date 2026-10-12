@@ -1,4 +1,5 @@
 'use client';
+import { type Locale } from '@findeg/domain';
 
 import React, { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -35,7 +36,7 @@ const GROUP_ORDER = ['campaign', 'audience', 'quality'];
 
 export function TagsClient({ initialTags }: TagsClientProps) {
   const t = useTranslations('Administration.Catalog.Tags');
-  const locale = useLocale() as 'en' | 'ar';
+  const locale = useLocale() as Locale;
   const { toast } = useToast();
 
   const [searchQuery, setSearchQuery] = useState('');

@@ -33,9 +33,8 @@ import { productVariants } from '../catalog/product-variants';
 import { businessPartners } from '../identity/partners';
 import { schoolSupplyListItems, schoolSupplyLists } from '../school-engine/school-supply-lists';
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
-import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
-
-export { CROCKFORD_BASE32_ALPHABET as CROCKFORD_BASE32 } from '@findeg/domain';
+import { StoredShippingAddress, VariantSnapshot } from '@findeg/db/types';
+import { CurrencyCode } from '@findeg/domain';
 
 export function generateOrderReference() {
   return domainOrderReference(randomBytes);
@@ -96,7 +95,7 @@ export const orders = salesSchema.table(
 
     // Shipping
     /** Frozen address snapshot at time of order */
-    shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<ShippingAddress>(),
+    shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<StoredShippingAddress>(),
     /** Carrier tracking number */
     trackingNumber: text('tracking_number'),
 

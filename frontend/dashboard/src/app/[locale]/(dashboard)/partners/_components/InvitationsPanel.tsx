@@ -1,4 +1,5 @@
 'use client';
+import type { Locale } from '@findeg/domain';
 
 import { useActionState, useState, useTransition } from 'react';
 import { Button, Input, Label } from '@findeg/ui';
@@ -48,7 +49,7 @@ function LinkBox({ link }: { link: string }) {
 
 /** Pending Partner Invitations of one Business Partner, with invite, resend, revoke and copy link. */
 export function InvitationsPanel({ partnerId, canChange, invitations }: InvitationsPanelProps) {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const [inviteState, inviteFormAction, inviting] = useActionState(
     inviteAction.bind(null, locale, partnerId),
     idle,

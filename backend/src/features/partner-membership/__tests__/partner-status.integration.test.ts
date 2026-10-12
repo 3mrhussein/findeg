@@ -1,12 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
-import {
-  partnerAccessHistory,
-  partnerMemberships,
-  users,
-  type PartnerRole,
-  type PartnerStatus,
-} from '@findeg/db/schema';
+import { partnerAccessHistory, partnerMemberships, users } from '@findeg/db/schema';
+import { type PartnerRole, type BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from '@findeg/db/schema';
 import {

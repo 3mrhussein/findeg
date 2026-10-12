@@ -6,7 +6,7 @@
  */
 
 import { getTranslations } from 'next-intl/server';
-import { type Locale } from '@findeg/backend/features/core';
+import { type Locale } from '@findeg/domain';
 import {
   getCatalogHealthStats,
   getCategoryProductDistribution,

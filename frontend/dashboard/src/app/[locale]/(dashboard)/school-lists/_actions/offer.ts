@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@lib/auth-guard';
-import type { Locale } from 'next-intl';
+import type { Locale } from '@findeg/domain';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { toListActor } from '../_lib/toListActor';
 import { parseOfferForm } from '../_lib/offerForm';
