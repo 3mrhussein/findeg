@@ -1,6 +1,5 @@
-import { ZERO_MONEY, addMoney, type Money } from '../common';
+import { ZERO_MONEY, addMoney, businessMonthOf, type Money } from '../common';
 import type { VariantId } from '../catalog';
-import { businessMonthOf } from '../orders';
 import type { SupplyListId, SupplyListItemId } from '../school-lists';
 import { PARTNER_REPORT_MIN_ORDERS } from './model';
 

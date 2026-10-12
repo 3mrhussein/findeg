@@ -38,7 +38,6 @@ export type { PaymentMethod, PaymentMethodType, PaymentOption } from './payment-
 export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
 export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from './notified-statuses';
 export type { NotifiedOrderStatus } from './notified-statuses';
-export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
 
 export {
   CROCKFORD_BASE32_ALPHABET,
