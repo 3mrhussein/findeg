@@ -8,9 +8,12 @@ Before any other action in the codebase:
 
 ### Worktrees
 
-- **Verify before working**: Always run `git worktree list`. Never assume an unlisted path under `.claude/worktrees/` or `worktree/` is an active worktree; directories containing only `.vscode/` or editor configs are orphaned leftovers from past worktrees.
-- **Clean teardown**: When deleting a worktree, remove both the git worktree tracking and any lingering untracked directory (`git worktree remove <path> && rm -rf <path>`).
-- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees, starting new branches from up-to-date `origin/develop`.
+Always manage worktrees using the workspace automation script:
+- **Create**: Run `pnpm wt:new <type>/<slug>` (or `node scripts/worktree.mjs create <type>/<slug>`). Automatically validates branch naming, fetches `origin/develop`, and creates the worktree rooted at fresh `origin/develop`.
+- **Teardown**: Run `pnpm wt:rm <path-or-branch>` (or `node scripts/worktree.mjs remove <path-or-branch>`). Safely dismantles the worktree and cleans up untracked editor/build debris (`rm -rf`) so no ghost directories remain.
+- **Prune**: Run `pnpm wt:prune` to automatically dismantle worktrees whose branches have already merged into `origin/develop` and clean up orphaned ghost directories.
+- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees via `pnpm wt:new`.
+- **Sub-agents**: Never run concurrent implementing sub-agents in the same worktree. Each sub-agent requires its own dedicated worktree. Read-only sub-agents (review, research) must not mutate branches or worktrees.
 
 ### Issue tracker
 
