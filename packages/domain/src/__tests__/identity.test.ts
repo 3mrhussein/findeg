@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import type {
+  AttributedOrder,
   BusinessPartner,
   BusinessPartnerId,
   Customer,
@@ -15,6 +16,7 @@ import type {
   PartnerMembership,
   PartnerMembershipId,
   ProductId,
+  PublicCode,
   ProductVariant,
   SchoolSupplyList,
   SchoolSupplyListItem,
@@ -59,5 +61,10 @@ describe('identity types', () => {
     expectTypeOf<OrderLine['variantId']>().toEqualTypeOf<VariantId>();
     expectTypeOf<PartnerMembership['customerId']>().toEqualTypeOf<CustomerId>();
     expectTypeOf<SchoolSupplyList['businessPartnerId']>().toEqualTypeOf<BusinessPartnerId>();
+  });
+
+  it("an Attributed Order records the list's Public Code, not a free string", () => {
+    expectTypeOf<AttributedOrder['supplyListPublicCode']>().toEqualTypeOf<PublicCode>();
+    expectTypeOf<string>().not.toExtend<AttributedOrder['supplyListPublicCode']>();
   });
 });

@@ -1,9 +1,11 @@
 /**
- * The business-domain map: which entity belongs to which domain, and how entities relate.
+ * The business-domain map: which entity belongs to which area, and how entities relate. It
+ * holds domain entities only: no application plumbing (Outbox, Guest Order Access) and no read
+ * projections (the Partner Report).
  *
- * Cross-domain links are by id (ADR-0016 boundary rule), never by object reference. The
- * `__tests__/relations.test.ts` suite checks this map against the schema, so a relation that
- * points at a missing entity fails the build.
+ * Cross-area links are by id, never by object reference (ADR-0018). The
+ * `__tests__/relations.test.ts` suite checks this map against the domain types, so a relation
+ * that names a missing entity or a field the entity lacks fails the build.
  */
 
 /** Entity name → owning domain. Every entity the map mentions must appear here exactly once. */
@@ -17,10 +19,17 @@ export const ENTITY_DOMAINS = {
   SchoolSupplyListItem: 'school-lists',
   ListSelection: 'school-lists',
   ListOffer: 'orders',
+  Product: 'catalog',
   ProductVariant: 'catalog',
+  Category: 'catalog',
+  Brand: 'catalog',
+  Tag: 'catalog',
+  Collection: 'catalog',
+  Attribute: 'catalog',
   Order: 'orders',
   OrderLine: 'orders',
   AttributedOrder: 'orders',
+  StockBalance: 'inventory',
   StockReservation: 'inventory',
   Warehouse: 'inventory',
 } as const;
@@ -32,15 +41,17 @@ export type DomainName = (typeof ENTITY_DOMAINS)[EntityName];
 export type Multiplicity = 'one' | 'many';
 
 /**
- * `from` stores the link: it holds the id field `via`, which references `to`. Every relation is
- * therefore child → parent, and it is the child's field that carries the id.
+ * `from` stores the link: its field `via` references `to`. Every relation is therefore
+ * child → parent, and it is the child's field that carries the reference. The field is an id
+ * (`…Id`), a list of ids (`…Ids`), or, inside the catalogue only, a map keyed by Attribute key.
+ * A nested field is written as a path, e.g. `specification.categoryId`.
  */
 export interface Relation {
   from: EntityName;
   to: EntityName;
-  /** The field on `from` that holds the id of `to`. */
+  /** The field (or dotted path) on `from` that references `to`. */
   via: string;
-  /** How many `to` one `from` may reference. Always `one` here, since a link names a single parent. */
+  /** How many `to` one `from` may reference: `one` for an `…Id` field, `many` for a list or map. */
   toPerFrom: Multiplicity;
   /** How many `from` may reference one `to`. */
   fromPerTo: Multiplicity;
@@ -48,7 +59,71 @@ export interface Relation {
   required: boolean;
 }
 
-export const RELATIONS: readonly Relation[] = [
+/**
+ * Every link in the domain. Declared `as const` so that the relation tests can check each `via`
+ * against the real field of its `from` entity.
+ */
+export const RELATIONS = [
+  // Catalogue
+  {
+    from: 'ProductVariant',
+    to: 'Product',
+    via: 'productId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: true,
+  },
+  {
+    from: 'Product',
+    to: 'Category',
+    via: 'categoryId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: true,
+  },
+  {
+    from: 'Product',
+    to: 'Brand',
+    via: 'brandId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: false,
+  },
+  // The category tree: a top-level category has no parent.
+  {
+    from: 'Category',
+    to: 'Category',
+    via: 'parentId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: false,
+  },
+  {
+    from: 'Product',
+    to: 'Tag',
+    via: 'tagIds',
+    toPerFrom: 'many',
+    fromPerTo: 'many',
+    required: false,
+  },
+  // A Collection is filled by the products that carry any of its tags.
+  {
+    from: 'Collection',
+    to: 'Tag',
+    via: 'tagIds',
+    toPerFrom: 'many',
+    fromPerTo: 'many',
+    required: false,
+  },
+  // A variant's attribute values are keyed by Attribute key, not id.
+  {
+    from: 'ProductVariant',
+    to: 'Attribute',
+    via: 'attributes',
+    toPerFrom: 'many',
+    fromPerTo: 'many',
+    required: false,
+  },
   // Partners and people
   {
     from: 'PartnerMembership',
@@ -108,12 +183,22 @@ export const RELATIONS: readonly Relation[] = [
     fromPerTo: 'many',
     required: false,
   },
+  // An Exact Item has no specification; any other item names exactly one category.
+  {
+    from: 'SchoolSupplyListItem',
+    to: 'Category',
+    via: 'specification.categoryId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: false,
+  },
+  // A list has at most one List Offer; a List Replacement copies it to the new list.
   {
     from: 'ListOffer',
     to: 'SchoolSupplyList',
     via: 'supplyListId',
     toPerFrom: 'one',
-    fromPerTo: 'many',
+    fromPerTo: 'one',
     required: true,
   },
   {
@@ -124,11 +209,19 @@ export const RELATIONS: readonly Relation[] = [
     fromPerTo: 'many',
     required: true,
   },
-  // Orders (guests have no Customer)
+  // Orders. A guest buyer has no Customer; a cart Order has no School Supply List.
   {
     from: 'Order',
     to: 'Customer',
-    via: 'customerId',
+    via: 'buyer.customerId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: false,
+  },
+  {
+    from: 'Order',
+    to: 'SchoolSupplyList',
+    via: 'source.supplyListId',
     toPerFrom: 'one',
     fromPerTo: 'many',
     required: false,
@@ -183,6 +276,22 @@ export const RELATIONS: readonly Relation[] = [
   },
   // Inventory
   {
+    from: 'StockBalance',
+    to: 'ProductVariant',
+    via: 'variantId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: true,
+  },
+  {
+    from: 'StockBalance',
+    to: 'Warehouse',
+    via: 'warehouseId',
+    toPerFrom: 'one',
+    fromPerTo: 'many',
+    required: true,
+  },
+  {
     from: 'StockReservation',
     to: 'Order',
     via: 'orderId',
@@ -206,4 +315,4 @@ export const RELATIONS: readonly Relation[] = [
     fromPerTo: 'many',
     required: true,
   },
-];
+] as const satisfies readonly Relation[];
