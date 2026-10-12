@@ -120,9 +120,15 @@ export interface AttributedOrder {
 export const DISCOUNT_SOURCES = ['list-offer'] as const;
 export type DiscountSource = (typeof DISCOUNT_SOURCES)[number];
 
+export {
+  LIST_OFFER_MAX_BASIS_POINTS,
+  LIST_OFFER_MIN_BASIS_POINTS,
+  ListOfferError,
+  priceListOfferLine,
+} from './list-offer-pricing';
+export type { ListOfferLinePrice } from './list-offer-pricing';
+
 /** A percentage discount on one School Supply List, active for a time window. Basis points: 100 = 1%. */
-export const LIST_OFFER_MIN_BASIS_POINTS = 0;
-export const LIST_OFFER_MAX_BASIS_POINTS = 10000;
 export interface ListOffer {
   id: ListOfferId;
   supplyListId: SupplyListId;
