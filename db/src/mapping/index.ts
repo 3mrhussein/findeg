@@ -61,13 +61,12 @@ export function mapPartnerMembership(
 }
 
 export function mapSupplyList(row: typeof schoolSupplyLists.$inferSelect): SchoolSupplyList {
-  if (!row.localizedTitle.en) throw new TypeError('A domain list needs its English title');
   return {
     id: domainId<'SchoolSupplyList'>(row.id),
     businessPartnerId: domainId<'BusinessPartner'>(row.businessPartnerId),
     academicYear: row.academicYear,
     grade: row.grade,
-    title: { ...row.localizedTitle, en: row.localizedTitle.en },
+    title: { ...row.localizedTitle, en: row.localizedTitle.en ?? '' },
     status: row.status,
     publicCode: row.publicCode === null ? null : publicCode(row.publicCode),
     sourceListId: row.sourceListId === null ? null : domainId<'SchoolSupplyList'>(row.sourceListId),
