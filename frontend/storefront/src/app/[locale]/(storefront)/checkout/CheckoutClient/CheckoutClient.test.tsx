@@ -53,10 +53,10 @@ const initialPrefill = {
 };
 
 const originalQuote = {
-  lines: [{ variantId: 101, quantity: 1, unitPrice: 10, discounts: [], lineTotal: 10 }],
-  shipping: 50,
-  subtotal: 10,
-  total: 60,
+  lines: [{ variantId: 101, quantity: 1, unitPrice: '10.00', discounts: [], lineTotal: '10.00' }],
+  shipping: '50.00',
+  subtotal: '10.00',
+  total: '60.00',
   currency: 'EGP' as const,
   confirmation: 'confirmation-original',
 };
@@ -67,13 +67,13 @@ const changedQuote = {
     {
       variantId: 101,
       quantity: 1,
-      unitPrice: 12,
-      discounts: [{ source: 'list-offer', amount: 2 }],
-      lineTotal: 10,
+      unitPrice: '12.00',
+      discounts: [{ source: 'list-offer', amount: '2.00' }],
+      lineTotal: '10.00',
     },
   ],
-  shipping: 55,
-  total: 65,
+  shipping: '55.00',
+  total: '65.00',
   confirmation: 'confirmation-changed',
 };
 
@@ -380,13 +380,13 @@ describe('CheckoutClient hydration and acceptance failures', () => {
           listItemId: 7,
           variantId: 101,
           quantity: 5,
-          unitPrice: 10,
+          unitPrice: '10.00',
           discounts: [],
-          lineTotal: 50,
+          lineTotal: '50.00',
         },
       ],
-      subtotal: 50,
-      total: 100,
+      subtotal: '50.00',
+      total: '100.00',
     };
     const fetchMock = vi
       .fn()
@@ -444,9 +444,9 @@ describe('CheckoutClient hydration and acceptance failures', () => {
     });
     const listQuote = {
       ...originalQuote,
-      lines: [{ ...originalQuote.lines[0], listItemId: 7, quantity: 3, lineTotal: 30 }],
-      subtotal: 30,
-      total: 80,
+      lines: [{ ...originalQuote.lines[0], listItemId: 7, quantity: 3, lineTotal: '30.00' }],
+      subtotal: '30.00',
+      total: '80.00',
     };
     const fetchMock = vi
       .fn()

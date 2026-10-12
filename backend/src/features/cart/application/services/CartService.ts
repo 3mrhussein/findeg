@@ -91,14 +91,10 @@ export class CartService implements ICartService {
     input: CartItem,
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const existing = items.find((i) => i.variantId === input.variantId);
-    if (existing) {
-      existing.quantity += input.quantity;
-      existing.unitPrice = input.unitPrice;
-    } else {
-      items.push(input);
-    }
-    this.carts.set(cartId, items);
+    const merged = this.addToCart(items, input).map((item) =>
+      item.variantId === input.variantId ? { ...item, unitPrice: input.unitPrice } : item,
+    );
+    this.carts.set(cartId, merged);
     return this.getCart(cartId);
   }
 
@@ -124,11 +120,7 @@ export class CartService implements ICartService {
     quantity: number,
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const existing = items.find((i) => i.variantId === variantId);
-    if (existing) {
-      existing.quantity = quantity;
-    }
-    this.carts.set(cartId, items);
+    this.carts.set(cartId, this.updateQuantity(items, variantId, quantity));
     return this.getCart(cartId);
   }
 

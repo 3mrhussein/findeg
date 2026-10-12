@@ -33,7 +33,7 @@ describe('transitionOrderStatus on real Postgres', () => {
     id: number,
     update: Parameters<ReturnType<typeof createOrders>['changeStatus']>[2],
   ) => createOrders({ db: testDb.db }).changeStatus(writer, id, update);
-  const checkout = createCheckoutService({ shippingFee: 50 });
+  const checkout = createCheckoutService({});
 
   beforeAll(async () => {
     testDb = connectToTestDatabase();

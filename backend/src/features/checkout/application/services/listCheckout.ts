@@ -11,16 +11,11 @@ import {
 import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
-import { toPiasters } from '@findeg/money';
-import { computeConfirmation } from '../../domain/confirmation';
-import { isOfferActive } from '../../domain/list-offer';
-import {
-  priceLine,
-  sumQuote,
-  type PiasterQuote,
-  type PiasterQuoteLine,
-} from '../../domain/piasters';
-import { ListUnavailableError, SelectionInvalidError } from '../../domain/errors';
+import { moneyFromDecimal, isLineQuantity } from '@findeg/domain/common';
+import { sku, type VariantId } from '@findeg/domain/catalog';
+import { priceQuote, type Quote } from '@findeg/domain/orders';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
+import { ListUnavailableError, SelectionInvalidError } from '../errors';
 import type { ListCheckoutLine } from '../../schemas';
 
 type Executor = typeof db | DbTransaction;
@@ -44,13 +39,10 @@ export interface ListAttribution {
 }
 
 export interface ListQuoteCalculation {
-  quote: PiasterQuote;
+  quote: Quote;
   variantMap: Map<number, CatalogVariantMetadata>;
   attribution: ListAttribution;
 }
-
-/** Tag on the per-line discount entries a List Offer produces. */
-export const LIST_OFFER_SOURCE = 'list-offer';
 
 const invalidIds = (ids: number[]) => [...new Set(ids)].sort((a, b) => a - b);
 
@@ -61,7 +53,6 @@ const invalidIds = (ids: number[]) => [...new Set(ids)].sort((a, b) => a - b);
  */
 export async function calculateListQuote(
   input: { publicCode: string; lines: ListCheckoutLine[] },
-  shippingFee: bigint,
   tx?: DbTransaction,
   now: Date = new Date(),
 ): Promise<ListQuoteCalculation> {
@@ -92,9 +83,7 @@ export async function calculateListQuote(
       !Number.isSafeInteger(line.listItemId) ||
       !Number.isSafeInteger(line.variantId) ||
       line.variantId < 1 ||
-      !Number.isSafeInteger(line.quantity) ||
-      line.quantity < 1 ||
-      line.quantity > 999 ||
+      !isLineQuantity(line.quantity) ||
       seen.has(line.listItemId) ||
       !itemById.has(line.listItemId)
     ) {
@@ -174,38 +163,33 @@ export async function calculateListQuote(
   // The offer is read after the list row is locked FOR SHARE. Staff offer edits take the list
   // FOR UPDATE first, so an offer created or changed mid-acceptance cannot slip past this read.
   const offer = await getListOffer(executor, list.id, tx ? { lock: 'share' } : {});
-  const listOfferBasisPoints = offer && isOfferActive(offer, now) ? offer.basisPoints : null;
-
-  const quoteLines: PiasterQuoteLine[] = [...input.lines]
-    .sort((a, b) => a.listItemId - b.listItemId)
-    .map((line) => {
-      const unitPrice = toPiasters(variantById.get(line.variantId)!.basePrice);
-      const priced = priceLine(unitPrice, line.quantity, listOfferBasisPoints);
+  const quote = priceQuote(
+    {
+      kind: 'list',
+      supplyListId: list.id as SupplyListId,
+      publicCode: publicCode(list.publicCode),
+      offer: offer ?? null,
+    },
+    input.lines.map((line) => {
+      const variant = variantById.get(line.variantId)!;
+      const name = variant.productName as Record<string, string>;
       return {
-        listItemId: line.listItemId,
-        variantId: line.variantId,
+        variantId: line.variantId as VariantId,
         quantity: line.quantity,
-        unitPrice,
-        discounts:
-          priced.discount > 0n ? [{ source: LIST_OFFER_SOURCE, amount: priced.discount }] : [],
-        lineTotal: priced.lineTotal,
+        unitPrice: moneyFromDecimal(variant.basePrice),
+        productName: name.en || name.ar || '',
+        sku: sku(variant.sku),
+        listItem: {
+          supplyListItemId: line.listItemId as SupplyListItemId,
+          defaultVariantId: itemById.get(line.listItemId)!.variantId as VariantId,
+        },
       };
-    });
-  const { subtotal, shipping, total } = sumQuote(quoteLines, shippingFee);
-  const currency = 'EGP' as const;
-  const confirmation = computeConfirmation({
-    source: 'list',
-    publicCode: list.publicCode,
-    currency,
-    shipping,
-    subtotal,
-    total,
-    listOfferBasisPoints,
-    lines: quoteLines,
-  });
+    }),
+    now,
+  );
 
   return {
-    quote: { lines: quoteLines, shipping, subtotal, total, currency, confirmation },
+    quote,
     variantMap: new Map(
       variants.map((variant) => [
         variant.id,
@@ -230,7 +214,7 @@ export async function calculateListQuote(
             : [[item.id, { defaultVariantId: item.variantId, exactItem: item.exactItem }] as const],
         ),
       ),
-      listOfferBasisPoints,
+      listOfferBasisPoints: quote.source.kind === 'list' ? quote.source.listOfferBasisPoints : null,
     },
   };
 }

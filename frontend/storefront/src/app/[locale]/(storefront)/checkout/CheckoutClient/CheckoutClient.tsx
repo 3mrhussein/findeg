@@ -47,9 +47,9 @@ interface PendingAttempt {
 
 function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
   return {
-    subtotal: quote.subtotal,
-    shippingCost: quote.shipping,
-    total: quote.total,
+    subtotal: Number(quote.subtotal),
+    shippingCost: Number(quote.shipping),
+    total: Number(quote.total),
     currency: quote.currency,
   };
 }
