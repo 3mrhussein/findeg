@@ -24,6 +24,15 @@ function specified(
 }
 
 describe('eligibleVariants', () => {
+  it('refuses an inactive Allowed Alternative even when its specification matches', () => {
+    const inactive = { ...candidate(2, 10, { color: 'blue' }), variantActive: false };
+    expect(eligibleVariants(specified(1, 10, { color: 'blue' }), [inactive])).toEqual([]);
+  });
+
+  it('refuses an Allowed Alternative on an inactive product', () => {
+    const inactive = { ...candidate(2, 10, { color: 'blue' }), productActive: false };
+    expect(eligibleVariants(specified(1, 10, { color: 'blue' }), [inactive])).toEqual([]);
+  });
   const candidates = [
     candidate(1, 10, { color: 'blue', size: 'A4' }),
     candidate(2, 10, { color: 'blue', size: 'A5' }),
