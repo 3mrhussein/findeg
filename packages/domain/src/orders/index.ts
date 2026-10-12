@@ -161,12 +161,12 @@ export interface ListOffer {
   endsAt: Date | null;
 }
 
-/** The server's authoritative pricing of a set of lines at one moment. */
-export interface Quote {
-  lines: readonly { variantId: VariantId; quantity: number; unitPrice: Money }[];
-  discounts: readonly { source: DiscountSource; amount: Money }[];
-  shippingFee: Money;
-  total: Money;
-  /** Digest of the Quote's terms that the Customer agrees to. */
-  confirmation: string;
-}
+export { FLAT_SHIPPING_FEE, priceQuote } from './quote';
+export type {
+  LineDiscount,
+  OrderSource,
+  OrderTotals,
+  Quote,
+  QuoteLine,
+  QuoteLineRequest,
+} from './quote';

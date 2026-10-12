@@ -10,7 +10,10 @@ export type OrderErrorCode =
   | 'INVALID_ORDER_REFERENCE'
   | 'INVALID_PHONE'
   | 'INVALID_SHIPPING_ADDRESS'
-  | 'INVALID_GUEST_EMAIL';
+  | 'INVALID_GUEST_EMAIL'
+  | 'EMPTY_ORDER'
+  | 'MIXED_ORDER_SOURCE'
+  | 'INVALID_LINE_QUANTITY';
 
 /** An Order, or a request to make or change one, that breaks an Order rule. */
 export class OrderError extends DomainError<OrderErrorCode> {
