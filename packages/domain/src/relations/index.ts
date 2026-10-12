@@ -99,11 +99,11 @@ export const RELATIONS: readonly Relation[] = [
     fromPerTo: 'many',
     required: true,
   },
-  // Exact Items only
+  // Every item has a default variant; only a draft may still lack one.
   {
     from: 'SchoolSupplyListItem',
     to: 'ProductVariant',
-    via: 'variantId',
+    via: 'defaultVariantId',
     toPerFrom: 'one',
     fromPerTo: 'many',
     required: false,
