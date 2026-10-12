@@ -1,3 +1,4 @@
+import { drawRandomBytes, type RandomBytes } from '../common/random';
 import { OrderError } from './order-error';
 
 declare const reference: unique symbol;
@@ -31,15 +32,8 @@ export function orderReference(text: string): OrderReference {
  * byte picks one character (`byte % 32`, unbiased because 256 is a multiple of 32). The
  * reference is unique only by chance: the store refuses a duplicate and the caller retries.
  */
-export function generateOrderReference(
-  randomBytes: (length: number) => Uint8Array,
-): OrderReference {
-  const bytes = randomBytes(ORDER_REFERENCE_BODY_LENGTH);
-  if (bytes.length < ORDER_REFERENCE_BODY_LENGTH) {
-    throw new TypeError(
-      `Expected ${ORDER_REFERENCE_BODY_LENGTH} random bytes, received ${bytes.length}`,
-    );
-  }
+export function generateOrderReference(random: RandomBytes): OrderReference {
+  const bytes = drawRandomBytes(random, ORDER_REFERENCE_BODY_LENGTH);
   let body = '';
   for (let i = 0; i < ORDER_REFERENCE_BODY_LENGTH; i += 1) {
     body += CROCKFORD_BASE32_ALPHABET[bytes[i]! % CROCKFORD_BASE32_ALPHABET.length];

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
+import { DomainError, type RandomBytes } from '@findeg/domain/common';
 import {
   ORDER_REFERENCE_PATTERN,
   generateOrderReference,
@@ -19,7 +19,7 @@ function codeOf(run: () => unknown): string | undefined {
 /** A random source that hands out the given bytes and records how many were asked for. */
 function bytes(...values: number[]) {
   const requested: number[] = [];
-  const source = (length: number) => {
+  const source: RandomBytes = (length) => {
     requested.push(length);
     return Uint8Array.from(values.slice(0, length));
   };
@@ -41,6 +41,14 @@ describe('Order Reference', () => {
       expect(reference).toMatch(ORDER_REFERENCE_PATTERN);
       expect(orderReference(reference)).toBe(reference);
     }
+  });
+
+  // A random source that ignores the length it was asked for is a programmer error.
+  it.each([
+    ['too few', [1, 2, 3, 4, 5]],
+    ['too many', [1, 2, 3, 4, 5, 6, 7]],
+  ])('refuses a random source that returns %s bytes', (_name, values) => {
+    expect(() => generateOrderReference(() => Uint8Array.from(values))).toThrow(TypeError);
   });
 
   it('parses a valid reference', () => {

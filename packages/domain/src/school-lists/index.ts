@@ -18,7 +18,7 @@ export {
   supplyListItem,
 } from './item';
 export { PUBLIC_CODE_PATTERN, generatePublicCode, publicCode } from './public-code';
-export type { PublicCode, RandomBytes } from './public-code';
+export type { PublicCode } from './public-code';
 export {
   STAFF_LIST_AUTHORING_ACTIONS,
   STAFF_LIST_AUTHORING_STATUSES,
