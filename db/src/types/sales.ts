@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { ORDER_STATUS_VALUES, PAYMENT_STATUS_VALUES, PAYMENT_METHOD_VALUES } from './enum-values';
+import {
+  EGYPTIAN_MOBILE_PATTERN,
+  ORDER_STATUSES as ORDER_STATUS_VALUES,
+  PAYMENT_STATUSES as PAYMENT_STATUS_VALUES,
+  PAYMENT_METHOD_TYPES as PAYMENT_METHOD_VALUES,
+} from '@findeg/domain';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain';
 
 /**
  * Sales & Order Primitives for Database Layer
@@ -8,23 +14,19 @@ import { ORDER_STATUS_VALUES, PAYMENT_STATUS_VALUES, PAYMENT_METHOD_VALUES } fro
 // ─── Enum-derived Schemas ────────────────────────────────────────────────────
 
 export const OrderStatusSchema = z.enum(ORDER_STATUS_VALUES);
-export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
 export const PaymentStatusSchema = z.enum(PAYMENT_STATUS_VALUES);
-export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 
 export const PaymentMethodSchema = z.enum(PAYMENT_METHOD_VALUES);
-export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
-/** Egyptian mobile: 01[0125] + 8 digits (e.g. 01012345678) or +20 prefix */
-const EgyptianPhoneRegex = /^(\+20)?01[0125]\d{8}$/;
+export type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain';
 
 export const ShippingAddressSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   phone: z
     .string()
     .min(11, 'Valid phone number required')
-    .regex(EgyptianPhoneRegex, 'Valid Egyptian mobile number (e.g. 01012345678)'),
+    .regex(EGYPTIAN_MOBILE_PATTERN, 'Valid Egyptian mobile number (e.g. 01012345678)'),
   city: z.string().min(2, 'City is required'),
   area: z.string().min(2, 'Area is required'),
   street: z.string().min(2, 'Street is required'),

@@ -1,3 +1,8 @@
+import {
+  generateOrderReference as domainOrderReference,
+  ORDER_REFERENCE_PATTERN,
+} from '@findeg/domain';
+import { sqlLiteral } from '../sql-values';
 /**
  * Orders Database Schema
  *
@@ -30,15 +35,10 @@ import { schoolSupplyListItems, schoolSupplyLists } from '../school-engine/schoo
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
 import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 
-export const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+export { CROCKFORD_BASE32_ALPHABET as CROCKFORD_BASE32 } from '@findeg/domain';
 
-export function generateOrderReference(): string {
-  const bytes = randomBytes(6);
-  let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += CROCKFORD_BASE32[bytes[i] % 32];
-  }
-  return `FE-${code}`;
+export function generateOrderReference() {
+  return domainOrderReference(randomBytes);
 }
 
 /**
@@ -110,7 +110,7 @@ export const orders = salesSchema.table(
     uniqueIndex('uq_orders_order_reference').on(table.orderReference),
     check(
       'ck_orders_order_reference',
-      sql`${table.orderReference} ~ '^FE-[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{6}$'`,
+      sql`${table.orderReference} ~ ${sqlLiteral(ORDER_REFERENCE_PATTERN.source)}`,
     ),
     check(
       'ck_orders_list_attribution',

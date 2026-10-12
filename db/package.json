@@ -16,7 +16,8 @@
     "./queries/school-directory": "./src/queries/school-directory/index.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts",
-    "./queries/stock-reservations": "./src/queries/inventory/stock-reservations.ts"
+    "./queries/stock-reservations": "./src/queries/inventory/stock-reservations.ts",
+    "./types/enum-values": "./src/types/compatibility-values.ts"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
@@ -36,7 +37,8 @@
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.45.3",
     "postgres": "^3.4.5",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@findeg/domain": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

@@ -8,6 +8,7 @@
 import { text, integer, jsonb, timestamp, index, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { systemSchema } from '../schemas';
+import { inList } from '../sql-values';
 
 export const OUTBOX_STATUSES = [
   'pending',
@@ -37,10 +38,7 @@ export const outbox = systemSchema.table(
   },
   (table) => [
     index('idx_outbox_due').on(table.status, table.nextAttemptAt),
-    check(
-      'ck_outbox_status',
-      sql`${table.status} in ('pending', 'processing', 'delivered', 'exhausted', 'expired')`,
-    ),
+    check('ck_outbox_status', sql`${table.status} in (${inList(OUTBOX_STATUSES)})`),
   ],
 );
 

@@ -9,11 +9,11 @@ import { z } from 'zod';
 
 // ─── Locale ─────────────────────────────────────────────────────────────────
 
-export const SUPPORTED_LOCALES = ['en', 'ar'] as const;
-export const DEFAULT_LOCALE: (typeof SUPPORTED_LOCALES)[number] = 'en';
+import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_CURRENCY } from '@findeg/domain';
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_CURRENCY };
+export type { Locale } from '@findeg/domain';
 
 export const LocaleSchema = z.enum(SUPPORTED_LOCALES);
-export type Locale = z.infer<typeof LocaleSchema>;
 
 // ─── Translations ───────────────────────────────────────────────────────────
 
@@ -33,7 +33,6 @@ export const CurrencyCodeSchema = z
   .regex(/^[A-Z]{3}$/, 'Currency must be a 3-letter code');
 
 export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
-export const DEFAULT_CURRENCY: CurrencyCode = 'EGP';
 
 export const MoneyAmountSchema = z.number().finite().nonnegative();
 export type MoneyAmount = z.infer<typeof MoneyAmountSchema>;

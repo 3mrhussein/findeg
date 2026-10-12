@@ -1,3 +1,5 @@
+import { sellableUnitsSql } from '../inventory/stock-sql';
+import { PUBLIC_SUPPLY_LIST_STATUSES } from '@findeg/domain';
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import {
   brands,
@@ -37,7 +39,7 @@ export async function getPublicSupplyListByCode(
     .where(
       and(
         eq(schoolSupplyLists.publicCode, publicCode),
-        inArray(schoolSupplyLists.status, ['published', 'archived']),
+        inArray(schoolSupplyLists.status, PUBLIC_SUPPLY_LIST_STATUSES),
       ),
     )
     .limit(1);
@@ -73,7 +75,7 @@ export async function getAvailableQuantities(
     .select({
       variantId: inventoryBalances.variantId,
       available:
-        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(
+        sql<number>`coalesce(sum(${sellableUnitsSql(inventoryBalances.onHand, inventoryBalances.reserved, warehouses.isActive)}), 0)`.mapWith(
           Number,
         ),
     })

@@ -1,3 +1,4 @@
+import { sellableUnitsSql } from '../inventory/stock-sql';
 import { db } from '../../connection';
 import { brands, categories, products } from '../../schema';
 import { and, asc, Column, count, desc, eq, inArray, or, sql, SQL } from 'drizzle-orm';
@@ -25,9 +26,10 @@ export async function getAdminProductsListRaw(
   const inventorySub = sql`
     (SELECT 
       pv."product_id",
-      SUM(COALESCE(ib."on_hand", 0) - COALESCE(ib."reserved", 0)) as total_stock
+      SUM(${sellableUnitsSql(sql`ib."on_hand"`, sql`ib."reserved"`, sql`w."is_active"`)}) as total_stock
      FROM "catalog"."product_variants" pv
      LEFT JOIN "inventory"."inventory_balances" ib ON pv."id" = ib."variant_id"
+     LEFT JOIN "inventory"."warehouses" w ON w."id" = ib."warehouse_id"
      GROUP BY pv."product_id"
     )
   `;
