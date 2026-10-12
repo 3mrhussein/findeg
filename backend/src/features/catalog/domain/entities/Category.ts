@@ -31,6 +31,7 @@ export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
     sortOrder: z.number().optional(),
     isActive: z.boolean().optional(),
     children: z.array(CategorySchema).optional(),
+    productCount: z.number().optional(),
   }),
 );
 
@@ -50,6 +51,7 @@ export type Category = {
   sortOrder?: number;
   isActive?: boolean;
   children?: Category[];
+  productCount?: number;
 };
 
 export const CreateCategorySchema = z.object({

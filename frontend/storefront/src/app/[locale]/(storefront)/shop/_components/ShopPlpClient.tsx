@@ -36,15 +36,13 @@ interface ActiveChip {
   onRemove: () => void;
 }
 
-type SortOptionMessageKey =
-  'SortPopular' | 'SortNewest' | 'SortPriceLowHigh' | 'SortPriceHighLow' | 'SortRating';
+type SortOptionMessageKey = 'SortPopular' | 'SortNewest' | 'SortPriceLowHigh' | 'SortPriceHighLow';
 
 const SORT_OPTIONS: Array<{ value: ShopPlpSort; key: SortOptionMessageKey }> = [
   { value: 'popular', key: 'SortPopular' },
   { value: 'newest', key: 'SortNewest' },
   { value: 'price-low-high', key: 'SortPriceLowHigh' },
   { value: 'price-high-low', key: 'SortPriceHighLow' },
-  { value: 'rating', key: 'SortRating' },
 ];
 
 function getVisiblePages(currentPage: number, totalPages: number): Array<number | 'ellipsis'> {
@@ -138,12 +136,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
         params.set('inStock', 'false');
       }
 
-      if (nextFilters.ratingMin) {
-        params.set('ratingMin', String(nextFilters.ratingMin));
-      } else {
-        params.delete('ratingMin');
-      }
-
       params.delete('discount');
       nextFilters.discounts.forEach((discount) => params.append('discount', discount));
 
@@ -170,7 +162,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
         'sort',
         'page',
         'perPage',
-        'ratingMin',
         'discount',
       ].forEach((key) => params.delete(key));
     }, shopRootPath);
@@ -225,18 +216,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
           ...vm.filters,
           minPrice: vm.minPriceBound,
           maxPrice: vm.maxPriceBound,
-        }),
-    });
-  }
-
-  if (vm.filters.ratingMin) {
-    activeChips.push({
-      id: 'rating',
-      label: t('RatingAndAbove', { rating: vm.filters.ratingMin }),
-      onRemove: () =>
-        handleApplyFilters({
-          ...vm.filters,
-          ratingMin: undefined,
         }),
     });
   }

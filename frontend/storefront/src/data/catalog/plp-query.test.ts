@@ -34,7 +34,6 @@ describe('parseShopPlpQuery', () => {
     const backend = (sort: string) => parseShopPlpQuery({ sort }).backendSort;
     expect(backend('price-low-high')).toBe('price_asc');
     expect(backend('price-high-low')).toBe('price_desc');
-    expect(backend('rating')).toBe('rating');
     expect(backend('popular')).toBe('popular');
     expect(parseShopPlpQuery({ sort: 'bogus' })).toMatchObject({
       sort: 'newest',

@@ -3,18 +3,20 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Heart, Eye, Star, ShoppingCart } from 'lucide-react';
+import { Eye, ShoppingCart } from 'lucide-react';
 import { Link } from '@i18n/navigation';
 import type { Product } from '@data/catalog/types';
 import { useCart } from '@hooks/useCart';
-import { useToast } from '@hooks/use-toast';
-import { useUser } from '@hooks/useUser';
-import { Button, formatEgpDecimal } from '@findeg/ui';
+import {
+  Button,
+  Badge,
+  Skeleton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  formatEgpDecimal,
+} from '@findeg/ui';
 import { discountPercentage as savingPercentage, moneyFromDecimal } from '@findeg/domain';
-import { Badge } from '@findeg/ui';
-import { Skeleton } from '@findeg/ui';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@findeg/ui';
-import { IconTooltip } from '@findeg/ui';
 import { cn } from '@lib/utils';
 
 export interface ProductCardBrand {
@@ -33,8 +35,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
   const t = useTranslations('Pages.ProductCard');
 
   const { addToCart } = useCart();
-  const { toast } = useToast();
-  const { currentUser, toggleWishlistItem } = useUser();
 
   const primaryVariant = useMemo(() => {
     const variants = product.variants || [];
@@ -51,29 +51,19 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       };
     }
 
-    const hasInventoryData = (product.variants || []).some(
-      (variant) => (variant.inventory?.length ?? 0) > 0,
-    );
-    if (!hasInventoryData) {
-      return {
-        inStock: true,
-        lowStock: false,
-        availableUnits: 0,
-      };
-    }
-
-    const variant = primaryVariant;
-    const inventory = variant.inventory || [];
-    const availableUnits = inventory.reduce((acc, inv) => acc + (inv.onHand || 0), 0);
+    const inventory = primaryVariant.inventory || [];
+    const availableUnits = inventory
+      .filter((inv) => inv.warehouseActive !== false)
+      .reduce((acc, inv) => acc + Math.max(0, (inv.onHand || 0) - (inv.reserved || 0)), 0);
     const inStock = availableUnits > 0;
-    const lowStock = inStock && availableUnits < 5;
+    const lowStock = inStock && availableUnits <= 5;
 
     return {
       inStock,
       lowStock,
       availableUnits,
     };
-  }, [primaryVariant, product.variants]);
+  }, [primaryVariant]);
 
   const discountPercentage = useMemo(() => {
     if (!primaryVariant || !primaryVariant.basePrice || !primaryVariant.strikePrice) return 0;
@@ -86,7 +76,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
   const currentPrice = String(primaryVariant?.basePrice || '0');
   const originalPrice = primaryVariant?.strikePrice ? String(primaryVariant.strikePrice) : null;
   const [imageLoaded, setImageLoaded] = useState(false);
-  const isWishlisted = Boolean(currentUser?.wishlist.includes(product.id));
 
   const imageUrl =
     primaryVariant?.images?.[0]?.url || `https://picsum.photos/seed/${product.id}/600/600`;
@@ -121,16 +110,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     addToCart(product.id, 1, {
       variantId: primaryVariant.id,
     });
-  };
-
-  const handleWishlistToggle = () => {
-    const isAdding = !isWishlisted;
-    toggleWishlistItem(product.id);
-    if (isAdding) {
-      toast({
-        title: t('SavedToWishlist'),
-      });
-    }
   };
 
   const stockLabel = !stockSnapshot.inStock
@@ -168,19 +147,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         </Badge>
       )}
 
-      <IconTooltip label={isWishlisted ? t('RemoveWishlist') : t('SaveToWishlist')} asChild>
-        <Button
-          type="button"
-          variant="secondary"
-          size="icon-sm"
-          className="absolute inset-e-3 top-3 z-20 rounded-full bg-background/90 hover:bg-background"
-          onClick={handleWishlistToggle}
-          aria-label={isWishlisted ? t('RemoveWishlist') : t('SaveToWishlist')}
-        >
-          <Heart className={cn('size-4', isWishlisted && 'fill-current text-red-500')} />
-        </Button>
-      </IconTooltip>
-
       {view === 'grid' && (
         <div className="pointer-events-none absolute inset-0 z-20 hidden items-center justify-center md:flex">
           <div className="rounded-full bg-background/90 p-3 text-foreground opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100">
@@ -216,12 +182,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
           />
         ) : null}
         <span className="truncate">{brand?.name || product.brandName || t('UnknownBrand')}</span>
-      </div>
-
-      <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Star className="size-3.5 fill-amber-400 text-amber-400" />
-        <span className="font-medium text-foreground">{product.rating.toFixed(1)}</span>
-        <span>({product.reviewsCount})</span>
       </div>
 
       <div className="mt-3 flex items-end gap-2">

@@ -1,3 +1,4 @@
+import 'server-only';
 /**
  * School Data Layer (Storefront)
  *
@@ -6,9 +7,12 @@
  * Filter options are cached; search and the profile are not, because they embed
  * list status (publish/archive/replace) that must show immediately.
  */
-import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
-import { createSchoolDirectory, type SchoolSearchParams } from '@findeg/backend/features/school';
+import {
+  createSchoolDirectory,
+  createSchoolSupplyListReader,
+  type SchoolSearchParams,
+} from '@findeg/backend/features/school';
 
 /**
  * Search the Partner School directory. Uncached: rows carry published-list counts.
@@ -33,4 +37,16 @@ export async function getSchoolFilterOptions() {
  */
 export async function getSchoolProfile(code: string) {
   return createSchoolDirectory().getByCode(code);
+}
+
+/**
+ * Read a School Supply List by public code. Live/uncached.
+ */
+export async function getSchoolSupplyListByPublicCode(publicCode: string) {
+  const result = await createSchoolSupplyListReader().getByPublicCode(publicCode);
+  if (!result.success) {
+    if (result.error === 'not-found') return null;
+    throw new Error(result.error);
+  }
+  return result.data;
 }

@@ -68,18 +68,18 @@ export function HeaderNavClient() {
                   Collections
                 </Link>
                 <Link
-                  href="/school-lists"
+                  href="/schools"
                   onClick={() => setOpen(false)}
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  For Schools
+                  {t('Schools')}
                 </Link>
                 <Link
-                  href={isLoggedIn ? '/dashboard' : '/login'}
+                  href={isLoggedIn ? '/my-account' : '/login'}
                   onClick={() => setOpen(false)}
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  {isLoggedIn ? t('Dashboard') : t('Login')}
+                  {isLoggedIn ? t('MyAccount') : t('SignIn')}
                 </Link>
               </nav>
 

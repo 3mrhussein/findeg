@@ -54,20 +54,14 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   };
 }
 
-import { getSession } from '@lib/session';
-
-// ... (imports)
-
 /**
  * Canonical PDP route: /shop/products/[slug].
  */
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { locale, slug } = await params;
-  console.log('[PDP] Rendering for slug:', slug, 'locale:', locale);
   setRequestLocale(locale as Locale);
 
-  const session = await getSession();
-  const vm = await getProductPdp(locale, slug, session);
+  const vm = await getProductPdp(locale, slug);
   if (!vm) {
     notFound();
   }

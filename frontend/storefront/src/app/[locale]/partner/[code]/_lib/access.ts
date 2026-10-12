@@ -1,11 +1,10 @@
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import type {
   PartnerAction,
   PartnerActor,
   PartnerContext,
   PartnerRole,
 } from '@findeg/backend/features/partner-membership';
-import { getCachedPartnerContext } from '@data/partner/queries';
+import { getCachedPartnerContext, requirePartnerRole } from '@data/partner/queries';
 
 export interface PartnerAccess {
   context: PartnerContext;
@@ -39,15 +38,10 @@ export async function resolvePartnerAccess(
   const context = await getCachedPartnerContext(code);
   if (!context.success) return null;
   if (!gate) return { context: context.data, actor: partnerActor(context.data) };
-  const allowed = createPartnerMembershipServices().memberships.requireRole(
-    context.data,
-    gate.roles,
-    gate.action,
-  );
+  const allowed = requirePartnerRole(context.data, gate.roles, gate.action);
   return allowed.success ? { context: allowed.data, actor: partnerActor(allowed.data) } : null;
 }
 
 /** Whether members may change now: the Business Partner is onboarding or active. */
 export const canChangeMembers = (context: PartnerContext) =>
-  createPartnerMembershipServices().memberships.requireRole(context, 'any', 'membership-change')
-    .success;
+  requirePartnerRole(context, 'any', 'membership-change').success;

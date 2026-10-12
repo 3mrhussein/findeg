@@ -1,9 +1,6 @@
-import { notFound } from 'next/navigation';
-import {
-  createPartnerMembershipServices,
-  PARTNER_ADMINISTRATOR,
-} from '@findeg/backend/features/partner-membership';
+import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
 import { Link } from '@i18n/navigation';
+import { getPendingInvitations } from '@data/partner/queries';
 import { PartnerSuspense, requireWorkspaceAccess } from '../../_components/PartnerShell';
 import { canChangeMembers, partnerActor } from '../_lib/access';
 import { InvitationsPanel } from './InvitationsPanel';
@@ -28,11 +25,7 @@ async function Invitations({ locale, code }: { locale: string; code: string }) {
   if (!access.allowed) return access.notice;
   const { context } = access;
 
-  const result = await createPartnerMembershipServices().invitations.listPendingInvitations(
-    partnerActor(context),
-    context.partner.id,
-  );
-  if (!result.success) notFound();
+  const invitations = await getPendingInvitations(partnerActor(context), context.partner.id);
 
   return (
     <main className="mx-auto min-h-[70vh] max-w-3xl space-y-6 p-6 py-12">
@@ -46,7 +39,7 @@ async function Invitations({ locale, code }: { locale: string; code: string }) {
         locale={locale}
         code={code}
         canChange={canChangeMembers(context)}
-        invitations={result.data.map((invitation) => ({
+        invitations={invitations.map((invitation) => ({
           id: invitation.id,
           email: invitation.email,
           roles: invitation.roles,

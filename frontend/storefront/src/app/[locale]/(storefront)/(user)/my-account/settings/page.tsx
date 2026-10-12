@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@find
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
-import { getMyAccountData } from '@findeg/backend';
+import { getUserProfile } from '@data/user/queries';
 import { requireAuth } from '@lib/auth-guard';
+import { updateProfileAction } from '@data/user/actions';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -18,8 +19,11 @@ export default async function SettingsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'Pages.MyAccount' });
+  const tCommon = await getTranslations({ locale, namespace: 'Common' });
   const session = await requireAuth(locale);
-  const { user } = await getMyAccountData(session.userId);
+  const user = await getUserProfile(session.userId);
+
+  const storedName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
 
   return (
     <div className="space-y-6">
@@ -31,26 +35,37 @@ export default async function SettingsPage({ params }: Props) {
       <div className="grid gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Account Details</CardTitle>
-            <CardDescription>Update your personal information.</CardDescription>
+            <CardTitle>{t('AccountDetails')}</CardTitle>
+            <CardDescription>{t('UpdatePersonalInfo')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" value={user.email} disabled />
-              <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
-            </div>
-            {/* Additional settings can be added here */}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Security</CardTitle>
-            <CardDescription>Update your password and security settings.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button variant="outline">Change Password</Button>
+          <CardContent>
+            <form
+              action={async (formData) => {
+                'use server';
+                await updateProfileAction(formData);
+              }}
+              className="space-y-4"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="email">{t('EmailLabel')}</Label>
+                <Input id="email" value={user.email} disabled />
+                <p className="text-xs text-muted-foreground">{t('EmailCannotChange')}</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">{t('NameLabel')}</Label>
+                <Input id="name" name="name" defaultValue={storedName} minLength={2} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">{t('PhoneLabel')}</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  defaultValue={user.phone || ''}
+                  placeholder="+20 10 1234 5678"
+                />
+              </div>
+              <Button type="submit">{tCommon('Save')}</Button>
+            </form>
           </CardContent>
         </Card>
       </div>

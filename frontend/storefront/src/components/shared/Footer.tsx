@@ -1,23 +1,18 @@
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from '@findeg/domain';
 import { Link } from '@i18n/navigation';
+import { CurrentYear } from './CurrentYear';
 
 interface FooterProps {
   locale: Locale;
 }
 
 /**
- * Cached site-wide footer.
- *
- * Uses `'use cache'` with `cacheLife('max')` — footer links and text
- * change only with code deployments. CURRENT_YEAR is captured at
- * cache time (build or first revalidation), which is acceptable for
- * a footer copyright string.
+ * Site-wide footer.
  */
 export async function Footer({ locale }: FooterProps) {
   // ✅ locale + namespace together — next-intl skips headers() call
   const t = await getTranslations({ locale, namespace: 'Layout.Footer' });
-  const year = 2025;
 
   return (
     <footer className="w-full bg-slate-900 text-slate-400 py-16 lg:py-24">
@@ -29,7 +24,7 @@ export async function Footer({ locale }: FooterProps) {
                 <span className="material-symbols-outlined text-[20px]">school</span>
               </div>
               <span className="text-2xl font-black tracking-tight text-white">
-                Listo<span className="text-primary">.</span>
+                FindEg<span className="text-primary">.</span>
               </span>
             </Link>
             <p className="mb-6 max-w-sm text-sm leading-relaxed">
@@ -38,14 +33,9 @@ export async function Footer({ locale }: FooterProps) {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="mailto:support@findeg.com"
                 className="flex size-10 items-center justify-center rounded-full bg-white/5 text-white hover:bg-primary hover:text-white transition-colors"
-              >
-                <span className="material-symbols-outlined text-[20px]">share</span>
-              </a>
-              <a
-                href="#"
-                className="flex size-10 items-center justify-center rounded-full bg-white/5 text-white hover:bg-primary hover:text-white transition-colors"
+                aria-label="Email support"
               >
                 <span className="material-symbols-outlined text-[20px]">mail</span>
               </a>
@@ -65,6 +55,11 @@ export async function Footer({ locale }: FooterProps) {
               <li>
                 <Link href="/categories" className="hover:text-primary transition-colors">
                   {t('Categories')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections" className="hover:text-primary transition-colors">
+                  {t('Collections')}
                 </Link>
               </li>
               <li>
@@ -91,13 +86,8 @@ export async function Footer({ locale }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  {t('PartnerProgram')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  {t('Fundraising')}
+                <Link href="/schools" className="hover:text-primary transition-colors">
+                  {t('Schools')}
                 </Link>
               </li>
             </ul>
@@ -109,24 +99,29 @@ export async function Footer({ locale }: FooterProps) {
             </h4>
             <ul className="space-y-4 text-sm">
               <li>
+                <Link href="/order-lookup" className="hover:text-primary transition-colors">
+                  {t('TrackOrder')}
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-primary transition-colors">
                   {t('AboutUs')}
                 </Link>
               </li>
               <li>
-                <Link href="/about#contact" className="hover:text-primary transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   {t('ContactSupport')}
                 </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   {t('ReturnPolicy')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   {t('TermsOfService')}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -134,11 +129,10 @@ export async function Footer({ locale }: FooterProps) {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row text-sm">
           <p>
-            &copy; {year} FindEg.com (Listo). {t('Copyright')}
+            &copy; <CurrentYear /> FindEg. {t('Copyright')}
           </p>
           <div className="flex gap-4">
             <span className="material-symbols-outlined text-[24px]">payments</span>
-            <span className="material-symbols-outlined text-[24px]">credit_card</span>
             <span className="material-symbols-outlined text-[24px]">account_balance</span>
           </div>
         </div>

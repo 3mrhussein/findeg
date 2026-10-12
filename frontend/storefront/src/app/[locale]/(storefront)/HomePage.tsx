@@ -7,7 +7,6 @@ import { HowItWorks } from './_components/home/HowItWorks';
 import { CollectionsGrid } from './_components/home/CollectionsGrid';
 import { NewArrivals } from './_components/home/NewArrivals';
 import { SchoolBanner } from './_components/home/SchoolBanner';
-import { NewsletterSection } from './_components/home/NewsletterSection';
 
 interface HomePageProps {
   language?: Locale;
@@ -53,11 +52,6 @@ export default async function HomePage({ language = 'en' }: HomePageProps) {
       {/* Pure static — locale text only */}
       {/* <Boundary rendering="static" hydration="server" label="School Banner"> */}
       <SchoolBanner locale={language} />
-      {/* </Boundary> */}
-
-      {/* Pure static — no data */}
-      {/* <Boundary rendering="static" hydration="server" label="Newsletter"> */}
-      <NewsletterSection />
       {/* </Boundary> */}
     </div>
   );

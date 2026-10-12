@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { getInvitationByToken } from '@data/partner/queries';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
 import { getCachedSession } from '@data/auth/queries';
 import { Link } from '@i18n/navigation';
@@ -42,11 +42,14 @@ async function InvitationContent({
   searchParams: PageProps['searchParams'];
 }) {
   const [viewResult, session, query] = await Promise.all([
-    createPartnerMembershipServices().invitations.getInvitation(token),
+    getInvitationByToken(token),
     getCachedSession(),
     searchParams,
   ]);
-  if (!viewResult.success) notFound();
+  if (!viewResult.success) {
+    if (viewResult.error === 'not-found') notFound();
+    throw new Error(viewResult.error);
+  }
   const invitation = viewResult.data;
   const returnTo = `/partner/invitations/${encodeURIComponent(token)}`;
   const authQuery = { email: invitation.email, locked: '1', returnTo };

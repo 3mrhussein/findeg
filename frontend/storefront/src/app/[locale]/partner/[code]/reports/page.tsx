@@ -1,11 +1,10 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import {
-  createPartnerSalesServices,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
   PARTNER_REPORT_ROLES,
 } from '@findeg/backend/features/partner-sales';
+import { getPartnerReport } from '@data/partner/queries';
 import {
   PartnerNotice,
   PartnerSuspense,
@@ -46,18 +45,10 @@ async function Reports({
 
   const locale = await getLocale();
   const t = await getTranslations('PartnerReports');
-  const reports = createPartnerSalesServices().partnerReports;
-  const read = (selected?: string) =>
-    reports.getPartnerReport({ userId: membership.userId }, partner.id, {
-      month: selected,
-      locale: locale === 'ar' ? 'ar' : 'en',
-    });
-  let result = await read(month);
-  // A hand-edited `?month=` outside the picker falls back to the current month.
-  if (!result.success && result.error === 'invalid-input' && month !== undefined) {
-    result = await read();
-  }
-  if (!result.success) notFound();
+  const report = await getPartnerReport({ userId: membership.userId }, partner.id, {
+    month,
+    locale: locale === 'ar' ? 'ar' : 'en',
+  });
 
   return (
     <PartnerNotice
@@ -69,7 +60,7 @@ async function Reports({
           {t('back')}
         </Link>
         <PartnerReportView
-          report={toPartnerReportProps(result.data, locale)}
+          report={toPartnerReportProps(report, locale)}
           minOrdersPerRow={MIN_DISTINCT_ORDERS_PER_SALES_ROW}
         />
       </div>

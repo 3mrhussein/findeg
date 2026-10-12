@@ -44,7 +44,7 @@ export const LoginContent: React.FC<LoginContentProps> = ({
                   pathname: '/registration',
                   query: { email: initialEmail, locked: emailLocked ? '1' : undefined, returnTo },
                 }}
-                className="text-primary hover:underline font-medium ml-1"
+                className="text-primary hover:underline font-medium ms-1"
               >
                 {t('Pages.Auth.SignupLink')}
               </Link>
@@ -66,11 +66,11 @@ export const LoginContent: React.FC<LoginContentProps> = ({
 
             <div className="grid grid-cols-2 gap-4">
               <Button variant="outline" className="w-full">
-                <Icon name="google" className="mr-2 h-4 w-4" />
+                <Icon name="google" className="me-2 h-4 w-4" />
                 Google
               </Button>
               <Button variant="outline" className="w-full">
-                <Icon name="facebook" className="mr-2 h-4 w-4" />
+                <Icon name="facebook" className="me-2 h-4 w-4" />
                 Facebook
               </Button>
             </div>

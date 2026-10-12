@@ -1,13 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
 import { Link } from '@i18n/navigation';
 import type { Product } from '@/data/catalog/types';
 import { useCart } from '@hooks/useCart';
 import { useTranslations } from 'next-intl';
-import { formatEgpDecimal } from '@findeg/ui';
-import { Button } from '@findeg/ui';
-import { Badge } from '@findeg/ui';
+import { Button, Badge, formatEgpDecimal } from '@findeg/ui';
 
 interface ProductCardProps {
   product: Product;
@@ -26,6 +25,15 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
   const displayPrice = String(defaultVariant?.basePrice ?? '0');
   const imageUrl =
     defaultVariant?.images?.[0]?.url || `https://picsum.photos/seed/${product.id}/600/600`;
+
+  const isOutOfStock = useMemo(() => {
+    if (!defaultVariant) return true;
+    const inventory = defaultVariant.inventory || [];
+    const availableUnits = inventory
+      .filter((inv) => inv.warehouseActive !== false)
+      .reduce((acc, inv) => acc + Math.max(0, (inv.onHand || 0) - (inv.reserved || 0)), 0);
+    return availableUnits <= 0;
+  }, [defaultVariant]);
 
   const isNew = !!product.isNew;
   const href = `/shop/products/${product.slug}`;
@@ -81,12 +89,12 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
                   variantId: defaultVariant.id,
                 })
               }
-              disabled={!defaultVariant}
+              disabled={!defaultVariant || isOutOfStock}
               data-testid={`product-card-add-${product.id}`}
               className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-6"
             >
               <span className="material-symbols-outlined text-[18px] mr-2">add_shopping_cart</span>
-              {t('AddToCart')}
+              {isOutOfStock ? t('OutOfStock') : t('AddToCart')}
             </Button>
           </div>
         </div>
@@ -118,12 +126,12 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
               variantId: defaultVariant.id,
             })
           }
-          disabled={!defaultVariant}
+          disabled={!defaultVariant || isOutOfStock}
           data-testid={`product-card-add-${product.id}`}
           className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 w-[90%] bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white shadow-lg font-bold hover:bg-slate-50 z-20 rounded-full"
         >
           <span className="material-symbols-outlined text-[18px] mr-2">add_shopping_cart</span>
-          {t('AddToCart')}
+          {isOutOfStock ? t('OutOfStock') : t('AddToCart')}
         </Button>
       </div>
 

@@ -14,6 +14,7 @@ export interface InventoryBalanceResult {
   variantId: ID;
   warehouseId: ID;
   warehouseCode: string;
+  isActive: boolean;
   onHand: number;
   reserved: number;
   /** Computed: onHand - reserved */

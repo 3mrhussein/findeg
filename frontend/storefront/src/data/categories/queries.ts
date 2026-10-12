@@ -1,12 +1,13 @@
+'use cache';
+
+import 'server-only';
 /**
  * Categories Data Layer (Storefront)
  *
  * Provides cached data for the storefront category features.
  * Adheres to Next.js 16 "use cache" standards.
  */
-'use cache';
 
-import 'server-only';
 import { cacheTag, cacheLife } from 'next/cache';
 import {
   createCategoryService,
@@ -14,8 +15,10 @@ import {
   createBrandService,
 } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
-import { mapProduct, mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
+import { mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
 import { ShopPlpViewModel } from '../catalog/types';
+import { mapProductsWithInventory } from '../catalog/inventory';
+import { parseShopPlpQuery } from '../catalog/plp-query';
 
 /**
  * Category Page Data
@@ -36,11 +39,28 @@ export async function getCategoryPageViewModel(
   const category = await categoryService.getBySlug(slug, resolvedLocale);
   if (!category) return null;
 
-  const products = await productService.getByCategory(category.id, resolvedLocale);
-  const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
+  const listing = parseShopPlpQuery(query);
+  const offset = (listing.page - 1) * listing.perPage;
+  const result = await productService.getFilteredProducts(
+    {
+      limit: listing.perPage,
+      offset,
+      isActive: true,
+      categoryId: category.id,
+      brandIds: listing.brandIds,
+      minPrice: listing.minPrice,
+      maxPrice: listing.maxPrice,
+      sort: listing.backendSort,
+    },
+    resolvedLocale,
+  );
+
+  const mappedProducts = await mapProductsWithInventory(result.products, resolvedLocale);
+  const priceBounds = await productService.getPriceBounds(category.id);
 
   return {
     category: category,
+    currentCategoryName: category.name,
     products: mappedProducts,
     categoryOptions: mapCategoryOptions(
       await categoryService.getTree(resolvedLocale),
@@ -48,8 +68,8 @@ export async function getCategoryPageViewModel(
       resolvedLocale,
     ),
     brandOptions: mapBrandOptions(await brandService.getAll(true, resolvedLocale), {}),
-    minPriceBound: 0,
-    maxPriceBound: 1000,
+    minPriceBound: priceBounds.minPrice,
+    maxPriceBound: priceBounds.maxPrice,
     facetCounts: {
       categories: {},
       brands: {},
@@ -59,23 +79,23 @@ export async function getCategoryPageViewModel(
         bundleDeals: 0,
       },
     },
-    total: products.length,
-    totalPages: 1,
-    page: 1,
-    perPage: mappedProducts.length,
-    from: 1,
-    to: mappedProducts.length,
+    total: result.total,
+    totalPages: Math.ceil(result.total / listing.perPage),
+    page: listing.page,
+    perPage: listing.perPage,
+    from: mappedProducts.length > 0 ? offset + 1 : 0,
+    to: mappedProducts.length > 0 ? offset + mappedProducts.length : 0,
     locale: resolvedLocale,
     query: String(query?.q || ''),
-    categorySlugPath: [],
+    categorySlugPath: [category.slug],
     filters: {
-      minPrice: 0,
-      maxPrice: 1000,
-      brandIds: [],
-      inStockOnly: false,
+      minPrice: listing.minPrice ?? priceBounds.minPrice,
+      maxPrice: listing.maxPrice ?? priceBounds.maxPrice,
+      brandIds: listing.brandIds,
+      inStockOnly: query?.inStock === 'true',
       discounts: [],
     },
-    sort: 'newest',
+    sort: listing.sort,
   };
 }
 
@@ -90,7 +110,11 @@ export async function getCategoriesPageData(
   cacheLife('days');
 
   const categoryService = createCategoryService();
-  return await categoryService.getAll(resolvedLocale);
+  const categories = await categoryService.getAll(resolvedLocale);
+  return categories.map((c) => ({
+    ...c,
+    productsCount: c.productCount ?? 0,
+  }));
 }
 
 /**

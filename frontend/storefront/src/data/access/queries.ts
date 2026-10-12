@@ -1,12 +1,13 @@
+'use cache';
+
+import 'server-only';
 /**
  * Access Management Data Layer (Storefront)
  *
  * Unified queries for roles, permissions, and admin users.
  * Adheres to Next.js 16 "use cache" standards.
  */
-'use cache';
 
-import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createIdentityServices } from '@findeg/backend/features/identity';
 

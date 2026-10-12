@@ -1,4 +1,10 @@
 {
+  "HomeCollections": {
+    "Title": "Curated Collections",
+    "ViewAll": "View all",
+    "Subtitle": "Discover premium curated collections.",
+    "Badge": "Collection"
+  },
   "Common": {
     "LogoAriaLabel": "FindEg.com Homepage",
     "LogoSubtitle": "School & Stationery",
@@ -52,7 +58,9 @@
       "Description": "Don't waste time searching for each item. Upload your school or class list, and our smart catalog will find the right products for you.",
       "TryFree": "Try for free",
       "LearnMore": "Learn more"
-    }
+    },
+    "Schools": "Schools",
+    "TrackOrder": "Track Order"
   },
   "Layout": {
     "Header": {
@@ -98,7 +106,10 @@
       "AboutUs": "About Us",
       "ContactSupport": "Contact Support",
       "ReturnPolicy": "Return Policy",
-      "TermsOfService": "Terms of Service"
+      "TermsOfService": "Terms of Service",
+      "Schools": "Schools",
+      "Collections": "Collections",
+      "TrackOrder": "Track Order"
     },
     "Announcement": {
       "BarText": "Free shipping on orders over $50! 🎉",
@@ -217,7 +228,7 @@
       "CollectionsTitle": "Shop by Collection",
       "CollectionsDescription": "Discover curated selections designed for your specific needs, aesthetics, and lifestyle.",
       "CollectionsExplore": "Explore this collection",
-      "SearchListo": "Search Listo",
+      "SearchListo": "Search FindEg",
       "SearchButton": "Search",
       "SearchHint": "Enter a keyword above to find exactly what you need.",
       "SearchResultsFor": "Results for \"{query}\"",
@@ -285,6 +296,7 @@
       "MaximumQuantity": "Maximum: {count}",
       "Added": "Added!",
       "Wishlist": "Add to Wishlist",
+      "YouSave": "Save {amount}",
       "DeliveryEstimate": "Estimated delivery: 2-4 business days to Cairo",
       "ReturnsPolicy": "30-day returns on eligible items",
       "SecureCheckout": "Secure checkout · Paymob encrypted",
@@ -451,7 +463,8 @@
       "HaveAccount": "Already have an account?",
       "NoAccount": "Don't have an account?",
       "SigninLink": "Sign In",
-      "SignupLink": "Sign Up"
+      "SignupLink": "Sign Up",
+      "ConfirmPassword": "Confirm Password"
     },
     "About": {
       "HeroTitle": "Sparking Joy in Learning & Play",
@@ -524,7 +537,11 @@
         "StoreHome": "Store Home",
         "NeedUserAccount": "Need a user account?",
         "SwitchAccount": "Switch to User Account"
-      }
+      },
+      "PhoneLabel": "Phone Number",
+      "AccountDetails": "Account Details",
+      "UpdatePersonalInfo": "Update your personal information.",
+      "EmailCannotChange": "Email cannot be changed."
     },
     "GuestOrder": {
       "LookupTitle": "Find your order",
@@ -668,5 +685,12 @@
     "unnamed": "—",
     "egp": "{amount} EGP",
     "loading": "Loading reports…"
+  },
+  "Validation": {
+    "NameMin": "Name must be at least 2 characters.",
+    "EmailInvalid": "Please enter a valid email address.",
+    "PasswordRequired": "Password is required.",
+    "PasswordMin": "Password must be at least 8 characters.",
+    "PasswordsDoNotMatch": "Passwords do not match."
   }
 }

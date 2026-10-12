@@ -29,7 +29,7 @@ export async function requireAdmin(locale: string): Promise<SessionPayload> {
 
 /**
  * Redirect already-authenticated users away from auth pages.
- * Admins go to /admin, regular users go to /dashboard.
+ * Admins go to /admin, regular users go to /my-account.
  */
 export async function redirectIfAuthenticated(locale: string): Promise<void> {
   const session = await getCachedSession();
@@ -37,7 +37,7 @@ export async function redirectIfAuthenticated(locale: string): Promise<void> {
     if (adminSession(session)) {
       redirect({ href: '/admin', locale: locale });
     } else {
-      redirect({ href: '/dashboard', locale: locale });
+      redirect({ href: '/my-account', locale: locale });
     }
   }
 }
@@ -77,7 +77,7 @@ export async function requirePermission(
   }
 
   if (!allowed) {
-    redirect({ href: '/dashboard', locale: locale });
+    redirect({ href: '/my-account', locale: locale });
   }
 
   return session;

@@ -32,6 +32,10 @@ export interface IProductService {
     language?: Locale,
   ): Promise<{ products: Product[]; total: number }>;
 
+  getPriceBounds(categoryId?: number): Promise<{ minPrice: number; maxPrice: number }>;
+
+  getProductsByTagIds(tagIds: number[], language?: Locale): Promise<Product[]>;
+
   create(input: ProductInput): Promise<Product>;
   update(id: number, input: ProductInput): Promise<Product>;
   delete(id: number): Promise<void>;

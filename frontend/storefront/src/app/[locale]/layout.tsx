@@ -8,7 +8,6 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import Providers from '@providers/Providers';
 import { Suspense } from 'react';
 import { BoundaryProvider } from '@lib/internal/BoundaryProvider';
-import { WebMCPInitializer } from '@components/shared/WebMCPInitializer';
 import { LocaleSync } from '@components/shared/LocaleSync';
 
 export const metadata: Metadata = {
@@ -94,7 +93,6 @@ export default async function RootLayout({
         <Providers>
           <Suspense fallback={null}>{children}</Suspense>
           {/* <BoundaryToggle /> */}
-          <WebMCPInitializer />
         </Providers>
       </BoundaryProvider>
     </NextIntlClientProvider>

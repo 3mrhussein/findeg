@@ -17,6 +17,9 @@
   "dependencies": {
     "@findeg/backend": "workspace:*",
     "@findeg/domain": "workspace:*",
+    "@findeg/domain-errors": "workspace:*",
+    "@findeg/env": "workspace:*",
+    "@findeg/orders": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "clsx": "^2.1.1",
@@ -33,9 +36,7 @@
     "react-hook-form": "^7.89.0",
     "swr": "^2.4.1",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.5",
-    "@findeg/orders": "workspace:*",
-    "@findeg/domain-errors": "workspace:*"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",
