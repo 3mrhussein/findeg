@@ -23,6 +23,8 @@ export {
 export type { StaffListAuthoringAction } from './staff-authoring';
 export { archiveSupplyList, assertDraftEditable, cloneSupplyList } from './lifecycle';
 export type { SupplyListClone, SupplyListDraft, SupplyListItemDraft } from './lifecycle';
+export { isListOfferActive, listOffer, listOfferBasisPointsAt } from './list-offer';
+export type { ListOfferWindow } from './list-offer';
 export { isSameSupplyListSlot, publishSupplyList } from './publish';
 export type {
   CopiedListOffer,
