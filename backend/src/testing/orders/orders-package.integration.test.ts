@@ -89,14 +89,19 @@ describe('public injected Orders package on PostgreSQL', () => {
       Object.keys(statusTargets).map((to) => [from as OrderStatus, to as OrderStatus]),
     ),
   )('Order Status %s → %s', async (from, to) => {
-    const row = await seed(from);
+    const row = await seed(
+      from,
+      from === 'refunded' ? 'refunded' : from === 'delivered' ? 'paid' : 'unpaid',
+    );
     if (from !== to && !statusTargets[from].includes(to)) {
-      await expect(api().changeStatus(writer, row.id, { status: to })).rejects.toBeInstanceOf(
-        InvalidOrderStatusTransitionError,
-      );
+      await expect(
+        api().changeStatus(writer, row.id, { status: to, parcelBackInWarehouse: true }),
+      ).rejects.toBeInstanceOf(InvalidOrderStatusTransitionError);
       expect((await api().detail(row.id))?.activity).toEqual([]);
     } else {
-      expect(await api().changeStatus(writer, row.id, { status: to })).toMatchObject({
+      expect(
+        await api().changeStatus(writer, row.id, { status: to, parcelBackInWarehouse: true }),
+      ).toMatchObject({
         changed: from !== to,
         previousStatus: from,
         status: to,
@@ -110,8 +115,8 @@ describe('public injected Orders package on PostgreSQL', () => {
       Object.keys(paymentTargets).map((to) => [from as PaymentStatus, to as PaymentStatus]),
     ),
   )('Payment Status %s → %s', async (from, to) => {
-    const row = await seed('pending', from);
-    if (from !== to && !paymentTargets[from].includes(to)) {
+    const row = await seed('delivered', from);
+    if (from !== to && (!paymentTargets[from].includes(to) || to === 'refunded')) {
       await expect(api().changePaymentStatus(writer, row.id, to)).rejects.toBeInstanceOf(
         InvalidPaymentStatusTransitionError,
       );
@@ -123,6 +128,62 @@ describe('public injected Orders package on PostgreSQL', () => {
       expect((await api().detail(row.id))?.activity).toHaveLength(from === to ? 0 : 1);
     }
   });
+  it.each(['pending', 'confirmed', 'processing', 'shipped', 'cancelled'] as const)(
+    'refuses paid before delivery for a %s Order without writing',
+    async (status) => {
+      const row = await seed(status);
+      const before = await api().detail(row.id);
+      await expect(api().changePaymentStatus(writer, row.id, 'paid')).rejects.toBeInstanceOf(
+        InvalidPaymentStatusTransitionError,
+      );
+      expect(await api().detail(row.id)).toEqual(before);
+    },
+  );
+
+  it('Refund atomically changes both statuses, records Staff and repeats without writes or email', async () => {
+    const row = await seed('delivered', 'paid');
+    const results = await Promise.all([api().refund(writer, row.id), api().refund(writer, row.id)]);
+    expect(results.filter((result) => result.changed)).toHaveLength(1);
+    const detail = await api().detail(row.id);
+    expect(detail?.order).toMatchObject({
+      status: 'refunded',
+      paymentStatus: 'refunded',
+      updatedAt: instant,
+    });
+    expect(detail?.activity).toEqual([
+      expect.objectContaining({
+        action: 'refund',
+        adminId: writer.userId,
+        createdAt: instant,
+        oldValues: { status: 'delivered', paymentStatus: 'paid' },
+        newValues: { status: 'refunded', paymentStatus: 'refunded' },
+      }),
+    ]);
+    expect(await api().refund(writer, row.id)).toMatchObject({ changed: false });
+    expect(await api().detail(row.id)).toEqual(detail);
+    expect(
+      (await testDb.db.select().from(outbox)).filter(
+        (message) => message.payload.orderId === row.id,
+      ),
+    ).toEqual([]);
+  });
+
+  it('an audit failure rolls back both Refund statuses', async () => {
+    const row = await seed('delivered', 'paid');
+    const before = await api().detail(row.id);
+    await expect(api().refund({ ...writer, userId: 2_000_000_000 }, row.id)).rejects.toThrow();
+    expect(await api().detail(row.id)).toEqual(before);
+  });
+
+  it('refuses Refund until the delivered Order is paid', async () => {
+    const row = await seed('delivered');
+    const before = await api().detail(row.id);
+    await expect(api().refund(writer, row.id)).rejects.toBeInstanceOf(
+      InvalidOrderStatusTransitionError,
+    );
+    expect(await api().detail(row.id)).toEqual(before);
+  });
+
   it('maps canonical snapshots exactly, retains deleted products and Staff identity', async () => {
     const row = await seed();
     await api().changeStatus(writer, row.id, {
@@ -172,7 +233,28 @@ describe('public injected Orders package on PostgreSQL', () => {
     });
     await api().changePaymentStatus(writer, row.id, 'unpaid');
     expect(await api().detail(row.id)).toEqual(before);
+    expect(
+      (await testDb.db.select().from(outbox)).filter(
+        (message) => message.payload.orderId === row.id,
+      ),
+    ).toEqual([]);
   });
+  it.each(['paid', 'unpaid'] as const)(
+    'same-status change on a legacy refunded/%s Order stays a no-op',
+    async (paymentStatus) => {
+      const row = await seed('refunded', paymentStatus);
+      const before = await api().detail(row.id);
+      expect(
+        await api().changeStatus(writer, row.id, { status: 'refunded', adminNotes: 'discard' }),
+      ).toMatchObject({ changed: false });
+      expect(await api().detail(row.id)).toEqual(before);
+      expect(
+        (await testDb.db.select().from(outbox)).filter(
+          (message) => message.payload.orderId === row.id,
+        ),
+      ).toEqual([]);
+    },
+  );
   it('audit failure rolls back status metadata and durable enqueue', async () => {
     const row = await seed('shipped');
     const before = await api().detail(row.id);

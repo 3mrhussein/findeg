@@ -14,15 +14,17 @@ import { useToast } from '@hooks/use-toast';
 import {
   type OrderStatus,
   type PaymentStatus,
-  ORDER_STATUS_OPTIONS as ORDER_STATUSES,
-  PAYMENT_STATUS_OPTIONS as PAYMENT_STATUSES,
-  OrderStatusSchema,
-  PaymentStatusSchema,
+  ORDER_STATUSES,
+  PAYMENT_STATUSES,
+} from '@findeg/domain/orders';
+import {
+  confirmStatusUpdate,
   getAllowedOrderStatusTransitions,
   getAllowedPaymentStatusTransitions,
   getOrderStatusLabel,
   getPaymentStatusLabel,
-} from '@findeg/orders/schemas';
+} from '@lib/order-presentation';
+import { OrderStatusSchema, PaymentStatusSchema } from '@findeg/orders/schemas';
 const ORDER_STATUS_OPTIONS = ORDER_STATUSES.map((value) => ({
   value,
   label: getOrderStatusLabel(value),
@@ -55,7 +57,10 @@ export function OrderDetailControls({
   ]);
 
   const normalizedInitialPaymentStatus = PaymentStatusSchema.parse(initialPaymentStatus);
-  const allowedPaymentTargets = getAllowedPaymentStatusTransitions(normalizedInitialPaymentStatus);
+  const allowedPaymentTargets = getAllowedPaymentStatusTransitions({
+    status: normalizedInitialStatus,
+    paymentStatus: normalizedInitialPaymentStatus,
+  });
   const selectablePaymentStatuses = new Set<PaymentStatus>([
     normalizedInitialPaymentStatus,
     ...allowedPaymentTargets,
@@ -84,10 +89,12 @@ export function OrderDetailControls({
   const saveStatusChanges = async () => {
     const numericOrderId = resolveOrderId();
     if (!numericOrderId) return;
+    const update = confirmStatusUpdate(normalizedInitialStatus, status);
+    if (!update) return;
     setSavingStatus(true);
     try {
       const result = await updateOrderStatusAction(numericOrderId, {
-        status,
+        ...update,
         trackingNumber: trackingNumber.trim() || undefined,
         adminNotes: adminNotes.trim() || undefined,
       });

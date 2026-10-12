@@ -1,7 +1,10 @@
 import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
 import { getOrders, getOrderStats } from '@data/orders/queries';
-import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@findeg/orders/schemas';
-import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
+import {
+  ORDER_STATUSES as ORDER_STATUS_OPTIONS,
+  PAYMENT_STATUSES as PAYMENT_STATUS_OPTIONS,
+} from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 import { OrderTable } from '../OrderTable';
 
 interface OrdersContentProps {

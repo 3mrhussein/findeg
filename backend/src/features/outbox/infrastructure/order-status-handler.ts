@@ -1,4 +1,5 @@
 import React from 'react';
+import { OrderStatusSchema } from '@findeg/orders/schemas';
 import { orderQueries } from '@findeg/db/queries';
 import { DEFAULT_LOCALE } from '../../core';
 import { OrderStatusUpdateEmail } from '../../notifications';
@@ -15,8 +16,10 @@ const SUBJECTS = {
 export function createOrderStatusHandler(emailProvider: EmailProvider): OutboxHandler {
   return async (payload, { rowId }) => {
     const orderId = Number(payload.orderId);
-    const status = String(payload.status);
-    if (!isNotifiedOrderStatus(status)) throw new Error(`Unsupported order status "${status}"`);
+    const parsed = OrderStatusSchema.safeParse(payload.status);
+    if (!parsed.success || !isNotifiedOrderStatus(parsed.data))
+      throw new Error(`Unsupported order status "${String(payload.status)}"`);
+    const status = parsed.data;
     const found = Number.isInteger(orderId) ? await orderQueries.getById(orderId) : null;
     if (!found) throw new Error(`Order ${String(payload.orderId)} not found`);
 

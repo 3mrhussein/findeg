@@ -29,6 +29,7 @@ describe('Dashboard Order detail query', () => {
       .insert(orders)
       .values({
         orderReference: 'FE-DT0001',
+        status: 'delivered',
         guestEmail: 'buyer@example.com',
         subtotal: '90.00',
         shippingCost: '10.00',
@@ -62,7 +63,7 @@ describe('Dashboard Order detail query', () => {
     expect(detail?.order).toMatchObject({
       id,
       orderReference: 'FE-DT0001',
-      status: 'pending',
+      status: 'delivered',
       paymentStatus: 'paid',
       subtotal: 9000n,
       shippingCost: 1000n,

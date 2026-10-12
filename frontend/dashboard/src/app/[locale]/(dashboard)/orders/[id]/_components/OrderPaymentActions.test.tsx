@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Order } from '@findeg/orders';
-import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 
 const { updateOrderStatusAction, updateOrderPaymentStatusAction, toast } = vi.hoisted(() => ({
   updateOrderStatusAction: vi.fn(),
@@ -33,7 +33,7 @@ describe('Order payment actions', () => {
 
   it('marks an unpaid Order paid and confirms with a toast', async () => {
     updateOrderPaymentStatusAction.mockResolvedValue({ success: true });
-    render(<OrderPaymentFulfillment order={order('pending', 'unpaid')} />);
+    render(<OrderPaymentFulfillment order={order('delivered', 'unpaid')} />);
 
     fireEvent.click(screen.getByRole('button', { name: /mark as paid/i }));
 
@@ -55,7 +55,7 @@ describe('Order payment actions', () => {
       success: false,
       error: 'Not authorized to change orders',
     });
-    render(<OrderPaymentFulfillment order={order('pending', 'unpaid')} />);
+    render(<OrderPaymentFulfillment order={order('delivered', 'unpaid')} />);
 
     fireEvent.click(screen.getByRole('button', { name: /mark as paid/i }));
 
@@ -72,7 +72,7 @@ describe('Order payment actions', () => {
 
   it('reports a failed payment request instead of throwing when the server action rejects', async () => {
     updateOrderPaymentStatusAction.mockRejectedValue(new Error('Failed to fetch'));
-    render(<OrderPaymentFulfillment order={order('pending', 'unpaid')} />);
+    render(<OrderPaymentFulfillment order={order('delivered', 'unpaid')} />);
 
     fireEvent.click(screen.getByRole('button', { name: /mark as paid/i }));
 
