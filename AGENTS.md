@@ -1,6 +1,8 @@
 # IMPORTANT
 
-Before any other action in the codebase, check `git branch --show-current`. Unless it is `develop` or `main`, the branch must be `<type>/<kebab-case-slug>` with type one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`; if it is not, rename it now with `git branch -m <type>/<slug>`.
+Make every change in your own worktree, never in the main checkout. Before the first edit, run `git worktree add -b <type>/<kebab-case-slug> worktree/<type>/<kebab-case-slug> origin/develop` and work only inside that directory. Type is one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`. A branch listed in `git worktree list` belongs to the session working there, so leave it alone.
+
+Already in a worktree, check `git branch --show-current`: unless it is `develop` or `main`, it must be `<type>/<kebab-case-slug>`; if it is not, rename it now with `git branch -m <type>/<slug>`.
 
 ## Agent skills
 

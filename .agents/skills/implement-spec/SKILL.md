@@ -31,6 +31,8 @@ Communication to and from subagents should be sparse. Communicate primarily thro
 
 5. Once an **implementer subagent** completes, merge its work to the integration branch with a **merger subagent**.
 
+   Every merge in this workflow, including the implementer's merge of the integration tip, is `git merge --no-ff <branch>` with git's default message. commitlint accepts `Merge branch '…'`; a custom merge message fails the commit-msg hook.
+
 6. If this changes the **frontier** of available tickets, kick off more **implementer subagents** to work on the new tickets. This allows for maximum concurrency.
 
 7. Once all tickets are complete, call the Skill tool with `code-review` on the integration branch. Fix all issues raised by the code review in a single **implementer subagent**.
