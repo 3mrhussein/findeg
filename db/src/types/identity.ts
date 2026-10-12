@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { EmailSchema } from './common';
-import { ACTOR_TYPE_VALUES, PORTAL_ROLE_VALUES } from './enum-values';
+import { ACTOR_TYPE_VALUES, PORTAL_ROLE_VALUES } from './persistence-values';
 
 /**
  * Identity & Authorization Primitives for Database Layer

@@ -1,3 +1,4 @@
+import { sellableUnitsSql } from '../inventory/stock-sql';
 import { sql, type SQL } from 'drizzle-orm';
 
 import { db } from '../../connection';
@@ -115,7 +116,7 @@ export async function executeCatalogScoredSearchRaw(input: {
         ${brandId ? sql`AND p.brand_id = ${brandId}` : sql``}
         ${minPrice != null ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price >= ${minPrice})` : sql``}
         ${maxPrice != null ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv WHERE pv.product_id = p.id AND pv.base_price <= ${maxPrice})` : sql``}
-        ${inStockOnly ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv JOIN inventory.inventory_balances ib ON ib.variant_id = pv.id WHERE pv.product_id = p.id AND (ib.on_hand - ib.reserved) > 0)` : sql``}
+        ${inStockOnly ? sql`AND EXISTS (SELECT 1 FROM catalog.product_variants pv JOIN inventory.inventory_balances ib ON ib.variant_id = pv.id JOIN inventory.warehouses w ON w.id = ib.warehouse_id WHERE pv.product_id = p.id AND pv.is_active = true AND w.is_active = true AND ${sellableUnitsSql(sql`ib.on_hand`, sql`ib.reserved`, sql`w.is_active`)} > 0)` : sql``}
       GROUP BY p.id
       HAVING MAX(${scoreOf}) > 0
       ORDER BY score DESC, p.id ASC

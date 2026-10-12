@@ -75,3 +75,33 @@ pnpm db:studio     # Open Drizzle introspection UI
 ---
 
 &copy; 2026 FindEg.com
+
+## Domain mapping and compatibility
+
+`@findeg/db` derives Order/payment enums and Partner/list CHECK values and bounds
+from `@findeg/domain`. Domain Order References use the domain generator with
+`node:crypto` randomness. These changes preserve generated migration SQL.
+
+Drizzle select/insert rows and existing read projections retain decimal strings
+and nullable historical references. The root entry exports explicit `mapOrderRow`,
+`mapOrderItemRow`, `mapProductVariant`, `mapBusinessPartner`, `mapPartnerMembership`,
+`mapSupplyList`, `mapSupplyListItem`, `mapStockBalance` and `mapWarehouse` adapters.
+`mapProductVariantRow` retains internal cost as Money; `mapDiscountRuleRow` maps
+fixed discounts and minimum spend while keeping percentage values as decimals.
+They brand entity identities at the persistence boundary and convert decimal
+strings to exact domain Money. Historical Order projections remain projections;
+they do not invent missing buyers, variants or acceptance snapshots. Serialize
+domain Money for persistence or JSON with `moneyToDecimal` from the domain;
+never coerce it through floating-point pounds. Non-EGP Order rows cannot map to
+EGP domain Money.
+
+The existing `@findeg/db/types/enum-values` entry delegates to domain value exports
+and db-owned session classifications until the consumer migration in #416.
+Partner/list table exports remain compatible. Outbox statuses, portal roles,
+actor types and Partner access audit values retain one owner in db. The existing
+Staff permission registry remains here pending its separate ownership decision.
+
+Available Stock clamps each balance to zero, then sums only active warehouses.
+Low stock means 1 to 5 available units per variant. `getLowStock` retains its
+per-warehouse balance projection and adds `available` for the variant's total;
+its filtering uses that total rather than individual warehouse balances.
