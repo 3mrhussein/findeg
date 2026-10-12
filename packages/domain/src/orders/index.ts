@@ -1,9 +1,16 @@
 /**
  * Order vocabulary (GLOSSARY: Order, Order Acceptance, Order Reference, Quote, Confirmation,
- * List Offer, Cancellation, Refund, Attributed Order, Guest Order Access; ADR-0005, ADR-0007, ADR-0008).
+ * List Offer, Cancellation, Refund, Attributed Order; ADR-0005, ADR-0007).
  */
-import type { CurrencyCode, MoneyInPiasters } from '../common';
-import type { Customer } from '../customers';
+import type { CurrencyCode, Id, Money } from '../common';
+import type { CustomerId } from '../customers';
+import type { VariantId } from '../catalog';
+import type { BusinessPartnerId } from '../partners';
+import type { SupplyListId, SupplyListItemId } from '../school-lists';
+
+export type OrderId = Id<'Order'>;
+export type OrderLineId = Id<'OrderLine'>;
+export type ListOfferId = Id<'ListOffer'>;
 
 export const ORDER_STATUSES = [
   'pending',
@@ -60,16 +67,15 @@ export const PAYMENT_STATUS_TRANSITIONS: Readonly<Record<PaymentStatus, readonly
 export const PAYMENT_METHOD_TYPES = ['cod', 'card'] as const;
 export type PaymentMethodType = (typeof PAYMENT_METHOD_TYPES)[number];
 
-/** A payment method, the phase in which it is accepted, and whether it is accepted today. */
+/** A payment method and whether it is accepted today. */
 export interface PaymentOption {
   type: PaymentMethodType;
   allowed: boolean;
-  phase: 1 | 2;
 }
 
 export const PAYMENT_OPTIONS: readonly PaymentOption[] = [
-  { type: 'cod', allowed: true, phase: 1 },
-  { type: 'card', allowed: false, phase: 2 },
+  { type: 'cod', allowed: true },
+  { type: 'card', allowed: false },
 ];
 
 /** Payment methods a checkout may accept today. */
@@ -81,9 +87,9 @@ export type PaymentMethod = PaymentMethodType;
 
 /** An accepted Order. Its status and payment status change after acceptance. */
 export interface Order {
-  id: number;
+  id: OrderId;
   reference: OrderReference;
-  customerId?: Customer['id'];
+  customerId?: CustomerId;
   guestEmail?: string;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
@@ -93,22 +99,21 @@ export interface Order {
 
 /** One product variant on an Order, priced at acceptance. */
 export interface OrderLine {
-  id: number;
-  orderId: Order['id'];
-  variantId: number;
+  id: OrderLineId;
+  orderId: OrderId;
+  variantId: VariantId;
   quantity: number;
-  unitPrice: MoneyInPiasters;
+  unitPrice: Money;
   /** Set when the line came from a School Supply List (Exact Item or Allowed Alternative). */
-  supplyListItemId?: number;
+  supplyListItemId?: SupplyListItemId;
 }
 
 /** An Order fixed to exactly one School Supply List, recording its Partner School's Business Partner. */
 export interface AttributedOrder {
-  orderId: Order['id'];
-  supplyListId: number;
+  orderId: OrderId;
+  supplyListId: SupplyListId;
   supplyListPublicCode: string;
-  supplyListVersionId: number;
-  businessPartnerId: number;
+  businessPartnerId: BusinessPartnerId;
 }
 
 /** The discount sources a Quote can carry. Only the List Offer exists in phase one. */
@@ -119,7 +124,8 @@ export type DiscountSource = (typeof DISCOUNT_SOURCES)[number];
 export const LIST_OFFER_MIN_BASIS_POINTS = 0;
 export const LIST_OFFER_MAX_BASIS_POINTS = 10000;
 export interface ListOffer {
-  supplyListId: number;
+  id: ListOfferId;
+  supplyListId: SupplyListId;
   basisPoints: number;
   startsAt: Date;
   endsAt: Date | null;
@@ -127,16 +133,10 @@ export interface ListOffer {
 
 /** The server's authoritative pricing of a set of lines at one moment. */
 export interface Quote {
-  lines: readonly { variantId: number; quantity: number; unitPrice: MoneyInPiasters }[];
-  discounts: readonly { source: DiscountSource; amount: MoneyInPiasters }[];
-  shippingFee: MoneyInPiasters;
-  total: MoneyInPiasters;
+  lines: readonly { variantId: VariantId; quantity: number; unitPrice: Money }[];
+  discounts: readonly { source: DiscountSource; amount: Money }[];
+  shippingFee: Money;
+  total: Money;
   /** Digest of the Quote's terms that the Customer agrees to. */
   confirmation: string;
-}
-
-/** How a Customer without an account views their Order: Order Reference and email, then a one-time code. */
-export interface GuestOrderAccess {
-  orderReference: OrderReference;
-  email: string;
 }

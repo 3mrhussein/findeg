@@ -11,5 +11,4 @@ export * from './partners';
 export * from './school-lists';
 export * from './orders';
 export * from './inventory';
-export * from './outbox';
 export * from './relations';

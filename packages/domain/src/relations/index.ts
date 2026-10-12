@@ -13,7 +13,6 @@ export const ENTITY_DOMAINS = {
   PartnerSchoolProfile: 'partners',
   PartnerMembership: 'partners',
   PartnerInvitation: 'partners',
-  PartnerReport: 'partners',
   SchoolSupplyList: 'school-lists',
   SchoolSupplyListItem: 'school-lists',
   ListSelection: 'school-lists',
@@ -22,10 +21,8 @@ export const ENTITY_DOMAINS = {
   Order: 'orders',
   OrderLine: 'orders',
   AttributedOrder: 'orders',
-  GuestOrderAccess: 'orders',
   StockReservation: 'inventory',
   Warehouse: 'inventory',
-  OutboxMessage: 'outbox',
 } as const;
 
 export type EntityName = keyof typeof ENTITY_DOMAINS;
@@ -41,7 +38,7 @@ export type Multiplicity = 'one' | 'many';
 export interface Relation {
   from: EntityName;
   to: EntityName;
-  /** The field on `from` that references `to`: an id, or a stable reference such as an Order Reference. */
+  /** The field on `from` that holds the id of `to`. */
   via: string;
   /** How many `to` one `from` may reference. Always `one` here, since a link names a single parent. */
   toPerFrom: Multiplicity;
@@ -83,14 +80,6 @@ export const RELATIONS: readonly Relation[] = [
     via: 'businessPartnerId',
     toPerFrom: 'one',
     fromPerTo: 'one',
-    required: true,
-  },
-  {
-    from: 'PartnerReport',
-    to: 'BusinessPartner',
-    via: 'businessPartnerId',
-    toPerFrom: 'one',
-    fromPerTo: 'many',
     required: true,
   },
   // School Supply Lists
@@ -192,15 +181,7 @@ export const RELATIONS: readonly Relation[] = [
     fromPerTo: 'many',
     required: true,
   },
-  {
-    from: 'GuestOrderAccess',
-    to: 'Order',
-    via: 'orderReference',
-    toPerFrom: 'one',
-    fromPerTo: 'many',
-    required: true,
-  },
-  // Inventory and outbox
+  // Inventory
   {
     from: 'StockReservation',
     to: 'Order',
@@ -224,13 +205,5 @@ export const RELATIONS: readonly Relation[] = [
     toPerFrom: 'one',
     fromPerTo: 'many',
     required: true,
-  },
-  {
-    from: 'OutboxMessage',
-    to: 'Order',
-    via: 'payload.orderId',
-    toPerFrom: 'one',
-    fromPerTo: 'many',
-    required: false,
   },
 ];

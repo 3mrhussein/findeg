@@ -2,7 +2,12 @@
  * School Supply List vocabulary (GLOSSARY: School Supply List, List Selection, Exact Item,
  * Allowed Alternative, List Replacement; ADR-0004, ADR-0011).
  */
-import type { LocalizedText } from '../common';
+import type { Id, LocalizedText } from '../common';
+import type { VariantId } from '../catalog';
+import type { BusinessPartnerId } from '../partners';
+
+export type SupplyListId = Id<'SchoolSupplyList'>;
+export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
 
 export const SUPPLY_LIST_STATUSES = ['draft', 'published', 'archived'] as const;
 export type SupplyListStatus = (typeof SUPPLY_LIST_STATUSES)[number];
@@ -31,8 +36,8 @@ export const SUPPLY_LIST_ITEM_QUANTITY_MAX = 999;
 
 /** A curated list a Partner School asks its Customers to buy, for one academic year and grade. */
 export interface SchoolSupplyList {
-  id: number;
-  businessPartnerId: number;
+  id: SupplyListId;
+  businessPartnerId: BusinessPartnerId;
   academicYear: string;
   grade: string;
   title: LocalizedText;
@@ -40,30 +45,30 @@ export interface SchoolSupplyList {
   /** Public, unguessable code that Customers use instead of a login. */
   publicCode: string;
   /** Set on a clone: the list it was copied from (content provenance only). */
-  sourceListId?: SchoolSupplyList['id'];
+  sourceListId?: SupplyListId;
   /** Set when this list supersedes a published list for the same partner, year and grade (List Replacement). */
-  replacesListId?: SchoolSupplyList['id'];
+  replacesListId?: SupplyListId;
   /** Set on the superseded list, pointing at its replacement. */
-  replacedById?: SchoolSupplyList['id'];
+  replacedById?: SupplyListId;
 }
 
 /** One line of a School Supply List. Required or optional per item. */
 export interface SchoolSupplyListItem {
-  id: number;
-  supplyListId: SchoolSupplyList['id'];
+  id: SupplyListItemId;
+  supplyListId: SupplyListId;
   kind: SupplyListItemKind;
   required: boolean;
   quantity: number;
   /** Exact Items name a product variant; specifications are matched at selection time. */
-  variantId?: number;
+  variantId?: VariantId;
 }
 
 /** A Customer's in-progress choices against one published list, kept apart from the Cart. */
 export interface ListSelection {
-  supplyListId: SchoolSupplyList['id'];
+  supplyListId: SupplyListId;
   lines: readonly {
-    supplyListItemId: SchoolSupplyListItem['id'];
-    variantId: number;
+    supplyListItemId: SupplyListItemId;
+    variantId: VariantId;
     quantity: number;
   }[];
 }

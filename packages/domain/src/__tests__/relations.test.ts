@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ENTITY_DOMAINS, RELATIONS, type EntityName } from '../relations';
+import { ENTITY_DOMAINS, RELATIONS, type EntityName } from '@findeg/domain/relations';
 
 const entities = Object.keys(ENTITY_DOMAINS) as EntityName[];
 
@@ -21,20 +21,10 @@ describe('business-domain map', () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it('cross-domain links are by id or stable reference, never by object', () => {
+  it('cross-domain links are by id, never by object', () => {
     for (const relation of RELATIONS) {
       if (ENTITY_DOMAINS[relation.from] === ENTITY_DOMAINS[relation.to]) continue;
-      const byId = /Id$/.test(relation.via) || /\.orderId$/.test(relation.via);
-      const byReference = relation.via === 'orderReference';
-      expect(byId || byReference, `${relation.from} → ${relation.to} via ${relation.via}`).toBe(
-        true,
-      );
-    }
-  });
-
-  it('a payload reference is never required', () => {
-    for (const relation of RELATIONS) {
-      if (relation.via.startsWith('payload.')) expect(relation.required).toBe(false);
+      expect(relation.via, `${relation.from} → ${relation.to}`).toMatch(/Id$/);
     }
   });
 
