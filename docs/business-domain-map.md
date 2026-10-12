@@ -1,6 +1,6 @@
 # Business-domain map
 
-The final map of FindEg's business areas and how they relate. It is generated from the schema data in `packages/schema/src/relations`, and the diagrams are checked by the schema tests, so a relation that points at a missing entity fails the build.
+The final map of FindEg's business areas and how they relate. The relations themselves are data in `packages/schema/src/relations`, and the schema tests check them: a relation that points at a missing entity fails the build. The diagrams below are maintained by hand. They were written from that data at this revision, and no test compares them with it, so update them whenever `RELATIONS` changes.
 
 ## Business areas
 
@@ -124,7 +124,7 @@ The schema tests check the map:
 - payload references (outbox) are never required
 - every status transition table targets only declared statuses; `closed`, `ended`, `accepted`, `archived` and `refunded` have no outgoing moves
 
-Both diagrams were also checked by the Mermaid validator: the entity diagram and the area diagram are both valid.
+Both diagrams were checked by the Mermaid validator when written: the entity diagram and the area diagram are both valid. Nothing re-checks them automatically.
 
 ## Open for Staff
 
