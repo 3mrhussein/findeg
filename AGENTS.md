@@ -4,6 +4,12 @@ Before any other action in the codebase, check `git branch --show-current`. Unle
 
 ## Agent skills
 
+### Worktrees
+
+- **Verify before working**: Always run `git worktree list`. Never assume an unlisted path under `.claude/worktrees/` or `worktree/` is an active worktree; directories containing only `.vscode/` or editor configs are orphaned leftovers from past worktrees.
+- **Clean teardown**: When deleting a worktree, remove both the git worktree tracking and any lingering untracked directory (`git worktree remove <path> && rm -rf <path>`).
+- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees.
+
 ### Issue tracker
 
 GitHub Issues via the `gh` CLI. See `docs/agents/issue-tracker.md`.
