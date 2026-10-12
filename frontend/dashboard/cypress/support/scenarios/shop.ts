@@ -1,3 +1,4 @@
+import { LOCALES } from '@findeg/domain';
 import {
   chooseSort,
   goToNextPage,
@@ -320,7 +321,7 @@ export const shouldShowEmptyStateForRestrictiveFilters = () => {
  * Contract case: key storefront routes should render successfully in both EN and AR locales.
  */
 export const shouldSupportEnArRouteParityForKeyPages = () => {
-  const locales: Array<'en' | 'ar'> = ['en', 'ar'];
+  const locales = LOCALES;
   const query = SHOP_MESSAGES.keychainsSlug;
 
   cy.request(
