@@ -3,12 +3,18 @@ import { DomainError, type ActiveStatus } from '@findeg/domain/common';
 import type { CategoryId, VariantId } from '@findeg/domain/catalog';
 import {
   eligibleVariants,
+  isExactItem,
+  supplyListItem,
   type CandidateVariant,
   type ItemSpecification,
+  type SupplyListId,
+  type SupplyListItemId,
 } from '@findeg/domain/school-lists';
 
 const variantId = (n: number) => n as VariantId;
 const categoryId = (n: number) => n as CategoryId;
+const listId = (n: number) => n as SupplyListId;
+const itemId = (n: number) => n as SupplyListItemId;
 
 function codeOf(run: () => unknown): string | undefined {
   try {
@@ -120,5 +126,34 @@ describe('eligible variants (ADR-0004, CA-4)', () => {
     ])('excludes an Exact Item default on an %s', (_name, status) => {
       expect(eligibleVariants(exact(1), [candidate(1, 10, {}, status)])).toEqual([]);
     });
+  });
+});
+
+describe('School Supply List Item', () => {
+  const props = {
+    id: itemId(1),
+    supplyListId: listId(1),
+    defaultVariantId: variantId(10),
+    specification: null,
+    required: true,
+    quantity: 3,
+  };
+
+  it('is an Exact Item without a specification, and accepts alternatives with one', () => {
+    expect(isExactItem(supplyListItem(props))).toBe(true);
+    const alternative = supplyListItem({ ...props, ...specified(10, 5, { colour: 'blue' }) });
+    expect(isExactItem(alternative)).toBe(false);
+  });
+
+  it('may lack its default variant while the list is a draft', () => {
+    expect(supplyListItem({ ...props, defaultVariantId: null }).defaultVariantId).toBeNull();
+  });
+
+  it.each([1, 2, 999])('accepts quantity %d', (quantity) => {
+    expect(supplyListItem({ ...props, quantity }).quantity).toBe(quantity);
+  });
+
+  it.each([0, -1, 1000, 1.5, Number.NaN])('refuses quantity %d', (quantity) => {
+    expect(codeOf(() => supplyListItem({ ...props, quantity }))).toBe('INVALID_ITEM_QUANTITY');
   });
 });

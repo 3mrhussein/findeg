@@ -8,6 +8,9 @@ import type { BusinessPartnerId } from '../partners';
 
 export { eligibleVariants, isEligibleVariant } from './eligibility';
 export type { CandidateVariant, EligibilityItem } from './eligibility';
+export { SupplyListError } from './supply-list-error';
+export type { SupplyListErrorCode } from './supply-list-error';
+export { isExactItem, supplyListItem } from './item';
 
 export type SupplyListId = Id<'SchoolSupplyList'>;
 export type SupplyListItemId = Id<'SchoolSupplyListItem'>;
