@@ -39,11 +39,6 @@ export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly Ord
 export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
 export { BUSINESS_TIME_ZONE, businessDateOf, businessMonthOf } from './business-time';
 
-/** Statuses that release the Order's Stock Reservation (Cancellation). */
-export const ORDER_STATUSES_RELEASING_STOCK = [
-  'cancelled',
-] as const satisfies readonly OrderStatus[];
-
 /** Public, human-readable identifier: `FE-` plus six Crockford base32 characters (not a secret). */
 export const ORDER_REFERENCE_PREFIX = 'FE-';
 export const ORDER_REFERENCE_BODY_LENGTH = 6;
