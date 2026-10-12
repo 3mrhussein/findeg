@@ -14,6 +14,14 @@ import {
   type PartnerDatabase,
 } from '@findeg/db/queries/partners';
 import type { PartnerStatus } from '@findeg/db/schema';
+import {
+  allowedPartnerStatusChanges,
+  changePartnerCode,
+  changePartnerStatus,
+  PARTNER_CODE_MAX_LENGTH,
+  PARTNER_CODE_MIN_LENGTH,
+  PARTNER_CODE_PATTERN,
+} from '@findeg/domain';
 import type { ChangePartnerStatusError } from '../interfaces/IPartnerService';
 import type {
   BusinessPartner,
@@ -23,13 +31,14 @@ import type {
   StaffActor,
   UpdatePartnerInput,
 } from '../interfaces/IPartnerService';
+import { partnerFailure } from './domain-failures';
 import { canManagePartners, canViewPartners, fail, ok } from './shared';
 
 const codeSchema = z
   .string()
-  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
-  .min(2)
-  .max(120);
+  .regex(PARTNER_CODE_PATTERN)
+  .min(PARTNER_CODE_MIN_LENGTH)
+  .max(PARTNER_CODE_MAX_LENGTH);
 const nameSchema = z.string().trim().min(1).max(255);
 
 const createSchema = z.object({ code: codeSchema, nameEn: nameSchema, nameAr: nameSchema });
@@ -57,14 +66,6 @@ function snapshot(row: BusinessPartnerRow) {
   return { code: row.code, nameEn: row.nameEn, nameAr: row.nameAr, status: row.status };
 }
 
-/** Status change policy. `closed` is final. */
-const ALLOWED_PARTNER_TRANSITIONS: Readonly<Record<PartnerStatus, readonly PartnerStatus[]>> = {
-  onboarding: ['active', 'closed'],
-  active: ['suspended', 'closed'],
-  suspended: ['active', 'closed'],
-  closed: [],
-};
-
 /**
  * Business Partner operations for FindEg Staff. Every change and its audit row
  * commit in one transaction; an audit row exists if and only if the change did.
@@ -73,7 +74,7 @@ export class PartnerService implements IPartnerService {
   constructor(private readonly getDb: () => Promise<PartnerDatabase>) {}
 
   allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[] {
-    return ALLOWED_PARTNER_TRANSITIONS[status];
+    return allowedPartnerStatusChanges(status);
   }
 
   async createPartner(actor: StaffActor, input: CreatePartnerInput) {
@@ -120,8 +121,12 @@ export class PartnerService implements IPartnerService {
             if (next !== undefined && next !== current[field]) patch[field] = next;
           }
           if (Object.keys(patch).length === 0) return ok(toPartner(current));
-          if (patch.code !== undefined && current.status !== 'onboarding') {
-            return fail('code-locked');
+          if (patch.code !== undefined) {
+            try {
+              changePartnerCode(current, patch.code);
+            } catch (error) {
+              return partnerFailure(error);
+            }
           }
 
           const updated = await updateBusinessPartner(tx, partnerId, patch);
@@ -151,14 +156,18 @@ export class PartnerService implements IPartnerService {
       async (tx): Promise<PartnerResult<BusinessPartner, ChangePartnerStatusError>> => {
         const current = await lockBusinessPartnerById(tx, partnerId);
         if (!current) return fail('not-found');
-        if (!ALLOWED_PARTNER_TRANSITIONS[current.status].includes(status)) {
-          return fail('invalid-transition');
-        }
-        if (status === 'active' && !(await hasActivePartnerAdministrator(tx, partnerId))) {
-          return fail('last-administrator');
+        // The domain needs only whether an active Partner Administrator exists, so 0 or 1 suffices.
+        const administrators = (await hasActivePartnerAdministrator(tx, partnerId)) ? 1 : 0;
+        let next: typeof current;
+        try {
+          next = changePartnerStatus(current, status, {
+            activePartnerAdministrators: administrators,
+          });
+        } catch (error) {
+          return partnerFailure(error);
         }
 
-        const updated = await setBusinessPartnerStatus(tx, partnerId, status);
+        const updated = await setBusinessPartnerStatus(tx, partnerId, next.status);
         await insertPartnerAccessHistory(tx, {
           businessPartnerId: partnerId,
           actorUserId: actor.userId,
@@ -184,4 +193,4 @@ export class PartnerService implements IPartnerService {
   }
 }
 
-type UpdateError = 'not-found' | 'code-locked';
+type UpdateError = 'not-found' | 'code-locked' | 'invalid-input';

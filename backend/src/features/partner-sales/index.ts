@@ -17,7 +17,6 @@ export {
   canReadPartnerReports,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
   PARTNER_REPORT_ROLES,
-  REPORTED_ORDER_STATUSES,
   REPORTED_PAYMENT_STATUSES,
   type IPartnerReportService,
   type MonthlySalesView,
@@ -31,7 +30,6 @@ export {
   type StaffPartnerReportError,
   type StaffPartnerReportView,
 } from './partner-report';
-export { PARTNER_SALES_TIME_ZONE } from './time';
 export { sumSalesFigures } from './money';
 export {
   createPartnerSalesServices,
