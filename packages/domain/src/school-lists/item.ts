@@ -1,9 +1,8 @@
-import {
-  SUPPLY_LIST_ITEM_QUANTITY_MAX,
-  SUPPLY_LIST_ITEM_QUANTITY_MIN,
-  type SchoolSupplyListItem,
-} from './index';
+import type { SchoolSupplyListItem } from './index';
 import { SupplyListError } from './supply-list-error';
+
+export const SUPPLY_LIST_ITEM_QUANTITY_MIN = 1;
+export const SUPPLY_LIST_ITEM_QUANTITY_MAX = 999;
 
 /** An item is an Exact Item when it has no specification: only its default variant is accepted. */
 export function isExactItem(item: Pick<SchoolSupplyListItem, 'specification'>): boolean {

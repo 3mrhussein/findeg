@@ -1,12 +1,6 @@
 import type { VariantId } from '../catalog';
-import {
-  SUPPLY_LIST_ITEM_QUANTITY_MAX,
-  SUPPLY_LIST_ITEM_QUANTITY_MIN,
-  type ItemSpecification,
-  type SupplyListId,
-  type SupplyListItemId,
-} from './index';
-import { isExactItem } from './item';
+import type { ItemSpecification, SupplyListId, SupplyListItemId } from './index';
+import { SUPPLY_LIST_ITEM_QUANTITY_MAX, SUPPLY_LIST_ITEM_QUANTITY_MIN, isExactItem } from './item';
 
 /** One item's choice in a List Selection. A quantity of 0 is an optional item switched off. */
 export interface SelectionLine {

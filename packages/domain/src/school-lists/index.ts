@@ -11,7 +11,12 @@ export { eligibleVariants, isEligibleVariant } from './eligibility';
 export type { CandidateVariant, EligibilityItem } from './eligibility';
 export { SupplyListError } from './supply-list-error';
 export type { SupplyListErrorCode } from './supply-list-error';
-export { isExactItem, supplyListItem } from './item';
+export {
+  SUPPLY_LIST_ITEM_QUANTITY_MAX,
+  SUPPLY_LIST_ITEM_QUANTITY_MIN,
+  isExactItem,
+  supplyListItem,
+} from './item';
 export { PUBLIC_CODE_PATTERN, generatePublicCode, publicCode } from './public-code';
 export type { PublicCode, RandomBytes } from './public-code';
 export {
@@ -80,9 +85,6 @@ export const SUPPLY_LIST_STATUS_TRANSITIONS: Readonly<
   published: ['archived'],
   archived: [],
 };
-
-export const SUPPLY_LIST_ITEM_QUANTITY_MIN = 1;
-export const SUPPLY_LIST_ITEM_QUANTITY_MAX = 999;
 
 /** A curated list a Partner School asks its Customers to buy, for one academic year and grade. */
 export interface SchoolSupplyList {

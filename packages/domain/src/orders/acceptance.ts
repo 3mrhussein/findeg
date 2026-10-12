@@ -5,8 +5,7 @@ import {
   type Warehouse,
 } from '../inventory';
 import { confirmQuote, type ConfirmationTerms } from './confirmation';
-import type { AcceptedOrder, PaymentMethod } from './index';
-import { ACCEPTED_PAYMENT_TYPES } from './index';
+import type { AcceptedOrder } from './index';
 import {
   egyptianMobile,
   guestBuyer,
@@ -17,6 +16,7 @@ import {
 } from './order-contact';
 import { OrderError } from './order-error';
 import type { OrderReference } from './order-reference';
+import { ACCEPTED_PAYMENT_TYPES, type PaymentMethod } from './payment-method';
 import type { Quote } from './quote';
 
 /** A payment method a checkout accepts today. Only cash on delivery is. */

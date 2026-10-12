@@ -1,12 +1,40 @@
 import { reservationSettlement, type ReservationSettlement } from '../inventory';
-import {
-  ORDER_STATUS_TRANSITIONS,
-  PAYMENT_STATUS_TRANSITIONS,
-  type Order,
-  type OrderStatus,
-  type PaymentStatus,
-} from './index';
+import type { Order } from './index';
 import { OrderError } from './order-error';
+
+export const ORDER_STATUSES = [
+  'pending',
+  'confirmed',
+  'processing',
+  'shipped',
+  'delivered',
+  'cancelled',
+  'refunded',
+] as const;
+export type OrderStatus = (typeof ORDER_STATUSES)[number];
+
+/** Every status an Order may move to from each status. */
+export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly OrderStatus[]>> = {
+  pending: ['confirmed', 'cancelled'],
+  confirmed: ['processing', 'cancelled'],
+  processing: ['shipped', 'cancelled'],
+  // A shipped Order is cancelled only once its parcel is back in the warehouse (ADR-0005).
+  shipped: ['delivered', 'cancelled'],
+  // Phase one is cash on delivery, so a refund only follows delivery (ADR-0005).
+  delivered: ['refunded'],
+  cancelled: [],
+  refunded: [],
+};
+
+export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
+export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
+
+export const PAYMENT_STATUS_TRANSITIONS: Readonly<Record<PaymentStatus, readonly PaymentStatus[]>> =
+  {
+    unpaid: ['paid'],
+    paid: ['refunded'],
+    refunded: [],
+  };
 
 /** Where an Order stands: its status and its payment status. */
 export type OrderProgress = Pick<Order, 'status' | 'paymentStatus'>;

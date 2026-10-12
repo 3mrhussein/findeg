@@ -8,39 +8,33 @@ import type { BusinessPartnerId } from '../partners';
 import type { PublicCode, SupplyListId } from '../school-lists';
 import type { EgyptianMobile, OrderBuyer, ShippingAddress } from './order-contact';
 import type { OrderReference } from './order-reference';
+import type { OrderStatus, PaymentStatus } from './order-status';
+import type { PaymentMethod } from './payment-method';
 import type { OrderSource, OrderTotals, QuoteLine } from './quote';
 
 export type OrderId = Id<'Order'>;
 export type OrderLineId = Id<'OrderLine'>;
 
-export const ORDER_STATUSES = [
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled',
-  'refunded',
-] as const;
-export type OrderStatus = (typeof ORDER_STATUSES)[number];
-
-/** Every status an Order may move to from each status. */
-export const ORDER_STATUS_TRANSITIONS: Readonly<Record<OrderStatus, readonly OrderStatus[]>> = {
-  pending: ['confirmed', 'cancelled'],
-  confirmed: ['processing', 'cancelled'],
-  processing: ['shipped', 'cancelled'],
-  // A shipped Order is cancelled only once its parcel is back in the warehouse (ADR-0005).
-  shipped: ['delivered', 'cancelled'],
-  // Phase one is cash on delivery, so a refund only follows delivery (ADR-0005).
-  delivered: ['refunded'],
-  cancelled: [],
-  refunded: [],
-};
-
 export { OrderError } from './order-error';
 export type { OrderErrorCode } from './order-error';
-export { changeOrderStatus, changePaymentStatus, refundOrder } from './order-status';
-export type { OrderProgress, OrderProgressChange, OrderStatusAssertions } from './order-status';
+export {
+  ORDER_STATUSES,
+  ORDER_STATUS_TRANSITIONS,
+  PAYMENT_STATUSES,
+  PAYMENT_STATUS_TRANSITIONS,
+  changeOrderStatus,
+  changePaymentStatus,
+  refundOrder,
+} from './order-status';
+export type {
+  OrderProgress,
+  OrderProgressChange,
+  OrderStatus,
+  OrderStatusAssertions,
+  PaymentStatus,
+} from './order-status';
+export { ACCEPTED_PAYMENT_TYPES, PAYMENT_METHOD_TYPES, PAYMENT_OPTIONS } from './payment-method';
+export type { PaymentMethod, PaymentMethodType, PaymentOption } from './payment-method';
 export { LIVE_ORDER_STATUSES, isLiveOrderStatus } from './live-statuses';
 export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from './notified-statuses';
 export type { NotifiedOrderStatus } from './notified-statuses';
@@ -73,41 +67,6 @@ export {
   setCartQuantity,
 } from './cart';
 export type { Cart, CartErrorCode, CartLine } from './cart';
-
-export const PAYMENT_STATUSES = ['unpaid', 'paid', 'refunded'] as const;
-export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
-
-export const PAYMENT_STATUS_TRANSITIONS: Readonly<Record<PaymentStatus, readonly PaymentStatus[]>> =
-  {
-    unpaid: ['paid'],
-    paid: ['refunded'],
-    refunded: [],
-  };
-
-/**
- * Payment methods are data, not a fixed list: a method is accepted at checkout when its option
- * is `allowed`. Turning card on is a data change, plus a database enum migration (ADR-0005).
- */
-export const PAYMENT_METHOD_TYPES = ['cod', 'card'] as const;
-export type PaymentMethodType = (typeof PAYMENT_METHOD_TYPES)[number];
-
-/** A payment method and whether it is accepted today. */
-export interface PaymentOption {
-  type: PaymentMethodType;
-  allowed: boolean;
-}
-
-export const PAYMENT_OPTIONS: readonly PaymentOption[] = [
-  { type: 'cod', allowed: true },
-  { type: 'card', allowed: false },
-];
-
-/** Payment methods a checkout may accept today. */
-export const ACCEPTED_PAYMENT_TYPES: readonly PaymentMethodType[] = PAYMENT_OPTIONS.filter(
-  (option) => option.allowed,
-).map((option) => option.type);
-
-export type PaymentMethod = PaymentMethodType;
 
 /**
  * An Order as Order Acceptance makes it, before it is stored and given ids. Its buyer, contact,
