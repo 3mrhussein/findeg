@@ -43,6 +43,14 @@ export async function updateMyProfile(userId: number, input: UpdateAdminInput) {
   return userService.updateAdmin(userId, input);
 }
 
+export async function updateProfile(
+  userId: number,
+  input: { firstName?: string; lastName?: string; phone?: string },
+) {
+  const { userService } = createIdentityServices();
+  return userService.updateProfile(userId, input);
+}
+
 export async function getDashboardData(locale: string, userId: number) {
   const { userService } = createIdentityServices();
   return userService.getDashboardData(locale, userId);

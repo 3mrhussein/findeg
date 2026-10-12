@@ -5,7 +5,7 @@ import { LoginContent } from './_components/LoginContent';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
-  searchParams: Promise<{ email?: string; locked?: string; returnTo?: string }>;
+  searchParams: Promise<{ email?: string; locked?: string; returnTo?: string; returnUrl?: string }>;
 };
 
 /**
@@ -23,12 +23,14 @@ export default async function Page({ params, searchParams }: Props) {
   const query = await searchParams;
   setRequestLocale(locale);
 
+  const returnTarget = query.returnUrl || query.returnTo;
+
   return (
     <Suspense fallback={null}>
       <LoginContent
         initialEmail={query.email}
         emailLocked={query.locked === '1'}
-        returnTo={query.returnTo}
+        returnTo={returnTarget}
       />
     </Suspense>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -13,15 +13,6 @@ import { useTranslations } from 'next-intl';
 const persistSessionToken = (_token: string) => {
   /* internal handler mapped later */
 };
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  password: z.string().min(1, {
-    message: 'Password is required.',
-  }),
-});
 
 interface LoginResponseBody {
   success?: boolean;
@@ -49,7 +40,21 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const t = useTranslations();
+  const tValidation = useTranslations('Validation');
   const router = useRouter();
+
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        email: z.string().email({
+          message: tValidation('EmailInvalid'),
+        }),
+        password: z.string().min(1, {
+          message: tValidation('PasswordRequired'),
+        }),
+      }),
+    [tValidation],
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -103,7 +108,7 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="m@example.com"
@@ -122,7 +127,7 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('Pages.Auth.Password')}</FormLabel>
               <FormControl>
                 <Input type="password" data-testid="login-password-input" {...field} />
               </FormControl>
@@ -136,7 +141,7 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
           </p>
         ) : null}
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
           <span data-testid="login-submit-label">{t('Pages.Auth.ButtonLogin')}</span>
         </Button>
       </form>

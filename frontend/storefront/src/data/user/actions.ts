@@ -1,29 +1,60 @@
 'use server';
 
 import { getSession } from '@lib/session';
-import { updateTag } from 'next/cache';
 import { revalidatePath } from 'next/cache';
 import { UpdateProfileInputSchema, validateInput } from '../schemas';
+import { getCurrentUser } from './queries';
+import { updateProfile as backendUpdateProfile } from '@findeg/backend';
+
+function splitName(name: string): { firstName?: string; lastName?: string } {
+  const trimmed = name.trim();
+  if (!trimmed) return {};
+
+  const parts = trimmed.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    return { firstName: parts[0], lastName: '' };
+  }
+
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(' '),
+  };
+}
+
+/**
+ * Server action to get the current user session data for client components.
+ */
+export async function getCurrentUserAction() {
+  return await getCurrentUser();
+}
 
 /**
  * Update user profile.
  *
- * Validates input, integrates with backend identity service, and invalidates user cache.
+ * Validates input, persists name and phone to backend identity service,
+ * and revalidates relevant paths.
  */
 export async function updateProfile(formData: FormData) {
   const session = await getSession();
   if (!session?.userId) throw new Error('Not authenticated');
 
-  const name = formData.get('name') as string;
+  const name = String(formData.get('name') ?? '').trim();
+  const phone = String(formData.get('phone') ?? '').trim();
 
   // Validate input
-  validateInput(UpdateProfileInputSchema, { name });
+  validateInput(UpdateProfileInputSchema, { name, phone: phone || undefined });
 
-  // Invalidate user cache so next query fetches fresh data
-  updateTag('user');
+  const { firstName, lastName } = splitName(name);
 
-  // Revalidate the account page to show new data
+  await backendUpdateProfile(session.userId, {
+    firstName,
+    lastName,
+    phone: phone || undefined,
+  });
+
+  // Revalidate the account and settings pages to reflect updated data
   revalidatePath('/my-account');
+  revalidatePath('/my-account/settings');
 
   return { success: true };
 }

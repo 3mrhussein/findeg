@@ -4,7 +4,6 @@
     "local/declared-workspace-dependencies": 1
   },
   "@findeg/storefront": {
-    "local/no-suppression-comments": 2,
     "local/declared-workspace-dependencies": 3
   }
 }

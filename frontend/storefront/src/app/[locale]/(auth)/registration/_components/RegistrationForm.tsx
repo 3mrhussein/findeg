@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -13,24 +13,6 @@ import { useTranslations } from 'next-intl';
 const persistSessionToken = (_token: string) => {
   /* internal handler mapped later */
 };
-
-const formSchema = z
-  .object({
-    name: z.string().min(2, {
-      message: 'Name must be at least 2 characters.',
-    }),
-    email: z.string().email({
-      message: 'Please enter a valid email address.',
-    }),
-    password: z.string().min(8, {
-      message: 'Password must be at least 8 characters.',
-    }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
 
 interface RegisterResponseBody {
   success?: boolean;
@@ -80,9 +62,34 @@ export function RegistrationForm({
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const t = useTranslations();
+  const tValidation = useTranslations('Validation');
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const formSchema = useMemo(
+    () =>
+      z
+        .object({
+          name: z.string().min(2, {
+            message: tValidation('NameMin'),
+          }),
+          email: z.string().email({
+            message: tValidation('EmailInvalid'),
+          }),
+          password: z.string().min(8, {
+            message: tValidation('PasswordMin'),
+          }),
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+          message: tValidation('PasswordsDoNotMatch'),
+          path: ['confirmPassword'],
+        }),
+    [tValidation],
+  );
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -95,7 +102,7 @@ export function RegistrationForm({
   /**
    *
    */
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
       setIsLoading(true);
       setServerError(null);
@@ -139,7 +146,7 @@ export function RegistrationForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>{t('Pages.Auth.Name')}</FormLabel>
               <FormControl>
                 <Input placeholder="John Doe" data-testid="registration-name-input" {...field} />
               </FormControl>
@@ -152,7 +159,7 @@ export function RegistrationForm({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="m@example.com"
@@ -171,7 +178,7 @@ export function RegistrationForm({
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('Pages.Auth.Password')}</FormLabel>
               <FormControl>
                 <Input type="password" data-testid="registration-password-input" {...field} />
               </FormControl>
@@ -184,7 +191,7 @@ export function RegistrationForm({
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>{t('Pages.Auth.ConfirmPassword')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -206,7 +213,7 @@ export function RegistrationForm({
           </p>
         ) : null}
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
           <span data-testid="registration-submit-label">{t('Pages.Auth.ButtonRegister')}</span>
         </Button>
       </form>

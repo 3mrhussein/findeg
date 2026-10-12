@@ -67,6 +67,10 @@ export default async function Page({ params, searchParams }: Props) {
                 {t('Pages.MyAccount.NameLabel')}
               </label>
               <Input id="name" name="name" defaultValue={displayName} required minLength={2} />
+              <label className="text-sm font-medium" htmlFor="phone">
+                {t('Pages.MyAccount.PhoneLabel')}
+              </label>
+              <Input id="phone" name="phone" defaultValue={user.phone || ''} />
               <Button type="submit">{t('Common.Save')}</Button>
             </form>
             <div>
