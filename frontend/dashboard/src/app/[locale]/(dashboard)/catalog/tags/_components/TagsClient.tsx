@@ -15,6 +15,7 @@ import {
   getTagProductCountAction as getTagProductCount,
 } from '@data/tags/actions';
 import { useToast } from '@hooks/use-toast';
+import { useRouter } from '@i18n/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +39,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
   const t = useTranslations('Administration.Catalog.Tags');
   const locale = useLocale() as Locale;
   const { toast } = useToast();
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -100,6 +102,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
       toast({
         title: res.isActive ? t('ToastActivated') : t('ToastDeactivated'),
       });
+      router.refresh();
     } else {
       toast({
         title: res.error || 'Error',
@@ -128,6 +131,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
           title: t('ToastDeleted'),
         });
         setDeleteDialogOpen(false);
+        router.refresh();
       } else {
         toast({
           title: res.error || 'Error',

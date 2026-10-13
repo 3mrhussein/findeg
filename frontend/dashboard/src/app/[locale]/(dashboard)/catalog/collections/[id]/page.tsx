@@ -22,15 +22,17 @@ export async function generateMetadata({ params }: CollectionEditPageProps): Pro
 /**
  *
  */
+import { getCollectionById } from '@data/collections/queries';
+import { getAllTags } from '@data/tags/queries';
+
 export default async function CollectionEditPage({ params }: CollectionEditPageProps) {
-  const { locale } = await params;
+  const { locale, id } = await params;
   await requirePermission(locale as Locale, {
     permission: PERMISSION_CODES.ADMIN_COLLECTIONS_WRITE,
   });
 
-  // TODO: Replace with data layer queries from @data/collections/queries
-  const collection = null as React.ComponentProps<typeof CollectionForm>['collection'] | null; // Stubbed - will trigger notFound()
-  const availableTags: import('@findeg/backend/features/catalog').Tag[] = []; // Stubbed
+  const collection = await getCollectionById(Number(id));
+  const availableTags = await getAllTags();
 
   if (!collection) {
     notFound();

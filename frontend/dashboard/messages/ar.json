@@ -217,7 +217,26 @@
           "HeroImageUrl": "رابط الصورة",
           "IsActive": "نشط"
         },
-        "SearchPlaceholder": "البحث بالعنوان أو الاسم اللطيف..."
+        "SearchPlaceholder": "البحث بالعنوان أو الاسم اللطيف...",
+        "GeneralInfo": "معلومات عامة",
+        "TagsSelection": "اختيار الوسوم",
+        "BasicInfo": "المعلومات الأساسية",
+        "BasicInfoDesc": "إعداد العناوين والاسم اللطيف وخصائص العرض.",
+        "DefineTags": "تحديد الوسوم",
+        "DefineTagsDesc": "المنتجات التي تحتوي على أي من هذه الوسوم سيتم تضمينها في هذه المجموعة.",
+        "Save": "حفظ التغييرات",
+        "Create": "إنشاء المجموعة",
+        "ToastCreated": "تم إنشاء المجموعة بنجاح",
+        "ToastUpdated": "تم تحديث المجموعة بنجاح",
+        "ToastDeleted": "تم حذف المجموعة بنجاح",
+        "SlugAvailable": "متاح",
+        "SlugTaken": "مستخدم بالفعل",
+        "SlugDescription": "معرف فريد للرابط.",
+        "NoTags": "لا توجد وسوم متاحة. يرجى إنشاء وسوم أولاً.",
+        "DeleteConfirmTitle": "حذف المجموعة؟",
+        "DeleteConfirmDesc": "هل أنت متأكد من حذف هذه المجموعة؟ لا يمكن التراجع عن هذا الإجراء.",
+        "DeleteAction": "حذف",
+        "CancelAction": "إلغاء"
       }
     }
   },

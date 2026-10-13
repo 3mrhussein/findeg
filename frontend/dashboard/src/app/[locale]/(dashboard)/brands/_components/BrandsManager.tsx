@@ -12,6 +12,7 @@ import { BrandCard } from './BrandCard';
 import { BrandFormPanel } from './BrandFormPanel';
 import { BrandDrawer } from './BrandDrawer';
 import { EmptyState } from '@findeg/ui';
+import { useToast } from '@hooks/use-toast';
 
 interface BrandsManagerProps {
   initialBrands: Brand[];
@@ -86,6 +87,35 @@ export function BrandsManager({
   const handleClosePanel = () => {
     setIsPanelOpen(false);
     setSelectedBrand(null);
+  };
+
+  const { toast } = useToast();
+
+  const handleDeleteBrand = async (brand: Brand) => {
+    const count = brand.productCount || 0;
+    const name = brand.localizedName?.en || brand.name || brand.slug;
+
+    if (count > 0) {
+      toast({
+        title: t('DeleteBlockedTitle', { name }),
+        description: t('DeleteBlockedDesc', { count }),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const result = await onDelete(brand.id as number);
+    if (!result.success) {
+      toast({
+        title: t('DeleteBlockedTitle', { name }),
+        description: result.error || t('DeleteBlockedDesc', { count }),
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: t('ToastDeleted'),
+      });
+    }
   };
 
   const handleFormSubmit = async (data: import('@findeg/backend/features/catalog').BrandInput) => {
@@ -169,7 +199,7 @@ export function BrandsManager({
                 brand={brand}
                 isSelected={selectedBrand?.id === brand.id}
                 onEdit={() => handleEdit(brand)}
-                onDelete={() => onDelete(brand.id)}
+                onDelete={() => handleDeleteBrand(brand)}
                 onToggleStatus={() => onToggleStatus(brand.id)}
               />
             ))}

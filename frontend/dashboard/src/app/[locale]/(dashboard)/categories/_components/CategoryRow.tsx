@@ -153,7 +153,7 @@ export function CategoryRow({
 
       {/* Status Badge */}
       <div className="shrink-0">
-        <StatusBadge status={category.isActive ? 'active' : 'draft'} />
+        <StatusBadge status={category.isActive ? 'active' : 'inactive'} />
       </div>
 
       {/* Product Count (Hidden if 0) */}

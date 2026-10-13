@@ -45,6 +45,7 @@ const {
     update: vi.fn(),
     delete: vi.fn(),
     reorder: vi.fn(),
+    checkSlugAvailable: vi.fn(),
   },
   tagsService: {
     create: vi.fn(),
@@ -134,7 +135,11 @@ vi.mock('@findeg/backend/features/partner-membership', async (importOriginal) =>
 import { createProduct, deleteProduct } from '@data/products/actions';
 import { createCategoryAction, deleteCategoryAction } from '@data/categories/actions';
 import { createBrandAction, deleteBrandAction } from '@data/brands/actions';
-import { createCollectionAction, deleteCollectionAction } from '@data/collections/actions';
+import {
+  createCollectionAction,
+  deleteCollectionAction,
+  checkCollectionSlugAvailableAction,
+} from '@data/collections/actions';
 import { createTagAction, deleteTagAction } from '@data/tags/actions';
 import { updateStock } from '@data/inventory/actions';
 import { createRoleAction, deleteRoleAction, createAdminAction } from '@data/access/actions';
@@ -310,6 +315,25 @@ describe('Server Action Security Integration Tests', () => {
       const res = await deleteCollectionAction(8);
       expect(res.success).toBe(true);
       expect(collectionsService.delete).toHaveBeenCalledWith(8);
+    });
+
+    it('refuses checking collection slug when unauthenticated', async () => {
+      getSession.mockResolvedValue(null);
+
+      const res = await checkCollectionSlugAvailableAction('new-col');
+      expect(res.success).toBe(false);
+      expect(res.error).toMatch(/Not authorized/i);
+      expect(collectionsService.checkSlugAvailable).not.toHaveBeenCalled();
+    });
+
+    it('allows staff with admin.collections.read to check slug availability', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_COLLECTIONS_READ]));
+      collectionsService.checkSlugAvailable.mockResolvedValue(true);
+
+      const res = await checkCollectionSlugAvailableAction('new-col');
+      expect(res.success).toBe(true);
+      expect(res.available).toBe(true);
+      expect(collectionsService.checkSlugAvailable).toHaveBeenCalledWith('new-col', undefined);
     });
   });
 

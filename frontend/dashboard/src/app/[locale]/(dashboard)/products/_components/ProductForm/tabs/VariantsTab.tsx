@@ -448,6 +448,7 @@ export function VariantsTab() {
                                   type="number"
                                   placeholder="0.00"
                                   {...priceField}
+                                  value={priceField.value === 0 ? '' : (priceField.value ?? '')}
                                   onChange={(e) =>
                                     priceField.onChange(
                                       e.target.value === '' ? 0 : parseFloat(e.target.value),

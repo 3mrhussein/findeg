@@ -42,17 +42,6 @@ export async function BrandsContent({ locale }: BrandsContentProps) {
    */
   async function handleDelete(id: number) {
     'use server';
-    // TODO: Check product count using data layer query
-    const productCount = 0; // Stubbed
-
-    if (productCount > 0) {
-      return {
-        success: false,
-        error: 'DELETE_BLOCKED',
-        count: productCount,
-      };
-    }
-
     const result = await deleteBrandAction(id);
     if (result.success) {
       revalidatePath(`/${locale}/brands`);

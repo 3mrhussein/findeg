@@ -62,3 +62,17 @@ export async function reorderCollectionsAction(updates: Array<{ id: number; sort
     return { success: false, error: getErrorMessage(error) };
   }
 }
+
+export async function checkCollectionSlugAvailableAction(slug: string, excludeId?: number) {
+  try {
+    await requireStaffAction(
+      PERMISSION_CODES.ADMIN_COLLECTIONS_READ,
+      'check collection slug available',
+    );
+    const { collections } = createAdministrationServices();
+    const available = await collections.checkSlugAvailable(slug, excludeId);
+    return { success: true, available };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error), available: true };
+  }
+}

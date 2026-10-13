@@ -21,4 +21,7 @@ export interface IAdminCollectionService {
 
   /** Updates the sort order of multiple collections */
   reorder(items: { id: ID; sortOrder: number }[], adminUserId?: number): Promise<void>;
+
+  /** Checks if a slug is available */
+  checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean>;
 }

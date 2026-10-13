@@ -129,3 +129,21 @@ export async function updateCollectionSortOrders(
     }
   });
 }
+
+/**
+ * Check if a collection slug is available (not already in use)
+ */
+export async function checkCollectionSlugAvailable(
+  slug: string,
+  excludeId?: number,
+): Promise<boolean> {
+  const results = await db
+    .select({ id: collections.id })
+    .from(collections)
+    .where(eq(collections.slug, slug))
+    .limit(1);
+
+  if (results.length === 0) return true;
+  if (excludeId !== undefined && results[0].id === excludeId) return true;
+  return false;
+}
