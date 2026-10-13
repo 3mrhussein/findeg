@@ -205,7 +205,11 @@ function removeWorktree(identifier, ...flags) {
     if (isForce) removeArgs.push('--force');
     removeArgs.push(match.path);
 
-    tryGit(removeArgs);
+    const removed = tryGit(removeArgs);
+    if (removed === null) {
+      console.error(`Error: Git refused to remove worktree "${match.path}".`);
+      process.exit(1);
+    }
     if (existsSync(match.path)) {
       rmSync(match.path, { recursive: true, force: true });
     }
@@ -229,6 +233,21 @@ function removeWorktree(identifier, ...flags) {
     if (!isContained) {
       console.error(
         `Error: Refusing to remove directory outside worktree containers: ${targetDir}`,
+      );
+      process.exit(1);
+    }
+
+    const overlaps = worktrees.some((wt) => {
+      const wtReal = toReal(wt.path);
+      return (
+        wtReal === targetDir ||
+        wtReal.startsWith(`${targetDir}/`) ||
+        targetDir.startsWith(`${wtReal}/`)
+      );
+    });
+    if (overlaps) {
+      console.error(
+        `Error: ${targetDir} contains or is inside a registered worktree. Refusing to delete.`,
       );
       process.exit(1);
     }

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -165,6 +165,88 @@ test('worktree.mjs refuses to remove dirty worktree without --force', () => {
       encoding: 'utf8',
     });
     assert.match(output, /Removed worktree/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
+test('worktree.mjs refuses to remove locked worktree when git refuses', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    execFileSync('node', [worktreeScript, 'create', 'feat/locked-test'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+
+    const wtPath = resolve(fixtureDir, 'worktree', 'feat/locked-test');
+    // Lock the worktree
+    execFileSync('git', ['worktree', 'lock', wtPath], { cwd: fixtureDir });
+
+    assert.throws(
+      () => {
+        execFileSync('node', [worktreeScript, 'remove', 'feat/locked-test'], {
+          cwd: fixtureDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        });
+      },
+      (err) => {
+        assert.match(err.stderr || err.stdout, /Git refused to remove worktree/);
+        return true;
+      },
+    );
+
+    // The worktree directory must still exist!
+    assert.strictEqual(existsSync(wtPath), true);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
+test('worktree.mjs refuses fallback removal when target overlaps a registered worktree', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    execFileSync('node', [worktreeScript, 'create', 'feat/nested-test'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+
+    const parentDir = resolve(fixtureDir, 'worktree', 'feat');
+    assert.throws(
+      () => {
+        execFileSync('node', [worktreeScript, 'remove', parentDir], {
+          cwd: fixtureDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        });
+      },
+      (err) => {
+        assert.match(
+          err.stderr || err.stdout,
+          /contains or is inside a registered worktree. Refusing to delete/,
+        );
+        return true;
+      },
+    );
+
+    const insideDir = resolve(fixtureDir, 'worktree', 'feat/nested-test', 'sub');
+    mkdirSync(insideDir, { recursive: true });
+    assert.throws(
+      () => {
+        execFileSync('node', [worktreeScript, 'remove', insideDir], {
+          cwd: fixtureDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        });
+      },
+      (err) => {
+        assert.match(
+          err.stderr || err.stdout,
+          /contains or is inside a registered worktree. Refusing to delete/,
+        );
+        return true;
+      },
+    );
   } finally {
     rmSync(fixtureDir, { recursive: true, force: true });
   }
