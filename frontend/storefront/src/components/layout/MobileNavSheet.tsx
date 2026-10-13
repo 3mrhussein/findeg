@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@i18n/navigation';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import { Link, usePathname } from '@i18n/navigation';
 import { useUser } from '@hooks/useUser';
 import { useCategories, type Category } from '@hooks/useCategories';
 
@@ -21,6 +22,9 @@ export function MobileNavSheet() {
   const [open, setOpen] = useState(false);
   const { isLoggedIn, currentUser } = useUser();
   const t = useTranslations('Nav');
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTo = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   const { categories, isLoading } = useCategories();
 
   const topLevelCategories = categories.filter((c: Category) => !c.parentId || c.depth === 0) || [];
@@ -30,14 +34,14 @@ export function MobileNavSheet() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <Menu className="size-6 text-slate-900 dark:text-white" />
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">{t('OpenMenu')}</span>
         </SheetTrigger>
         <SheetContent
           side="left"
           className="w-[85vw] sm:w-[350px] p-0 flex flex-col h-full bg-white dark:bg-background overflow-hidden border-r-0"
         >
           <SheetHeader className="p-4 border-b border-slate-100 dark:border-slate-800 text-start bg-slate-50 dark:bg-slate-950/50">
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <SheetTitle className="sr-only">{t('MenuTitle')}</SheetTitle>
 
             {/* User Greeting */}
             <div className="flex items-center gap-3">
@@ -48,7 +52,7 @@ export function MobileNavSheet() {
                 {isLoggedIn ? (
                   <>
                     <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                      {currentUser?.name || 'User'}
+                      {currentUser?.name || t('MyAccount')}
                     </span>
                     <Link
                       href="/my-account"
@@ -65,7 +69,7 @@ export function MobileNavSheet() {
                     </span>
                     <div className="flex items-center gap-2 text-xs font-medium mt-0.5">
                       <Link
-                        href="/login"
+                        href={{ pathname: '/login', query: { returnTo } }}
                         onClick={() => setOpen(false)}
                         className="text-primary hover:underline"
                       >
@@ -73,7 +77,7 @@ export function MobileNavSheet() {
                       </Link>
                       <span className="text-slate-300 dark:text-slate-600">|</span>
                       <Link
-                        href="/registration"
+                        href={{ pathname: '/registration', query: { returnTo } }}
                         onClick={() => setOpen(false)}
                         className="text-primary hover:underline"
                       >
@@ -92,7 +96,7 @@ export function MobileNavSheet() {
               <Link href="/search" onClick={() => setOpen(false)}>
                 <div className="flex items-center gap-3 w-full h-10 px-4 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-400">
                   <Search className="size-4" />
-                  <span className="text-sm">Search FindEg...</span>
+                  <span className="text-sm">{t('SearchPlaceholder')}</span>
                 </div>
               </Link>
             </div>
@@ -127,10 +131,10 @@ export function MobileNavSheet() {
             {/* Category Accordion */}
             <div className="p-2">
               <h3 className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-500">
-                Departments
+                {t('Departments')}
               </h3>
               {isLoading ? (
-                <div className="p-4 text-center text-sm text-slate-400">Loading categories...</div>
+                <div className="p-4 text-center text-sm text-slate-400">{t('LoadingCategories')}</div>
               ) : (
                 <Accordion type="single" collapsible className="w-full">
                   {topLevelCategories.map((cat: Category) => {
@@ -172,7 +176,7 @@ export function MobileNavSheet() {
                                 onClick={() => setOpen(false)}
                                 className="block py-2 text-sm text-primary font-medium hover:underline transition-colors"
                               >
-                                View all in {cat.name}
+                                {t('ViewAllInCategory', { category: cat.name })}
                               </Link>
                             )}
                           </div>

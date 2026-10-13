@@ -61,6 +61,11 @@
     },
     "Schools": "المدارس",
     "TrackOrder": "تتبع الطلب",
+    "OpenMenu": "فتح القائمة",
+    "MenuTitle": "قائمة التنقل",
+    "Departments": "الأقسام",
+    "LoadingCategories": "جارٍ تحميل الفئات...",
+    "ViewAllInCategory": "عرض كل المنتجات في {category}",
     "PartnerWorkspace": "مساحة عمل الشريك",
     "Language": "اللغة",
     "Theme": "المظهر"
@@ -807,6 +812,9 @@
     "EmailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح.",
     "PasswordRequired": "كلمة المرور مطلوبة.",
     "PasswordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
-    "PasswordsDoNotMatch": "كلمتا المرور غير متطابقتين."
+    "PasswordsDoNotMatch": "كلمتا المرور غير متطابقتين.",
+    "RequestInvalid": "تحقق من البيانات وحاول مرة أخرى.",
+    "LoginFailed": "تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور وحاول مرة أخرى.",
+    "RegistrationFailed": "تعذر إنشاء الحساب. تحقق من البيانات وحاول مرة أخرى."
   }
 }
