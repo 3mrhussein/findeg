@@ -12,7 +12,7 @@ Always manage worktrees using the workspace automation script:
 - **Create**: Run `pnpm wt:new <type>/<slug>` (or `node scripts/worktree.mjs create <type>/<slug>`). Automatically validates branch naming, fetches `origin/develop`, and creates the worktree rooted at fresh `origin/develop`.
 - **Teardown**: Run `pnpm wt:rm <path-or-branch>` (or `node scripts/worktree.mjs remove <path-or-branch>`). Safely dismantles the worktree and cleans up untracked editor/build debris (`rm -rf`) so no ghost directories remain.
 - **Prune**: Run `pnpm wt:prune` to automatically dismantle worktrees whose branches have already merged into `origin/develop` and clean up orphaned ghost directories.
-- **Keep root on develop**: The root workspace (`/Users/amr/projects/findeg`) tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees via `pnpm wt:new`.
+- **Keep root on develop**: The repository root tracks `develop` (`git checkout develop && git pull origin develop`). Always isolate feature and fix work in dedicated worktrees via `pnpm wt:new`.
 - **Sub-agents**: Never run concurrent implementing sub-agents in the same worktree. Each sub-agent requires its own dedicated worktree. Read-only sub-agents (review, research) must not mutate branches or worktrees.
 
 ### Issue tracker

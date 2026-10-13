@@ -2,11 +2,24 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const worktreeScript = resolve(here, 'worktree.mjs');
+
+function createGitFixture() {
+  const fixtureDir = mkdtempSync(join(tmpdir(), 'wt-fixture-'));
+  execFileSync('git', ['init', '-b', 'develop', fixtureDir]);
+  execFileSync('git', ['-C', fixtureDir, 'config', 'user.email', 'test@test.local']);
+  execFileSync('git', ['-C', fixtureDir, 'config', 'user.name', 'Test']);
+  execFileSync('git', ['-C', fixtureDir, 'commit', '--allow-empty', '-m', 'initial']);
+  execFileSync('git', ['-C', fixtureDir, 'remote', 'add', 'origin', fixtureDir]);
+  execFileSync('git', ['-C', fixtureDir, 'fetch', 'origin', 'develop']);
+  return fixtureDir;
+}
 
 test('worktree.mjs displays help text when invoked with no arguments', () => {
   const output = execFileSync('node', [worktreeScript], { encoding: 'utf8' });
@@ -42,9 +55,117 @@ test('worktree.mjs rejects branch names that violate the naming convention', () 
   }
 });
 
-test('worktree.mjs lists active worktrees without errors', () => {
-  const output = execFileSync('node', [worktreeScript, 'list'], { encoding: 'utf8' });
-  assert.match(output, /Active Git Worktrees:/);
-  assert.match(output, /develop/);
-  assert.match(output, /\[ROOT\]/);
+test('worktree.mjs lists active worktrees without errors using fixture repo', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    const output = execFileSync('node', [worktreeScript, 'list'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+    assert.match(output, /Active Git Worktrees:/);
+    assert.match(output, /develop/);
+    assert.match(output, /\[ROOT\]/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
+test('worktree.mjs does not classify newly created branch as [MERGED]', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    // Create a new worktree off origin/develop
+    execFileSync('node', [worktreeScript, 'create', 'feat/test-branch'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+
+    const output = execFileSync('node', [worktreeScript, 'list'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+    assert.match(output, /feat\/test-branch/);
+    assert.doesNotMatch(output, /feat\/test-branch.*\[MERGED\]/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
+test('worktree.mjs refuses to remove unregistered directory outside worktree containers', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    assert.throws(
+      () => {
+        execFileSync('node', [worktreeScript, 'remove', fixtureDir], {
+          cwd: fixtureDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        });
+      },
+      (err) => {
+        assert.match(err.stderr || err.stdout, /Cannot remove the root workspace repository/);
+        return true;
+      },
+    );
+
+    const outsideDir = mkdtempSync(join(tmpdir(), 'outside-'));
+    try {
+      assert.throws(
+        () => {
+          execFileSync('node', [worktreeScript, 'remove', outsideDir], {
+            cwd: fixtureDir,
+            encoding: 'utf8',
+            stdio: 'pipe',
+          });
+        },
+        (err) => {
+          assert.match(
+            err.stderr || err.stdout,
+            /Refusing to remove directory outside worktree containers/,
+          );
+          return true;
+        },
+      );
+    } finally {
+      rmSync(outsideDir, { recursive: true, force: true });
+    }
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
+test('worktree.mjs refuses to remove dirty worktree without --force', () => {
+  const fixtureDir = createGitFixture();
+  try {
+    execFileSync('node', [worktreeScript, 'create', 'feat/dirty-test'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+
+    const wtPath = resolve(fixtureDir, 'worktree', 'feat/dirty-test');
+    // Dirty the worktree
+    writeFileSync(resolve(wtPath, 'dirty.txt'), 'uncommitted changes');
+
+    assert.throws(
+      () => {
+        execFileSync('node', [worktreeScript, 'remove', 'feat/dirty-test'], {
+          cwd: fixtureDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        });
+      },
+      (err) => {
+        assert.match(err.stderr || err.stdout, /has uncommitted changes.*Use --force/);
+        return true;
+      },
+    );
+
+    // With --force it should succeed
+    const output = execFileSync('node', [worktreeScript, 'remove', 'feat/dirty-test', '--force'], {
+      cwd: fixtureDir,
+      encoding: 'utf8',
+    });
+    assert.match(output, /Removed worktree/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
 });
