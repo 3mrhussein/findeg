@@ -22,7 +22,11 @@
     "db:studio": "pnpm db:run && pnpm --filter @findeg/db db:studio",
     "clean": "turbo run clean && rm -rf node_modules .turbo && pnpm clean:next",
     "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next",
-    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true"
+    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true",
+    "wt:new": "node scripts/worktree.mjs create",
+    "wt:rm": "node scripts/worktree.mjs remove",
+    "wt:prune": "node scripts/worktree.mjs prune",
+    "wt:list": "node scripts/worktree.mjs list"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
