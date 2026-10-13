@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
@@ -149,16 +149,6 @@ export function ProductForm({
       }
     });
   };
-
-  // Auto-save logic
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (form.formState.isDirty) {
-        // Implement auto-save to temporary storage or draft endpoint
-      }
-    }, 30000);
-    return () => clearInterval(timer);
-  }, [form.formState.isDirty]);
 
   return (
     <Form {...form}>

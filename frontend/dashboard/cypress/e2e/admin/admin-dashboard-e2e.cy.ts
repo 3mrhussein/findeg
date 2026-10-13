@@ -147,6 +147,72 @@ describe('Admin dashboard catalog management', () => {
     visitWhenServerRenders(listPath, renamed, { present: false });
     cy.contains('tbody tr', renamed).should('not.exist');
   });
+
+  it('creates and edits a product with attributes, compare-at, default variant, and bulk activates', () => {
+    const name = uniqueCatalogName('variant-test');
+    const sku = uniqueSku();
+    const listPath = `/en/products?search=${sku}`;
+
+    cy.visit('/en/products/new');
+    cy.get('input[placeholder="e.g. Classic Ballpoint Pen"]')
+      .filter(':visible')
+      .should(($el) => {
+        expect(Object.keys($el[0]).some((key) => key.startsWith('__reactProps$'))).to.equal(true);
+      });
+    cy.get('input[placeholder="e.g. Classic Ballpoint Pen"]').filter(':visible').type(name.nameEn);
+    cy.get('input[placeholder="مثال: قلم جاف كلاسيك"]').filter(':visible').type(name.nameAr);
+
+    // Variants Tab
+    cy.contains('button', 'Variants').click();
+    cy.contains('New Variant').click();
+    cy.get('input[placeholder="e.g. STA-PEN-BLUE"]').type(sku);
+
+    // Set prices: basePrice 50, strikePrice (compare-at) 75
+    cy.get('input[placeholder="0.00"]').eq(0).clear().type('50');
+    cy.get('input[placeholder="0.00"]').eq(1).clear().type('75');
+
+    // Add Attribute
+    cy.contains('button', 'Add Attribute').click();
+    cy.get('input[placeholder="Attribute Name"]').type('Color');
+    cy.get('input[placeholder="Value"]').type('Navy');
+
+    // Set inactive to test bulk activate later
+    cy.contains('label', 'Inactive').click();
+
+    cy.contains('button', 'Publish Product').click();
+    cy.location('pathname').should('match', /\/en\/products\/\d+\/edit$/);
+
+    // Verify persisted edit view shows compare-at price and attribute
+    cy.contains('button', 'Variants').click();
+    cy.contains(sku).click();
+    cy.get('input[placeholder="0.00"]').eq(1).should('have.value', '75');
+    cy.get('input[placeholder="Attribute Name"]').should('have.value', 'Color');
+    cy.get('input[placeholder="Value"]').should('have.value', 'Navy');
+
+    // Verify product list shows formatted price EGP 50.00, SKU, and Inactive status
+    visitWhenServerRenders(`${listPath}&status=all`, name.nameEn);
+    cy.contains('tbody tr', name.nameEn).within(() => {
+      cy.contains('span', 'Inactive').should('be.visible');
+      cy.contains('EGP 50.00').should('be.visible');
+      cy.contains(sku).should('be.visible');
+    });
+
+    // Bulk activate
+    clickWhenHydrated(cy.contains('tbody tr', name.nameEn).find('button[role="checkbox"]'));
+    clickWhenHydrated(cy.contains('div.fixed', '1 selected').contains('button', 'Activate'));
+
+    // Verify status changed to Active
+    visitWhenServerRenders(listPath, name.nameEn);
+    cy.contains('tbody tr', name.nameEn).within(() => {
+      cy.contains('span', 'Active').should('be.visible');
+    });
+
+    // Cleanup: delete the product
+    clickWhenHydrated(cy.contains('tbody tr', name.nameEn).find('button[role="checkbox"]'));
+    clickWhenHydrated(cy.contains('div.fixed', '1 selected').contains('button', 'Delete'));
+    visitWhenServerRenders(listPath, name.nameEn, { present: false });
+    cy.contains('tbody tr', name.nameEn).should('not.exist');
+  });
 });
 
 for (const locale of ['en', 'ar']) {

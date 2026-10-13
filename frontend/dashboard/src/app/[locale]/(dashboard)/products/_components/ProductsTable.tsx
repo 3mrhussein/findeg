@@ -11,7 +11,6 @@ interface ProductsTableProps {
   total: number;
   selectedIds: number[];
   onSelectChange: (ids: number[]) => void;
-  onDuplicate: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
@@ -19,7 +18,6 @@ export function ProductsTable({
   products,
   selectedIds,
   onSelectChange,
-  onDuplicate,
   onDelete,
 }: ProductsTableProps) {
   const t = useTranslations('Administration.Catalog.Products');
@@ -79,7 +77,6 @@ export function ProductsTable({
                 product={product}
                 isSelected={selectedIds.includes(product.id)}
                 onSelectChange={(checked) => handleSelectRow(product.id, checked)}
-                onDuplicate={onDuplicate}
                 onDelete={onDelete}
               />
             ))
