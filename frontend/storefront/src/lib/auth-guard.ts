@@ -50,7 +50,7 @@ export async function getOptionalSession(): Promise<SessionPayload | null> {
   return getCachedSession();
 }
 /**
- * Require specific permission — redirects to /dashboard if unauthorized.
+ * Require specific permission — redirects to /my-account if unauthorized.
  */
 export async function requirePermission(
   locale: string,

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { ClientUser as User } from '@lib/types';
+import { getCurrentUserAction } from '@data/user/actions';
 
 export interface UserContextType {
   currentUser: User | null;
@@ -9,11 +10,10 @@ export interface UserContextType {
   isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
+  refresh: () => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
-
-import { getCurrentUserAction } from '@data/user/actions';
 
 // ... (types)
 
@@ -25,30 +25,36 @@ import { getCurrentUserAction } from '@data/user/actions';
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const refreshRequest = useRef(0);
+
+  const refresh = useCallback(async () => {
+    const requestId = ++refreshRequest.current;
+    try {
+      const data = await getCurrentUserAction();
+      const sessionUser = data?.user;
+      if (requestId === refreshRequest.current) {
+        setCurrentUser(
+          sessionUser
+            ? {
+                name:
+                  [sessionUser.firstName, sessionUser.lastName].filter(Boolean).join(' ').trim() ||
+                  sessionUser.email,
+                email: sessionUser.email,
+              }
+            : null,
+        );
+      }
+    } catch (error) {
+      console.error('Failed to hydrate user session:', error);
+      if (requestId === refreshRequest.current) setCurrentUser(null);
+    } finally {
+      if (requestId === refreshRequest.current) setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    /**
-     *
-     */
-    const fetchSession = async () => {
-      try {
-        const data = await getCurrentUserAction();
-        if (data) {
-          const session = data;
-          setCurrentUser({
-            name: session.user.firstName || session.user.email,
-            email: session.user.email,
-          });
-        }
-      } catch (error) {
-        console.error('Failed to hydrate user session:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSession();
-  }, []);
+    void refresh();
+  }, [refresh]);
 
   /**
    *
@@ -70,7 +76,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isLoggedIn = !!currentUser;
 
   return (
-    <UserContext.Provider value={{ currentUser, isLoggedIn, isLoading, login, logout }}>
+    <UserContext.Provider value={{ currentUser, isLoggedIn, isLoading, login, logout, refresh }}>
       {children}
     </UserContext.Provider>
   );
