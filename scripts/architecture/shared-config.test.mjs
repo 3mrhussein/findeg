@@ -145,3 +145,22 @@ test('shared Vitest defaults preserve node/browser discovery, setup and aliases'
     }
   }
 });
+
+test('Domain source edits invalidate lint for consumers without a Domain dependency', () => {
+  const args = ['exec', 'turbo', 'run', 'lint', '--dry=json'];
+  const before = JSON.parse(run(args));
+  const probe = path.join(root, 'packages/domain/src/domain-copy-cache-fixture.ts');
+  assert.equal(fs.existsSync(probe), false);
+  try {
+    fs.writeFileSync(probe, "export const FUTURE_VALUES = ['future-a', 'future-b'] as const;\n");
+    const after = JSON.parse(run(args));
+    for (const task of before.tasks.filter((task) => task.task === 'lint')) {
+      const changed = after.tasks.find((candidate) => candidate.taskId === task.taskId);
+      assert.notEqual(changed.hash, task.hash, task.taskId);
+    }
+    const affected = JSON.parse(run(['exec', 'turbo', 'run', 'lint', '--affected', '--dry=json']));
+    assert.ok(affected.packages.includes('@findeg/ui'));
+  } finally {
+    fs.rmSync(probe, { force: true });
+  }
+});
