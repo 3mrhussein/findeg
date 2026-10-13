@@ -14,9 +14,9 @@ import { type Locale } from '@findeg/domain';
 import {
   getCatalogHealthStats,
   getCategoryProductDistribution,
+  getExhaustedOutboxHealth,
   getRecentActivity,
 } from '@data/admin/queries';
-import { countExhaustedOutbox, listExhaustedOutbox } from '@findeg/backend/features/outbox';
 import {
   KpiCard,
   OutboxHealthWidget,
@@ -134,14 +134,13 @@ export async function MediumDashboardSection({ locale: _locale }: DashboardWidge
  */
 export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
   // Heavy queries - parallel loading
-  const [categoryDist, recentActivity, exhaustedOutbox, exhaustedCount] = await Promise.all([
+  const [categoryDist, recentActivity, { exhaustedOutbox, exhaustedCount }] = await Promise.all([
     getCategoryProductDistribution(),
     getRecentActivity({
       limit: 8,
       entityTypes: ['product', 'category', 'brand', 'tag'],
     }),
-    listExhaustedOutbox(),
-    countExhaustedOutbox(),
+    getExhaustedOutboxHealth(),
   ]);
 
   return (

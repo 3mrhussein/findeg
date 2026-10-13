@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
@@ -25,7 +25,10 @@ const fail = (error: string): OfferFormState => ({
   message: ERROR_MESSAGES[error] ?? error,
 });
 
-const refresh = () => revalidatePath('/[locale]/school-lists/[id]', 'page');
+const refresh = () => {
+  revalidatePath('/[locale]/school-lists/[id]', 'page');
+  updateTag('school-lists');
+};
 
 /** Set or replace a list's List Offer. The list keeps its code and stays published. */
 export async function saveOfferAction(

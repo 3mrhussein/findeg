@@ -6,7 +6,7 @@ import {
   CollectionInputSchema,
   type CollectionInput,
 } from '@findeg/backend/features/catalog/schemas';
-import { Collection, Tag } from '@findeg/backend/features/catalog';
+import type { Collection, Tag } from '@findeg/backend/features/catalog';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 import { useState, useEffect } from 'react';

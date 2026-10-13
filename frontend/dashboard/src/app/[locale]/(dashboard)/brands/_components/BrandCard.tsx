@@ -7,7 +7,7 @@ import { Button } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 import { StatusBadge } from '@components/shared/StatusBadge';
 import { cn } from '@lib/utils';
-import { Brand } from '@findeg/backend/features/catalog';
+import type { Brand } from '@findeg/backend/features/catalog';
 import Image from 'next/image';
 
 interface BrandCardProps {

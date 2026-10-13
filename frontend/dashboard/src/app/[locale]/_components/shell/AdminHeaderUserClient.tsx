@@ -11,7 +11,7 @@ import {
 } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { useRouter } from '@i18n/navigation';
-import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
+import { getAvatarColorClass, getInitials } from '@lib/utils';
 import { logoutAction as logout } from '@actions/auth-actions';
 
 interface AdminHeaderUserClientProps {

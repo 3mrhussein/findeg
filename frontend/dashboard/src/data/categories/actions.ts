@@ -51,7 +51,6 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
 
     // Invalidate category detail and lists
     updateTag('categories');
-    updateTag(`category-${id}`);
     revalidatePath('/categories');
     revalidatePath(`/categories/${id}`);
 
@@ -76,7 +75,6 @@ export async function deleteCategoryAction(id: number) {
 
     // Invalidate all category caches
     updateTag('categories');
-    updateTag(`category-${id}`);
     revalidatePath('/categories');
 
     return { success: true };

@@ -7,7 +7,7 @@ import { Search, Plus } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { Brand } from '@findeg/backend/features/catalog';
+import type { Brand } from '@findeg/backend/features/catalog';
 import { BrandCard } from './BrandCard';
 import { BrandFormPanel } from './BrandFormPanel';
 import { BrandDrawer } from './BrandDrawer';

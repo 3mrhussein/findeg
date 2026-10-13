@@ -3,8 +3,7 @@ import { Badge, Button } from '@findeg/ui';
 import type { Locale } from '@findeg/domain';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
-import { toStaffActor } from './_lib/toStaffActor';
+import { listPartners } from '@data/partners/queries';
 
 export const metadata = {
   title: 'Business Partners - FindEg Admins',
@@ -17,8 +16,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
   });
   const canManage = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
 
-  const { partners } = createPartnerMembershipServices();
-  const result = await partners.listPartners(toStaffActor(session));
+  const result = await listPartners(session);
   const rows = result.success ? result.data : [];
 
   return (

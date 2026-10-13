@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
@@ -47,6 +47,7 @@ export async function updateMembershipAction(
       };
     }
     revalidatePath('/[locale]/partners/[id]', 'page');
+    updateTag('partners');
     return { status: 'done' };
   } catch {
     return { status: 'error', message: ERROR_MESSAGES.forbidden };

@@ -16,7 +16,7 @@ import type { Locale } from '@findeg/domain';
  * Cache: Long TTL (days) since categories change infrequently
  */
 export async function getCategories(locale: Locale) {
-  cacheTag('categories', `categories-${locale}`);
+  cacheTag('categories');
   cacheLife('days');
 
   const categories = createCategoryService();
@@ -29,7 +29,7 @@ export async function getCategories(locale: Locale) {
  * Cache: Tagged with category ID
  */
 export async function getCategoryById(id: number, locale: Locale) {
-  cacheTag('categories', `category-${id}`, `category-${id}-${locale}`);
+  cacheTag('categories');
   cacheLife('days');
 
   const categories = createCategoryService();

@@ -1,40 +1,25 @@
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
-import type { Locale } from '@findeg/domain';
+import { allowedPartnerStatusChanges, type Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import {
-  createPartnerSalesServices,
+  getPartner,
+  listMembers,
+  listPendingInvitations,
+  getPartnerStaffReport,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
-  type IPartnerReportService,
-  type PartnerSalesStaffActor,
-} from '@findeg/backend/features/partner-sales';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+} from '@data/partners/queries';
+import { listSchoolSupplyListsForPartner } from '@data/school-lists/queries';
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { SalesReportPanel } from '../_components/SalesReportPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { toSalesReportProps } from '../_lib/salesReport';
-import { toStaffActor } from '../_lib/toStaffActor';
-import { toListActor } from '../../school-lists/_lib/toListActor';
 
 export const metadata = { title: 'Business Partner - FindEg Admins' };
-
-/** An unknown or out-of-range `?month=` falls back to the current month. */
-async function readReport(
-  reports: IPartnerReportService,
-  session: PartnerSalesStaffActor,
-  partnerId: number,
-  month: string | undefined,
-) {
-  const requested = await reports.getStaffReport(session, partnerId, { month });
-  return month !== undefined && !requested.success && requested.error === 'invalid-input'
-    ? reports.getStaffReport(session, partnerId)
-    : requested;
-}
 
 export default async function PartnerDetailPage({
   params,
@@ -53,26 +38,17 @@ export default async function PartnerDetailPage({
   if (!/^\d+$/.test(id)) notFound();
 
   const partnerId = Number(id);
-  const actor = toStaffActor(session);
   const canManagePartner = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
   const canViewReports = sessionHasPermission(session, PERMISSION_CODES.PARTNER_REPORTS_VIEW);
 
-  const { partners, invitations, memberships } = createPartnerMembershipServices();
-  const partner = await partners.getPartner(actor, partnerId);
+  const partner = await getPartner(session, partnerId);
   if (!partner.success) notFound();
 
   const [members, pending, lists, report] = await Promise.all([
-    canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
-    canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
-    canManagePartner
-      ? createAdministrationServices().schoolSupplyLists.listForPartner(
-          toListActor(session),
-          partnerId,
-        )
-      : Promise.resolve(null),
-    canViewReports
-      ? readReport(createPartnerSalesServices().partnerReports, session, partnerId, month)
-      : null,
+    canManagePartner ? listMembers(session, partnerId) : Promise.resolve(null),
+    canManagePartner ? listPendingInvitations(session, partnerId) : Promise.resolve(null),
+    canManagePartner ? listSchoolSupplyListsForPartner(session, partnerId) : Promise.resolve(null),
+    canViewReports ? getPartnerStaffReport(session, partnerId, month) : null,
   ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
@@ -104,7 +80,7 @@ export default async function PartnerDetailPage({
             <StatusActions
               partnerId={partnerId}
               current={partner.data.status}
-              targets={partners.allowedStatusChanges(partner.data.status)}
+              targets={allowedPartnerStatusChanges(partner.data.status)}
             />
             {members?.success ? (
               <MembersPanel

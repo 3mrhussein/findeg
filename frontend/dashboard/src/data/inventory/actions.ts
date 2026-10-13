@@ -5,7 +5,7 @@
  */
 'use server';
 
-import { revalidateTag, updateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { requireStaffAction } from '@lib/auth-guard';
@@ -43,7 +43,8 @@ export async function bulkUpdateStock(
     await inventory.bulkUpdateStock(updates);
 
     // Invalidate inventory caches
-    revalidateTag('inventory', 'max');
+    updateTag('inventory');
+    updateTag('products');
 
     return { success: true };
   } catch (error: unknown) {

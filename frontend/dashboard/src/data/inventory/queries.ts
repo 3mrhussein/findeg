@@ -40,7 +40,7 @@ export async function getInventoryWithProducts(options?: {
  */
 export async function getLowStockAlerts(threshold: number = 10) {
   cacheLife('minutes');
-  cacheTag('inventory', 'low-stock');
+  cacheTag('inventory');
 
   const { inventory } = createAdministrationServices();
   const lowStockProducts = await inventory.getLowStockAlerts(threshold);

@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
@@ -37,7 +37,10 @@ function linkFor(locale: string, token: string): string {
   return `${base}/${locale}/partner/invitations/${token}`;
 }
 
-const refresh = () => revalidatePath('/[locale]/partners/[id]', 'page');
+const refresh = () => {
+  revalidatePath('/[locale]/partners/[id]', 'page');
+  updateTag('partners');
+};
 
 export async function inviteAction(
   locale: Locale,
