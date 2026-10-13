@@ -3,7 +3,7 @@ import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { listPartners } from '@data/partners/queries';
+import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 import { NewDraftForm } from '../_components/NewDraftForm';
 
 export const metadata = {
@@ -21,7 +21,7 @@ export default async function NewSchoolSupplyListPage({
     any: [PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE],
   });
 
-  const partnersRes = await listPartners(session);
+  const partnersRes = await getSchoolListPartnerOptions(session);
   const partners = partnersRes.success ? partnersRes.data : [];
 
   return (

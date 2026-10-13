@@ -50,12 +50,6 @@ const codeSchema = z
   .max(PARTNER_CODE_MAX_LENGTH);
 const nameSchema = z.string().trim().min(1).max(255);
 
-const createSchema = z.object({ code: codeSchema, nameEn: nameSchema, nameAr: nameSchema });
-const updateSchema = z.object({
-  code: codeSchema.optional(),
-  nameEn: nameSchema.optional(),
-  nameAr: nameSchema.optional(),
-});
 const profileSchema = z.object({
   governorate: z.enum(GOVERNORATES),
   area: z.string().trim().min(1).max(255),
@@ -67,6 +61,19 @@ const profileSchema = z.object({
     .max(2048)
     .nullish()
     .transform((v) => v || null),
+});
+
+const createSchema = z.object({
+  code: codeSchema,
+  nameEn: nameSchema,
+  nameAr: nameSchema,
+  schoolProfile: profileSchema.optional(),
+});
+const updateSchema = z.object({
+  schoolProfile: profileSchema.optional(),
+  code: codeSchema.optional(),
+  nameEn: nameSchema.optional(),
+  nameAr: nameSchema.optional(),
 });
 
 function toPartner(row: BusinessPartnerRow): BusinessPartner {
@@ -106,7 +113,11 @@ export class PartnerService implements IPartnerService {
     try {
       const db = await this.getDb();
       const row = await db.transaction(async (tx) => {
-        const created = await insertBusinessPartner(tx, parsed.data);
+        const { schoolProfile, ...fields } = parsed.data;
+        const created = await insertBusinessPartner(tx, fields);
+        if (schoolProfile) {
+          await upsertPartnerSchoolProfile(tx, { businessPartnerId: created.id, ...schoolProfile });
+        }
         await insertPartnerAccessHistory(tx, {
           businessPartnerId: created.id,
           actorUserId: actor.userId,
@@ -141,7 +152,6 @@ export class PartnerService implements IPartnerService {
             const next = parsed.data[field];
             if (next !== undefined && next !== current[field]) patch[field] = next;
           }
-          if (Object.keys(patch).length === 0) return ok(toPartner(current));
           if (patch.code !== undefined) {
             try {
               changePartnerCode(current, patch.code);
@@ -149,6 +159,13 @@ export class PartnerService implements IPartnerService {
               return partnerFailure(error);
             }
           }
+          if (parsed.data.schoolProfile) {
+            await upsertPartnerSchoolProfile(tx, {
+              businessPartnerId: partnerId,
+              ...parsed.data.schoolProfile,
+            });
+          }
+          if (Object.keys(patch).length === 0) return ok(toPartner(current));
 
           const updated = await updateBusinessPartner(tx, partnerId, patch);
           const changed = Object.keys(patch) as (keyof BusinessPartnerPatch)[];

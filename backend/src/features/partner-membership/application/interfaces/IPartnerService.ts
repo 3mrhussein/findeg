@@ -39,6 +39,7 @@ export interface BusinessPartner {
 }
 
 export interface CreatePartnerInput {
+  schoolProfile?: SavePartnerSchoolProfileInput;
   code: string;
   nameEn: string;
   nameAr: string;
@@ -46,6 +47,7 @@ export interface CreatePartnerInput {
 
 /** Omitted fields are left unchanged. `code` may only change while onboarding. */
 export interface UpdatePartnerInput {
+  schoolProfile?: SavePartnerSchoolProfileInput;
   code?: string;
   nameEn?: string;
   nameAr?: string;

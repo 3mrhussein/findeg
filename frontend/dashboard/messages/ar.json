@@ -64,7 +64,41 @@
     "MembersLoadError": "تعذر تحميل الأعضاء. قد لا تملك الإذن لإدارة شريك الأعمال هذا.",
     "SchoolSupplyLists": "قوائم المستلزمات المدرسية",
     "Offer": "عرض",
-    "Logo": "الشعار"
+    "Logo": "الشعار",
+    "Errors": {
+      "forbidden": "ليست لديك صلاحية لتنفيذ هذا الإجراء.",
+      "invalid-input": "تحقق من قيم الحقول المطلوبة وحدودها.",
+      "code-taken": "يستخدم شريك آخر هذا الرمز.",
+      "code-locked": "يمكن تغيير الرمز أثناء الإعداد فقط.",
+      "not-found": "لم يعد السجل المطلوب موجودًا.",
+      "unknown": "تعذر إكمال الطلب. يرجى المحاولة مرة أخرى."
+    },
+    "InvitationErrors": {
+      "forbidden": "ليست لديك صلاحية لتنفيذ هذا الإجراء.",
+      "invalid-input": "تحقق من قيم الحقول المطلوبة وحدودها.",
+      "not-found": "لم يعد السجل المطلوب موجودًا.",
+      "partner-not-open": "يمكن تغيير الدعوات أثناء الإعداد أو النشاط فقط.",
+      "invitation-not-pending": "لم تعد هذه الدعوة معلّقة.",
+      "unknown": "تعذر إكمال الطلب. يرجى المحاولة مرة أخرى."
+    },
+    "Email": "البريد الإلكتروني",
+    "Roles": "الأدوار",
+    "Invite": "دعوة",
+    "PendingInvitations": "الدعوات المعلّقة",
+    "CopyLink": "نسخ الرابط",
+    "Copied": "تم النسخ",
+    "InvitationsOpenOnly": "يمكن تغيير الدعوات أثناء الإعداد أو النشاط فقط.",
+    "Resend": "إعادة الإرسال ونسخ الرابط",
+    "Revoke": "إلغاء الدعوة",
+    "NoInvitations": "لا توجد دعوات معلّقة.",
+    "Expired": "منتهية ({date})",
+    "Expires": "تنتهي في {date}",
+    "RoleLabels": {
+      "partner-administrator": "مدير الشريك",
+      "list-manager": "مسؤول القوائم",
+      "collection-staff": "موظف الاستلام",
+      "report-viewer": "قارئ التقارير"
+    }
   },
   "PartnerSales": {
     "Tab": "المبيعات",
@@ -166,7 +200,34 @@
     "FiniteWindow": "نشط من {start} حتى {end}",
     "OpenEndedWindow": "نشط من {start} (مفتوح المدة)",
     "MoneyExample": "معاينة السعر: بند بسعر {original} ج.م يُخفّض إلى {discounted} ج.م.",
-    "ActiveDiscount": "الخصم النشط: {percent}%"
+    "ActiveDiscount": "الخصم النشط: {percent}%",
+    "Errors": {
+      "forbidden": "ليست لديك صلاحية لتنفيذ هذا الإجراء.",
+      "invalid-input": "تحقق من قيم الحقول المطلوبة وحدودها.",
+      "not-found": "لم يعد السجل المطلوب موجودًا.",
+      "partner-school-not-found": "المدرسة الشريكة غير موجودة أو ليس لها ملف مدرسة.",
+      "partner-status-not-allowed": "حالة الشريك لا تسمح بهذا الإجراء.",
+      "item-not-found": "عنصر القائمة غير موجود.",
+      "not-draft": "يمكن تعديل المسودات فقط.",
+      "invalid-transition": "لا يمكن الانتقال إلى هذه الحالة.",
+      "empty-list": "لا يمكن نشر قائمة فارغة. أضف عنصرًا واحدًا على الأقل.",
+      "default-unavailable": "يجب أن يكون لكل عنصر متغير منتج افتراضي نشط قبل النشر.",
+      "default-ineligible": "المتغير الافتراضي لأحد العناصر لا يطابق المواصفات.",
+      "slot-taken": "توجد قائمة منشورة بالفعل لهذا العام الدراسي والصف.",
+      "unknown": "تعذر إكمال الطلب. يرجى المحاولة مرة أخرى.",
+      "label-required": "اسم العنصر مطلوب."
+    },
+    "OfferErrors": {
+      "forbidden": "ليست لديك صلاحية لتنفيذ هذا الإجراء.",
+      "invalid-input": "تحقق من قيم الحقول المطلوبة وحدودها.",
+      "not-found": "لم يعد السجل المطلوب موجودًا.",
+      "partner-school-not-found": "المدرسة الشريكة غير موجودة أو ليس لها ملف مدرسة.",
+      "unknown": "تعذر إكمال الطلب. يرجى المحاولة مرة أخرى.",
+      "discount": "أدخل خصمًا بين صفر و١٠٠ بالمائة.",
+      "start": "أدخل تاريخ ووقت البداية.",
+      "end": "أدخل تاريخ ووقت نهاية صالحين.",
+      "window": "يجب أن تكون النهاية بعد البداية."
+    }
   },
   "Pages": {
     "Dashboard": {
@@ -427,7 +488,9 @@
         "Refunded": "مسترد",
         "Healthy": "جيد",
         "Low": "مخزون منخفض",
-        "Out": "نفذ المخزون"
+        "Out": "نفذ المخزون",
+        "Paid": "مدفوع",
+        "Unpaid": "غير مدفوع"
       }
     },
     "Dashboard": {
@@ -866,7 +929,36 @@
       "NotesTitle": "ملاحظات داخلية",
       "NotesPlaceholder": "أضف ملاحظة داخلية لهذا الطلب...",
       "AddNote": "إضافة ملاحظة",
-      "NoNotes": "لا توجد ملاحظات داخلية بعد."
+      "NoNotes": "لا توجد ملاحظات داخلية بعد.",
+      "UpdateFailed": "تعذر التحديث",
+      "OrdersUpdated": "تم تحديث الطلبات",
+      "BulkPartial": "تم تحديث {count}؛ {error}",
+      "BulkUpdated": "تم تحديث {count} طلبات.",
+      "ConfirmBulkCancel": "هل تريد إلغاء الطلبات المحددة؟",
+      "Selected": "محدد",
+      "ConfirmSelected": "تأكيد المحدد",
+      "MarkProcessing": "بدء التجهيز",
+      "CancelSelected": "إلغاء المحدد",
+      "NoteAdded": "تمت إضافة الملاحظة",
+      "NoteFailed": "تعذرت إضافة الملاحظة",
+      "RequestFailed": "تعذر إرسال الطلب. تحقق من الاتصال وحاول مرة أخرى.",
+      "RefundSuccess": "تم رد مبلغ الطلب",
+      "RefundFailed": "تعذر رد المبلغ",
+      "TrackingRequired": "يلزم رقم تتبع لشحن الطلب.",
+      "ConfirmParcelBack": "أكد عودة الشحنة إلى المخزن.",
+      "ConfirmCancel": "هل تريد إلغاء هذا الطلب؟",
+      "StatusUpdated": "تم تحديث حالة الطلب",
+      "TrackingUpdated": "تم تحديث معلومات التتبع",
+      "PaymentUpdated": "تم تحديث حالة الدفع",
+      "PaymentAndStatus": "الدفع والحالة",
+      "PaymentStatus": "حالة الدفع",
+      "MarkPayment": "تغيير الحالة إلى {status}",
+      "LogisticalStatus": "حالة الشحن",
+      "SelectStatus": "اختر الحالة",
+      "ShippedCancelHint": "لا تلغِ الطلب المشحون إلا بعد عودة الشحنة إلى المخزن؛ الإلغاء يعيد الوحدات إلى المخزون المتاح.",
+      "FulfillmentTracking": "تتبع الشحنة",
+      "TrackingPlaceholder": "رقم الشحنة / التتبع",
+      "Update": "تحديث"
     }
   }
 }

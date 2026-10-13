@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import {
   categories,
   inventoryBalances,
@@ -9,6 +9,7 @@ import {
   warehouses,
 } from '@findeg/db/schema';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { adjustStock } from '@findeg/db/queries';
 import { AdminInventoryService } from '../application/services/AdminInventoryService';
 import type { IAuditLogService } from '../application/interfaces/IAuditLogService';
 
@@ -73,7 +74,14 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
   }
 
   it('adjusts inventory without a warehouse id by resolving the active warehouse inside a transaction', async () => {
-    const warehouseId = await ensureActiveWarehouse();
+    await ensureActiveWarehouse();
+    const [expected] = await testDb.db
+      .select({ id: warehouses.id })
+      .from(warehouses)
+      .where(eq(warehouses.isActive, true))
+      .orderBy(warehouses.id)
+      .limit(1);
+    const warehouseId = expected.id;
     const variantId = await seedVariant();
 
     // 1. Initial adjustment without warehouseId
@@ -127,5 +135,82 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
     // Diff was -20
     expect(updatedMovements[1].quantity).toBe(-20);
     expect(updatedMovements[1].movementType).toBe('adjustment');
+  });
+  it('applies both simultaneous first adjustments and records both movements', async () => {
+    const warehouseId = await ensureActiveWarehouse();
+    const variantId = await seedVariant();
+    await Promise.all(
+      [10, 20].map((quantity) =>
+        adjustStock(variantId, warehouseId, {
+          movementType: 'adjustment',
+          quantity,
+        }),
+      ),
+    );
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(
+        and(
+          eq(inventoryBalances.variantId, variantId),
+          eq(inventoryBalances.warehouseId, warehouseId),
+        ),
+      );
+    expect(balance.onHand).toBe(30);
+    const movements = await testDb.db
+      .select()
+      .from(stockMovements)
+      .where(eq(stockMovements.variantId, variantId));
+    expect(movements).toHaveLength(2);
+    expect(movements.reduce((sum, movement) => sum + movement.quantity, 0)).toBe(30);
+  });
+
+  it('refuses a negative first adjustment without creating balance or movement', async () => {
+    const warehouseId = await ensureActiveWarehouse();
+    const variantId = await seedVariant();
+    await expect(
+      adjustStock(variantId, warehouseId, { movementType: 'adjustment', quantity: -1 }),
+    ).rejects.toThrow();
+    expect(
+      await testDb.db
+        .select()
+        .from(inventoryBalances)
+        .where(eq(inventoryBalances.variantId, variantId)),
+    ).toEqual([]);
+    expect(
+      await testDb.db.select().from(stockMovements).where(eq(stockMovements.variantId, variantId)),
+    ).toEqual([]);
+  });
+
+  it('serializes first-time absolute stock corrections instead of adding both targets', async () => {
+    const warehouseId = await ensureActiveWarehouse();
+    const variantId = await seedVariant();
+    await Promise.all(
+      [30, 40].map((quantity) => service.updateStock({ variantId, warehouseId, quantity })),
+    );
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(eq(inventoryBalances.variantId, variantId));
+    expect([30, 40]).toContain(balance.onHand);
+    const movements = await testDb.db
+      .select()
+      .from(stockMovements)
+      .where(eq(stockMovements.variantId, variantId));
+    expect(movements.reduce((sum, movement) => sum + movement.quantity, 0)).toBe(balance.onHand);
+  });
+
+  it('keeps a concurrent recount at one requested quantity after existing stock', async () => {
+    const warehouseId = await ensureActiveWarehouse();
+    const variantId = await seedVariant();
+    await service.updateStock({ variantId, warehouseId, quantity: 50 });
+    await Promise.all(
+      [30, 40].map((quantity) => service.updateStock({ variantId, warehouseId, quantity })),
+    );
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(eq(inventoryBalances.variantId, variantId));
+    expect([30, 40]).toContain(balance.onHand);
   });
 });

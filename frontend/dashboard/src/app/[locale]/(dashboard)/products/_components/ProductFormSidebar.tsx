@@ -236,7 +236,10 @@ export function ProductFormSidebar({
               { label: t('images'), value: String(imageCount) },
               {
                 label: t('price'),
-                value: defaultPrice > 0 ? `EGP ${formatEgpDecimal(String(defaultPrice))}` : '—',
+                value:
+                  Number.isFinite(defaultPrice) && defaultPrice > 0
+                    ? `EGP ${formatEgpDecimal(defaultPrice.toFixed(2))}`
+                    : '—',
               },
               {
                 label: t('lastSaved'),

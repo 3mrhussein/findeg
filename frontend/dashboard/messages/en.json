@@ -64,7 +64,41 @@
     "MembersLoadError": "Members could not be loaded. You may not have permission to manage this Business Partner.",
     "SchoolSupplyLists": "School Supply Lists",
     "Offer": "Offer",
-    "Logo": "Logo"
+    "Logo": "Logo",
+    "Errors": {
+      "forbidden": "You do not have permission to manage Business Partners.",
+      "invalid-input": "Check the fields: the code must be lowercase letters, digits and hyphens, both names are required, and school profile fields must be valid.",
+      "code-taken": "Another Business Partner already uses this code.",
+      "code-locked": "The code can only be changed while the Business Partner is onboarding.",
+      "not-found": "This Business Partner no longer exists.",
+      "unknown": "The request could not be completed. Please try again."
+    },
+    "InvitationErrors": {
+      "forbidden": "You do not have permission to manage Business Partners.",
+      "invalid-input": "Enter a valid email address and choose at least one role.",
+      "not-found": "This Business Partner or invitation no longer exists.",
+      "partner-not-open": "Invitations can only change while the Business Partner is onboarding or active.",
+      "invitation-not-pending": "This invitation is no longer pending.",
+      "unknown": "The request could not be completed. Please try again."
+    },
+    "Email": "Email",
+    "Roles": "Roles",
+    "Invite": "Invite",
+    "PendingInvitations": "Pending invitations",
+    "CopyLink": "Copy link",
+    "Copied": "Copied",
+    "InvitationsOpenOnly": "Invitations can only change while the Business Partner is onboarding or active.",
+    "Resend": "Resend & copy link",
+    "Revoke": "Revoke",
+    "NoInvitations": "No pending invitations.",
+    "Expired": "Expired ({date})",
+    "Expires": "expires {date}",
+    "RoleLabels": {
+      "partner-administrator": "Partner Administrator",
+      "list-manager": "List manager",
+      "collection-staff": "Collection staff",
+      "report-viewer": "Report viewer"
+    }
   },
   "PartnerSales": {
     "Tab": "Sales",
@@ -166,7 +200,34 @@
     "FiniteWindow": "Active from {start} until {end}",
     "OpenEndedWindow": "Active from {start} (open-ended)",
     "MoneyExample": "Price preview: A {original} EGP item discounts to {discounted} EGP.",
-    "ActiveDiscount": "Active discount: {percent}%"
+    "ActiveDiscount": "Active discount: {percent}%",
+    "Errors": {
+      "forbidden": "You do not have permission to manage School Supply Lists.",
+      "invalid-input": "Check the form values: required fields cannot be empty, and quantities must be between 1 and 999.",
+      "not-found": "This School Supply List no longer exists.",
+      "partner-school-not-found": "This Business Partner was not found or has no school profile.",
+      "partner-status-not-allowed": "Drafting and editing lists is not allowed for closed Business Partners.",
+      "item-not-found": "The requested list item was not found.",
+      "not-draft": "Only drafts can be edited.",
+      "invalid-transition": "Cannot perform this status transition.",
+      "empty-list": "Cannot publish an empty list. Add at least one item first.",
+      "default-unavailable": "Every item must have an active default product variant before publication.",
+      "default-ineligible": "One or more items have an ineligible default variant.",
+      "slot-taken": "Another published list already occupies this academic year and grade slot.",
+      "unknown": "The request could not be completed. Please try again.",
+      "label-required": "Item label is required."
+    },
+    "OfferErrors": {
+      "forbidden": "You do not have permission to edit School Supply Lists.",
+      "invalid-input": "Check the offer: 0 to 100 percent, and the end must be after the start.",
+      "not-found": "This School Supply List no longer exists.",
+      "partner-school-not-found": "This list does not belong to a Partner School.",
+      "unknown": "The request could not be completed. Please try again.",
+      "discount": "Enter a discount between 0 and 100 percent.",
+      "start": "Enter a start date and time.",
+      "end": "Enter a valid end date and time.",
+      "window": "The end must be after the start."
+    }
   },
   "Pages": {
     "Dashboard": {
@@ -427,7 +488,9 @@
         "Refunded": "Refunded",
         "Healthy": "Healthy",
         "Low": "Low Stock",
-        "Out": "Out of Stock"
+        "Out": "Out of Stock",
+        "Paid": "Paid",
+        "Unpaid": "Unpaid"
       }
     },
     "Dashboard": {
@@ -866,7 +929,36 @@
       "NotesTitle": "Internal Notes",
       "NotesPlaceholder": "Add an internal note for this order...",
       "AddNote": "Add Note",
-      "NoNotes": "No internal notes yet."
+      "NoNotes": "No internal notes yet.",
+      "UpdateFailed": "Update failed",
+      "OrdersUpdated": "Orders updated",
+      "BulkPartial": "{count} updated; {error}",
+      "BulkUpdated": "{count} orders updated.",
+      "ConfirmBulkCancel": "Confirm that you want to cancel the selected orders.",
+      "Selected": "selected",
+      "ConfirmSelected": "Confirm Selected",
+      "MarkProcessing": "Mark Processing",
+      "CancelSelected": "Cancel Selected",
+      "NoteAdded": "Note added successfully",
+      "NoteFailed": "Failed to add note",
+      "RequestFailed": "The update request failed. Check your connection and try again.",
+      "RefundSuccess": "Order refunded successfully",
+      "RefundFailed": "Refund failed",
+      "TrackingRequired": "Shipping requires a tracking number.",
+      "ConfirmParcelBack": "Confirm that the parcel is back in the warehouse.",
+      "ConfirmCancel": "Confirm that you want to cancel this order.",
+      "StatusUpdated": "Order status updated",
+      "TrackingUpdated": "Tracking information updated",
+      "PaymentUpdated": "Payment status updated",
+      "PaymentAndStatus": "Payment & Status",
+      "PaymentStatus": "Payment Status",
+      "MarkPayment": "Mark as {status}",
+      "LogisticalStatus": "Logistical Status",
+      "SelectStatus": "Select status",
+      "ShippedCancelHint": "Cancel a shipped Order only once the parcel is back in the warehouse: cancelling returns its units to available stock.",
+      "FulfillmentTracking": "Fulfillment Tracking",
+      "TrackingPlaceholder": "AWB / Tracking #",
+      "Update": "Update"
     }
   }
 }

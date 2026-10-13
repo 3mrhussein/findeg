@@ -2,15 +2,9 @@ import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Product } from '../../../catalog/domain/entities/Product';
 import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos/InventoryUpdate';
-import {
-  getBalance,
-  adjustStock,
-  getLowStock,
-  productQueries,
-  withTransaction,
-} from '@findeg/db/queries';
-import { warehouses } from '@findeg/db/schema';
-import { eq } from 'drizzle-orm';
+import { adjustStock, getLowStock, productQueries, withTransaction } from '@findeg/db/queries';
+import { inventoryBalances, warehouses } from '@findeg/db/schema';
+import { and, eq } from 'drizzle-orm';
 import { createProductService } from '../../../catalog';
 
 /**
@@ -99,8 +93,27 @@ export class AdminInventoryService implements IAdminInventoryService {
       }
 
       // 2. Read balance inside transaction with resolved warehouse
-      const balance = await getBalance(update.variantId as number, warehouseId, tx);
-      const currentQty = balance?.onHand || 0;
+      // Initialize safely so even two first-time absolute updates lock the same row.
+      await tx
+        .insert(inventoryBalances)
+        .values({
+          variantId: update.variantId as number,
+          warehouseId,
+          onHand: 0,
+          reserved: 0,
+        })
+        .onConflictDoNothing();
+      const [balance] = await tx
+        .select({ onHand: inventoryBalances.onHand })
+        .from(inventoryBalances)
+        .where(
+          and(
+            eq(inventoryBalances.variantId, update.variantId as number),
+            eq(inventoryBalances.warehouseId, warehouseId),
+          ),
+        )
+        .for('update');
+      const currentQty = balance.onHand;
       oldQty = currentQty;
       const diff = update.quantity - currentQty;
 

@@ -13,28 +13,6 @@ export interface ActionState<T = unknown> {
   data?: T;
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  forbidden: 'You do not have permission to manage School Supply Lists.',
-  'invalid-input':
-    'Check the form values: required fields cannot be empty, and quantities must be between 1 and 999.',
-  'not-found': 'This School Supply List no longer exists.',
-  'partner-school-not-found': 'This Business Partner was not found or has no school profile.',
-  'partner-status-not-allowed':
-    'Drafting and editing lists is not allowed for closed Business Partners.',
-  'item-not-found': 'The requested list item was not found.',
-  'not-draft': 'Only drafts can be edited.',
-  'invalid-transition': 'Cannot perform this status transition.',
-  'empty-list': 'Cannot publish an empty list. Add at least one item first.',
-  'default-unavailable':
-    'Every item must have an active default product variant before publication.',
-  'default-ineligible': 'One or more items have an ineligible default variant.',
-  'slot-taken': 'Another published list already occupies this academic year and grade slot.',
-};
-
-function formatError(error: string): string {
-  return ERROR_MESSAGES[error] ?? error;
-}
-
 function refreshList(listId?: number) {
   revalidatePath('/[locale]/school-lists', 'page');
   if (listId) {
@@ -89,13 +67,13 @@ export async function createDraftAction(
     });
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(result.data.id);
     return { status: 'success', data: { id: result.data.id } };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -140,13 +118,13 @@ export async function updateDraftAction(
     });
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -186,7 +164,7 @@ export async function addItemAction(
     }
 
     if (!labelEn && !labelAr) {
-      return { status: 'error', message: 'Item label is required.' };
+      return { status: 'error', message: 'label-required' };
     }
 
     const itemInput: SupplyListItemInput = {
@@ -218,13 +196,13 @@ export async function addItemAction(
     const result = await schoolSupplyLists.addItem(actor, listId, itemInput);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -296,13 +274,13 @@ export async function updateItemAction(
     const result = await schoolSupplyLists.updateItem(actor, listId, itemId, patch);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -319,13 +297,13 @@ export async function removeItemAction(listId: number, itemId: number): Promise<
     const result = await schoolSupplyLists.removeItem(actor, listId, itemId);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -342,13 +320,13 @@ export async function reorderItemsAction(listId: number, itemIds: number[]): Pro
     const result = await schoolSupplyLists.reorderItems(actor, listId, itemIds);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -369,14 +347,14 @@ export async function publishListAction(
     const result = await schoolSupplyLists.publish(actor, listId);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success', data: { warnings: result.data.warnings } };
   } catch (err) {
     console.error('publishListAction error:', err);
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -393,13 +371,13 @@ export async function cloneListAction(listId: number): Promise<ActionState<{ id:
     const result = await schoolSupplyLists.cloneToDraft(actor, listId);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(result.data.id);
     return { status: 'success', data: { id: result.data.id } };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 
@@ -416,13 +394,13 @@ export async function archiveListAction(listId: number): Promise<ActionState> {
     const result = await schoolSupplyLists.archive(actor, listId);
 
     if (!result.success) {
-      return { status: 'error', message: formatError(result.error) };
+      return { status: 'error', message: result.error };
     }
 
     refreshList(listId);
     return { status: 'success' };
   } catch {
-    return { status: 'error', message: formatError('forbidden') };
+    return { status: 'error', message: 'forbidden' };
   }
 }
 

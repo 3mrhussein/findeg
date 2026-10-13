@@ -121,34 +121,27 @@ export async function adjustStock(
   tx?: DbTransaction,
 ): Promise<void> {
   return await withTransaction(tx, async (tx) => {
-    // 1. Update/Upsert balance with row-level lock
-    const [existing] = await tx
-      .select({ id: inventoryBalances.id })
-      .from(inventoryBalances)
+    // Initialize without racing another first writer, then atomically apply the delta.
+    // A zero insert also permits negative deltas on an existing positive balance:
+    // PostgreSQL checks INSERT constraints before handling a uniqueness conflict.
+    await tx
+      .insert(inventoryBalances)
+      .values({ variantId, warehouseId, onHand: 0, reserved: 0 })
+      .onConflictDoNothing({
+        target: [inventoryBalances.variantId, inventoryBalances.warehouseId],
+      });
+    await tx
+      .update(inventoryBalances)
+      .set({
+        onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
+        updatedAt: new Date(),
+      })
       .where(
         and(
           eq(inventoryBalances.variantId, variantId),
           eq(inventoryBalances.warehouseId, warehouseId),
         ),
-      )
-      .for('update');
-
-    if (existing) {
-      await tx
-        .update(inventoryBalances)
-        .set({
-          onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
-          updatedAt: new Date(),
-        })
-        .where(eq(inventoryBalances.id, existing.id));
-    } else {
-      await tx.insert(inventoryBalances).values({
-        variantId,
-        warehouseId,
-        onHand: Math.max(0, movement.quantity),
-        reserved: 0,
-      });
-    }
+      );
 
     // 2. Record movement
     await tx.insert(stockMovements).values({

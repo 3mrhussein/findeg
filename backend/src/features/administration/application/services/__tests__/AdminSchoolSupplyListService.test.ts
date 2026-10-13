@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   lifecycle: {} as ISchoolSupplyListService,
   listSpecificationOptions: vi.fn(),
   listVariantCandidates: vi.fn(),
+  listPartnerOptions: vi.fn(),
 }));
 
 vi.mock('../../../../school', async (importOriginal) => ({
@@ -23,6 +24,7 @@ vi.mock('@findeg/db/queries/school-supply-lists', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@findeg/db/queries/school-supply-lists')>()),
   findVariantCandidates: mocks.listVariantCandidates,
   listAttributeValuesForCategory: mocks.listSpecificationOptions,
+  listSchoolListPartners: mocks.listPartnerOptions,
 }));
 
 vi.mock('@findeg/db/connection', () => ({ db: mocks.db }));
@@ -42,6 +44,24 @@ describe('AdminSchoolSupplyListService', () => {
     mocks.lifecycle = {} as ISchoolSupplyListService;
     lifecycle = mocks.lifecycle;
     service = createAdministrationServices().schoolSupplyLists;
+  });
+
+  it.each([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ, PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE])(
+    'lists partner options for Staff with only %s',
+    async (permission) => {
+      const options = [{ id: 7, nameEn: 'School', nameAr: 'مدرسة', status: 'onboarding' }];
+      mocks.listPartnerOptions.mockResolvedValue(options);
+      await expect(
+        service.listPartnerOptions({ ...writer, permissionCodes: [permission] }),
+      ).resolves.toEqual({ success: true, data: options });
+    },
+  );
+  it('refuses partner options without list permission before querying', async () => {
+    await expect(service.listPartnerOptions({ ...writer, permissionCodes: [] })).resolves.toEqual({
+      success: false,
+      error: 'forbidden',
+    });
+    expect(mocks.listPartnerOptions).not.toHaveBeenCalled();
   });
 
   it('returns catalog-backed specification options to authorized Staff', async () => {

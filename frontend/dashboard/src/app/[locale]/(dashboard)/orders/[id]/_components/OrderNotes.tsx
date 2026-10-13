@@ -32,20 +32,20 @@ export function OrderNotes({ orderId, notes }: OrderNotesProps) {
       try {
         const result = await addOrderNoteAction(orderId, trimmed);
         if (result.success) {
-          toast({ title: 'Note added successfully' });
+          toast({ title: t('NoteAdded') });
           setNoteText('');
           router.refresh();
         } else {
           toast({
-            title: 'Failed to add note',
+            title: t('NoteFailed'),
             description: result.error,
             variant: 'destructive',
           });
         }
       } catch {
         toast({
-          title: 'Failed to add note',
-          description: 'Network error or server unavailable',
+          title: t('NoteFailed'),
+          description: t('RequestFailed'),
           variant: 'destructive',
         });
       }

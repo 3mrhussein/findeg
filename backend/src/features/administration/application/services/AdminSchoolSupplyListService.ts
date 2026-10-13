@@ -12,6 +12,7 @@ import type {
   IAdminSchoolSupplyListService,
   SchoolSupplyListIndexFilters,
   SchoolSupplyListIndexRow,
+  SchoolListPartnerOption,
   SpecificationOption,
   SpecificationVariantCandidate,
 } from '../interfaces/IAdminSchoolSupplyListService';
@@ -29,7 +30,13 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     private readonly querySpecificationOptions: SpecificationOptionsQuery,
     private readonly queryVariantCandidates: VariantCandidatesQuery,
     private readonly queryListAll?: ListAllQuery,
+    private readonly queryPartnerOptions: () => Promise<SchoolListPartnerOption[]> = async () => [],
   ) {}
+
+  async listPartnerOptions(actor: SupplyListStaffActor) {
+    if (!canReadSupplyLists(actor)) return forbidden();
+    return { success: true as const, data: await this.queryPartnerOptions() };
+  }
 
   async listAll(actor: SupplyListStaffActor, filters: SchoolSupplyListIndexFilters = {}) {
     if (!canReadSupplyLists(actor)) return forbidden();

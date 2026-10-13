@@ -160,6 +160,11 @@ for (const locale of ['en', 'ar']) {
         cy.get('[data-testid="item-row"]').should('have.length', 1);
         cy.contains(locale === 'ar' ? 'كشكول 100 صفحة' : 'Notebook 100 pages').should('be.visible');
 
+        // Reload to prove the edited quantity persisted, rather than only counting rows.
+        cy.reload();
+        cy.get('[data-testid="item-row"]').first().find('td').eq(2).should('have.text', '5');
+        cy.get('[data-testid="items-editor-section"]').should('have.attr', 'data-hydrated', 'true');
+
         // 2. Add Specification Item (without default variant first to test incomplete draft)
         cy.get('[data-testid="add-item-btn"]').click();
         cy.get('[data-testid="item-dialog"]').should('be.visible');

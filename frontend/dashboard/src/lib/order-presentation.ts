@@ -38,14 +38,13 @@ export function getAllowedPaymentStatusTransitions(order: OrderProgress): Paymen
 export function confirmStatusUpdate(
   from: OrderStatus,
   status: OrderStatus,
+  messages: { parcelBack: string; cancel: string },
 ): OrderStatusUpdate | null {
   if (status === 'cancelled') {
     if (from === 'shipped') {
-      return window.confirm('Confirm that the parcel is back in the warehouse.')
-        ? { status, parcelBackInWarehouse: true }
-        : null;
+      return window.confirm(messages.parcelBack) ? { status, parcelBackInWarehouse: true } : null;
     }
-    return window.confirm('Confirm that you want to cancel this order.') ? { status } : null;
+    return window.confirm(messages.cancel) ? { status } : null;
   }
   return { status };
 }

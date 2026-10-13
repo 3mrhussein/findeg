@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -22,6 +23,7 @@ export function ListLifecycleActions({
   canEdit,
 }: ListLifecycleActionsProps) {
   const t = useTranslations('SchoolLists');
+  const translateError = useActionError('SchoolLists.Errors');
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -38,7 +40,7 @@ export function ListLifecycleActions({
     startTransition(async () => {
       const res = await cloneListAction(listId);
       if (res.status === 'error') {
-        setActionError(res.message || 'Error cloning list');
+        setActionError(res.message || 'unknown');
       } else if (res.status === 'success' && res.data) {
         router.push(`/school-lists/${res.data.id}`);
       }
@@ -50,7 +52,7 @@ export function ListLifecycleActions({
     startTransition(async () => {
       const res = await archiveListAction(listId);
       if (res.status === 'error') {
-        setActionError(res.message || 'Error archiving list');
+        setActionError(res.message || 'unknown');
       } else if (res.status === 'success') {
         router.refresh();
       }
@@ -63,7 +65,7 @@ export function ListLifecycleActions({
         className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"
         data-testid="lifecycle-error-alert"
       >
-        {actionError}
+        {translateError(actionError)}
       </div>
     ) : null;
   }
@@ -105,7 +107,7 @@ export function ListLifecycleActions({
           className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"
           data-testid="lifecycle-error-alert"
         >
-          {actionError}
+          {translateError(actionError)}
         </div>
       )}
     </div>

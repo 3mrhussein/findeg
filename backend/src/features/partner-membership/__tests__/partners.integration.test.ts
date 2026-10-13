@@ -44,6 +44,50 @@ describe('Business Partners (Staff operations)', () => {
     return result.data;
   };
 
+  describe('partner and school profile save', () => {
+    const profile = {
+      governorate: 'Cairo' as const,
+      area: 'Maadi',
+      schoolType: 'Private' as const,
+      academicSystem: 'National' as const,
+    };
+    it('rejects an invalid profile before reserving the partner code, then allows retry', async () => {
+      const fields = { code: 'profile-retry-school', nameEn: 'School', nameAr: 'مدرسة' };
+      expect(
+        await services.partners.createPartner(staff, {
+          ...fields,
+          schoolProfile: { ...profile, area: '' },
+        }),
+      ).toEqual({ success: false, error: 'invalid-input' });
+      const all = await services.partners.listPartners(staff);
+      expect(all.success && all.data.some((p) => p.code === fields.code)).toBe(false);
+      const result = await services.partners.createPartner(staff, {
+        ...fields,
+        schoolProfile: profile,
+      });
+      expect(result.success).toBe(true);
+      if (!result.success) throw new Error(result.error);
+      expect(await services.partners.getPartnerSchoolProfile(staff, result.data.id)).toMatchObject({
+        success: true,
+        data: { area: 'Maadi' },
+      });
+    });
+    it('leaves names and history unchanged when an edit contains an invalid profile', async () => {
+      const partner = await create('profile-edit-school');
+      expect(
+        await services.partners.updatePartner(staff, partner.id, {
+          nameEn: 'Changed',
+          schoolProfile: { ...profile, area: '' },
+        }),
+      ).toEqual({ success: false, error: 'invalid-input' });
+      expect(await services.partners.getPartner(staff, partner.id)).toMatchObject({
+        success: true,
+        data: { nameEn: 'Nile School' },
+      });
+      expect(await historyFor(partner.id)).toHaveLength(1);
+    });
+  });
+
   describe('createPartner', () => {
     it('creates an onboarding partner and records a partner.created audit row', async () => {
       const partner = await create('nile-school');

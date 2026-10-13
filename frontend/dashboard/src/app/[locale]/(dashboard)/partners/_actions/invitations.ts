@@ -18,18 +18,9 @@ export interface InvitationActionState {
   link?: string;
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  forbidden: 'You do not have permission to manage Business Partners.',
-  'invalid-input': 'Enter a valid email address and choose at least one role.',
-  'not-found': 'This Business Partner or invitation no longer exists.',
-  'partner-not-open':
-    'Invitations can only change while the Business Partner is onboarding or active.',
-  'invitation-not-pending': 'This invitation is no longer pending.',
-};
-
 const fail = (error: string): InvitationActionState => ({
   status: 'error',
-  message: ERROR_MESSAGES[error] ?? error,
+  message: error,
 });
 
 function linkFor(locale: string, token: string): string {

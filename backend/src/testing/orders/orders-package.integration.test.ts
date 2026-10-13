@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { eq } from 'drizzle-orm';
-import { orders, orderItems, users, outbox } from '@findeg/db/schema';
+import { eq, sql } from 'drizzle-orm';
+import { orders, orderItems, orderNotes, auditLog, users, outbox } from '@findeg/db/schema';
 import {
   createOrders,
   InvalidOrderStatusTransitionError,
@@ -84,6 +84,33 @@ describe('public injected Orders package on PostgreSQL', () => {
     });
     return row;
   }
+  it('rolls back a note when auditing fails, and retries without a duplicate', async () => {
+    const row = await seed();
+    await testDb.db
+      .execute(sql`create function public.reject_note_audit() returns trigger language plpgsql as $$
+      begin raise exception 'injected note audit failure'; end; $$`);
+    await testDb.db.execute(sql`create trigger reject_note_audit before insert on ${auditLog}
+      for each row when (NEW.action = 'add_note') execute function public.reject_note_audit()`);
+    try {
+      await expect(api().addNote(writer, row.id, 'Call customer')).rejects.toThrow();
+      expect(
+        await testDb.db.select().from(orderNotes).where(eq(orderNotes.orderId, row.id)),
+      ).toEqual([]);
+    } finally {
+      await testDb.db.execute(sql`drop trigger reject_note_audit on ${auditLog}`);
+      await testDb.db.execute(sql`drop function public.reject_note_audit()`);
+    }
+    await api().addNote(writer, row.id, 'Call customer');
+    const detail = await api().detail(row.id);
+    expect(detail?.notes).toHaveLength(1);
+    expect(detail?.notes[0]).toMatchObject({
+      note: 'Call customer',
+      authorName: 'Mona Saleh',
+      createdAt: instant,
+    });
+    expect(detail?.activity).toHaveLength(1);
+  });
+
   it.each(
     Object.keys(statusTargets).flatMap((from) =>
       Object.keys(statusTargets).map((to) => [from as OrderStatus, to as OrderStatus]),

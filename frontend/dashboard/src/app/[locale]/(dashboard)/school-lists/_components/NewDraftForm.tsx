@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 
 import { useActionState, useEffect } from 'react';
 import { useRouter } from '@i18n/navigation';
@@ -23,6 +24,7 @@ const initialState: ActionState<{ id: number }> = { status: 'idle' };
 export function NewDraftForm({ partners, locale }: NewDraftFormProps) {
   const router = useRouter();
   const t = useTranslations('SchoolLists');
+  const actionError = useActionError('SchoolLists.Errors');
   const [state, formAction, isPending] = useActionState(createDraftAction, initialState);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export function NewDraftForm({ partners, locale }: NewDraftFormProps) {
           className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"
           data-testid="draft-error-alert"
         >
-          {state.message}
+          {actionError(state.message)}
         </div>
       )}
 

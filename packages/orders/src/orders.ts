@@ -271,9 +271,7 @@ export function createOrders({
       const todayRevenueFilter = options.liveOnly
         ? sql`filter (where ${day} = ${today} and ${liveStatuses})`
         : sql`filter (where ${day} = ${today})`;
-      const trendLiveClause = options.liveOnly
-        ? sql`and ${orders.status} in ('pending', 'confirmed', 'processing', 'shipped', 'delivered')`
-        : sql``;
+      const trendLiveClause = options.liveOnly ? sql`and ${liveStatuses}` : sql``;
 
       return db.transaction(
         async (tx) => {
@@ -400,37 +398,40 @@ export function createOrders({
           : 'Staff';
       }
 
-      const changedAt = now();
-      const [inserted] = await db
-        .insert(orderNotes)
-        .values({
-          orderId: key,
-          authorId: actor.userId,
-          authorName: authorName || 'Staff',
-          note: cleanNote,
+      return db.transaction(async (tx) => {
+        const changedAt = now();
+        const [inserted] = await tx
+          .insert(orderNotes)
+          .values({
+            orderId: key,
+            authorId: actor.userId,
+            authorName: authorName || 'Staff',
+            note: cleanNote,
+            createdAt: changedAt,
+          })
+          .returning();
+
+        await tx.insert(auditLog).values({
+          adminUserId: actor.userId,
+          entityType: 'order',
+          entityId: String(key),
+          action: 'add_note',
+          oldValues: {},
+          newValues: { noteId: inserted.id, note: cleanNote },
           createdAt: changedAt,
-        })
-        .returning();
+        });
 
-      await db.insert(auditLog).values({
-        adminUserId: actor.userId,
-        entityType: 'order',
-        entityId: String(key),
-        action: 'add_note',
-        oldValues: {},
-        newValues: { noteId: inserted.id, note: cleanNote },
-        createdAt: changedAt,
+        return {
+          id: inserted.id,
+          orderId: inserted.orderId,
+          authorId: inserted.authorId,
+          authorName: inserted.authorName,
+          note: inserted.note,
+          createdAt: inserted.createdAt,
+        };
       });
-
-      return {
-        id: inserted.id,
-        orderId: inserted.orderId,
-        authorId: inserted.authorId,
-        authorName: inserted.authorName,
-        note: inserted.note,
-        createdAt: inserted.createdAt,
-      };
     },
+
     async listNotes(id) {
       const key = orderId.parse(id);
       const db = await database();

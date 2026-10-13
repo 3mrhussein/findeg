@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -43,6 +44,7 @@ export function ItemsEditor({
   locale,
 }: ItemsEditorProps) {
   const t = useTranslations('SchoolLists');
+  const translateError = useActionError('SchoolLists.Errors');
   const [mounted, setMounted] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ItemFormValues | null>(null);
@@ -82,7 +84,7 @@ export function ItemsEditor({
     startTransition(async () => {
       const res = await removeItemAction(listId, itemId);
       if (res.status === 'error') {
-        setActionError(res.message || 'Error deleting item');
+        setActionError(res.message || 'unknown');
       }
     });
   };
@@ -102,7 +104,7 @@ export function ItemsEditor({
         newItems.map((i) => i.id),
       );
       if (res.status === 'error') {
-        setActionError(res.message || 'Error reordering items');
+        setActionError(res.message || 'unknown');
       }
     });
   };
@@ -118,7 +120,7 @@ export function ItemsEditor({
       try {
         const res = await publishListAction(listId);
         if (res.status === 'error') {
-          setActionError(res.message || 'Error publishing list');
+          setActionError(res.message || 'unknown');
         } else if (res.status === 'success') {
           if (res.data?.warnings && res.data.warnings.length > 0) {
             setWarnings(res.data.warnings);
@@ -126,7 +128,7 @@ export function ItemsEditor({
         }
       } catch (err) {
         console.error('handlePublish client error:', err);
-        setActionError(err instanceof Error ? err.message : 'Error publishing list');
+        setActionError('unknown');
       }
     });
   };
@@ -179,7 +181,7 @@ export function ItemsEditor({
           className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"
           data-testid="editor-error-alert"
         >
-          {actionError}
+          {translateError(actionError)}
         </div>
       )}
 

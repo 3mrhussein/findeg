@@ -326,3 +326,16 @@ export function isSupplyListSlotTakenError(error: unknown): boolean {
   }
   return false;
 }
+
+/** Minimal partner identity/status projection for Staff list filters and authoring. */
+export async function listSchoolListPartners(executor: SchoolSupplyListExecutor) {
+  return executor
+    .select({
+      id: businessPartners.id,
+      nameEn: businessPartners.nameEn,
+      nameAr: businessPartners.nameAr,
+      status: businessPartners.status,
+    })
+    .from(businessPartners)
+    .orderBy(asc(businessPartners.id));
+}

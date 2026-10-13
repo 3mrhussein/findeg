@@ -38,11 +38,11 @@ export function OrderHeader({ order }: OrderHeaderProps) {
       const result = await refundOrderAction(Number(order.id));
 
       if (result.success) {
-        toast({ title: 'Order refunded successfully' });
+        toast({ title: t('RefundSuccess') });
         setDialogOpen(false);
         router.refresh();
       } else {
-        toast({ title: 'Refund failed', description: result.error, variant: 'destructive' });
+        toast({ title: t('RefundFailed'), description: result.error, variant: 'destructive' });
       }
     });
   };

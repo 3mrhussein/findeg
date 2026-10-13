@@ -6,7 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getSchoolSupplyListById, getSchoolSupplyListOffer } from '@data/school-lists/queries';
-import { getPartner } from '@data/partners/queries';
+import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 import { getCategories } from '@data/categories/queries';
 import { OfferForm } from '../_components/OfferForm';
 import { ItemsEditor } from '../_components/ItemsEditor';
@@ -35,8 +35,10 @@ export default async function SchoolSupplyListPage({
   const list = await getSchoolSupplyListById(session, listId);
   if (!list.success) notFound();
 
-  const partnerRes = await getPartner(session, list.data.businessPartnerId);
-  const partner = partnerRes.success ? partnerRes.data : null;
+  const partnerRes = await getSchoolListPartnerOptions(session);
+  const partner = partnerRes.success
+    ? partnerRes.data.find((option) => option.id === list.data.businessPartnerId)
+    : null;
 
   const categoriesRes = await getCategories(locale as Locale);
   const categories = Array.isArray(categoriesRes) ? categoriesRes : [];

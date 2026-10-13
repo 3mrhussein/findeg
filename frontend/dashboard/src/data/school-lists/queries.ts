@@ -67,3 +67,11 @@ export async function getVariantCandidates(session: SessionPayload, categoryId: 
   const { schoolSupplyLists } = createAdministrationServices();
   return await schoolSupplyLists.listVariantCandidates(toListActor(session), categoryId);
 }
+
+/** List-only Staff can read the names/statuses needed by their own screens. */
+export async function getSchoolListPartnerOptions(session: SessionPayload) {
+  cacheTag('school-lists', 'partners');
+  cacheLife('minutes');
+  const { schoolSupplyLists } = createAdministrationServices();
+  return schoolSupplyLists.listPartnerOptions(toListActor(session));
+}

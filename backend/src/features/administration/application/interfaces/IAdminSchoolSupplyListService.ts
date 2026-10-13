@@ -21,7 +21,17 @@ export interface SpecificationVariantCandidate {
   attributes: Record<string, string>;
 }
 
+export interface SchoolListPartnerOption {
+  id: number;
+  nameEn: string;
+  nameAr: string;
+  status: import('@findeg/domain').BusinessPartnerStatus;
+}
+
 export interface IAdminSchoolSupplyListService extends ISchoolSupplyListService {
+  listPartnerOptions(
+    actor: SupplyListStaffActor,
+  ): Promise<SupplyListResult<SchoolListPartnerOption[]>>;
   listAll(
     actor: SupplyListStaffActor,
     filters?: SchoolSupplyListIndexFilters,

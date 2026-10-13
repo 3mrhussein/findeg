@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 import type { Locale } from '@findeg/domain';
 import { useActionState } from 'react';
 import { Button, Input, Label, formatEgp } from '@findeg/ui';
@@ -17,6 +18,7 @@ const initialState: OfferFormState = { status: 'idle' };
 export function OfferForm({ listId, canEdit, offer }: OfferFormProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations('SchoolLists');
+  const actionError = useActionError('SchoolLists.OfferErrors');
   const [state, saveAction, saving] = useActionState(
     saveOfferAction.bind(null, locale, listId),
     initialState,
@@ -95,7 +97,7 @@ export function OfferForm({ listId, canEdit, offer }: OfferFormProps) {
         </div>
         {state.status === 'error' && (
           <p role="alert" className="text-sm text-destructive" data-testid="offer-error-alert">
-            {state.message}
+            {actionError(state.message)}
           </p>
         )}
         {state.status === 'saved' && (

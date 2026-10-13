@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 import type { Locale } from '@findeg/domain';
 import { GOVERNORATES, SCHOOL_TYPES, ACADEMIC_SYSTEMS } from '@findeg/domain';
 
@@ -29,6 +30,7 @@ export function PartnerForm({ partner, profile }: PartnerFormProps) {
   const router = useRouter();
   const locale = useLocale() as Locale;
   const t = useTranslations('Partners');
+  const actionError = useActionError('Partners.Errors');
   const [state, formAction, isPending] = useActionState(
     savePartnerAction.bind(null, locale, partner?.id ?? null),
     initialState,
@@ -146,7 +148,7 @@ export function PartnerForm({ partner, profile }: PartnerFormProps) {
 
       {state.status === 'error' && (
         <p role="alert" className="text-sm text-red-600">
-          {state.message}
+          {actionError(state.message)}
         </p>
       )}
       <Button type="submit" disabled={isPending}>

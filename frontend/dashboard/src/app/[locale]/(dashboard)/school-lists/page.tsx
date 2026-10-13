@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getSchoolSupplyLists } from '@data/school-lists/queries';
-import { listPartners } from '@data/partners/queries';
+import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 
 export const metadata = {
   title: 'School Supply Lists - FindEg Admins',
@@ -33,7 +33,7 @@ export default async function SchoolSupplyListsPage({
   });
   const canWrite = sessionHasPermission(session, PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE);
 
-  const partnersRes = await listPartners(session);
+  const partnersRes = await getSchoolListPartnerOptions(session);
   const partners = partnersRes.success ? partnersRes.data : [];
 
   const partnerId = resolvedSearchParams.partnerId

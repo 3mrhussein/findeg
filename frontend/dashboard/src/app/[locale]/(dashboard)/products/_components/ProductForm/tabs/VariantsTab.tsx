@@ -344,7 +344,12 @@ export function VariantsTab() {
                         {variant.isActive ? t('active') : t('inactive')}
                       </Badge>
                       <span className="text-sm font-semibold tabular-nums">
-                        EGP {formatEgpDecimal(String(variant.basePrice ?? 0))}
+                        EGP{' '}
+                        {formatEgpDecimal(
+                          Number.isFinite(variant.basePrice)
+                            ? Number(variant.basePrice).toFixed(2)
+                            : '0.00',
+                        )}
                       </span>
                     </div>
                   </div>

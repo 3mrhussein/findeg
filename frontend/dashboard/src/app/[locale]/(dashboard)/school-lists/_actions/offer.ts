@@ -13,16 +13,9 @@ export interface OfferFormState {
   message?: string;
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  forbidden: 'You do not have permission to edit School Supply Lists.',
-  'invalid-input': 'Check the offer: 0 to 100 percent, and the end must be after the start.',
-  'not-found': 'This School Supply List no longer exists.',
-  'partner-school-not-found': 'This list does not belong to a Partner School.',
-};
-
 const fail = (error: string): OfferFormState => ({
   status: 'error',
-  message: ERROR_MESSAGES[error] ?? error,
+  message: error,
 });
 
 const refresh = () => {

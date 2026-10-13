@@ -1,9 +1,10 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 import type { Locale } from '@findeg/domain';
 
 import { useActionState, useState, useTransition } from 'react';
 import { Badge, Button, Input, Label } from '@findeg/ui';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   inviteAction,
   resendInvitationAction,
@@ -29,6 +30,7 @@ interface InvitationsPanelProps {
 const idle: InvitationActionState = { status: 'idle' };
 
 function LinkBox({ link }: { link: string }) {
+  const t = useTranslations('Partners');
   const [copied, setCopied] = useState(false);
   return (
     <div className="flex items-center gap-2" data-testid="invitation-link">
@@ -41,7 +43,7 @@ function LinkBox({ link }: { link: string }) {
           setCopied(true);
         }}
       >
-        {copied ? 'Copied' : 'Copy link'}
+        {copied ? t('Copied') : t('CopyLink')}
       </Button>
     </div>
   );
@@ -50,6 +52,8 @@ function LinkBox({ link }: { link: string }) {
 /** Pending Partner Invitations of one Business Partner, with invite, resend, revoke and copy link. */
 export function InvitationsPanel({ partnerId, canChange, invitations }: InvitationsPanelProps) {
   const locale = useLocale() as Locale;
+  const t = useTranslations('Partners');
+  const actionError = useActionError('Partners.InvitationErrors');
   const [inviteState, inviteFormAction, inviting] = useActionState(
     inviteAction.bind(null, locale, partnerId),
     idle,
@@ -65,11 +69,11 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
       {canChange ? (
         <form action={inviteFormAction} className="max-w-xl space-y-4" data-testid="invite-form">
           <div className="space-y-2">
-            <Label htmlFor="invite-email">Email</Label>
+            <Label htmlFor="invite-email">{t('Email')}</Label>
             <Input id="invite-email" name="email" type="email" required dir="ltr" />
           </div>
           <fieldset className="space-y-2">
-            <legend className="text-sm font-medium">Roles</legend>
+            <legend className="text-sm font-medium">{t('Roles')}</legend>
             {PARTNER_ROLES.map((role) => (
               <label key={role.value} className="flex items-center gap-2 text-sm">
                 <input
@@ -78,28 +82,26 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
                   value={role.value}
                   defaultChecked={role.value === 'partner-administrator'}
                 />
-                {role.label}
+                {t(`RoleLabels.${role.value}`)}
               </label>
             ))}
           </fieldset>
           {inviteState.status === 'error' && (
             <p role="alert" className="text-sm text-red-600">
-              {inviteState.message}
+              {actionError(inviteState.message)}
             </p>
           )}
           <Button type="submit" disabled={inviting}>
-            Invite
+            {t('Invite')}
           </Button>
           {inviteState.link && <LinkBox link={inviteState.link} />}
         </form>
       ) : (
-        <p className="text-sm text-muted-foreground">
-          Invitations can only change while the Business Partner is onboarding or active.
-        </p>
+        <p className="text-sm text-muted-foreground">{t('InvitationsOpenOnly')}</p>
       )}
 
       <div>
-        <h2 className="text-xl font-semibold mb-2">Pending invitations</h2>
+        <h2 className="text-xl font-semibold mb-2">{t('PendingInvitations')}</h2>
         <ul className="divide-y rounded-lg border" data-testid="pending-invitations">
           {invitations.map((invitation) => {
             const isExpired = new Date(invitation.expiresAt).getTime() <= Date.now();
@@ -118,19 +120,21 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
                       {invitation.email}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>{invitation.roles.join(', ')}</span>
+                      <span>
+                        {invitation.roles
+                          .map((role) =>
+                            t.has(`RoleLabels.${role}`) ? t(`RoleLabels.${role}`) : role,
+                          )
+                          .join(', ')}
+                      </span>
                       <span>·</span>
                       {isExpired ? (
                         <Badge variant="destructive" data-testid="invitation-expired-badge">
-                          {locale === 'ar'
-                            ? `منتهية (${formattedDate})`
-                            : `Expired (${formattedDate})`}
+                          {t('Expired', { date: formattedDate })}
                         </Badge>
                       ) : (
                         <span data-testid="invitation-expiry">
-                          {locale === 'ar'
-                            ? `تنتهي في ${formattedDate}`
-                            : `expires ${formattedDate}`}
+                          {t('Expires', { date: formattedDate })}
                         </span>
                       )}
                     </div>
@@ -145,7 +149,7 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
                           run(invitation.id, () => resendInvitationAction(locale, invitation.id))
                         }
                       >
-                        Resend &amp; copy link
+                        {t('Resend')}
                       </Button>
                       <Button
                         type="button"
@@ -155,14 +159,14 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
                           run(invitation.id, () => revokeInvitationAction(locale, invitation.id))
                         }
                       >
-                        Revoke
+                        {t('Revoke')}
                       </Button>
                     </div>
                   )}
                 </div>
                 {rowState?.id === invitation.id && rowState.state.status === 'error' && (
                   <p role="alert" className="text-sm text-red-600">
-                    {rowState.state.message}
+                    {actionError(rowState.state.message)}
                   </p>
                 )}
                 {rowState?.id === invitation.id && rowState.state.link && (
@@ -172,7 +176,7 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
             );
           })}
           {invitations.length === 0 && (
-            <li className="p-4 text-sm text-muted-foreground">No pending invitations.</li>
+            <li className="p-4 text-sm text-muted-foreground">{t('NoInvitations')}</li>
           )}
         </ul>
       </div>

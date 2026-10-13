@@ -1,4 +1,5 @@
 'use client';
+import { useActionError } from '@hooks/use-action-error';
 
 import { useState, useEffect, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -45,12 +46,13 @@ interface ItemDialogProps {
 
 export function ItemDialog({ open, onOpenChange, listId, categories, item }: ItemDialogProps) {
   const t = useTranslations('SchoolLists');
+  const actionError = useActionError('SchoolLists.Errors');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const [labelEn, setLabelEn] = useState('');
   const [labelAr, setLabelAr] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState('1');
   const [required, setRequired] = useState(true);
   const [exactItem, setExactItem] = useState(true);
   const [variantId, setVariantId] = useState<string>('');
@@ -67,7 +69,7 @@ export function ItemDialog({ open, onOpenChange, listId, categories, item }: Ite
     if (item) {
       setLabelEn(item.labelEn || '');
       setLabelAr(item.labelAr || '');
-      setQuantity(item.quantity || 1);
+      setQuantity(String(item.quantity || 1));
       setRequired(item.required);
       setExactItem(item.exactItem);
       setVariantId(item.variantId ? String(item.variantId) : '');
@@ -78,7 +80,7 @@ export function ItemDialog({ open, onOpenChange, listId, categories, item }: Ite
     } else {
       setLabelEn('');
       setLabelAr('');
-      setQuantity(1);
+      setQuantity('1');
       setRequired(true);
       setExactItem(true);
       setVariantId('');
@@ -136,7 +138,7 @@ export function ItemDialog({ open, onOpenChange, listId, categories, item }: Ite
       }
 
       if (result.status === 'error') {
-        setError(result.message || 'Error saving item');
+        setError(result.message || 'unknown');
       } else {
         onOpenChange(false);
       }
@@ -168,7 +170,7 @@ export function ItemDialog({ open, onOpenChange, listId, categories, item }: Ite
               className="rounded-md bg-destructive/15 p-3 text-sm text-destructive"
               data-testid="item-error-alert"
             >
-              {error}
+              {actionError(error ?? undefined)}
             </div>
           )}
 
@@ -204,7 +206,7 @@ export function ItemDialog({ open, onOpenChange, listId, categories, item }: Ite
                 min="1"
                 max="999"
                 value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, Math.min(999, Number(e.target.value))))}
+                onChange={(e) => setQuantity(e.target.value)}
                 required
                 data-testid="item-quantity"
               />
