@@ -1,4 +1,10 @@
-import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
+import type {
+  AcademicSystem,
+  BusinessPartnerStatus as PartnerStatus,
+  Governorate,
+  SchoolType,
+} from '@findeg/domain';
+import type { PartnerSchoolProfileRow } from '@findeg/db/queries/partners';
 
 /**
  * A Staff session acting on Business Partners. A `SessionPayload` satisfies this
@@ -57,6 +63,16 @@ export type ReadPartnerError = 'forbidden' | 'not-found';
 export type ChangePartnerStatusError =
   'forbidden' | 'not-found' | 'invalid-transition' | 'last-administrator';
 
+export interface SavePartnerSchoolProfileInput {
+  governorate: Governorate;
+  area: string;
+  schoolType: SchoolType;
+  academicSystem: AcademicSystem;
+  logoUrl?: string | null;
+}
+
+export type SavePartnerSchoolProfileError = 'forbidden' | 'invalid-input' | 'not-found';
+
 export interface IPartnerService {
   /** The statuses a Business Partner may move to from `status` (empty once `closed`). */
   allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[];
@@ -84,4 +100,13 @@ export interface IPartnerService {
     actor: StaffActor,
     partnerId: number,
   ): Promise<PartnerResult<BusinessPartner, ReadPartnerError>>;
+  savePartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow, SavePartnerSchoolProfileError>>;
+  getPartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow | null, ReadPartnerError>>;
 }

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   getBusinessPartnerById,
+  getPartnerSchoolProfile,
   hasActivePartnerAdministrator,
   insertBusinessPartner,
   insertPartnerAccessHistory,
@@ -9,25 +10,33 @@ import {
   lockBusinessPartnerById,
   setBusinessPartnerStatus,
   updateBusinessPartner,
+  upsertPartnerSchoolProfile,
   type BusinessPartnerPatch,
   type BusinessPartnerRow,
   type PartnerDatabase,
+  type PartnerSchoolProfileRow,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 import {
+  ACADEMIC_SYSTEMS,
   allowedPartnerStatusChanges,
   changePartnerCode,
   changePartnerStatus,
+  GOVERNORATES,
   PARTNER_CODE_MAX_LENGTH,
   PARTNER_CODE_MIN_LENGTH,
   PARTNER_CODE_PATTERN,
+  SCHOOL_TYPES,
 } from '@findeg/domain';
-import type { ChangePartnerStatusError } from '../interfaces/IPartnerService';
 import type {
   BusinessPartner,
+  ChangePartnerStatusError,
   CreatePartnerInput,
   IPartnerService,
   PartnerResult,
+  ReadPartnerError,
+  SavePartnerSchoolProfileError,
+  SavePartnerSchoolProfileInput,
   StaffActor,
   UpdatePartnerInput,
 } from '../interfaces/IPartnerService';
@@ -46,6 +55,18 @@ const updateSchema = z.object({
   code: codeSchema.optional(),
   nameEn: nameSchema.optional(),
   nameAr: nameSchema.optional(),
+});
+const profileSchema = z.object({
+  governorate: z.enum(GOVERNORATES),
+  area: z.string().trim().min(1).max(255),
+  schoolType: z.enum(SCHOOL_TYPES),
+  academicSystem: z.enum(ACADEMIC_SYSTEMS),
+  logoUrl: z
+    .string()
+    .trim()
+    .max(2048)
+    .nullish()
+    .transform((v) => v || null),
 });
 
 function toPartner(row: BusinessPartnerRow): BusinessPartner {
@@ -190,6 +211,45 @@ export class PartnerService implements IPartnerService {
     if (!canViewPartners(actor)) return fail('forbidden');
     const row = await getBusinessPartnerById(await this.getDb(), partnerId);
     return row ? ok(toPartner(row)) : fail('not-found');
+  }
+
+  async savePartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow, SavePartnerSchoolProfileError>> {
+    if (!canManagePartners(actor)) return fail('forbidden');
+    const parsed = profileSchema.safeParse(input);
+    if (!parsed.success) return fail('invalid-input');
+
+    const db = await this.getDb();
+    return await db.transaction(async (tx) => {
+      const partner = await lockBusinessPartnerById(tx, partnerId);
+      if (!partner) return fail('not-found');
+
+      const saved = await upsertPartnerSchoolProfile(tx, {
+        businessPartnerId: partnerId,
+        governorate: parsed.data.governorate,
+        area: parsed.data.area,
+        schoolType: parsed.data.schoolType,
+        academicSystem: parsed.data.academicSystem,
+        logoUrl: parsed.data.logoUrl ?? null,
+      });
+
+      return ok(saved);
+    });
+  }
+
+  async getPartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow | null, ReadPartnerError>> {
+    if (!canViewPartners(actor)) return fail('forbidden');
+    const db = await this.getDb();
+    const partner = await getBusinessPartnerById(db, partnerId);
+    if (!partner) return fail('not-found');
+    const profile = await getPartnerSchoolProfile(db, partnerId);
+    return ok(profile ?? null);
   }
 }
 

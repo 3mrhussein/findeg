@@ -246,6 +246,107 @@ describe('Business Partners (Staff operations)', () => {
     });
   });
 
+  describe('savePartnerSchoolProfile & getPartnerSchoolProfile', () => {
+    it('saves a school profile and retrieves it', async () => {
+      const partner = await create('profile-test-school');
+      const saveResult = await services.partners.savePartnerSchoolProfile(staff, partner.id, {
+        governorate: 'Cairo',
+        area: 'Maadi',
+        schoolType: 'Private',
+        academicSystem: 'National',
+        logoUrl: 'https://example.com/logo.png',
+      });
+
+      expect(saveResult).toEqual({
+        success: true,
+        data: expect.objectContaining({
+          businessPartnerId: partner.id,
+          governorate: 'Cairo',
+          area: 'Maadi',
+          schoolType: 'Private',
+          academicSystem: 'National',
+          logoUrl: 'https://example.com/logo.png',
+        }),
+      });
+
+      const getResult = await services.partners.getPartnerSchoolProfile(staff, partner.id);
+      expect(getResult).toEqual({
+        success: true,
+        data: expect.objectContaining({
+          businessPartnerId: partner.id,
+          governorate: 'Cairo',
+          area: 'Maadi',
+          schoolType: 'Private',
+          academicSystem: 'National',
+          logoUrl: 'https://example.com/logo.png',
+        }),
+      });
+    });
+
+    it('updates an existing profile (upsert)', async () => {
+      const partner = await create('profile-upsert-school');
+      await services.partners.savePartnerSchoolProfile(staff, partner.id, {
+        governorate: 'Giza',
+        area: 'Dokki',
+        schoolType: 'Language',
+        academicSystem: 'British',
+      });
+
+      const updateResult = await services.partners.savePartnerSchoolProfile(staff, partner.id, {
+        governorate: 'Alexandria',
+        area: 'Smouha',
+        schoolType: 'International',
+        academicSystem: 'American',
+        logoUrl: '/alex.png',
+      });
+
+      expect(updateResult.success).toBe(true);
+      const readResult = await services.partners.getPartnerSchoolProfile(staff, partner.id);
+      expect(readResult.success && readResult.data).toMatchObject({
+        governorate: 'Alexandria',
+        area: 'Smouha',
+        schoolType: 'International',
+        academicSystem: 'American',
+        logoUrl: '/alex.png',
+      });
+    });
+
+    it('rejects invalid domain enum values', async () => {
+      const partner = await create('profile-invalid-school');
+      const result = await services.partners.savePartnerSchoolProfile(staff, partner.id, {
+        governorate: 'InvalidGovernorate' as unknown as import('@findeg/domain').Governorate,
+        area: 'Somewhere',
+        schoolType: 'Private',
+        academicSystem: 'National',
+      });
+
+      expect(result).toEqual({ success: false, error: 'invalid-input' });
+    });
+
+    it('refuses unauthorized staff', async () => {
+      const partner = await create('profile-forbidden-school');
+      const result = await services.partners.savePartnerSchoolProfile(unauthorized, partner.id, {
+        governorate: 'Cairo',
+        area: 'Maadi',
+        schoolType: 'Private',
+        academicSystem: 'National',
+      });
+
+      expect(result).toEqual({ success: false, error: 'forbidden' });
+    });
+
+    it('returns not-found for unknown partner', async () => {
+      const result = await services.partners.savePartnerSchoolProfile(staff, 999_999, {
+        governorate: 'Cairo',
+        area: 'Maadi',
+        schoolType: 'Private',
+        academicSystem: 'National',
+      });
+
+      expect(result).toEqual({ success: false, error: 'not-found' });
+    });
+  });
+
   it('keeps the audit history append-only', async () => {
     const partner = await create('append-only-school');
     await expect(

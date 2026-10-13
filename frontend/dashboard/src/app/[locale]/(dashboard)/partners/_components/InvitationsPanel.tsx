@@ -2,7 +2,7 @@
 import type { Locale } from '@findeg/domain';
 
 import { useActionState, useState, useTransition } from 'react';
-import { Button, Input, Label } from '@findeg/ui';
+import { Badge, Button, Input, Label } from '@findeg/ui';
 import { useLocale } from 'next-intl';
 import {
   inviteAction,
@@ -101,53 +101,76 @@ export function InvitationsPanel({ partnerId, canChange, invitations }: Invitati
       <div>
         <h2 className="text-xl font-semibold mb-2">Pending invitations</h2>
         <ul className="divide-y rounded-lg border" data-testid="pending-invitations">
-          {invitations.map((invitation) => (
-            <li key={invitation.id} className="space-y-2 p-4" data-testid="pending-invitation">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <div dir="ltr" className="font-medium">
-                    {invitation.email}
+          {invitations.map((invitation) => {
+            const isExpired = new Date(invitation.expiresAt).getTime() <= Date.now();
+            const dateLocale = locale === 'ar' ? 'ar-EG' : 'en-GB';
+            const formattedDate = new Date(invitation.expiresAt).toLocaleDateString(dateLocale, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            });
+
+            return (
+              <li key={invitation.id} className="space-y-2 p-4" data-testid="pending-invitation">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <div dir="ltr" className="font-medium">
+                      {invitation.email}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>{invitation.roles.join(', ')}</span>
+                      <span>·</span>
+                      {isExpired ? (
+                        <Badge variant="destructive" data-testid="invitation-expired-badge">
+                          {locale === 'ar'
+                            ? `منتهية (${formattedDate})`
+                            : `Expired (${formattedDate})`}
+                        </Badge>
+                      ) : (
+                        <span data-testid="invitation-expiry">
+                          {locale === 'ar'
+                            ? `تنتهي في ${formattedDate}`
+                            : `expires ${formattedDate}`}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {invitation.roles.join(', ')} · expires{' '}
-                    {new Date(invitation.expiresAt).toLocaleDateString('en-GB')}
-                  </div>
+                  {canChange && (
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={busy}
+                        onClick={() =>
+                          run(invitation.id, () => resendInvitationAction(locale, invitation.id))
+                        }
+                      >
+                        Resend &amp; copy link
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={busy}
+                        onClick={() =>
+                          run(invitation.id, () => revokeInvitationAction(locale, invitation.id))
+                        }
+                      >
+                        Revoke
+                      </Button>
+                    </div>
+                  )}
                 </div>
-                {canChange && (
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={busy}
-                      onClick={() =>
-                        run(invitation.id, () => resendInvitationAction(locale, invitation.id))
-                      }
-                    >
-                      Resend &amp; copy link
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={busy}
-                      onClick={() =>
-                        run(invitation.id, () => revokeInvitationAction(locale, invitation.id))
-                      }
-                    >
-                      Revoke
-                    </Button>
-                  </div>
+                {rowState?.id === invitation.id && rowState.state.status === 'error' && (
+                  <p role="alert" className="text-sm text-red-600">
+                    {rowState.state.message}
+                  </p>
                 )}
-              </div>
-              {rowState?.id === invitation.id && rowState.state.status === 'error' && (
-                <p role="alert" className="text-sm text-red-600">
-                  {rowState.state.message}
-                </p>
-              )}
-              {rowState?.id === invitation.id && rowState.state.link && (
-                <LinkBox link={rowState.state.link} />
-              )}
-            </li>
-          ))}
+                {rowState?.id === invitation.id && rowState.state.link && (
+                  <LinkBox link={rowState.state.link} />
+                )}
+              </li>
+            );
+          })}
           {invitations.length === 0 && (
             <li className="p-4 text-sm text-muted-foreground">No pending invitations.</li>
           )}

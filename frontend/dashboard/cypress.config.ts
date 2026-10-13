@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { defineConfig } from 'cypress';
 import { orderFixtureTasks } from './cypress/support/tasks/order-fixtures';
+import { partnerFixtureTasks } from './cypress/support/tasks/partner-fixtures';
 
 const artifactsBase = process.env.TEST_ARTIFACTS_DIR
   ? path.join(process.env.TEST_ARTIFACTS_DIR, 'dashboard')
@@ -23,7 +24,7 @@ export default defineConfig({
     videosFolder: path.join(artifactsBase, 'videos'),
     downloadsFolder: path.join(artifactsBase, 'downloads'),
     setupNodeEvents(on, config) {
-      on('task', orderFixtureTasks);
+      on('task', { ...orderFixtureTasks, ...partnerFixtureTasks });
       return config;
     },
   },

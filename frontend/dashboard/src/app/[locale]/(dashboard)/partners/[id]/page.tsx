@@ -7,6 +7,7 @@ import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import {
   getPartner,
+  getPartnerSchoolProfile,
   listMembers,
   listPendingInvitations,
   getPartnerStaffReport,
@@ -30,6 +31,7 @@ export default async function PartnerDetailPage({
 }) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'PartnerSales' });
+  const tPartners = await getTranslations({ locale, namespace: 'Partners' });
   const { month: monthParam } = await searchParams;
   const month = typeof monthParam === 'string' ? monthParam : undefined;
   const session = await requirePermission(locale as Locale, {
@@ -44,11 +46,12 @@ export default async function PartnerDetailPage({
   const partner = await getPartner(session, partnerId);
   if (!partner.success) notFound();
 
-  const [members, pending, lists, report] = await Promise.all([
+  const [profile, members, pending, lists, report] = await Promise.all([
+    canManagePartner ? getPartnerSchoolProfile(session, partnerId) : Promise.resolve(null),
     canManagePartner ? listMembers(session, partnerId) : Promise.resolve(null),
     canManagePartner ? listPendingInvitations(session, partnerId) : Promise.resolve(null),
     canManagePartner ? listSchoolSupplyListsForPartner(session, partnerId) : Promise.resolve(null),
-    canViewReports ? getPartnerStaffReport(session, partnerId, month) : null,
+    canViewReports ? getPartnerStaffReport(session, partnerId, month, locale as Locale) : null,
   ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
@@ -63,15 +66,19 @@ export default async function PartnerDetailPage({
           </p>
         </div>
         {canManagePartner && (
-          <Link href={`/partners/${partnerId}/edit`} className="text-sm underline">
-            Edit
+          <Link
+            href={`/partners/${partnerId}/edit`}
+            className="text-sm underline"
+            data-testid="edit-partner-link"
+          >
+            {tPartners('Edit')}
           </Link>
         )}
       </div>
 
       <Tabs defaultValue={canManagePartner && !month ? 'overview' : 'sales'} className="space-y-6">
         <TabsList>
-          {canManagePartner && <TabsTrigger value="overview">Overview</TabsTrigger>}
+          {canManagePartner && <TabsTrigger value="overview">{tPartners('Overview')}</TabsTrigger>}
           {canViewReports && <TabsTrigger value="sales">{t('Tab')}</TabsTrigger>}
         </TabsList>
 
@@ -82,6 +89,40 @@ export default async function PartnerDetailPage({
               current={partner.data.status}
               targets={allowedPartnerStatusChanges(partner.data.status)}
             />
+            {profile?.success && profile.data && (
+              <section
+                className="rounded-lg border p-4 space-y-3"
+                data-testid="school-profile-details"
+              >
+                <h2 className="text-xl font-semibold">{tPartners('SchoolProfile')}</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('Governorate')}</span>
+                    <span className="font-medium">{profile.data.governorate ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('Area')}</span>
+                    <span className="font-medium">{profile.data.area ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('SchoolType')}</span>
+                    <span className="font-medium">{profile.data.schoolType ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">
+                      {tPartners('AcademicSystem')}
+                    </span>
+                    <span className="font-medium">{profile.data.academicSystem ?? '—'}</span>
+                  </div>
+                </div>
+                {profile.data.logoUrl && (
+                  <div className="pt-2">
+                    <span className="text-muted-foreground block text-xs">{tPartners('Logo')}</span>
+                    <span className="text-xs font-mono">{profile.data.logoUrl}</span>
+                  </div>
+                )}
+              </section>
+            )}
             {members?.success ? (
               <MembersPanel
                 canChange={canChange}
@@ -96,13 +137,12 @@ export default async function PartnerDetailPage({
               />
             ) : (
               <p role="alert" className="text-destructive text-sm">
-                Members could not be loaded. You may not have permission to manage this Business
-                Partner.
+                {tPartners('MembersLoadError')}
               </p>
             )}
             {lists?.success && lists.data.length > 0 && (
               <section className="space-y-2" data-testid="supply-lists">
-                <h2 className="text-xl font-semibold">School Supply Lists</h2>
+                <h2 className="text-xl font-semibold">{tPartners('SchoolSupplyLists')}</h2>
                 <ul className="divide-y rounded-lg border">
                   {lists.data.map((list) => (
                     <li key={list.id} className="flex items-center justify-between px-4 py-3">
@@ -113,7 +153,7 @@ export default async function PartnerDetailPage({
                       <span className="flex items-center gap-3">
                         <Badge variant="outline">{list.status}</Badge>
                         <Link href={`/school-lists/${list.id}`} className="text-sm underline">
-                          Offer
+                          {tPartners('Offer')}
                         </Link>
                       </span>
                     </li>

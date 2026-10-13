@@ -3,6 +3,7 @@
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import type { SessionPayload } from '@findeg/backend/features/core';
+import type { Locale } from '@findeg/domain';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import {
   createPartnerSalesServices,
@@ -36,6 +37,14 @@ export async function getPartner(session: SessionPayload, partnerId: number) {
   return await partners.getPartner(toStaffActor(session), partnerId);
 }
 
+export async function getPartnerSchoolProfile(session: SessionPayload, partnerId: number) {
+  cacheTag('partners');
+  cacheLife('minutes');
+
+  const { partners } = createPartnerMembershipServices();
+  return await partners.getPartnerSchoolProfile(toStaffActor(session), partnerId);
+}
+
 export async function listMembers(session: SessionPayload, partnerId: number) {
   cacheTag('partners');
   cacheLife('minutes');
@@ -56,6 +65,7 @@ export async function getPartnerStaffReport(
   session: SessionPayload,
   partnerId: number,
   month?: string,
+  locale: Locale = 'en',
 ) {
   cacheTag('partners');
   cacheLife('minutes');
@@ -66,8 +76,8 @@ export async function getPartnerStaffReport(
     userId: session.userId,
     permissionCodes: session.permissionCodes,
   };
-  const requested = await partnerReports.getStaffReport(actor, partnerId, { month });
+  const requested = await partnerReports.getStaffReport(actor, partnerId, { month, locale });
   return month !== undefined && !requested.success && requested.error === 'invalid-input'
-    ? await partnerReports.getStaffReport(actor, partnerId)
+    ? await partnerReports.getStaffReport(actor, partnerId, { locale })
     : requested;
 }

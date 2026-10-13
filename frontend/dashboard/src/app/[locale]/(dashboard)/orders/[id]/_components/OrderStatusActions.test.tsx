@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { NextIntlClientProvider } from 'next-intl';
 import type { Order } from '@findeg/orders';
 import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 
@@ -9,6 +10,28 @@ vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 
 import { OrderHeader } from './OrderHeader';
 import { OrderPaymentFulfillment } from './OrderPaymentFulfillment';
+
+const messages = {
+  Administration: {
+    OrdersDetail: {
+      Order: 'Order',
+      PlacedOn: 'Placed on {date}',
+      ProcessRefund: 'Process Refund',
+      ConfirmRefundTitle: 'Confirm Refund',
+      ConfirmRefundDesc: 'Are you sure?',
+      Cancel: 'Cancel',
+      ConfirmRefundAction: 'Refund',
+    },
+  },
+};
+
+function renderWithIntl(ui: React.ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
 
 function order(status: OrderStatus, paymentStatus: PaymentStatus = 'unpaid'): Order {
   return { id: 7, status, paymentStatus, createdAt: new Date('2026-10-05T08:00:00.000Z') } as Order;
@@ -33,12 +56,12 @@ describe('Order status actions', () => {
   });
 
   it.each(['processing', 'shipped'] as const)('offers no refund for a paid %s Order', (status) => {
-    render(<OrderHeader order={order(status, 'paid')} />);
+    renderWithIntl(<OrderHeader order={order(status, 'paid')} />);
     expect(screen.queryByRole('button', { name: /refund/i })).not.toBeInTheDocument();
   });
 
   it('offers a refund for a paid delivered Order', () => {
-    render(<OrderHeader order={order('delivered', 'paid')} />);
+    renderWithIntl(<OrderHeader order={order('delivered', 'paid')} />);
     expect(screen.getByRole('button', { name: /refund/i })).toBeInTheDocument();
   });
 });
