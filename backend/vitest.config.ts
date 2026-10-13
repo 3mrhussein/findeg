@@ -1,10 +1,11 @@
+import { nodeTest } from '../configs/vitest/defaults';
 import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node',
+    ...nodeTest,
     env: {
       DATABASE_URL: 'postgres://localhost/findeg_test',
       DB_USER: 'postgres',

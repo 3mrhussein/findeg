@@ -1,6 +1,10 @@
 # Coding standards
 
-Agreed rules; automated enforcement is pending.
+Shared tooling now lives in `configs/` (#435), with compatibility delegates and Turbo
+cache/change-selection inputs. Existing lint and test behavior is preserved.
+Preset/naming activation (#436), coverage/test placement (#437), environment
+relocation (#438), and measured full activation/delegate removal (#445) remain pending.
+See [the delegate inventory](configs/compatibility.md). The rules below are the agreed targets.
 
 ## Global
 

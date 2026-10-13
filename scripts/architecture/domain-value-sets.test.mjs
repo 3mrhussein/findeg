@@ -70,17 +70,14 @@ test('domain ownership permits intentional fixture and owner copies', async () =
 test('new live exports are protected through aliases and satisfies; private and type-only sets are excluded', async () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-exports-'));
   try {
-    const config = path.join(fixture, 'packages/config');
+    const config = path.join(fixture, 'configs');
     const domain = path.join(fixture, 'packages/domain');
     fs.mkdirSync(path.join(config, 'eslint/rules'), { recursive: true });
     fs.mkdirSync(path.join(domain, 'src'), { recursive: true });
     fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}');
-    fs.symlinkSync(
-      path.join(root, 'packages/config/node_modules'),
-      path.join(config, 'node_modules'),
-    );
+    fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(config, 'node_modules'));
     fs.copyFileSync(
-      path.join(root, 'packages/config/eslint/rules/no-domain-value-set-copies.js'),
+      path.join(root, 'configs/eslint/rules/no-domain-value-set-copies.js'),
       path.join(config, 'eslint/rules/no-domain-value-set-copies.js'),
     );
     fs.writeFileSync(
@@ -189,17 +186,12 @@ test('Cypress support and configuration remain subject to ownership checks', asy
 test('findeg-lint rejects a copied set rather than ratcheting it as a warning', () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-cli-'));
   try {
-    fs.symlinkSync(
-      path.join(root, 'packages/config/node_modules'),
-      path.join(fixture, 'node_modules'),
-    );
+    fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(fixture, 'node_modules'));
     fs.writeFileSync(
       path.join(fixture, 'package.json'),
       '{"name":"@fixture/domain-copy","type":"module"}',
     );
-    const profile = pathToFileURL(
-      path.join(root, 'packages/config/eslint/profiles/isomorphic.js'),
-    ).href;
+    const profile = pathToFileURL(path.join(root, 'configs/eslint/profiles/isomorphic.js')).href;
     fs.writeFileSync(
       path.join(fixture, 'eslint.config.js'),
       `export { isomorphic as default } from '${profile}';`,
@@ -210,7 +202,7 @@ test('findeg-lint rejects a copied set rather than ratcheting it as a warning', 
     );
     const result = spawnSync(
       process.execPath,
-      [path.join(root, 'packages/config/bin/lint.mjs'), 'index.ts'],
+      [path.join(root, 'configs/bin/lint.mjs'), 'index.ts'],
       { cwd: fixture, encoding: 'utf8' },
     );
     assert.equal(result.status, 1, result.stderr);
@@ -288,17 +280,14 @@ test('default-exported domain arrays are protected through public defaults and a
   for (const scenario of cases) {
     const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-default-'));
     try {
-      const config = path.join(fixture, 'packages/config');
+      const config = path.join(fixture, 'configs');
       const domain = path.join(fixture, 'packages/domain');
       fs.mkdirSync(path.join(config, 'eslint/rules'), { recursive: true });
       fs.mkdirSync(path.join(domain, 'src'), { recursive: true });
       fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}');
-      fs.symlinkSync(
-        path.join(root, 'packages/config/node_modules'),
-        path.join(config, 'node_modules'),
-      );
+      fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(config, 'node_modules'));
       fs.copyFileSync(
-        path.join(root, 'packages/config/eslint/rules/no-domain-value-set-copies.js'),
+        path.join(root, 'configs/eslint/rules/no-domain-value-set-copies.js'),
         path.join(config, 'eslint/rules/no-domain-value-set-copies.js'),
       );
       fs.writeFileSync(
