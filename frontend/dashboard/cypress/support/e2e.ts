@@ -17,6 +17,7 @@ Cypress.Commands.add('disableAnimations', () => {
 });
 
 Cypress.on('uncaught:exception', (err) => {
+  console.error('CYPRESS UNCAUGHT EXCEPTION:', err);
   // Ignore React hydration mismatch errors
   if (
     err.message.includes('Minified React error #418') ||

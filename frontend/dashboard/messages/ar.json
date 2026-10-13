@@ -147,7 +147,26 @@
     "ListOfferHelp": "نسبة خصم على كل بند في هذه القائمة عند الدفع. تغييرها لا يعيد نشر القائمة؛ القائمة البديلة تنسخ العرض عند نشرها.",
     "StatusDraft": "مسودة",
     "StatusPublished": "منشور",
-    "StatusArchived": "مؤرشف"
+    "StatusArchived": "مؤرشف",
+    "Clone": "استنساخ القائمة",
+    "Cloning": "جارٍ الاستنساخ...",
+    "Archive": "أرشفة القائمة",
+    "Archiving": "جارٍ الأرشفة...",
+    "ReplacedBy": "تم استبدالها بالقائمة #{id}",
+    "Replaces": "تستبدل القائمة #{id}",
+    "OutOfStockWarning": "تحذير: نسخة افتراضية واحدة أو أكثر غير متوفرة في المخزون. تم نشر القائمة، ولكن قد يحتاج العملاء لاختيار بدائل.",
+    "DiscountPercent": "نسبة الخصم (%)",
+    "StartsUtc": "يبدأ في (UTC)",
+    "EndsUtc": "ينتهي في (UTC، اختياري)",
+    "EndsHelp": "اتركه فارغاً لعرض مفتوح المدة. ينطبق الخصم على جميع بنود القائمة أثناء قبول الطلب بين تاريخ البداية والنهاية.",
+    "SaveOffer": "حفظ العرض",
+    "CreateOffer": "إنشاء العرض",
+    "RemoveOffer": "إزالة العرض",
+    "OfferSaved": "تم حفظ العرض بنجاح.",
+    "FiniteWindow": "نشط من {start} حتى {end}",
+    "OpenEndedWindow": "نشط من {start} (مفتوح المدة)",
+    "MoneyExample": "معاينة السعر: بند بسعر {original} ج.م يُخفّض إلى {discounted} ج.م.",
+    "ActiveDiscount": "الخصم النشط: {percent}%"
   },
   "Pages": {
     "Dashboard": {

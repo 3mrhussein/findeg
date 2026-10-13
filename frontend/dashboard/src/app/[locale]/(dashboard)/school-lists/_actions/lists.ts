@@ -352,8 +352,12 @@ export async function reorderItemsAction(listId: number, itemIds: number[]): Pro
   }
 }
 
-/** Publish a list draft. Refuses publication if items lack active defaults or partner is closed/suspended. */
-export async function publishListAction(listId: number): Promise<ActionState> {
+/** Publish a list draft. Refuses publication if items lack active defaults or partner is closed. Warns on out-of-stock defaults. */
+export async function publishListAction(
+  listId: number,
+): Promise<
+  ActionState<{ warnings: Array<{ code: string; listItemId: number; variantId: number }> }>
+> {
   try {
     const session = await requireStaffAction(
       PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
@@ -363,6 +367,53 @@ export async function publishListAction(listId: number): Promise<ActionState> {
 
     const { schoolSupplyLists } = createAdministrationServices();
     const result = await schoolSupplyLists.publish(actor, listId);
+
+    if (!result.success) {
+      return { status: 'error', message: formatError(result.error) };
+    }
+
+    refreshList(listId);
+    return { status: 'success', data: { warnings: result.data.warnings } };
+  } catch (err) {
+    console.error('publishListAction error:', err);
+    return { status: 'error', message: formatError('forbidden') };
+  }
+}
+
+/** Clone a published or archived list into a fresh draft. */
+export async function cloneListAction(listId: number): Promise<ActionState<{ id: number }>> {
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+      'clone School Supply List',
+    );
+    const actor = toListActor(session);
+
+    const { schoolSupplyLists } = createAdministrationServices();
+    const result = await schoolSupplyLists.cloneToDraft(actor, listId);
+
+    if (!result.success) {
+      return { status: 'error', message: formatError(result.error) };
+    }
+
+    refreshList(result.data.id);
+    return { status: 'success', data: { id: result.data.id } };
+  } catch {
+    return { status: 'error', message: formatError('forbidden') };
+  }
+}
+
+/** Archive a published list. Allowed in any partner status (ADR-0012). */
+export async function archiveListAction(listId: number): Promise<ActionState> {
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+      'archive School Supply List',
+    );
+    const actor = toListActor(session);
+
+    const { schoolSupplyLists } = createAdministrationServices();
+    const result = await schoolSupplyLists.archive(actor, listId);
 
     if (!result.success) {
       return { status: 'error', message: formatError(result.error) };

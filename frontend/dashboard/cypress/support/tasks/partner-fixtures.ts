@@ -294,6 +294,7 @@ export const partnerFixtureTasks = {
     status?: SupplyListStatus;
     titleEn?: string;
     titleAr?: string;
+    sourceListId?: number | null;
   }): Promise<{ id: number }> {
     return withSql(async (sql) => {
       const tag = randomBytes(4).toString('hex');
@@ -302,10 +303,11 @@ export const partnerFixtureTasks = {
       const status = options.status ?? 'draft';
       const titleEn = options.titleEn ?? `Supply List ${tag}`;
       const titleAr = options.titleAr ?? `قائمة مستلزمات ${tag}`;
+      const sourceListId = options.sourceListId ?? null;
 
       const [row] = await sql<{ id: number }[]>`
         insert into school_engine.school_supply_lists
-          (business_partner_id, grade, academic_year, status, localized_title, public_code, published_at)
+          (business_partner_id, grade, academic_year, status, localized_title, public_code, published_at, source_list_id)
         values (
           ${options.partnerId},
           ${grade},
@@ -313,7 +315,8 @@ export const partnerFixtureTasks = {
           ${status},
           ${sql.json({ en: titleEn, ar: titleAr })},
           ${status === 'published' ? randomBytes(16).toString('hex') : null},
-          ${status === 'published' ? sql`now()` : null}
+          ${status === 'published' ? sql`now()` : null},
+          ${sourceListId}
         )
         returning id
       `;
@@ -356,6 +359,130 @@ export const partnerFixtureTasks = {
         returning id
       `;
       return { id: row.id };
+    });
+  },
+
+  setTestSupplyListOffer(options: {
+    listId: number;
+    basisPoints: number;
+    startsAt?: string;
+    endsAt?: string | null;
+  }): Promise<{ listId: number }> {
+    return withSql(async (sql) => {
+      const startsAt = options.startsAt ? new Date(options.startsAt) : new Date();
+      const endsAt = options.endsAt ? new Date(options.endsAt) : null;
+      await sql`
+        insert into sales.list_offers (list_id, basis_points, starts_at, ends_at)
+        values (${options.listId}, ${options.basisPoints}, ${startsAt}, ${endsAt})
+        on conflict (list_id) do update set
+          basis_points = excluded.basis_points,
+          starts_at = excluded.starts_at,
+          ends_at = excluded.ends_at,
+          updated_at = now()
+      `;
+      return { listId: options.listId };
+    });
+  },
+
+  getTestSupplyListOffer(options: { listId: number }): Promise<{
+    listId: number;
+    basisPoints: number;
+    startsAt: string;
+    endsAt: string | null;
+  } | null> {
+    return withSql(async (sql) => {
+      const [offer] = await sql<
+        { listId: number; basisPoints: number; startsAt: Date; endsAt: Date | null }[]
+      >`
+        select list_id as "listId", basis_points as "basisPoints", starts_at as "startsAt", ends_at as "endsAt"
+        from sales.list_offers
+        where list_id = ${options.listId}
+      `;
+      if (!offer) return null;
+      return {
+        ...offer,
+        startsAt: offer.startsAt.toISOString(),
+        endsAt: offer.endsAt ? offer.endsAt.toISOString() : null,
+      };
+    });
+  },
+
+  getTestSupplyList(options: { listId: number }): Promise<{
+    id: number;
+    status: string;
+    publicCode: string | null;
+    sourceListId: number | null;
+    replacesListId: number | null;
+    replacedById: number | null;
+  } | null> {
+    return withSql(async (sql) => {
+      const [list] = await sql<
+        {
+          id: number;
+          status: string;
+          publicCode: string | null;
+          sourceListId: number | null;
+          replacesListId: number | null;
+          replacedById: number | null;
+        }[]
+      >`
+        select id, status, public_code as "publicCode", source_list_id as "sourceListId",
+               replaces_list_id as "replacesListId", replaced_by_id as "replacedById"
+        from school_engine.school_supply_lists
+        where id = ${options.listId}
+      `;
+      return list ?? null;
+    });
+  },
+
+  setTestVariantStatus(options: {
+    variantId: number;
+    isActive: boolean;
+  }): Promise<{ variantId: number }> {
+    return withSql(async (sql) => {
+      await sql`
+        update catalog.product_variants
+        set is_active = ${options.isActive}
+        where id = ${options.variantId}
+      `;
+      return { variantId: options.variantId };
+    });
+  },
+
+  setTestVariantStock(options: {
+    variantId: number;
+    onHand: number;
+    reserved?: number;
+  }): Promise<{ variantId: number }> {
+    return withSql(async (sql) => {
+      const [wh] = await sql<{ id: number }[]>`select id from inventory.warehouses limit 1`;
+      if (!wh) throw new Error('No warehouse found');
+      await sql`
+        insert into inventory.inventory_balances (variant_id, warehouse_id, on_hand, reserved)
+        values (${options.variantId}, ${wh.id}, ${options.onHand}, ${options.reserved ?? 0})
+        on conflict (variant_id, warehouse_id) do update set
+          on_hand = excluded.on_hand,
+          reserved = excluded.reserved
+      `;
+      return { variantId: options.variantId };
+    });
+  },
+
+  setTestSupplyListStatus(options: {
+    listId: number;
+    status: SupplyListStatus;
+  }): Promise<{ listId: number }> {
+    return withSql(async (sql) => {
+      const publicCode = options.status === 'published' ? randomBytes(16).toString('hex') : null;
+      await sql`
+        update school_engine.school_supply_lists
+        set
+          status = ${options.status},
+          public_code = case when ${options.status} = 'published' and public_code is null then ${publicCode} else public_code end,
+          published_at = case when ${options.status} = 'published' and published_at is null then now() else published_at end
+        where id = ${options.listId}
+      `;
+      return { listId: options.listId };
     });
   },
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Badge, Button } from '@findeg/ui';
 import { ArrowUp, ArrowDown, Pencil, Trash2, Plus, Send } from 'lucide-react';
@@ -43,10 +43,15 @@ export function ItemsEditor({
   locale,
 }: ItemsEditorProps) {
   const t = useTranslations('SchoolLists');
+  const [mounted, setMounted] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ItemFormValues | null>(null);
   const [isPending, startTransition] = useTransition();
   const [actionError, setActionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isEditable = canEdit && status === 'draft' && partnerStatus !== 'closed';
 
@@ -102,18 +107,44 @@ export function ItemsEditor({
     });
   };
 
+  const [warnings, setWarnings] = useState<
+    Array<{ code: string; listItemId: number; variantId: number }>
+  >([]);
+
   const handlePublish = () => {
     setActionError(null);
+    setWarnings([]);
     startTransition(async () => {
-      const res = await publishListAction(listId);
-      if (res.status === 'error') {
-        setActionError(res.message || 'Error publishing list');
+      try {
+        const res = await publishListAction(listId);
+        if (res.status === 'error') {
+          setActionError(res.message || 'Error publishing list');
+        } else if (res.status === 'success') {
+          if (res.data?.warnings && res.data.warnings.length > 0) {
+            setWarnings(res.data.warnings);
+          }
+        }
+      } catch (err) {
+        console.error('handlePublish client error:', err);
+        setActionError(err instanceof Error ? err.message : 'Error publishing list');
       }
     });
   };
 
   return (
-    <section className="space-y-4" data-testid="items-editor-section">
+    <section
+      className="space-y-4"
+      data-testid="items-editor-section"
+      data-hydrated={mounted ? 'true' : 'false'}
+    >
+      {warnings.length > 0 && (
+        <div
+          className="rounded-md bg-amber-500/15 p-4 text-sm text-amber-800 dark:text-amber-200"
+          data-testid="out-of-stock-warning"
+        >
+          {t('OutOfStockWarning')}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold tracking-tight">{t('ItemsSection')}</h2>
         <div className="flex items-center gap-2">
@@ -123,7 +154,7 @@ export function ItemsEditor({
                 variant="outline"
                 size="sm"
                 onClick={handleOpenAdd}
-                disabled={isPending}
+                disabled={!mounted || isPending}
                 data-testid="add-item-btn"
               >
                 <Plus className="me-1 h-4 w-4" />
@@ -132,7 +163,7 @@ export function ItemsEditor({
               <Button
                 size="sm"
                 onClick={handlePublish}
-                disabled={isPending}
+                disabled={!mounted || isPending}
                 data-testid="publish-list-btn"
               >
                 <Send className="me-1 h-4 w-4" />
