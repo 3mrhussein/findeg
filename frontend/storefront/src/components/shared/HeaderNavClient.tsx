@@ -37,7 +37,7 @@ export function HeaderNavClient() {
           <SheetContent side="right" className="w-[300px] sm:w-[350px]">
             <SheetHeader className="mb-6">
               <SheetTitle className="text-left font-black tracking-tight text-xl">
-                Ready<span className="text-primary">.</span>
+                FindEg<span className="text-primary">.</span>
               </SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-6">
@@ -58,14 +58,21 @@ export function HeaderNavClient() {
                   onClick={() => setOpen(false)}
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  Shop
+                  {t('Shop')}
                 </Link>
                 <Link
                   href="/categories"
                   onClick={() => setOpen(false)}
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  Collections
+                  {t('Categories')}
+                </Link>
+                <Link
+                  href="/collections"
+                  onClick={() => setOpen(false)}
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
+                >
+                  {t('Collections')}
                 </Link>
                 <Link
                   href="/schools"
@@ -73,6 +80,13 @@ export function HeaderNavClient() {
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
                   {t('Schools')}
+                </Link>
+                <Link
+                  href="/order-lookup"
+                  onClick={() => setOpen(false)}
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
+                >
+                  {t('TrackOrder')}
                 </Link>
                 <Link
                   href={isLoggedIn ? '/my-account' : '/login'}
@@ -88,13 +102,13 @@ export function HeaderNavClient() {
               <div className="flex items-center gap-4">
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Language
+                    {t('Language')}
                   </span>
                   <ToggleLanguage />
                 </div>
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Theme
+                    {t('Theme')}
                   </span>
                   <ToggleTheme />
                 </div>

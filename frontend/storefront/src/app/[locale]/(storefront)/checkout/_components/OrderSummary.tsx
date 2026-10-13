@@ -72,8 +72,7 @@ export function OrderSummary({
         <div className="flex gap-3 text-primary">
           <span className="material-symbols-outlined shrink-0 text-[20px]">verified_user</span>
           <p className="text-xs font-medium leading-relaxed">
-            Your payment is secure. We never store your full card details and transmit all data over
-            encrypted SSL connection.
+            {t('Pages.Checkout.SecurityNotice')}
           </p>
         </div>
       </div>

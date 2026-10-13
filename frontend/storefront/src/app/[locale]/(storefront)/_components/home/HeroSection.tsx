@@ -42,7 +42,7 @@ export async function HeroSection({ locale = 'en' }: HeroSectionProps) {
                 variant="ghost"
                 className="rounded-full px-6 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 h-12"
               >
-                <Link href="/school-lists" className="gap-2">
+                <Link href="/schools" className="gap-2">
                   {t('ButtonSchools')}
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </Link>

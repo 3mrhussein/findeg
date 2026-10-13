@@ -1,13 +1,40 @@
 'use client';
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
-import type { CartItem } from '@findeg/backend/features/cart';
+import {
+  addLine,
+  clearCartStorage,
+  loadMetadataMap,
+  loadStoredCart,
+  removeLine,
+  saveMetadataMap,
+  saveStoredCart,
+  toClientCartItems,
+  updateLineQuantity,
+  type ClientCartItem,
+  type ItemMetadata,
+  type MetadataMap,
+  type StoredCart,
+} from '@/lib/cart/cart-storage';
+
+export type CartItem = ClientCartItem;
 
 export interface CartContextType {
   cartItems: CartItem[];
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  addToCart: (productId: number, quantity: number, options: { variantId: number }) => void;
+  addToCart: (
+    productId: number,
+    quantity: number,
+    options: {
+      variantId: number;
+      productName?: string;
+      variantLabel?: string;
+      imageUrl?: string;
+      unitPrice?: number;
+      sku?: string;
+    },
+  ) => void;
   removeFromCart: (variantId: number) => void;
   updateQuantity: (variantId: number, quantity: number) => void;
   clearCart: () => void;
@@ -18,144 +45,85 @@ export interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-/**
- *
- */
-function getGuestId() {
-  const storageKey = 'findeg_guest_id';
-  const existing = window.localStorage.getItem(storageKey);
-  if (existing) return existing;
-
-  const generated = `guest_${crypto.randomUUID()}`;
-  window.localStorage.setItem(storageKey, generated);
-  return generated;
-}
-
-/**
- *
- */
-function toCartItems(
-  rawItems: (Partial<CartItem> & {
-    productId: number;
-    variantId: number;
-    quantity: number;
-    sku: string;
-    name?: string;
-    variantKey?: string;
-    images?: { url: string }[];
-    unitPriceSnapshot?: number;
-    price?: number;
-  })[],
-): CartItem[] {
-  return rawItems.map((item) => ({
-    productId: item.productId,
-    variantId: item.variantId,
-    sku: item.sku,
-    productName: item.productName || item.name || `Product #${item.productId}`,
-    variantLabel: item.variantLabel || item.variantKey || 'Default',
-    imageUrl: item.imageUrl || (item.images && item.images[0]?.url),
-    quantity: item.quantity,
-    unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
-    currency: item.currency || 'EGP',
-  }));
-}
-
-import {
-  getCartAction,
-  addToCartAction,
-  removeFromCartAction,
-  updateQuantityAction,
-} from '@data/cart/actions';
-
-// ... (types and helper functions)
-
-/**
- *
- */
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<StoredCart>({ v: 1, lines: [] });
+  const [metadata, setMetadata] = useState<MetadataMap>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  /**
-   *
-   */
-  const refreshCart = async () => {
-    const guestId = getGuestId();
-    const cart = await getCartAction(guestId);
-    const items = cart?.items || [];
-    setCartItems(toCartItems(items));
-  };
-
   useEffect(() => {
-    const guestId = getGuestId();
-    getCartAction(guestId).then((cart) => {
-      const items = cart?.items || [];
-      setCartItems(toCartItems(items));
-    });
+    if (typeof window === 'undefined') return;
+    const loadedCart = loadStoredCart(window.localStorage);
+    const loadedMeta = loadMetadataMap(window.localStorage);
+    setCart(loadedCart);
+    setMetadata(loadedMeta);
   }, []);
 
-  /**
-   *
-   */
-  const toggleCart = () => setIsCartOpen(!isCartOpen);
+  const toggleCart = () => setIsCartOpen((prev) => !prev);
 
-  /**
-   *
-   */
-  const addToCart = (productId: number, quantity: number, options: { variantId: number }) => {
-    const guestId = getGuestId();
-    const payload = {
+  const addToCart = (
+    productId: number,
+    quantity: number,
+    options: {
+      variantId: number;
+      productName?: string;
+      variantLabel?: string;
+      imageUrl?: string;
+      unitPrice?: number;
+      sku?: string;
+    },
+  ) => {
+    const itemMeta: ItemMetadata = {
       productId,
-      variantId: options.variantId,
-      quantity,
+      productName: options.productName,
+      variantLabel: options.variantLabel,
+      imageUrl: options.imageUrl,
+      unitPrice: options.unitPrice,
+      sku: options.sku,
     };
-
-    addToCartAction(guestId, payload).then(() => refreshCart());
+    const { cart: nextCart, metaMap: nextMeta } = addLine(
+      cart,
+      { variantId: options.variantId, quantity },
+      itemMeta,
+      metadata,
+    );
+    setCart(nextCart);
+    setMetadata(nextMeta);
+    if (typeof window !== 'undefined') {
+      saveStoredCart(nextCart, window.localStorage);
+      saveMetadataMap(nextMeta, window.localStorage);
+    }
     setIsCartOpen(true);
   };
 
-  /**
-   *
-   */
   const removeFromCart = (variantId: number) => {
-    const guestId = getGuestId();
-    removeFromCartAction(guestId, variantId).then(() => refreshCart());
+    const nextCart = removeLine(cart, variantId);
+    setCart(nextCart);
+    if (typeof window !== 'undefined') {
+      saveStoredCart(nextCart, window.localStorage);
+    }
   };
 
-  /**
-   *
-   */
   const updateQuantity = (variantId: number, quantity: number) => {
-    if (quantity <= 0) return removeFromCart(variantId);
-
-    const guestId = getGuestId();
-    const payload = {
-      variantId,
-      quantity,
-    };
-    updateQuantityAction(guestId, payload).then(() => refreshCart());
+    const nextCart = updateLineQuantity(cart, variantId, quantity);
+    setCart(nextCart);
+    if (typeof window !== 'undefined') {
+      saveStoredCart(nextCart, window.localStorage);
+    }
   };
 
-  /**
-   *
-   */
   const clearCart = () => {
-    const guestId = getGuestId();
-    const currentItems = [...cartItems];
-
-    Promise.all(
-      currentItems.map((item) => {
-        return removeFromCartAction(guestId, item.variantId);
-      }),
-    ).then(() => refreshCart());
+    const empty: StoredCart = { v: 1, lines: [] };
+    setCart(empty);
+    setMetadata({});
+    if (typeof window !== 'undefined') {
+      clearCartStorage(window.localStorage);
+    }
   };
 
-  const cartCount = useMemo(
-    () => cartItems.reduce((total, item) => total + item.quantity, 0),
-    [cartItems],
-  );
+  const cartItems = useMemo(() => toClientCartItems(cart, metadata), [cart, metadata]);
+  const cartCount = useMemo(() => cart.lines.reduce((total, l) => total + l.quantity, 0), [cart]);
   const cartTotal = useMemo(
-    () => cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
+    () => cartItems.reduce((total, item) => total + (item.unitPrice || 0) * item.quantity, 0),
     [cartItems],
   );
 

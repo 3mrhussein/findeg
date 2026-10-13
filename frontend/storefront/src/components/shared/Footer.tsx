@@ -81,11 +81,6 @@ export async function Footer({ locale }: FooterProps) {
             </h4>
             <ul className="space-y-4 text-sm">
               <li>
-                <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  {t('FindYourList')}
-                </Link>
-              </li>
-              <li>
                 <Link href="/schools" className="hover:text-primary transition-colors">
                   {t('Schools')}
                 </Link>

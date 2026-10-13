@@ -14,11 +14,15 @@ import { CircleUser, Search } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { logoutAction } from '@data/auth/actions';
 import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 /**
  * Topbar for the user dashboard.
  */
 export function Topbar({ hasPartnerWorkspace = false }: { hasPartnerWorkspace?: boolean }) {
+  const t = useTranslations('Pages.MyAccount');
+  const tNav = useTranslations('Nav');
+
   return (
     <header className="flex h-[60px] items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
       <div className="w-full flex-1">
@@ -27,45 +31,45 @@ export function Topbar({ hasPartnerWorkspace = false }: { hasPartnerWorkspace?: 
             <Search className="absolute inset-s-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search..."
+              placeholder={tNav('SearchPlaceholder')}
               className="w-full appearance-none bg-background ps-8 shadow-none md:w-2/3 lg:w-1/3"
             />
           </div>
         </form>
       </div>
       <DropdownMenu>
-        <IconTooltip label="Toggle user menu" asChild>
+        <IconTooltip label={tNav('MyAccount')} asChild>
           <DropdownMenuTrigger asChild>
             <Button
               variant="secondary"
               size="icon"
               className="rounded-full"
-              aria-label="Toggle user menu"
+              aria-label={tNav('MyAccount')}
             >
               <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
+              <span className="sr-only">{tNav('MyAccount')}</span>
             </Button>
           </DropdownMenuTrigger>
         </IconTooltip>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('Title')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/my-account/settings">Settings</Link>
+            <Link href="/my-account/settings">{t('Settings')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/about">Support</Link>
+            <Link href="/about">{tNav('Support')}</Link>
           </DropdownMenuItem>
           {hasPartnerWorkspace ? (
             <DropdownMenuItem asChild>
-              <Link href="/partner">Partner Workspace</Link>
+              <Link href="/partner">{tNav('PartnerWorkspace')}</Link>
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
           <form action={logoutAction}>
             <button type="submit" className="w-full text-start">
               <DropdownMenuItem asChild>
-                <span>Logout</span>
+                <span>{t('Logout')}</span>
               </DropdownMenuItem>
             </button>
           </form>

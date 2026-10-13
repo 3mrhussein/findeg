@@ -61,6 +61,7 @@ export function createOrderAcceptedHandler(emailProvider: EmailProvider): Outbox
       total: formatCurrency(exactDecimal(order.totalAmount), order.currency, locale),
       deliveryAddress: [address?.street, address?.area, address?.city].filter(Boolean).join(', '),
       locale,
+      isGuest: !order.userId,
     });
 
     await emailProvider.send({

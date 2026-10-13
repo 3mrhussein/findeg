@@ -33,7 +33,7 @@ import {
   type ListSelection,
 } from '@/lib/list-selection/list-selection';
 
-/** The order body as sent: the form still offers 'card', which the backend rejects until supported. */
+/** The order body as sent: COD is the only supported payment method (ADR-0007). */
 type PendingOrderPayload = Omit<CheckoutOrderInput, 'paymentMethod'> & {
   paymentMethod: PaymentMethod;
 };
@@ -149,7 +149,7 @@ export function CheckoutClient({
     setAcceptanceFailure(null);
   }
 
-  const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
+  const optimisticShipping = 50;
   const listTotal = list
     ? selectedLines.reduce((sum, line) => {
         const item = list.items.find((candidate) => candidate.id === line.listItemId);
@@ -185,7 +185,7 @@ export function CheckoutClient({
       })
     : cartItems.map((item) => ({
         variantId: Number(item.variantId),
-        productName: item.productName,
+        productName: item.productName || '',
         variantLabel: item.variantLabel || undefined,
       }));
 
@@ -379,7 +379,7 @@ export function CheckoutClient({
           </h1>
           {!orderResult?.success && hasItems && (
             <p className="text-lg text-slate-500 max-w-lg mx-auto">
-              You&apos;re almost there! Complete your details below to finalize your order.
+              {t('Pages.Checkout.Subtitle')}
             </p>
           )}
         </div>
@@ -399,6 +399,7 @@ export function CheckoutClient({
             continueLabel={t('Pages.Checkout.ContinueShopping')}
             confirmTitle={t('Pages.Checkout.OrderConfirmed')}
             orderReferenceLabel={t('Pages.Checkout.OrderReference')}
+            trackOrderLabel={t('Pages.Checkout.TrackOrder')}
           />
         ) : hasItems ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">

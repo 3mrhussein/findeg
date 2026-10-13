@@ -17,6 +17,8 @@ export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations('Pages.MyAccount');
 
+  const tHeader = useTranslations('Layout.Header');
+
   const routes = [
     {
       href: '/my-account',
@@ -68,16 +70,16 @@ export function Sidebar() {
       </div>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <IconTooltip label="Toggle navigation menu" asChild>
+        <IconTooltip label={tHeader('OpenMenuButton')} asChild>
           <SheetTrigger asChild>
             <Button
               variant="outline"
               size="icon"
               className="shrink-0 md:hidden ms-4 mt-4"
-              aria-label="Toggle navigation menu"
+              aria-label={tHeader('OpenMenuButton')}
             >
               <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle navigation menu</span>
+              <span className="sr-only">{tHeader('OpenMenuButton')}</span>
             </Button>
           </SheetTrigger>
         </IconTooltip>

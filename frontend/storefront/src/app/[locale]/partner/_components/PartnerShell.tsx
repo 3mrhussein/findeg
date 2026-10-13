@@ -55,14 +55,18 @@ export function PartnerNotice({
   );
 }
 
-export function AccessSuspendedNotice() {
+import { getLocale, getTranslations } from 'next-intl/server';
+
+export async function AccessSuspendedNotice({ locale }: { locale?: string }) {
+  const loc = locale ?? (await getLocale().catch(() => 'en'));
+  const t = await getTranslations({ locale: loc, namespace: 'PartnerWorkspace' });
   return (
     <PartnerNotice
       centered
-      title="Access suspended"
-      description="Your access to this Partner Workspace is suspended."
+      title={t('AccessSuspendedTitle')}
+      description={t('AccessSuspendedDesc')}
     >
-      Contact an administrator of this Business Partner to restore your access.
+      {t('AccessSuspendedContact')}
     </PartnerNotice>
   );
 }
@@ -80,19 +84,27 @@ export async function requireWorkspaceAccess(
   code: string,
   roles: readonly PartnerRole[] | 'any',
   action: PartnerAction,
+  locale?: string,
 ): Promise<WorkspaceAccess> {
   const access = decidePartnerPageAccess(await getCachedPartnerContext(code), roles, action);
   if (access.kind === 'allowed') return { allowed: true, context: access.context };
   if (access.kind === 'not-found') notFound();
-  if (access.kind === 'suspended') return { allowed: false, notice: <AccessSuspendedNotice /> };
+  const loc = locale ?? (await getLocale().catch(() => 'en'));
+  if (access.kind === 'suspended')
+    return { allowed: false, notice: await AccessSuspendedNotice({ locale: loc }) };
 
+  const t = await getTranslations({ locale: loc, namespace: 'PartnerWorkspace' });
   const { partner } = access.context;
+  const isAr = loc === 'ar';
+  const partnerName = isAr ? partner.nameAr : partner.nameEn;
+  const partnerAlt = isAr ? partner.nameEn : partner.nameAr;
+
   if (access.reason === 'role-not-held') {
     return {
       allowed: false,
       notice: (
-        <PartnerNotice title="Not permitted" description={partner.nameEn}>
-          Your Partner Roles do not allow you to open this page.
+        <PartnerNotice title={t('NotPermittedTitle')} description={partnerName}>
+          {t('NotPermittedDesc')}
         </PartnerNotice>
       ),
     };
@@ -100,10 +112,10 @@ export async function requireWorkspaceAccess(
   return {
     allowed: false,
     notice: (
-      <PartnerNotice title={partner.nameEn} description={partner.nameAr}>
+      <PartnerNotice title={partnerName} description={partnerAlt}>
         {partner.status === 'closed'
-          ? 'This Business Partner is closed. Only its Partner Reports remain available.'
-          : `This is not available while the Business Partner is ${partner.status}.`}
+          ? t('ClosedNotice')
+          : t('UnavailableStatusNotice', { status: partner.status })}
       </PartnerNotice>
     ),
   };

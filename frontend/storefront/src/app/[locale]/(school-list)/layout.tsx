@@ -1,6 +1,6 @@
 import { type Locale } from '@findeg/domain';
 import React from 'react';
-import { SchoolListLayout } from '@app/[locale]/(storefront)/school/_components/SchoolListLayout';
+import { SchoolListLayout } from './_components/SchoolListLayout';
 import { setRequestLocale } from 'next-intl/server';
 
 /**

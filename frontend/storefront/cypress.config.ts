@@ -147,8 +147,8 @@ export default defineConfig({
             businessPartnerId: partner.id,
             governorate: 'Cairo',
             area: 'Maadi',
-            schoolType: 'private',
-            academicSystem: 'national',
+            schoolType: 'Private',
+            academicSystem: 'National',
             logoUrl: '/school.png',
           });
           const [category] = await db

@@ -21,6 +21,7 @@ interface OrderConfirmationEmailProps {
   total: string;
   deliveryAddress: string;
   locale?: string;
+  isGuest?: boolean;
 }
 
 import env from '@findeg/env';
@@ -37,6 +38,7 @@ export const OrderConfirmationEmail = ({
   total = 'EGP 100.00',
   deliveryAddress = '123 Main St, Cairo, Egypt',
   locale = 'en',
+  isGuest = false,
 }: OrderConfirmationEmailProps) => {
   const isRtl = locale === 'ar';
 
@@ -110,7 +112,14 @@ export const OrderConfirmationEmail = ({
       </Section>
 
       <Section style={btnContainer}>
-        <Button style={button} href={`${BASE_URL}/${locale}/my-account/orders`}>
+        <Button
+          style={button}
+          href={
+            isGuest
+              ? `${BASE_URL}/${locale}/order-lookup?ref=${encodeURIComponent(orderReference)}`
+              : `${BASE_URL}/${locale}/my-account/orders`
+          }
+        >
           {content.trackOrderStr}
         </Button>
       </Section>
