@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-13",
+  "framework": "Next.js App Router, frontend/storefront/package.json:30",
+  "fontStack": "Inter for English and Cairo for Arabic, frontend/storefront/src/app/layout.tsx:6-29",
+  "palette": "Shared Tailwind CSS variables with indigo primary and amber accent, frontend/storefront/src/app/globals.css:7-27 and :root",
+  "motion": "framer-motion 12.4.7 installed, frontend/storefront/package.json:27",
+  "spacing": "Tailwind v4; no named project spacing scale found",
+  "designSystem": "No design.md or existing Hallmark stamp found",
+  "preserved": [
+    "Inter/Cairo font files",
+    "Tailwind entry directives",
+    "shared site navigation and footer"
+  ],
+  "introduced": [
+    "homepage-scoped Garden palette",
+    "Ecosystem Index composition",
+    "page-scoped responsive styling"
+  ]
+}

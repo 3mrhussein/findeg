@@ -1,0 +1,479 @@
+/* Hallmark · macrostructure: Ecosystem Index · N11 mega-menu · Ft3 marketplace index
+ * tone: playful · anchor hue: leaf-green · theme: Garden (light / rounded-sans / green)
+ * enrichment: existing product photography · motion: hover lift only
+ */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · contrast: AA · nav/footer: inherited */
+
+.page {
+  min-width: 0;
+  overflow-x: clip;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.page :global(section) {
+  width: 100%;
+}
+
+.page :global(h1),
+.page :global(h2),
+.page :global(h3) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-style: normal;
+}
+
+.page :global(p) {
+  color: var(--color-muted);
+}
+
+.page :global(a:focus-visible),
+.page :global(button:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.hero :global(section) {
+  padding-block-start: clamp(var(--space-sm), 3vw, var(--space-xl));
+  padding-block-end: clamp(var(--space-lg), 5vw, var(--space-2xl));
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.hero :global(section > div) {
+  width: min(100% - 2rem, 84rem);
+  padding-inline: 0;
+}
+
+.hero :global(section > div > div) {
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(var(--space-lg), 5vw, var(--space-3xl));
+}
+
+.hero :global(section > div > div > div:first-child) {
+  max-width: 39rem;
+  gap: var(--space-md);
+}
+
+.hero :global(section > div > div > div:first-child > div:first-child) {
+  display: none;
+}
+
+.hero :global(section h1) {
+  max-width: 12ch;
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.055em;
+}
+
+.hero :global(section h1 span) {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 1px;
+}
+
+.hero :global(section p) {
+  max-width: 50ch;
+  font-size: var(--text-md);
+  line-height: 1.65;
+}
+
+.hero :global(section a) {
+  min-height: 3rem;
+  max-width: 100%;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.hero :global(section a:first-child) {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  box-shadow: 0 0.2rem 0 var(--color-ink-2);
+}
+
+.hero :global(section a:first-child:hover) {
+  transform: translateY(-2px);
+}
+
+.hero :global(section a:first-child:active) {
+  transform: translateY(1px);
+}
+
+.hero :global(section > div > div > div:first-child > div:last-child) {
+  align-items: center;
+}
+
+.hero :global(section > div > div > div:last-child) {
+  min-width: 0;
+}
+
+.hero :global(section > div > div > div:last-child > div:first-child),
+.hero :global(section > div > div > div:last-child > div:nth-child(2)) {
+  display: none;
+}
+
+.hero :global(section > div > div > div:last-child > div:nth-child(3)) {
+  width: 100%;
+  overflow: hidden;
+  border: var(--rule-hairline);
+  border-radius: 42% 42% var(--radius-card) var(--radius-card);
+  background: var(--color-paper-2);
+  box-shadow: var(--shadow-card);
+}
+
+.hero :global(section img) {
+  transition: transform var(--dur-medium) var(--ease-out);
+}
+
+.hero :global(section > div > div > div:last-child > div:last-child) {
+  display: none;
+}
+
+.collections :global(section) {
+  padding-block: clamp(var(--space-2xl), 7vw, var(--space-3xl));
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+
+.collections :global(section > div),
+.arrivals :global(section > div),
+.howItWorks :global(section > div),
+.school :global(section > div) {
+  width: min(100% - 2rem, 84rem);
+  padding-inline: 0;
+}
+
+.collections :global(section > div > div:first-child) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.collections :global(section h2),
+.arrivals :global(section h2),
+.howItWorks :global(section h2) {
+  font-size: clamp(var(--text-2xl), 2.4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.collections :global(section > div > div:last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.collections :global(section > div > div:last-child > a) {
+  min-width: 0;
+  border: var(--rule-hairline);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.collections :global(section > div > div:last-child > a:nth-child(2)) {
+  margin-block-start: var(--space-xl);
+}
+
+.collections :global(section > div > div:last-child > a:nth-child(3)) {
+  margin-block-start: calc(var(--space-sm) * -1);
+}
+
+.collections :global(section h3) {
+  font-size: var(--text-xl);
+  font-weight: 800;
+}
+
+.collections :global(section a:focus-visible),
+.arrivals :global(section a:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.arrivals :global(section) {
+  padding-block: clamp(var(--space-2xl), 7vw, var(--space-3xl));
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.arrivals :global(section > div > div:last-child) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.arrivals :global(section > div > div:last-child > *) {
+  min-width: 0;
+}
+
+.arrivals :global(section > div > div:last-child > * > div:first-child) {
+  overflow: clip;
+  border: var(--rule-hairline);
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-short) var(--ease-out);
+}
+
+.arrivals :global(section h3) {
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+.arrivals :global(section button) {
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  opacity: 1;
+  translate: none;
+  transform: translateX(-50%);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    transform var(--dur-short) var(--ease-out),
+    opacity var(--dur-short) var(--ease-out);
+}
+
+.arrivals :global(section button:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.arrivals :global(section button:active) {
+  transform: translateX(-50%) translateY(1px);
+}
+
+.arrivals :global(section button:disabled) {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.howItWorks :global(section) {
+  padding-block: clamp(var(--space-2xl), 7vw, var(--space-3xl));
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+.howItWorks :global(section > div > div:first-child) {
+  margin-bottom: var(--space-xl);
+}
+
+.howItWorks :global(section > div > div:last-child) {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  counter-reset: steps;
+}
+
+.howItWorks :global(section > div > div:last-child > *) {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: var(--space-md);
+  align-items: start;
+  padding-block: var(--space-md);
+  border: 0;
+  border-top: var(--rule-hairline);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  counter-increment: steps;
+}
+
+.howItWorks :global(section > div > div:last-child > *::before) {
+  content: '0' counter(steps);
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.howItWorks :global(section > div > div:last-child > * > div) {
+  display: grid;
+  gap: var(--space-2xs);
+  padding: 0;
+  text-align: start;
+}
+
+.howItWorks :global(section > div > div:last-child > * > div > div:first-child) {
+  display: none;
+}
+
+.howItWorks :global(section h3) {
+  font-size: var(--text-lg);
+  font-weight: 800;
+}
+
+.howItWorks :global(section > div > div:last-child > *:last-child) {
+  border-bottom: var(--rule-hairline);
+}
+
+.school :global(section) {
+  padding-block: clamp(var(--space-2xl), 7vw, var(--space-3xl));
+  background: var(--color-paper);
+}
+
+.school :global(section > div > div:first-child) {
+  overflow: hidden;
+  border: var(--rule-hairline);
+  border-radius: calc(var(--radius-card) * 1.5);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  box-shadow: var(--shadow-card);
+}
+
+.school :global(section > div > div:first-child > div:first-child > div:nth-child(-n + 2)) {
+  display: none;
+}
+
+.school :global(section h2),
+.school :global(section p),
+.school :global(section ul),
+.school :global(section li) {
+  color: var(--color-paper);
+}
+
+.school :global(section > div > div:first-child > div:first-child > div:last-child) {
+  display: none;
+}
+
+.school :global(section a:first-child) {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.school :global(section a:last-child) {
+  color: var(--color-paper);
+  white-space: nowrap;
+}
+
+.school :global(section a:active) {
+  transform: translateY(1px);
+}
+
+.school :global(section a:focus-visible),
+.school :global(section button:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero :global(section img:hover) {
+    transform: scale(1.025);
+  }
+
+  .collections :global(section > div > div:last-child > a:hover),
+  .arrivals :global(section > div > div:last-child > * > div:first-child:hover) {
+    transform: translateY(-3px);
+  }
+
+  .arrivals :global(section button:hover),
+  .school :global(section a:hover) {
+    filter: brightness(1.06);
+  }
+}
+
+@media (min-width: 60rem) {
+  .hero :global(section > div),
+  .collections :global(section > div),
+  .arrivals :global(section > div),
+  .howItWorks :global(section > div),
+  .school :global(section > div) {
+    width: min(100% - 4rem, 84rem);
+  }
+
+  .collections :global(section > div > div:first-child) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 60rem) {
+  .hero :global(section > div > div) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .hero :global(section > div > div > div:last-child) {
+    max-width: 38rem;
+    margin-inline: auto;
+  }
+
+  .collections :global(section > div > div:last-child),
+  .arrivals :global(section > div > div:last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collections :global(section > div > div:last-child > a:nth-child(2)),
+  .collections :global(section > div > div:last-child > a:nth-child(3)) {
+    margin-block-start: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .hero :global(section > div),
+  .collections :global(section > div),
+  .arrivals :global(section > div),
+  .howItWorks :global(section > div),
+  .school :global(section > div) {
+    width: min(100% - 2rem, 84rem);
+  }
+
+  .hero :global(section h1) {
+    font-size: var(--text-display-s);
+  }
+
+  .hero :global(section > div > div > div:first-child > div:last-child) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero :global(section a) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .collections :global(section > div > div:last-child),
+  .arrivals :global(section > div > div:last-child) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .collections :global(section > div > div:last-child > a) {
+    aspect-ratio: 4 / 3;
+  }
+
+  .school :global(section > div > div:first-child > div) {
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+  }
+
+  .school :global(section a) {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page :global(*) {
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .page :global(a:hover),
+  .page :global(button:hover),
+  .page :global(a:active),
+  .page :global(button:active),
+  .page :global(img:hover) {
+    transform: none !important;
+    translate: none !important;
+    filter: none !important;
+  }
+
+  .arrivals :global(section > div > div:last-child > * > div:first-child:hover) {
+    transform: none !important;
+  }
+}
