@@ -10,6 +10,7 @@ import { getPartner } from '@data/partners/queries';
 import { getCategories } from '@data/categories/queries';
 import { OfferForm } from '../_components/OfferForm';
 import { ItemsEditor } from '../_components/ItemsEditor';
+import { ListLifecycleActions } from '../_components/ListLifecycleActions';
 import { toUtcInputValue } from '../_lib/offerForm';
 
 export const metadata = {
@@ -85,15 +86,40 @@ export default async function SchoolSupplyListPage({
           </Link>
         </div>
 
-        <h1 className="mt-2 text-3xl font-bold tracking-tight" data-testid="list-title">
-          {title}
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight" data-testid="list-title">
+              {title}
+            </h1>
 
-        <div className="text-muted-foreground mt-2 flex items-center gap-2">
-          <span>
-            {list.data.grade} · {list.data.academicYear}
-          </span>
-          {getStatusBadge(list.data.status)}
+            <div className="text-muted-foreground mt-2 flex items-center gap-2">
+              <span>
+                {list.data.grade} · {list.data.academicYear}
+              </span>
+              {getStatusBadge(list.data.status)}
+            </div>
+
+            {list.data.replacesListId && (
+              <div className="text-sm text-muted-foreground" data-testid="replaces-list-notice">
+                {t('Replaces', { id: list.data.replacesListId })}
+              </div>
+            )}
+            {list.data.replacedById && (
+              <div
+                className="text-sm text-amber-700 dark:text-amber-300"
+                data-testid="replaced-by-list-notice"
+              >
+                {t('ReplacedBy', { id: list.data.replacedById })}
+              </div>
+            )}
+          </div>
+
+          <ListLifecycleActions
+            listId={listId}
+            status={list.data.status}
+            partnerStatus={partner?.status ?? ''}
+            canEdit={canEdit}
+          />
         </div>
       </div>
 

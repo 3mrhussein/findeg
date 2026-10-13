@@ -77,6 +77,9 @@ const {
   schoolSupplyListService: {
     setOffer: vi.fn(),
     clearOffer: vi.fn(),
+    cloneToDraft: vi.fn(),
+    archive: vi.fn(),
+    publish: vi.fn(),
   },
 }));
 
@@ -145,7 +148,15 @@ import { updateStock } from '@data/inventory/actions';
 import { createRoleAction, deleteRoleAction, createAdminAction } from '@data/access/actions';
 import { savePartnerAction } from '@/app/[locale]/(dashboard)/partners/_actions/partners';
 import { changePartnerStatusAction } from '@/app/[locale]/(dashboard)/partners/_actions/status';
-import { clearOfferAction } from '@/app/[locale]/(dashboard)/school-lists/_actions/offer';
+import {
+  clearOfferAction,
+  saveOfferAction,
+} from '@/app/[locale]/(dashboard)/school-lists/_actions/offer';
+import {
+  publishListAction,
+  cloneListAction,
+  archiveListAction,
+} from '@/app/[locale]/(dashboard)/school-lists/_actions/lists';
 
 function staffSession(permissionCodes: string[], activeRoleIds: string[] = []): SessionPayload {
   return {
@@ -517,6 +528,98 @@ describe('Server Action Security Integration Tests', () => {
       const res = await clearOfferAction('en', 1, { status: 'idle' });
       expect(res.status).toBe('cleared');
       expect(schoolSupplyListService.clearOffer).toHaveBeenCalled();
+    });
+
+    it('refuses unauthenticated calls to save offer', async () => {
+      getSession.mockResolvedValue(null);
+      const fd = new FormData();
+      fd.set('percent', '10');
+      fd.set('startsAt', '2026-10-15T10:00');
+
+      const res = await saveOfferAction('en', 1, { status: 'idle' }, fd);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.setOffer).not.toHaveBeenCalled();
+    });
+
+    it('refuses unauthenticated calls to publish list', async () => {
+      getSession.mockResolvedValue(null);
+
+      const res = await publishListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.publish).not.toHaveBeenCalled();
+    });
+
+    it('refuses staff lacking write permission to publish list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ]));
+
+      const res = await publishListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.publish).not.toHaveBeenCalled();
+    });
+
+    it('allows staff with write permission to publish list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE]));
+      schoolSupplyListService.publish.mockResolvedValue({
+        success: true,
+        data: { list: { id: 1 }, warnings: [] },
+      });
+
+      const res = await publishListAction(1);
+      expect(res.status).toBe('success');
+      expect(schoolSupplyListService.publish).toHaveBeenCalled();
+    });
+
+    it('refuses unauthenticated calls to clone list', async () => {
+      getSession.mockResolvedValue(null);
+
+      const res = await cloneListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.cloneToDraft).not.toHaveBeenCalled();
+    });
+
+    it('refuses staff lacking write permission to clone list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ]));
+
+      const res = await cloneListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.cloneToDraft).not.toHaveBeenCalled();
+    });
+
+    it('allows staff with write permission to clone list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE]));
+      schoolSupplyListService.cloneToDraft.mockResolvedValue({
+        success: true,
+        data: { id: 2 },
+      });
+
+      const res = await cloneListAction(1);
+      expect(res.status).toBe('success');
+      expect(schoolSupplyListService.cloneToDraft).toHaveBeenCalled();
+    });
+
+    it('refuses unauthenticated calls to archive list', async () => {
+      getSession.mockResolvedValue(null);
+
+      const res = await archiveListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.archive).not.toHaveBeenCalled();
+    });
+
+    it('refuses staff lacking write permission to archive list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ]));
+
+      const res = await archiveListAction(1);
+      expect(res.status).toBe('error');
+      expect(schoolSupplyListService.archive).not.toHaveBeenCalled();
+    });
+
+    it('allows staff with write permission to archive list', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE]));
+      schoolSupplyListService.archive.mockResolvedValue({ success: true, data: { id: 1 } });
+
+      const res = await archiveListAction(1);
+      expect(res.status).toBe('success');
+      expect(schoolSupplyListService.archive).toHaveBeenCalled();
     });
   });
 });

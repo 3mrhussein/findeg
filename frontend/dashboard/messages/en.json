@@ -147,7 +147,26 @@
     "ListOfferHelp": "A percentage off every line of this list at checkout. Changing it does not republish the list; a replacement list copies the offer when it is published.",
     "StatusDraft": "Draft",
     "StatusPublished": "Published",
-    "StatusArchived": "Archived"
+    "StatusArchived": "Archived",
+    "Clone": "Clone List",
+    "Cloning": "Cloning...",
+    "Archive": "Archive List",
+    "Archiving": "Archiving...",
+    "ReplacedBy": "Replaced by list #{id}",
+    "Replaces": "Replaces list #{id}",
+    "OutOfStockWarning": "Warning: One or more default variants are out of stock. The list was published, but customers may need to select substitutes.",
+    "DiscountPercent": "Discount (%)",
+    "StartsUtc": "Starts (UTC)",
+    "EndsUtc": "Ends (UTC, optional)",
+    "EndsHelp": "Leave empty for an open-ended offer. The offer applies to every line of the list while the order is accepted between the start and the end.",
+    "SaveOffer": "Save offer",
+    "CreateOffer": "Create offer",
+    "RemoveOffer": "Remove offer",
+    "OfferSaved": "Offer saved.",
+    "FiniteWindow": "Active from {start} until {end}",
+    "OpenEndedWindow": "Active from {start} (open-ended)",
+    "MoneyExample": "Price preview: A {original} EGP item discounts to {discounted} EGP.",
+    "ActiveDiscount": "Active discount: {percent}%"
   },
   "Pages": {
     "Dashboard": {
