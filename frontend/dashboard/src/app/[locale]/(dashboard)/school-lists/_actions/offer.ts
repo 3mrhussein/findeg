@@ -1,7 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@lib/auth-guard';
+import { requireStaffAction } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { toListActor } from '../_lib/toListActor';
@@ -33,14 +34,22 @@ export async function saveOfferAction(
   _previous: OfferFormState,
   formData: FormData,
 ): Promise<OfferFormState> {
-  const actor = toListActor(await requireAdmin(locale));
-  const parsed = parseOfferForm(formData);
-  if (!parsed.ok) return { status: 'error', message: parsed.message };
-  const { schoolSupplyLists } = createAdministrationServices();
-  const result = await schoolSupplyLists.setOffer(actor, listId, parsed.offer);
-  if (!result.success) return fail(result.error);
-  refresh();
-  return { status: 'saved' };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+      'edit School Supply Lists',
+    );
+    const actor = toListActor(session);
+    const parsed = parseOfferForm(formData);
+    if (!parsed.ok) return { status: 'error', message: parsed.message };
+    const { schoolSupplyLists } = createAdministrationServices();
+    const result = await schoolSupplyLists.setOffer(actor, listId, parsed.offer);
+    if (!result.success) return fail(result.error);
+    refresh();
+    return { status: 'saved' };
+  } catch {
+    return fail('forbidden');
+  }
 }
 
 export async function clearOfferAction(
@@ -48,10 +57,18 @@ export async function clearOfferAction(
   listId: number,
   _previous: OfferFormState,
 ): Promise<OfferFormState> {
-  const actor = toListActor(await requireAdmin(locale));
-  const { schoolSupplyLists } = createAdministrationServices();
-  const result = await schoolSupplyLists.clearOffer(actor, listId);
-  if (!result.success) return fail(result.error);
-  refresh();
-  return { status: 'cleared' };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+      'edit School Supply Lists',
+    );
+    const actor = toListActor(session);
+    const { schoolSupplyLists } = createAdministrationServices();
+    const result = await schoolSupplyLists.clearOffer(actor, listId);
+    if (!result.success) return fail(result.error);
+    refresh();
+    return { status: 'cleared' };
+  } catch {
+    return fail('forbidden');
+  }
 }

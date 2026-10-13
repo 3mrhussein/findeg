@@ -4,6 +4,9 @@ import { getOrderDetail } from '@data/orders/queries';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@i18n/navigation';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 import { OrderHeader } from './_components/OrderHeader';
 import { OrderTimeline } from './_components/OrderTimeline';
 import { OrderItemsTable } from './_components/OrderItemsTable';
@@ -22,6 +25,7 @@ export default async function OrderDetailPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_ORDERS_READ });
 
   // Order ids are positive 32-bit integers; anything else cannot name an Order.
   if (!/^[1-9]\d{0,9}$/.test(id) || Number(id) > 2_147_483_647) notFound();

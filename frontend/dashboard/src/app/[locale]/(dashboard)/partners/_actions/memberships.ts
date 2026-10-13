@@ -1,7 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@lib/auth-guard';
+import { requireStaffAction } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
 import {
   createPartnerMembershipServices,
@@ -31,15 +32,23 @@ export async function updateMembershipAction(
   expectedVersion: number,
   input: UpdateMembershipInput,
 ): Promise<MembershipActionState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const { memberships } = createPartnerMembershipServices();
-  const result = await memberships.updateMembership(actor, membershipId, input, expectedVersion);
-  if (!result.success) {
-    return {
-      status: 'error',
-      message: ERROR_MESSAGES[result.error] ?? 'Something went wrong. Try again.',
-    };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.PARTNERS_MANAGE,
+      'update partner membership',
+    );
+    const actor = toStaffActor(session);
+    const { memberships } = createPartnerMembershipServices();
+    const result = await memberships.updateMembership(actor, membershipId, input, expectedVersion);
+    if (!result.success) {
+      return {
+        status: 'error',
+        message: ERROR_MESSAGES[result.error] ?? 'Something went wrong. Try again.',
+      };
+    }
+    revalidatePath('/[locale]/partners/[id]', 'page');
+    return { status: 'done' };
+  } catch {
+    return { status: 'error', message: ERROR_MESSAGES.forbidden };
   }
-  revalidatePath('/[locale]/partners/[id]', 'page');
-  return { status: 'done' };
 }

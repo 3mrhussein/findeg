@@ -1,3 +1,4 @@
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
 import { NavGroup } from './interfaces';
 
 export const ADMIN_NAV: NavGroup[] = [
@@ -8,6 +9,7 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'لوحة التحكم',
         href: '/',
         icon: 'LayoutDashboard',
+        permission: PERMISSION_CODES.ADMIN_DASHBOARD_READ,
       },
     ],
   },
@@ -20,14 +22,14 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'المنتجات',
         href: '/products',
         icon: 'Package',
-        permission: 'products.view',
+        permission: PERMISSION_CODES.ADMIN_PRODUCTS_READ,
       },
       {
         label: 'Categories',
         labelAr: 'الفئات',
         href: '/categories',
         icon: 'FolderTree',
-        permission: 'categories.view',
+        permission: PERMISSION_CODES.ADMIN_CATEGORIES_READ,
         persistent: true,
         children: [
           {
@@ -35,14 +37,14 @@ export const ADMIN_NAV: NavGroup[] = [
             labelAr: 'الوسوم',
             href: '/catalog/tags',
             icon: 'Tag',
-            permission: 'tags.manage',
+            permission: PERMISSION_CODES.ADMIN_TAGS_READ,
           },
           {
             label: 'Collections',
             labelAr: 'المجموعات',
             href: '/catalog/collections',
             icon: 'Layers',
-            permission: 'collections.manage',
+            permission: PERMISSION_CODES.ADMIN_COLLECTIONS_READ,
           },
         ],
       },
@@ -51,7 +53,7 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'العلامات التجارية',
         href: '/brands',
         icon: 'Award',
-        permission: 'brands.view',
+        permission: PERMISSION_CODES.ADMIN_BRANDS_READ,
       },
     ],
   },
@@ -64,40 +66,24 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'الطلبات',
         href: '/orders',
         icon: 'ShoppingCart',
-        permission: 'orders.view',
+        permission: PERMISSION_CODES.ADMIN_ORDERS_READ,
       },
       {
         label: 'Inventory',
         labelAr: 'المخزون',
         href: '/inventory',
         icon: 'Warehouse',
-        permission: 'inventory.view',
+        permission: PERMISSION_CODES.ADMIN_INVENTORY_READ,
       },
-    ],
-  },
-  {
-    label: 'CONTENT',
-    labelAr: 'المحتوى',
-    items: [
       {
-        label: 'Media',
-        labelAr: 'الوسائط',
-        href: '/media',
-        icon: 'Image',
-        permission: 'media.view',
-      },
-    ],
-  },
-  {
-    label: 'ANALYTICS',
-    labelAr: 'التحليلات',
-    items: [
-      {
-        label: 'Analytics',
-        labelAr: 'التحليلات',
-        href: '/editorial/search-analytics',
-        icon: 'BarChart3',
-        permission: 'analytics.view',
+        label: 'School Supply Lists',
+        labelAr: 'قوائم الأدوات المدرسية',
+        href: '/school-lists',
+        icon: 'GraduationCap',
+        anyPermissions: [
+          PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ,
+          PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+        ],
       },
     ],
   },
@@ -110,14 +96,14 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'شركاء الأعمال',
         href: '/partners',
         icon: 'Building2',
-        anyPermissions: ['partners.manage', 'partner.reports.view'],
+        anyPermissions: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.PARTNER_REPORTS_VIEW],
       },
       {
         label: 'Audit Log',
         labelAr: 'سجل التدقيق',
         href: '/audit-log',
         icon: 'ClipboardList',
-        permission: 'audit.view',
+        permission: PERMISSION_CODES.ADMIN_AUDIT_LOG_READ,
       },
       {
         label: 'Settings',
@@ -136,12 +122,7 @@ export const ADMIN_NAV: NavGroup[] = [
             labelAr: 'الموظفون',
             href: '/users',
             icon: 'Users',
-          },
-          {
-            label: 'Roles & Permissions',
-            labelAr: 'الأدوار',
-            href: '/users/roles',
-            icon: 'Shield',
+            permission: PERMISSION_CODES.ADMIN_USERS_READ,
           },
         ],
       },

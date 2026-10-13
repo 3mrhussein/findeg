@@ -8,19 +8,21 @@
 
 import { revalidateTag } from 'next/cache';
 import { createIdentityServices } from '@findeg/backend/features/identity';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 import type {
   CreateAdminInput,
   UpdateAdminInput,
   PermissionOverrideInput,
 } from '@findeg/backend/features/identity';
-import { getSession } from '@lib/session';
 
 /**
  * Create a new custom role
  */
 export async function createRoleAction(code: string, name: string, permissionIds: number[]) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_ROLES_WRITE, 'create role');
     const { adminRoles } = createIdentityServices();
     const result = await adminRoles.createRole(code, name, permissionIds);
 
@@ -36,6 +38,7 @@ export async function createRoleAction(code: string, name: string, permissionIds
  */
 export async function updateRolePermissionsAction(roleId: number, permissionIds: number[]) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_ROLES_WRITE, 'update role permissions');
     const { adminRoles } = createIdentityServices();
     const result = await adminRoles.updateRolePermissions(roleId, permissionIds);
 
@@ -52,6 +55,7 @@ export async function updateRolePermissionsAction(roleId: number, permissionIds:
  */
 export async function deleteRoleAction(roleId: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_ROLES_WRITE, 'delete role');
     const { adminRoles } = createIdentityServices();
     await adminRoles.deleteRole(roleId);
 
@@ -67,6 +71,7 @@ export async function deleteRoleAction(roleId: number) {
  */
 export async function createAdminAction(input: CreateAdminInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_USERS_WRITE, 'create admin user');
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.createAdmin(input);
 
@@ -82,6 +87,7 @@ export async function createAdminAction(input: CreateAdminInput) {
  */
 export async function updateAdminAction(userId: number, input: UpdateAdminInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_USERS_WRITE, 'update admin user');
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.updateAdmin(userId, input);
 
@@ -98,7 +104,10 @@ export async function updateAdminAction(userId: number, input: UpdateAdminInput)
  */
 export async function setPermissionOverridesAction(userId: number, permissionIds: number[]) {
   try {
-    const session = await getSession();
+    const session = await requireStaffAction(
+      PERMISSION_CODES.ADMIN_USERS_WRITE,
+      'set permission overrides',
+    );
     if (!session?.userId) {
       throw new Error('Unauthorized: Missing session user ID');
     }

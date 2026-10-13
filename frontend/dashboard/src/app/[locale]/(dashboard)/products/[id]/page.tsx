@@ -1,6 +1,9 @@
 import { Suspense } from 'react';
 import { ProductDetailSkeleton } from '@components/skeletons';
 import { ProductDetailContent } from './_components/ProductDetailContent';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Product Edit Page
@@ -14,6 +17,7 @@ export default async function EditProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id: idParam } = await params;
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_PRODUCTS_READ });
   const productId = parseInt(idParam);
 
   return (

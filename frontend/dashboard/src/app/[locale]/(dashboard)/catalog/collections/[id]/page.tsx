@@ -1,9 +1,12 @@
 import { CollectionForm } from '../_components/CollectionForm';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 interface CollectionEditPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }
 
 /**
@@ -20,7 +23,10 @@ export async function generateMetadata({ params }: CollectionEditPageProps): Pro
  *
  */
 export default async function CollectionEditPage({ params }: CollectionEditPageProps) {
-  await params;
+  const { locale } = await params;
+  await requirePermission(locale as Locale, {
+    permission: PERMISSION_CODES.ADMIN_COLLECTIONS_WRITE,
+  });
 
   // TODO: Replace with data layer queries from @data/collections/queries
   const collection = null as React.ComponentProps<typeof CollectionForm>['collection'] | null; // Stubbed - will trigger notFound()

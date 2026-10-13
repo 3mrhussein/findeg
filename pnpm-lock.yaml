@@ -193,6 +193,9 @@ importers:
       '@findeg/domain-errors':
         specifier: workspace:*
         version: link:../../packages/domain-errors
+      '@findeg/env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders

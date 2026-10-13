@@ -1,7 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@lib/auth-guard';
+import { requireStaffAction } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { toStaffActor } from '../_lib/toStaffActor';
@@ -27,22 +28,27 @@ export async function savePartnerAction(
   _previous: PartnerFormState,
   formData: FormData,
 ): Promise<PartnerFormState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const { partners } = createPartnerMembershipServices();
-  const fields = {
-    code: String(formData.get('code') ?? '').trim(),
-    nameEn: String(formData.get('nameEn') ?? ''),
-    nameAr: String(formData.get('nameAr') ?? ''),
-  };
+  try {
+    const session = await requireStaffAction(PERMISSION_CODES.PARTNERS_MANAGE, 'manage partners');
+    const actor = toStaffActor(session);
+    const { partners } = createPartnerMembershipServices();
+    const fields = {
+      code: String(formData.get('code') ?? '').trim(),
+      nameEn: String(formData.get('nameEn') ?? ''),
+      nameAr: String(formData.get('nameAr') ?? ''),
+    };
 
-  const result =
-    partnerId === null
-      ? await partners.createPartner(actor, fields)
-      : await partners.updatePartner(actor, partnerId, fields);
+    const result =
+      partnerId === null
+        ? await partners.createPartner(actor, fields)
+        : await partners.updatePartner(actor, partnerId, fields);
 
-  if (!result.success) {
-    return { status: 'error', message: ERROR_MESSAGES[result.error] ?? result.error };
+    if (!result.success) {
+      return { status: 'error', message: ERROR_MESSAGES[result.error] ?? result.error };
+    }
+    revalidatePath('/[locale]/partners', 'page');
+    return { status: 'saved' };
+  } catch {
+    return { status: 'error', message: ERROR_MESSAGES.forbidden };
   }
-  revalidatePath('/[locale]/partners', 'page');
-  return { status: 'saved' };
 }

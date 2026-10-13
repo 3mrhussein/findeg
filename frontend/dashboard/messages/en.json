@@ -11,6 +11,20 @@
     "Discount": "Discount",
     "Actions": "Actions"
   },
+  "Auth": {
+    "title": "Admin Login",
+    "description": "Enter your credentials to access the dashboard",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "errors": {
+      "requiredFields": "Email and password are required",
+      "invalidCredentials": "Invalid email or password",
+      "adminOnly": "Forbidden: This portal is for administrators only",
+      "generic": "An unexpected error occurred. Please try again."
+    }
+  },
   "PartnerSales": {
     "Tab": "Sales",
     "LoadError": "The sales report could not be loaded.",

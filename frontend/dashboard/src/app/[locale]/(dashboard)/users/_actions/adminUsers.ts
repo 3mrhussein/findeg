@@ -1,9 +1,9 @@
 'use server';
 
-import { requireAdmin } from '@lib/auth-guard';
+import { requireStaffAction } from '@lib/auth-guard';
 import { revalidateTag } from 'next/cache';
 import { createIdentityServices } from '@findeg/backend/features/identity';
-import type { Locale } from '@findeg/domain';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -14,12 +14,7 @@ import { getErrorMessage } from '@lib/type-guards';
 
 export async function createAdminAction(formData: FormData) {
   try {
-    const session = await requireAdmin('en' as Locale); // Needs to be localized eventually, using en for fallback
-
-    // Needs System Admin check
-    if (!session.activeRoleIds?.includes('system_admin')) {
-      return { success: false, error: 'Unauthorized: System Admin role required' };
-    }
+    await requireStaffAction(PERMISSION_CODES.ADMIN_USERS_WRITE, 'create admin user');
 
     // Extract form data
     const input = {
@@ -43,11 +38,7 @@ export async function createAdminAction(formData: FormData) {
 
 export async function updateAdminAction(userId: number, formData: FormData) {
   try {
-    const session = await requireAdmin('en' as Locale);
-
-    if (!session.activeRoleIds?.includes('system_admin')) {
-      return { success: false, error: 'Unauthorized: System Admin role required' };
-    }
+    await requireStaffAction(PERMISSION_CODES.ADMIN_USERS_WRITE, 'update admin user');
 
     // Extract form data
     const input = {

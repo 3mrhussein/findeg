@@ -20,6 +20,7 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@i18n': path.resolve(__dirname, './src/i18n'),
       '@findeg/backend': path.resolve(__dirname, '../../backend/src'),
+      '@findeg/env': path.resolve(__dirname, '../../packages/env/src'),
     },
   },
 });
