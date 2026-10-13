@@ -106,7 +106,6 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
               <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="m@example.com"
                   data-testid="login-email-input"
                   readOnly={emailLocked}
                   aria-readonly={emailLocked}

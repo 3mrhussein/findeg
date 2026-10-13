@@ -223,10 +223,14 @@ export function MobileNavSheet() {
             <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ToggleLanguage />
-                <span className="text-xs font-semibold text-slate-500 uppercase">Language</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase">
+                  {t('Language')}
+                </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-slate-500 uppercase">Theme</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase">
+                  {t('Theme')}
+                </span>
                 <ToggleTheme />
               </div>
             </div>

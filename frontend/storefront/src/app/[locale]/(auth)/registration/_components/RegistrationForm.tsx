@@ -144,7 +144,7 @@ export function RegistrationForm({
             <FormItem>
               <FormLabel>{t('Pages.Auth.Name')}</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" data-testid="registration-name-input" {...field} />
+                <Input data-testid="registration-name-input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -158,7 +158,6 @@ export function RegistrationForm({
               <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="m@example.com"
                   data-testid="registration-email-input"
                   readOnly={emailLocked}
                   aria-readonly={emailLocked}
