@@ -299,7 +299,7 @@ for (const locale of ['en', 'ar']) {
         cy.wait('@serverAction');
         expectFailureToast(labels.RequestFailed);
         // The select falls back to the persisted status instead of the rejected choice.
-        cy.get(statusSelect).should('contain.text', 'Pending');
+        cy.get(statusSelect).should('contain.text', statuses.Pending);
         cy.reload();
         cy.contains('h1', /pending/i).should('be.visible');
       });
