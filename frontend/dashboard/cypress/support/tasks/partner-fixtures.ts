@@ -2,7 +2,11 @@ import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import postgres from 'postgres';
-import type { BusinessPartnerStatus, PartnerMembershipStatus } from '@findeg/domain';
+import type {
+  BusinessPartnerStatus,
+  PartnerMembershipStatus,
+  SupplyListStatus,
+} from '@findeg/domain';
 
 function readDatabaseUrl(): string {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
@@ -266,6 +270,92 @@ export const partnerFixtureTasks = {
       }
 
       return { orderId: order.id, listId: list.id };
+    });
+  },
+
+  setTestPartnerStatus(options: {
+    partnerId: number;
+    status: BusinessPartnerStatus;
+  }): Promise<{ success: boolean }> {
+    return withSql(async (sql) => {
+      await sql`
+        update identity.business_partners
+        set status = ${options.status}
+        where id = ${options.partnerId}
+      `;
+      return { success: true };
+    });
+  },
+
+  createTestSupplyList(options: {
+    partnerId: number;
+    grade?: string;
+    academicYear?: string;
+    status?: SupplyListStatus;
+    titleEn?: string;
+    titleAr?: string;
+  }): Promise<{ id: number }> {
+    return withSql(async (sql) => {
+      const tag = randomBytes(4).toString('hex');
+      const grade = options.grade ?? 'Grade 1';
+      const academicYear = options.academicYear ?? '2026-2027';
+      const status = options.status ?? 'draft';
+      const titleEn = options.titleEn ?? `Supply List ${tag}`;
+      const titleAr = options.titleAr ?? `قائمة مستلزمات ${tag}`;
+
+      const [row] = await sql<{ id: number }[]>`
+        insert into school_engine.school_supply_lists
+          (business_partner_id, grade, academic_year, status, localized_title, public_code, published_at)
+        values (
+          ${options.partnerId},
+          ${grade},
+          ${academicYear},
+          ${status},
+          ${sql.json({ en: titleEn, ar: titleAr })},
+          ${status === 'published' ? randomBytes(16).toString('hex') : null},
+          ${status === 'published' ? sql`now()` : null}
+        )
+        returning id
+      `;
+      return { id: row.id };
+    });
+  },
+
+  addTestSupplyListItem(options: {
+    listId: number;
+    labelEn?: string;
+    labelAr?: string;
+    quantity?: number;
+    required?: boolean;
+    exactItem?: boolean;
+    variantId?: number | null;
+    specification?: { categoryId: number; attributes: Record<string, string> } | null;
+  }): Promise<{ id: number }> {
+    return withSql(async (sql) => {
+      const tag = randomBytes(4).toString('hex');
+      const labelEn = options.labelEn ?? `Item ${tag}`;
+      const labelAr = options.labelAr ?? `بند ${tag}`;
+      const quantity = options.quantity ?? 1;
+      const required = options.required ?? true;
+      const exactItem = options.exactItem ?? true;
+      const variantId = options.variantId ?? null;
+      const specification = options.specification ? sql.json(options.specification) : null;
+
+      const [row] = await sql<{ id: number }[]>`
+        insert into school_engine.school_supply_list_items
+          (list_id, localized_label, quantity, required, exact_item, variant_id, specification)
+        values (
+          ${options.listId},
+          ${sql.json({ en: labelEn, ar: labelAr })},
+          ${quantity},
+          ${required},
+          ${exactItem},
+          ${variantId},
+          ${specification}
+        )
+        returning id
+      `;
+      return { id: row.id };
     });
   },
 };

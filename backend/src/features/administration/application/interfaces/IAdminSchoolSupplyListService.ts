@@ -3,6 +3,12 @@ import type {
   SupplyListResult,
   SupplyListStaffActor,
 } from '../../../school';
+import type {
+  SchoolSupplyListIndexFilters,
+  SchoolSupplyListIndexRow,
+} from '@findeg/db/queries/school-supply-lists';
+
+export type { SchoolSupplyListIndexFilters, SchoolSupplyListIndexRow };
 
 export interface SpecificationOption {
   attributeKey: string;
@@ -16,6 +22,10 @@ export interface SpecificationVariantCandidate {
 }
 
 export interface IAdminSchoolSupplyListService extends ISchoolSupplyListService {
+  listAll(
+    actor: SupplyListStaffActor,
+    filters?: SchoolSupplyListIndexFilters,
+  ): Promise<SupplyListResult<SchoolSupplyListIndexRow[]>>;
   listSpecificationOptions(
     actor: SupplyListStaffActor,
     categoryId: number,

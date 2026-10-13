@@ -33,6 +33,7 @@ import { createSchoolSupplyListService } from '../../../school';
 import {
   findVariantCandidates,
   listAttributeValuesForCategory,
+  listSchoolSupplyLists,
 } from '@findeg/db/queries/school-supply-lists';
 
 async function loadDb() {
@@ -70,6 +71,7 @@ export function createAdministrationServices(): AdministrationServices {
     schoolSupplyListLifecycle,
     async (categoryId) => listAttributeValuesForCategory(await loadDb(), categoryId),
     async (categoryId) => findVariantCandidates(await loadDb(), { categoryId }),
+    async (filters) => listSchoolSupplyLists(await loadDb(), filters),
   );
 
   // Create admin services (inject repository dependencies)
