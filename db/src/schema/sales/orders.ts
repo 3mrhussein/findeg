@@ -22,6 +22,7 @@ import {
   varchar,
   jsonb,
   uniqueIndex,
+  index,
   check,
   boolean,
 } from 'drizzle-orm/pg-core';
@@ -183,6 +184,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     references: [users.id],
   }),
   items: many(orderItems),
+  notes: many(orderNotes),
 }));
 
 /** Each order item references its parent order and product */
@@ -202,9 +204,42 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 }));
 
 /**
+ * Order Notes Table
+ *
+ * Append-only internal notes on orders, with author and time.
+ */
+export const orderNotes = salesSchema.table(
+  'order_notes',
+  {
+    id: serial('id').primaryKey(),
+    orderId: integer('order_id')
+      .notNull()
+      .references(() => orders.id, { onDelete: 'cascade' }),
+    authorId: integer('author_id').references(() => users.id, { onDelete: 'set null' }),
+    authorName: text('author_name').notNull(),
+    note: text('note').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [index('idx_order_notes_order_id').on(table.orderId)],
+);
+
+export const orderNotesRelations = relations(orderNotes, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderNotes.orderId],
+    references: [orders.id],
+  }),
+  author: one(users, {
+    fields: [orderNotes.authorId],
+    references: [users.id],
+  }),
+}));
+
+/**
  * Type Exports
  */
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type NewOrderItem = typeof orderItems.$inferInsert;
+export type OrderNote = typeof orderNotes.$inferSelect;
+export type NewOrderNote = typeof orderNotes.$inferInsert;

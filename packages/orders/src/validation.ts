@@ -36,12 +36,15 @@ const calendarDate = z
       value >= '0001-01-01'
     );
   }, 'Invalid calendar date');
+export const noteText = z.string().trim().min(1, 'Note cannot be empty').max(2000);
+
 export const statsOptionsSchema = z
   .object({
     from: calendarDate.optional(),
     to: calendarDate.optional(),
     trendDays: z.number().int().min(1).max(366).default(30),
     topProductsLimit: z.number().int().min(1).max(100).default(5),
+    liveOnly: z.boolean().optional(),
   })
   .refine(
     (options) => !options.from || !options.to || options.from <= options.to,

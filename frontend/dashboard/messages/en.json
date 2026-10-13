@@ -722,6 +722,27 @@
         "Preview": "Preview",
         "GroupKeyPreview": "System ID"
       }
+    },
+    "OrdersDetail": {
+      "Order": "Order",
+      "PlacedOn": "Placed on {date}",
+      "ProcessRefund": "Process Refund",
+      "ConfirmRefundTitle": "Confirm Order Refund",
+      "ConfirmRefundDesc": "Are you sure you want to refund this order? This will mark both the order and payment as refunded.",
+      "Cancel": "Cancel",
+      "ConfirmRefundAction": "Confirm Refund",
+      "ItemsTitle": "Order Items",
+      "Product": "Product",
+      "Sku": "SKU",
+      "Price": "Price",
+      "Qty": "Qty",
+      "Discount": "Discount",
+      "Total": "Total",
+      "Substitute": "Substitute",
+      "NotesTitle": "Internal Notes",
+      "NotesPlaceholder": "Add an internal note for this order...",
+      "AddNote": "Add Note",
+      "NoNotes": "No internal notes yet."
     }
   }
 }

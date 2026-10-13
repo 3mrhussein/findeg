@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { formatEgp } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
 interface OrderItemsTableProps {
@@ -13,21 +14,21 @@ interface OrderItemsTableProps {
  *
  */
 export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
-  const t = useTranslations('Common');
+  const t = useTranslations('Administration.OrdersDetail');
   return (
     <div className="rounded-md border bg-card">
       <div className="p-4 border-b">
-        <h3 className="text-lg font-semibold tracking-tight">Order Items</h3>
+        <h3 className="text-lg font-semibold tracking-tight">{t('ItemsTitle')}</h3>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[40%]">Product</TableHead>
-            <TableHead>SKU</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-            <TableHead className="text-right">Qty</TableHead>
+            <TableHead className="w-[40%]">{t('Product')}</TableHead>
+            <TableHead>{t('Sku')}</TableHead>
+            <TableHead className="text-right">{t('Price')}</TableHead>
+            <TableHead className="text-right">{t('Qty')}</TableHead>
             <TableHead className="text-right">{t('Discount')}</TableHead>
-            <TableHead className="text-right">Total</TableHead>
+            <TableHead className="text-right">{t('Total')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -46,6 +47,15 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
                   <div className="flex flex-col">
                     <span className="font-medium">{name}</span>
                     {variant && <span className="text-xs text-muted-foreground">{variant}</span>}
+                    {item.isSubstitute && (
+                      <Badge
+                        variant="outline"
+                        data-testid="order-item-substitute-badge"
+                        className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-600 border-amber-300 w-fit mt-1"
+                      >
+                        {t('Substitute')}
+                      </Badge>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell className="text-xs font-mono">{sku}</TableCell>

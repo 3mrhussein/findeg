@@ -11,6 +11,7 @@ import { DashboardOrdersWidget } from './DashboardOrdersWidget';
 
 import { getTranslations } from 'next-intl/server';
 import { type Locale } from '@findeg/domain';
+import { getOptionalSession } from '@lib/auth-guard';
 import {
   getCatalogHealthStats,
   getCategoryProductDistribution,
@@ -35,10 +36,13 @@ interface DashboardWidgetProps {
  * Renders immediately with ~50ms of queries (simple counts)
  */
 export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
-  const t = await getTranslations({
-    locale: locale as Locale,
-    namespace: 'Administration.Dashboard',
-  });
+  const [t, session] = await Promise.all([
+    getTranslations({
+      locale: locale as Locale,
+      namespace: 'Administration.Dashboard',
+    }),
+    getOptionalSession(),
+  ]);
 
   // Quick queries only - single round-trip
   const catalogStats = await getCatalogHealthStats();
@@ -54,7 +58,7 @@ export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
     day: 'numeric',
   });
 
-  const firstName = 'Admin';
+  const firstName = session?.user?.firstName || 'Staff';
 
   return (
     <>
@@ -173,7 +177,7 @@ export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
 /** Independent home Orders reads share the same invalidated data layer as Orders workflows. */
 export async function OrdersDashboardSection({ locale }: DashboardWidgetProps) {
   const [stats, recentOrders, t] = await Promise.all([
-    getOrderStats(),
+    getOrderStats({ liveOnly: true }),
     getRecentOrders(),
     getTranslations({ locale }),
   ]);

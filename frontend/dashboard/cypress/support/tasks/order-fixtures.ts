@@ -109,4 +109,17 @@ export const orderFixtureTasks = {
   setTestOrderPaymentStatus(args: SetOrderStateArgs<PaymentStatus>): Promise<null> {
     return setOrderState('payment_status', 'payment_status', args);
   },
+
+  setTestOrderTrackingNumber({
+    id,
+    trackingNumber,
+  }: {
+    id: number;
+    trackingNumber: string;
+  }): Promise<null> {
+    return withSql(async (sql) => {
+      await sql`update sales.orders set tracking_number = ${trackingNumber} where id = ${id}`;
+      return null;
+    });
+  },
 };

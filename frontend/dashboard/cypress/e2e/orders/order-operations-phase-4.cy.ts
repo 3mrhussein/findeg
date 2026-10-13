@@ -61,7 +61,7 @@ for (const locale of ['en', 'ar']) {
 
       it('updates the status, records it in the activity log and persists it', () => {
         visitOrderDetail(detailPath());
-        cy.contains('h1', `Order #FE-${String(order.id).padStart(5, '0')}`).should('be.visible');
+        cy.contains('h1', order.orderReference).should('be.visible');
         cy.contains('No recent activity found for this order.').should('be.visible');
 
         chooseStatus('Confirmed');
@@ -94,6 +94,137 @@ for (const locale of ['en', 'ar']) {
         cy.contains('tbody tr', order.orderReference)
           .should('contain.text', 'confirmed')
           .and('not.contain.text', 'pending');
+      });
+
+      it('cycles through full lifecycle: confirm, ship with tracking, deliver, mark as paid', () => {
+        visitOrderDetail(detailPath());
+        // 1. Confirm
+        chooseStatus('Confirmed');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /confirmed/i).should('be.visible');
+
+        // 2. Paid before delivery is refused (button does not exist)
+        cy.contains('button:visible', 'Mark as paid').should('not.exist');
+
+        // 3. Processing
+        chooseStatus('Processing');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /processing/i).should('be.visible');
+
+        // 4. Shipping without tracking is refused
+        chooseStatus('Shipped');
+        cy.contains('Update failed').should('be.visible');
+        cy.contains('Shipping requires a tracking number').should('be.visible');
+
+        // Enter tracking and ship
+        cy.get('[data-testid="order-tracking-input"]').clear().type('AWB-123456');
+        chooseStatus('Shipped');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /shipped/i).should('be.visible');
+
+        // Paid before delivery is still refused
+        cy.contains('button:visible', 'Mark as paid').should('not.exist');
+
+        // 5. Deliver
+        chooseStatus('Delivered');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /delivered/i).should('be.visible');
+
+        // 6. Paid is now allowed
+        cy.contains('button:visible', 'Mark as paid').click();
+        cy.contains('Payment status updated').should('be.visible');
+        cy.get(paymentBadge).should('have.text', 'paid');
+      });
+
+      it('cancels pending order with confirmation and releases stock', () => {
+        visitOrderDetail(detailPath());
+        cy.on('window:confirm', (text) => {
+          expect(text).to.contain('cancel this order');
+          return true;
+        });
+        chooseStatus('Cancelled');
+        cy.contains('Order status updated').should('be.visible');
+        cy.contains('h1', /cancelled/i).should('be.visible');
+      });
+
+      it('cancelling a shipped order requires parcel-back confirmation', () => {
+        cy.task<TestOrder>('createTestOrder').then((shippedOrder) => {
+          cy.task('setTestOrderStatus', { id: shippedOrder.id, status: 'shipped' });
+          cy.task('setTestOrderTrackingNumber', {
+            id: shippedOrder.id,
+            trackingNumber: 'TRACK-111',
+          });
+          visitOrderDetail(`/${locale}/orders/${shippedOrder.id}`);
+
+          cy.on('window:confirm', (text) => {
+            expect(text).to.contain('parcel is back in the warehouse');
+            return true;
+          });
+
+          chooseStatus('Cancelled');
+          cy.contains('Order status updated').should('be.visible');
+          cy.contains('h1', /cancelled/i).should('be.visible');
+        });
+      });
+
+      it('refunds a delivered paid order via confirmation dialog setting both statuses to refunded', () => {
+        cy.task('setTestOrderStatus', { id: order.id, status: 'delivered' });
+        cy.task('setTestOrderPaymentStatus', { id: order.id, status: 'paid' });
+        visitOrderDetail(detailPath());
+
+        cy.get('[data-testid="order-refund-button"]').click();
+        cy.get('[data-testid="confirm-refund-button"]').should('be.visible').click();
+
+        cy.contains('Order refunded successfully').should('be.visible');
+        cy.contains('h1', /refunded/i).should('be.visible');
+        cy.get(paymentBadge).should('have.text', 'refunded');
+      });
+
+      it('persists order notes with author and timestamp', () => {
+        visitOrderDetail(detailPath());
+        cy.get('[data-testid="order-note-input"]').type('Customer requested delivery after 5 PM');
+        cy.get('[data-testid="order-note-submit"]').click();
+
+        cy.contains('Note added successfully').should('be.visible');
+        cy.get('[data-testid="order-note-item"]').should('be.visible');
+        cy.get('[data-testid="order-note-text"]').should(
+          'contain.text',
+          'Customer requested delivery after 5 PM',
+        );
+        cy.get('[data-testid="order-note-author"]').should('not.be.empty');
+        cy.get('[data-testid="order-note-date"]').should('not.be.empty');
+
+        // Persists across reload
+        cy.reload();
+        cy.get('[data-testid="order-note-text"]').should(
+          'contain.text',
+          'Customer requested delivery after 5 PM',
+        );
+      });
+
+      it('executes bulk cancel with mixed results listing failures by order reference', () => {
+        cy.task<TestOrder>('createTestOrder').then((deliveredOrder) => {
+          cy.task('setTestOrderStatus', { id: deliveredOrder.id, status: 'delivered' });
+
+          cy.visit(`/${locale}/orders`);
+          cy.get('[data-testid="admin-orders-filter-search"]').should('be.visible');
+          cy.contains('tr', deliveredOrder.orderReference, { timeout: 10000 })
+            .find('[data-testid="order-row-checkbox"]')
+            .click({ force: true });
+          cy.get('[data-testid="order-row-checkbox"]')
+            .filter(':not([data-state="checked"])')
+            .first()
+            .click({ force: true });
+
+          cy.get('[data-testid="bulk-cancel-button"]').click();
+
+          cy.contains(
+            `${deliveredOrder.orderReference}: An Order cannot move from delivered to cancelled`,
+            {
+              timeout: 10000,
+            },
+          ).should('be.visible');
+        });
       });
 
       it('offers payment only after delivery', () => {

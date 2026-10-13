@@ -722,6 +722,27 @@
         "Preview": "معاينة",
         "GroupKeyPreview": "معرف النظام"
       }
+    },
+    "OrdersDetail": {
+      "Order": "الطلب",
+      "PlacedOn": "تم الطلب في {date}",
+      "ProcessRefund": "معالجة الاسترداد",
+      "ConfirmRefundTitle": "تأكيد استرداد الطلب",
+      "ConfirmRefundDesc": "هل أنت متأكد من رغبتك في استرداد هذا الطلب؟ سيتم تعيين حالة الطلب والدفع إلى مسترد.",
+      "Cancel": "إلغاء",
+      "ConfirmRefundAction": "تأكيد الاسترداد",
+      "ItemsTitle": "عناصر الطلب",
+      "Product": "المنتج",
+      "Sku": "رمز المنتج",
+      "Price": "السعر",
+      "Qty": "الكمية",
+      "Discount": "الخصم",
+      "Total": "الإجمالي",
+      "Substitute": "بديل",
+      "NotesTitle": "ملاحظات داخلية",
+      "NotesPlaceholder": "أضف ملاحظة داخلية لهذا الطلب...",
+      "AddNote": "إضافة ملاحظة",
+      "NoNotes": "لا توجد ملاحظات داخلية بعد."
     }
   }
 }

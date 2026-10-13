@@ -85,6 +85,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
           className="translate-y-[2px]"
+          data-testid="order-row-checkbox"
         />
       ),
       enableSorting: false,
@@ -150,9 +151,11 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         const relative = formatDistanceToNow(date, { addSuffix: true });
 
         return (
-          <div className="flex flex-col" title={relative}>
-            <span>{formatted}</span>
-            <span className="text-xs text-muted-foreground">{relative}</span>
+          <div className="flex flex-col" title={relative} suppressHydrationWarning>
+            <span suppressHydrationWarning>{formatted}</span>
+            <span className="text-xs text-muted-foreground" suppressHydrationWarning>
+              {relative}
+            </span>
           </div>
         );
       },

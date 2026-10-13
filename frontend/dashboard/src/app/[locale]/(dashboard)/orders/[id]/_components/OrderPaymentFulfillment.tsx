@@ -80,13 +80,21 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
   };
 
   const handleStatusChange = (newStatus: string) => {
+    if (newStatus === 'shipped' && !trackingNumber.trim()) {
+      toast({
+        title: 'Update failed',
+        description: 'Shipping requires a tracking number.',
+        variant: 'destructive',
+      });
+      return;
+    }
     const update = confirmStatusUpdate(order.status, newStatus as OrderStatus);
     if (!update) return;
     runUpdate(
       () =>
         adminUpdateOrderStatusAction(Number(order.id), {
           ...update,
-          trackingNumber: trackingNumber || undefined,
+          trackingNumber: trackingNumber.trim() || undefined,
         }),
       'Order status updated',
     );
@@ -97,7 +105,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
       () =>
         adminUpdateOrderStatusAction(Number(order.id), {
           status: order.status,
-          trackingNumber: trackingNumber || undefined,
+          trackingNumber: trackingNumber.trim() || undefined,
         }),
       'Tracking information updated',
     );
@@ -198,12 +206,14 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
               value={trackingNumber}
               onChange={(e) => setTrackingNumber(e.target.value)}
               disabled={isPending}
+              data-testid="order-tracking-input"
               className="h-9"
             />
             <Button
               size="sm"
               onClick={handleUpdateTracking}
               disabled={isPending || !trackingNumber || trackingNumber === order.trackingNumber}
+              data-testid="order-tracking-update-button"
               className="h-9"
             >
               Update
