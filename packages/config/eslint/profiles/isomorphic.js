@@ -1,4 +1,2 @@
-import { compose } from './compose.js';
-
-// Leaf packages shared by server and browser bundles (money, domain-errors).
-export const isomorphic = compose('isomorphic');
+// Temporary compatibility delegate; removal is owned by #445.
+export * from '../../../../configs/eslint/profiles/isomorphic.js';

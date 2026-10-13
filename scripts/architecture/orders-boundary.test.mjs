@@ -86,7 +86,7 @@ test('removed Backend Order entries cannot bypass the public package', async () 
 
 test('workspace dependency graph has no runtime, type, or development cycles', async () => {
   const candidates = [
-    'packages/config',
+    'configs',
     'packages/env',
     'packages/money',
     'packages/domain-errors',
