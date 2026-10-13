@@ -5,6 +5,7 @@
  * Mirrors backend's JwtSessionManager pattern but adapted for Next.js App Router.
  */
 
+import 'server-only';
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
 import { PortalRoleSchema, type SessionPayload } from '@findeg/backend/features/core';

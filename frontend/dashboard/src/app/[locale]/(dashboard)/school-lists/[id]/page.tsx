@@ -2,12 +2,10 @@ import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge } from '@findeg/ui';
 import type { Locale } from '@findeg/domain';
-import { requirePermission } from '@lib/auth-guard';
+import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { canWriteSupplyLists } from '@findeg/backend/features/school';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { getSchoolSupplyListById, getSchoolSupplyListOffer } from '@data/school-lists/queries';
 import { OfferForm } from '../_components/OfferForm';
-import { toListActor } from '../_lib/toListActor';
 import { toUtcInputValue } from '../_lib/offerForm';
 
 export const metadata = {
@@ -26,12 +24,11 @@ export default async function SchoolSupplyListPage({
 
   if (!/^\d+$/.test(id)) notFound();
   const listId = Number(id);
-  const actor = toListActor(session);
-  const { schoolSupplyLists } = createAdministrationServices();
+  const canEdit = sessionHasPermission(session, PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE);
 
-  const list = await schoolSupplyLists.getById(actor, listId);
+  const list = await getSchoolSupplyListById(session, listId);
   if (!list.success) notFound();
-  const offer = await schoolSupplyLists.getOffer(actor, listId);
+  const offer = await getSchoolSupplyListOffer(session, listId);
   const current = offer.success ? offer.data : null;
 
   return (
@@ -58,7 +55,7 @@ export default async function SchoolSupplyListPage({
         </p>
         <OfferForm
           listId={listId}
-          canEdit={canWriteSupplyLists(actor)}
+          canEdit={canEdit}
           offer={
             current
               ? {

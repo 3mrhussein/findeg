@@ -1,8 +1,7 @@
-'use client';
-
 import * as React from 'react';
 import { NavItem } from './NavItem';
-import type { NavGroup as NavGroupType } from '@/interfaces';
+import type { NavGroup as NavGroupType, NavItem as NavItemData } from '@/interfaces';
+import { useAdminPermissions } from '@/hooks/useAdminPermissions';
 
 export interface NavGroupProps {
   group: NavGroupType;
@@ -10,14 +9,35 @@ export interface NavGroupProps {
   locale?: string;
 }
 
+function hasAnyVisibleItem(
+  item: NavItemData,
+  can: (p: string) => boolean,
+  systemAdmin: boolean,
+  portalRole?: string,
+): boolean {
+  if (systemAdmin) return true;
+  const itemAllowed =
+    (!item.permission || can(item.permission)) &&
+    (!item.anyPermissions || item.anyPermissions.some((p) => can(p))) &&
+    (!item.portalRoles ||
+      (portalRole ? item.portalRoles.includes(portalRole as 'customer' | 'staff') : false));
+
+  if (itemAllowed) return true;
+  if (
+    item.children &&
+    item.children.some((child) => hasAnyVisibleItem(child, can, systemAdmin, portalRole))
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function NavGroup({ group, collapsed = false, locale = 'en' }: NavGroupProps) {
+  const { can, systemAdmin, portalRole } = useAdminPermissions();
   const label = locale === 'ar' ? group.labelAr : group.label;
 
-  // We check if the group ends up having any visible items.
-  // We can just rely on NavItem to filter itself out, but if NavGroup is effectively empty,
-  // we might still render the header. For simplicity in this layout, we just render it.
-
-  if (group.items.length === 0) {
+  const visible = group.items.some((item) => hasAnyVisibleItem(item, can, systemAdmin, portalRole));
+  if (!visible) {
     return null;
   }
 

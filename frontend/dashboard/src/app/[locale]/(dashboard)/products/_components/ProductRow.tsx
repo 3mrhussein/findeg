@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { TimeAgo } from '@/components/ui/time-ago';
-import { Copy, Pencil, ExternalLink, Clock } from 'lucide-react';
+import { Pencil, Clock } from 'lucide-react';
 import { Checkbox } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { Badge } from '@findeg/ui';
@@ -12,11 +12,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@findeg/ui';
 import { Link } from '@i18n/navigation';
 import type { ProductListItem } from '@findeg/backend/features/administration';
 
+import { formatEgpDecimal } from '@findeg/ui';
+
 interface ProductRowProps {
   product: ProductListItem;
   isSelected: boolean;
   onSelectChange: (selected: boolean) => void;
-  onDuplicate: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
@@ -24,17 +25,14 @@ export function ProductRow({
   product,
   isSelected,
   onSelectChange,
-  onDuplicate,
   onDelete: _onDelete,
 }: ProductRowProps) {
   const t = useTranslations('Administration.Catalog.Products');
 
-  const formattedPrice = product.defaultVariantPrice
-    ? new Intl.NumberFormat('en-EG', {
-        style: 'currency',
-        currency: 'EGP',
-      }).format(product.defaultVariantPrice)
-    : '—';
+  const formattedPrice =
+    product.defaultVariantPrice != null
+      ? `EGP ${formatEgpDecimal(String(product.defaultVariantPrice))}`
+      : '—';
 
   const getCompletenessBorder = (status: ProductListItem['completeness']) => {
     switch (status) {
@@ -145,7 +143,7 @@ export function ProductRow({
         </div>
       </TableCell>
 
-      {/* Actions — 3 Direct Icon Buttons */}
+      {/* Actions */}
       <TableCell className="text-right">
         <div className="flex items-center justify-end gap-1">
           <Tooltip>
@@ -161,34 +159,6 @@ export function ProductRow({
               </Link>
             </TooltipTrigger>
             <TooltipContent>{t('Actions.Edit')}</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => onDuplicate(product.id)}
-                className={cn(
-                  'w-7 h-7 rounded flex items-center justify-center transition-colors',
-                  'text-slate-400 dark:text-slate-500 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-950/50',
-                )}
-              >
-                <Copy size={14} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>{t('Actions.Duplicate')}</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => window.open(`/products/${product.id}`, '_blank')}
-                className={cn(
-                  'w-7 h-7 rounded flex items-center justify-center transition-colors',
-                  'text-slate-400 dark:text-slate-500 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/50',
-                )}
-              >
-                <ExternalLink size={14} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Preview in storefront</TooltipContent>
           </Tooltip>
         </div>
       </TableCell>

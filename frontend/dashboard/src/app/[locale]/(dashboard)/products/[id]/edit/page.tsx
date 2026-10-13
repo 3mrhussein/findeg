@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import { parse } from '@findeg/backend/features/core';
 import { getProductForEdit } from '@data/products/queries';
 import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * /admin/products/[id]/edit
@@ -14,6 +17,7 @@ export default async function EditProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_PRODUCTS_WRITE });
   const resolvedLocale = parse(locale);
   const productId = parseInt(id);
 

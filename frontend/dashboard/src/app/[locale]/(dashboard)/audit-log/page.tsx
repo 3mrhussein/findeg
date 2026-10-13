@@ -8,6 +8,9 @@ import { Link } from '@i18n/navigation';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 const LIMIT = 50;
 
@@ -46,8 +49,10 @@ function safeJson(value: unknown): string {
  *
  */
 export default async function AuditLogPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     page?: string;
     entityType?: string;
@@ -55,6 +60,8 @@ export default async function AuditLogPage({
     entityId?: string;
   }>;
 }) {
+  const { locale } = await params;
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_AUDIT_LOG_READ });
   const { page: pageParam, entityType = '', action = '', entityId = '' } = await searchParams;
   const page = Number(pageParam) || 1;
 

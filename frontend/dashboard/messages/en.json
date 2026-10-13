@@ -11,6 +11,20 @@
     "Discount": "Discount",
     "Actions": "Actions"
   },
+  "Auth": {
+    "title": "Admin Login",
+    "description": "Enter your credentials to access the dashboard",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "errors": {
+      "requiredFields": "Email and password are required",
+      "invalidCredentials": "Invalid email or password",
+      "adminOnly": "Forbidden: This portal is for administrators only",
+      "generic": "An unexpected error occurred. Please try again."
+    }
+  },
   "PartnerSales": {
     "Tab": "Sales",
     "LoadError": "The sales report could not be loaded.",
@@ -203,7 +217,26 @@
           "HeroImageUrl": "Hero Image URL",
           "IsActive": "Is Active"
         },
-        "SearchPlaceholder": "Search by title or slug..."
+        "SearchPlaceholder": "Search by title or slug...",
+        "GeneralInfo": "General Info",
+        "TagsSelection": "Tags Selection",
+        "BasicInfo": "Basic Information",
+        "BasicInfoDesc": "Configure titles, slug and display properties.",
+        "DefineTags": "Define Tags",
+        "DefineTagsDesc": "Products with ANY of these tags will be included in this collection.",
+        "Save": "Save Changes",
+        "Create": "Create Collection",
+        "ToastCreated": "Collection created",
+        "ToastUpdated": "Collection updated",
+        "ToastDeleted": "Collection deleted",
+        "SlugAvailable": "Available",
+        "SlugTaken": "Already taken",
+        "SlugDescription": "Unique URL identifier.",
+        "NoTags": "No tags available. Create tags first.",
+        "DeleteConfirmTitle": "Delete collection?",
+        "DeleteConfirmDesc": "Are you sure you want to delete this collection? This action cannot be undone.",
+        "DeleteAction": "Delete",
+        "CancelAction": "Cancel"
       }
     }
   },
@@ -425,7 +458,30 @@
               "noVariantsDesc": "Simple products should have at least one default variant.",
               "createFirstVariant": "Create First Variant",
               "sku": "SKU",
-              "basePrice": "Base Price"
+              "basePrice": "Base Price",
+              "costPrice": "Cost Price",
+              "compareAtPrice": "Compare-at Price (Strike Price)",
+              "barcode": "Barcode",
+              "weightGrams": "Weight (Grams)",
+              "labelEn": "Label (English)",
+              "labelAr": "Label (Arabic)",
+              "default": "Default",
+              "setDefault": "Set Default",
+              "primarySku": "Primary SKU for Product",
+              "active": "Active",
+              "inactive": "Inactive",
+              "variantActiveHelp": "This variant is active and available for purchase",
+              "attributesTitle": "Attributes",
+              "attributesDesc": "Key-value attributes (e.g. Color: Blue, Size: XL)",
+              "addAttribute": "Add Attribute",
+              "attributeKey": "Attribute Name",
+              "attributeValue": "Value",
+              "noAttributes": "No attributes added yet.",
+              "imagesTitle": "Variant Images",
+              "imagesDesc": "Add image URLs specifically for this variant",
+              "imageUrl": "Image URL",
+              "addImage": "Add Image URL",
+              "noImages": "No images added for this variant."
             },
             "Media": {
               "imageGallery": "Image Gallery",
@@ -447,14 +503,22 @@
           },
           "Sidebar": {
             "status": "Status",
-            "active": "Active / Published",
-            "draft": "Draft / Hidden",
+            "active": "Active",
+            "activeDesc": "Visible in the storefront",
+            "inactive": "Inactive",
+            "inactiveDesc": "Hidden from storefront",
             "organization": "Organization",
             "category": "Category",
             "brand": "Brand",
             "selectBrand": "Select a brand",
             "noBrand": "No Brand (Generic)",
-            "tags": "Tags"
+            "tags": "Tags",
+            "summary": "Summary",
+            "variants": "Variants",
+            "images": "Images",
+            "price": "Price",
+            "lastSaved": "Last saved",
+            "notSaved": "Not saved"
           }
         },
         "Filters": {
@@ -658,6 +722,27 @@
         "Preview": "Preview",
         "GroupKeyPreview": "System ID"
       }
+    },
+    "OrdersDetail": {
+      "Order": "Order",
+      "PlacedOn": "Placed on {date}",
+      "ProcessRefund": "Process Refund",
+      "ConfirmRefundTitle": "Confirm Order Refund",
+      "ConfirmRefundDesc": "Are you sure you want to refund this order? This will mark both the order and payment as refunded.",
+      "Cancel": "Cancel",
+      "ConfirmRefundAction": "Confirm Refund",
+      "ItemsTitle": "Order Items",
+      "Product": "Product",
+      "Sku": "SKU",
+      "Price": "Price",
+      "Qty": "Qty",
+      "Discount": "Discount",
+      "Total": "Total",
+      "Substitute": "Substitute",
+      "NotesTitle": "Internal Notes",
+      "NotesPlaceholder": "Add an internal note for this order...",
+      "AddNote": "Add Note",
+      "NoNotes": "No internal notes yet."
     }
   }
 }

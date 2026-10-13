@@ -1,16 +1,5 @@
 /**
  * Dashboard Authentication Server Actions
- *
- * TODO: Reimplement using createIdentityServices() from backend
- *
- * The backend login/logout functions were removed from exports because they use
- * ServiceContainer with @ imports that break Turbopack bundling.
- *
- * Implementation approach:
- * 1. Import createIdentityServices from @backend/features/identity
- * 2. Call authService.login(email, password)
- * 3. Handle session creation with Next.js cookies
- * 4. Handle redirects and cache invalidation
  */
 
 'use server';
@@ -20,17 +9,37 @@ import { createIdentityServices } from '@findeg/backend/features/identity';
 import { adminSession, createUserVO, type SessionPayload } from '@findeg/backend/features/core';
 import { createSession, deleteSession } from '@lib/session';
 
+export type LoginActionState = {
+  success?: boolean;
+  error?: string;
+} | null;
+
 /**
  * Server Action: User login
  *
- * @param formData - Form data with 'email' and 'password' fields
+ * Supports both useActionState (prevState, formData) and direct invocation (formData).
  */
-export async function loginAction(formData: FormData) {
-  const email = formData.get('email') as string;
+export async function loginAction(
+  prevStateOrFormData?: LoginActionState | FormData,
+  formDataOrUndefined?: FormData,
+): Promise<LoginActionState> {
+  const formData =
+    formDataOrUndefined instanceof FormData
+      ? formDataOrUndefined
+      : prevStateOrFormData instanceof FormData
+        ? prevStateOrFormData
+        : null;
+
+  if (!formData) {
+    return { success: false, error: 'generic' };
+  }
+
+  const locale = (formData.get('locale') as string) === 'ar' ? 'ar' : 'en';
+  const email = (formData.get('email') as string)?.trim();
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    throw new Error('Email and password are required');
+    return { success: false, error: 'requiredFields' };
   }
 
   try {
@@ -38,7 +47,7 @@ export async function loginAction(formData: FormData) {
     const result = await auth.login(email, password);
 
     if (!result.success || !result.user) {
-      throw new Error(result.error || 'Invalid email or password');
+      return { success: false, error: 'invalidCredentials' };
     }
 
     // Construct SessionPayload mapping from AuthResult.user
@@ -59,12 +68,11 @@ export async function loginAction(formData: FormData) {
     };
 
     if (!adminSession(sessionPayload as SessionPayload)) {
-      throw new Error('Forbidden: This portal is for administrators only');
+      return { success: false, error: 'adminOnly' };
     }
 
     await createSession(sessionPayload as SessionPayload);
   } catch (error: unknown) {
-    // If it's a redirect, let it bubble up (standard Next.js behavior)
     if (
       error &&
       typeof error === 'object' &&
@@ -75,37 +83,27 @@ export async function loginAction(formData: FormData) {
       throw error;
     }
     console.error('[dashboard] Login error:', error);
-    throw error;
+    return { success: false, error: 'generic' };
   }
 
-  redirect({ href: '/', locale: 'en' });
+  redirect({ href: '/', locale });
+  return { success: true };
 }
 
 /**
  * Server Action: User logout
  *
- * @param formData - Optional form data with redirectTo field
+ * Retains locale and redirects to /login.
  */
 export async function logoutAction(formData?: FormData) {
-  try {
-    // Delete session cookie
-    await deleteSession();
+  const locale = (formData?.get('locale') as string) === 'ar' ? 'ar' : 'en';
+  const redirectTo = (formData?.get('redirectTo') as string) || '/login';
 
-    // Redirect after logout
-    const redirectTo = (formData?.get('redirectTo') as string) || '/';
-    redirect({ href: redirectTo, locale: 'en' });
+  try {
+    await deleteSession();
   } catch (error: unknown) {
-    if (
-      error &&
-      typeof error === 'object' &&
-      'digest' in error &&
-      typeof error.digest === 'string' &&
-      error.digest.startsWith('NEXT_REDIRECT')
-    ) {
-      throw error;
-    }
     console.error('[dashboard] Logout action error:', error);
-    // Even if error occurs, redirect to home
-    redirect({ href: '/', locale: 'en' });
   }
+
+  redirect({ href: redirectTo, locale });
 }

@@ -1,7 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@lib/auth-guard';
+import { revalidatePath, updateTag } from 'next/cache';
+import { requireStaffAction } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
 import {
   createPartnerMembershipServices,
@@ -26,11 +27,20 @@ export async function changePartnerStatusAction(
   partnerId: number,
   target: BusinessPartner['status'],
 ): Promise<StatusActionState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const { partners } = createPartnerMembershipServices();
-  const result = await partners.changePartnerStatus(actor, partnerId, target);
-  if (!result.success) return { status: 'error', message: ERROR_MESSAGES[result.error] };
-  revalidatePath('/[locale]/partners', 'page'); // the list shows status
-  revalidatePath('/[locale]/partners/[id]', 'page');
-  return { status: 'idle' };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.PARTNERS_MANAGE,
+      'change partner status',
+    );
+    const actor = toStaffActor(session);
+    const { partners } = createPartnerMembershipServices();
+    const result = await partners.changePartnerStatus(actor, partnerId, target);
+    if (!result.success) return { status: 'error', message: ERROR_MESSAGES[result.error] };
+    revalidatePath('/[locale]/partners', 'page'); // the list shows status
+    revalidatePath('/[locale]/partners/[id]', 'page');
+    updateTag('partners');
+    return { status: 'idle' };
+  } catch {
+    return { status: 'error', message: ERROR_MESSAGES.forbidden };
+  }
 }

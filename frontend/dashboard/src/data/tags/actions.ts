@@ -1,8 +1,10 @@
 'use server';
 
 import { TagInput } from '@findeg/backend/features/catalog';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -11,9 +13,10 @@ import { getErrorMessage } from '@lib/type-guards';
 
 export async function createTagAction(input: TagInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'create tag');
     const { tags } = createAdministrationServices();
     const result = await tags.create(input);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error('[createTagAction]', error);
@@ -23,9 +26,10 @@ export async function createTagAction(input: TagInput) {
 
 export async function updateTagAction(id: number, input: TagInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'update tag');
     const { tags } = createAdministrationServices();
     const result = await tags.update(id, input);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error('[updateTagAction]', error);
@@ -35,9 +39,10 @@ export async function updateTagAction(id: number, input: TagInput) {
 
 export async function deleteTagAction(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'delete tag');
     const { tags } = createAdministrationServices();
     await tags.delete(id);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true };
   } catch (error: unknown) {
     console.error('[deleteTagAction]', error);
@@ -47,9 +52,10 @@ export async function deleteTagAction(id: number) {
 
 export async function bulkUpdateTagsStatusAction(ids: number[], isActive: boolean) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'bulk update tags status');
     const { tags } = createAdministrationServices();
     await tags.bulkUpdateStatus(ids, isActive);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true };
   } catch (error: unknown) {
     console.error('[bulkUpdateTagsStatusAction]', error);
@@ -59,9 +65,10 @@ export async function bulkUpdateTagsStatusAction(ids: number[], isActive: boolea
 
 export async function bulkDeleteTagsAction(ids: number[]) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'bulk delete tags');
     const { tags } = createAdministrationServices();
     await tags.bulkDelete(ids);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true };
   } catch (error: unknown) {
     console.error('[bulkDeleteTagsAction]', error);
@@ -71,9 +78,10 @@ export async function bulkDeleteTagsAction(ids: number[]) {
 
 export async function toggleTagStatusAction(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_WRITE, 'toggle tag status');
     const { tags } = createAdministrationServices();
     const result = await tags.toggleTagStatus(id);
-    revalidateTag('tags', 'max');
+    updateTag('tags');
     return { success: true, isActive: result.isActive, data: result };
   } catch (error: unknown) {
     console.error('[toggleTagStatusAction]', error);
@@ -83,6 +91,7 @@ export async function toggleTagStatusAction(id: number) {
 
 export async function getTagProductCountAction(tagId: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_READ, 'get tag product count');
     const { tags } = createAdministrationServices();
     const count = await tags.getTagProductCount(tagId);
     return { success: true, count };
@@ -94,11 +103,23 @@ export async function getTagProductCountAction(tagId: number) {
 
 export async function getDistinctTagGroupsAction() {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_READ, 'get distinct tag groups');
     const { tags } = createAdministrationServices();
     const groups = await tags.getDistinctGroups();
     return { success: true, groups };
   } catch (error: unknown) {
     console.error('[getDistinctTagGroupsAction]', error);
     return { success: false, error: getErrorMessage(error), groups: [] };
+  }
+}
+
+export async function checkTagSlugAvailableAction(slug: string, excludeId?: number) {
+  try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_TAGS_READ, 'check tag slug available');
+    const { tags } = createAdministrationServices();
+    const available = await tags.checkSlugAvailable(slug, excludeId);
+    return { success: true, available };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error), available: true };
   }
 }

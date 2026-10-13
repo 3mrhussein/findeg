@@ -26,7 +26,7 @@ export async function getProducts(
   locale: string,
   filters?: ProductListFilters,
 ): Promise<ProductListResult> {
-  cacheTag('products', `products-${locale}`);
+  cacheTag('products');
   cacheLife('hours');
 
   const { products } = createAdministrationServices();
@@ -39,7 +39,7 @@ export async function getProducts(
  * Cache: Tagged with product ID, revalidated on that product's mutation
  */
 export async function getProductById(id: number, locale: string) {
-  cacheTag('products', `product-${id}`, `product-${id}-${locale}`);
+  cacheTag('products');
   cacheLife('hours');
 
   const products = createProductService();
@@ -52,7 +52,7 @@ export async function getProductById(id: number, locale: string) {
  * Cache: Tagged with product ID, revalidated on that product's mutation
  */
 export async function getProductForEdit(id: number): Promise<ProductEditData | null> {
-  cacheTag('products', `product-${id}`);
+  cacheTag('products');
   cacheLife('hours');
 
   const { products } = createAdministrationServices();
@@ -65,7 +65,7 @@ export async function getProductForEdit(id: number): Promise<ProductEditData | n
  * Cache: Tagged with search scope, shorter cache lifetime for freshness
  */
 export async function searchProducts(query: string, locale: string, _filters?: unknown) {
-  cacheTag('products', `search-${locale}`);
+  cacheTag('products');
   cacheLife('hours');
 
   const products = createProductService();

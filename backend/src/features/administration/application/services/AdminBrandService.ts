@@ -156,6 +156,11 @@ export class AdminBrandService implements IAdminBrandService {
       throw new Error(`Brand with ID ${id} not found`);
     }
 
+    const productCount = await countProductsByBrandId(id as number);
+    if (productCount > 0) {
+      throw new Error(`Cannot delete brand with ${productCount} associated product(s)`);
+    }
+
     await deleteBrand(id as number);
 
     if (this.auditLogService) {

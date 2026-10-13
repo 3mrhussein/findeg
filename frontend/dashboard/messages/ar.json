@@ -11,6 +11,20 @@
     "Discount": "الخصم",
     "Actions": "إجراءات"
   },
+  "Auth": {
+    "title": "تسجيل دخول المشرف",
+    "description": "أدخل بيانات الاعتماد الخاصة بك للوصول إلى لوحة التحكم",
+    "emailLabel": "البريد الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جاري تسجيل الدخول...",
+    "errors": {
+      "requiredFields": "البريد الإلكتروني وكلمة المرور مطلوبان",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "adminOnly": "محظور: هذه البوابة مخصصة للمشرفين فقط",
+      "generic": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+    }
+  },
   "PartnerSales": {
     "Tab": "المبيعات",
     "LoadError": "تعذر تحميل تقرير المبيعات.",
@@ -203,7 +217,26 @@
           "HeroImageUrl": "رابط الصورة",
           "IsActive": "نشط"
         },
-        "SearchPlaceholder": "البحث بالعنوان أو الاسم اللطيف..."
+        "SearchPlaceholder": "البحث بالعنوان أو الاسم اللطيف...",
+        "GeneralInfo": "معلومات عامة",
+        "TagsSelection": "اختيار الوسوم",
+        "BasicInfo": "المعلومات الأساسية",
+        "BasicInfoDesc": "إعداد العناوين والاسم اللطيف وخصائص العرض.",
+        "DefineTags": "تحديد الوسوم",
+        "DefineTagsDesc": "المنتجات التي تحتوي على أي من هذه الوسوم سيتم تضمينها في هذه المجموعة.",
+        "Save": "حفظ التغييرات",
+        "Create": "إنشاء المجموعة",
+        "ToastCreated": "تم إنشاء المجموعة بنجاح",
+        "ToastUpdated": "تم تحديث المجموعة بنجاح",
+        "ToastDeleted": "تم حذف المجموعة بنجاح",
+        "SlugAvailable": "متاح",
+        "SlugTaken": "مستخدم بالفعل",
+        "SlugDescription": "معرف فريد للرابط.",
+        "NoTags": "لا توجد وسوم متاحة. يرجى إنشاء وسوم أولاً.",
+        "DeleteConfirmTitle": "حذف المجموعة؟",
+        "DeleteConfirmDesc": "هل أنت متأكد من حذف هذه المجموعة؟ لا يمكن التراجع عن هذا الإجراء.",
+        "DeleteAction": "حذف",
+        "CancelAction": "إلغاء"
       }
     }
   },
@@ -423,7 +456,32 @@
               "addVariant": "إضافة نوع",
               "noVariants": "لا يوجد أنواع بعد",
               "noVariantsDesc": "يجب أن تحتوي المنتجات البسيطة على نوع افتراضي واحد على الأقل.",
-              "createFirstVariant": "إنشاء النوع الأول"
+              "createFirstVariant": "إنشاء النوع الأول",
+              "sku": "رمز التخزين (SKU)",
+              "basePrice": "السعر الأساسي",
+              "costPrice": "سعر التكلفة",
+              "compareAtPrice": "سعر المقارنة (قبل الخصم)",
+              "barcode": "الباركود",
+              "weightGrams": "الوزن (جرام)",
+              "labelEn": "التسمية (إنجليزي)",
+              "labelAr": "التسمية (عربي)",
+              "default": "افتراضي",
+              "setDefault": "تعيين كافتراضي",
+              "primarySku": "الرمز الأساسي للمنتج",
+              "active": "نشط",
+              "inactive": "غير نشط",
+              "variantActiveHelp": "هذا النوع نشط ومتاح للشراء",
+              "attributesTitle": "الخصائص",
+              "attributesDesc": "خصائص المفتاح والقيمة (مثل: اللون: أزرق، المقاس: XL)",
+              "addAttribute": "إضافة خاصية",
+              "attributeKey": "اسم الخاصية",
+              "attributeValue": "القيمة",
+              "noAttributes": "لم يتم إضافة أي خصائص بعد.",
+              "imagesTitle": "صور النوع",
+              "imagesDesc": "أضف روابط صور مخصصة لهذا النوع",
+              "imageUrl": "رابط الصورة",
+              "addImage": "إضافة رابط صورة",
+              "noImages": "لا توجد صور مضافة لهذا النوع."
             },
             "Media": {
               "imageGallery": "معرض الصور",
@@ -445,14 +503,22 @@
           },
           "Sidebar": {
             "status": "الحالة",
-            "active": "نشط / منشور",
-            "draft": "مسودة / مخفي",
+            "active": "نشط",
+            "activeDesc": "مرئي في المتجر",
+            "inactive": "غير نشط",
+            "inactiveDesc": "مخفي من المتجر",
             "organization": "التنظيم",
             "category": "الفئة",
             "brand": "الماركة",
             "selectBrand": "اختر ماركة",
             "noBrand": "بدون ماركة (عام)",
-            "tags": "الوسوم"
+            "tags": "الوسوم",
+            "summary": "الملخص",
+            "variants": "المتغيرات",
+            "images": "الصور",
+            "price": "السعر",
+            "lastSaved": "آخر حفظ",
+            "notSaved": "لم يتم الحفظ"
           }
         },
         "Filters": {
@@ -656,6 +722,27 @@
         "Preview": "معاينة",
         "GroupKeyPreview": "معرف النظام"
       }
+    },
+    "OrdersDetail": {
+      "Order": "الطلب",
+      "PlacedOn": "تم الطلب في {date}",
+      "ProcessRefund": "معالجة الاسترداد",
+      "ConfirmRefundTitle": "تأكيد استرداد الطلب",
+      "ConfirmRefundDesc": "هل أنت متأكد من رغبتك في استرداد هذا الطلب؟ سيتم تعيين حالة الطلب والدفع إلى مسترد.",
+      "Cancel": "إلغاء",
+      "ConfirmRefundAction": "تأكيد الاسترداد",
+      "ItemsTitle": "عناصر الطلب",
+      "Product": "المنتج",
+      "Sku": "رمز المنتج",
+      "Price": "السعر",
+      "Qty": "الكمية",
+      "Discount": "الخصم",
+      "Total": "الإجمالي",
+      "Substitute": "بديل",
+      "NotesTitle": "ملاحظات داخلية",
+      "NotesPlaceholder": "أضف ملاحظة داخلية لهذا الطلب...",
+      "AddNote": "إضافة ملاحظة",
+      "NoNotes": "لا توجد ملاحظات داخلية بعد."
     }
   }
 }

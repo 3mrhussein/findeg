@@ -45,6 +45,7 @@ export function mapOrder(row: StoredOrder, items: StoredItem[], user?: User | nu
       productSkuSnapshot: item.productSkuSnapshot,
       variantSkuSnapshot: item.variantSkuSnapshot,
       variantSnapshot: item.variantSnapshot,
+      isSubstitute: item.isSubstitute ?? null,
     })),
   };
 }

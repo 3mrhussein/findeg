@@ -6,10 +6,12 @@ import {
   CollectionInputSchema,
   type CollectionInput,
 } from '@findeg/backend/features/catalog/schemas';
-import { Collection, Tag } from '@findeg/backend/features/catalog';
+import type { Collection, Tag } from '@findeg/backend/features/catalog';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
-import { useState, useEffect } from 'react';
+import { useDebounce } from '@hooks/use-debounce';
+import { useState, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Form,
   FormControl,
@@ -26,23 +28,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { ChevronLeft, Save, Loader2, Image as ImageIcon } from 'lucide-react';
-
 import { Checkbox } from '@findeg/ui';
 import Image from 'next/image';
-import { createCollectionAction, updateCollectionAction } from '@/data/collections/actions';
+import {
+  createCollectionAction,
+  updateCollectionAction,
+  checkCollectionSlugAvailableAction,
+} from '@data/collections/actions';
 
 interface CollectionFormProps {
-  collection?: Collection;
+  collection?: (Collection & { tags?: Tag[] }) | null;
   availableTags: Tag[];
 }
 
-/**
- *
- */
 export function CollectionForm({ collection, availableTags }: CollectionFormProps) {
+  const t = useTranslations('Pages.Dashboard.Collections');
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSlugChecking, setIsSlugChecking] = useState(false);
+  const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
 
   const form = useForm<CollectionInput>({
     resolver: zodResolver(CollectionInputSchema) as Resolver<CollectionInput>,
@@ -57,22 +62,60 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
     },
   });
 
-  // Auto-slugify
+  const slugEditedManually = useRef(false);
   const watchTitle = form.watch('localizedTitle.en');
+  const slug = form.watch('slug');
+  const debouncedSlug = useDebounce(slug, 500);
+
+  // Auto-slugify when creating
   useEffect(() => {
-    if (watchTitle && !collection) {
-      const slug = watchTitle
+    if (watchTitle && !collection && !slugEditedManually.current) {
+      const generatedSlug = watchTitle
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
-      form.setValue('slug', slug);
+      form.setValue('slug', generatedSlug, { shouldValidate: true });
     }
   }, [watchTitle, form, collection]);
 
-  /**
-   *
-   */
+  // Check slug availability
+  useEffect(() => {
+    async function checkSlug() {
+      if (!debouncedSlug || debouncedSlug.length < 2) {
+        setIsSlugAvailable(null);
+        return;
+      }
+
+      if (collection && debouncedSlug === collection.slug) {
+        setIsSlugAvailable(true);
+        return;
+      }
+
+      setIsSlugChecking(true);
+      try {
+        const res = await checkCollectionSlugAvailableAction(
+          debouncedSlug,
+          collection?.id ? Number(collection.id) : undefined,
+        );
+        setIsSlugAvailable(res.available);
+      } catch (error) {
+        console.error('Collection slug check failed', error);
+      } finally {
+        setIsSlugChecking(false);
+      }
+    }
+    checkSlug();
+  }, [debouncedSlug, collection]);
+
   const onSubmit = async (data: CollectionInput) => {
+    if (isSlugAvailable === false) {
+      toast({
+        title: t('SlugTaken'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const result = collection
@@ -80,7 +123,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
         : await createCollectionAction(data);
 
       if (result.success) {
-        toast({ title: collection ? 'Collection updated' : 'Collection created' });
+        toast({ title: collection ? t('ToastUpdated') : t('ToastCreated') });
         router.push('/catalog/collections');
         router.refresh();
       } else {
@@ -102,30 +145,30 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <h2 className="text-2xl font-bold tracking-tight">
-              {collection ? 'Edit Collection' : 'New Collection'}
+              {collection ? t('EditCollection') : t('NewCollection')}
             </h2>
           </div>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || isSlugAvailable === false}>
             {isSubmitting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            {collection ? 'Save Changes' : 'Create Collection'}
+            {collection ? t('Save') : t('Create')}
           </Button>
         </div>
 
         <Tabs defaultValue="general" className="w-full">
           <TabsList>
-            <TabsTrigger value="general">General Info</TabsTrigger>
-            <TabsTrigger value="tags">Tags Selection</TabsTrigger>
+            <TabsTrigger value="general">{t('GeneralInfo')}</TabsTrigger>
+            <TabsTrigger value="tags">{t('TagsSelection')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="space-y-6 mt-4">
             <Card>
               <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-                <CardDescription>Configure titles, slug and display properties.</CardDescription>
+                <CardTitle>{t('BasicInfo')}</CardTitle>
+                <CardDescription>{t('BasicInfoDesc')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,7 +177,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     name="localizedTitle.en"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Title (English)</FormLabel>
+                        <FormLabel>{t('Form.TitleEn')}</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="e.g. Back to School" />
                         </FormControl>
@@ -147,7 +190,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     name="localizedTitle.ar"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Title (Arabic)</FormLabel>
+                        <FormLabel>{t('Form.TitleAr')}</FormLabel>
                         <FormControl>
                           <Input {...field} dir="rtl" placeholder="مثلاً: العودة للمدارس" />
                         </FormControl>
@@ -162,11 +205,34 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                   name="slug"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="back-to-school" />
-                      </FormControl>
-                      <FormDescription>Unique URL identifier.</FormDescription>
+                      <FormLabel>{t('Form.Slug')}</FormLabel>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            {...field}
+                            onChange={(e) => {
+                              slugEditedManually.current = true;
+                              field.onChange(e);
+                            }}
+                            placeholder="back-to-school"
+                            className="pr-24 font-mono text-sm"
+                          />
+                        </FormControl>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                          {isSlugChecking ? (
+                            <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
+                          ) : isSlugAvailable === true ? (
+                            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 font-normal px-1.5 h-5 text-[10px]">
+                              {t('SlugAvailable')}
+                            </Badge>
+                          ) : isSlugAvailable === false ? (
+                            <Badge className="bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-500/10 dark:text-rose-400 font-normal px-1.5 h-5 text-[10px]">
+                              {t('SlugTaken')}
+                            </Badge>
+                          ) : null}
+                        </div>
+                      </div>
+                      <FormDescription>{t('SlugDescription')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -178,7 +244,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     name="localizedSubtitle.en"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Subtitle (English)</FormLabel>
+                        <FormLabel>{t('Form.SubtitleEn')}</FormLabel>
                         <FormControl>
                           <Input {...field} value={field.value || ''} />
                         </FormControl>
@@ -191,7 +257,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     name="localizedSubtitle.ar"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Subtitle (Arabic)</FormLabel>
+                        <FormLabel>{t('Form.SubtitleAr')}</FormLabel>
                         <FormControl>
                           <Input {...field} value={field.value || ''} dir="rtl" />
                         </FormControl>
@@ -206,7 +272,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                   name="heroImageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Hero Image URL</FormLabel>
+                      <FormLabel>{t('Form.HeroImageUrl')}</FormLabel>
                       <FormControl>
                         <div className="flex gap-2">
                           <Input {...field} value={field.value || ''} placeholder="https://..." />
@@ -235,12 +301,12 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     name="sortOrder"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sort Order</FormLabel>
+                        <FormLabel>{t('SortOrder')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             type="number"
-                            onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           />
                         </FormControl>
                         <FormMessage />
@@ -253,7 +319,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-4">
                         <div className="space-y-0.5">
-                          <FormLabel>Active Status</FormLabel>
+                          <FormLabel>{t('Form.IsActive')}</FormLabel>
                         </div>
                         <FormControl>
                           <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -269,10 +335,8 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
           <TabsContent value="tags" className="space-y-6 mt-4">
             <Card>
               <CardHeader>
-                <CardTitle>Define Tags</CardTitle>
-                <CardDescription>
-                  Products with ANY of these tags will be included in this collection.
-                </CardDescription>
+                <CardTitle>{t('DefineTags')}</CardTitle>
+                <CardDescription>{t('DefineTagsDesc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -283,15 +347,19 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     >
                       <Checkbox
                         id={`tag-${tag.id}`}
-                        checked={form.watch('tagIds').includes(tag.id as number)}
+                        data-testid={`tag-checkbox-${tag.id}`}
+                        checked={(form.watch('tagIds') || []).includes(tag.id as number)}
                         onCheckedChange={(checked) => {
-                          const current = form.getValues('tagIds');
+                          const current = form.getValues('tagIds') || [];
                           if (checked) {
-                            form.setValue('tagIds', [...current, tag.id as number]);
+                            form.setValue('tagIds', [...current, tag.id as number], {
+                              shouldDirty: true,
+                            });
                           } else {
                             form.setValue(
                               'tagIds',
                               current.filter((id: number) => id !== tag.id),
+                              { shouldDirty: true },
                             );
                           }
                         }}
@@ -301,7 +369,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                         className="flex flex-1 items-center gap-2 cursor-pointer"
                       >
                         <div
-                          className="w-3 h-3 rounded-full"
+                          className="w-3 h-3 rounded-full shrink-0"
                           style={{ backgroundColor: tag.color || '#ccc' }}
                         />
                         <span className="text-sm font-medium">{tag.key}</span>
@@ -313,9 +381,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                   ))}
                 </div>
                 {availableTags.length === 0 && (
-                  <p className="text-center py-8 text-muted-foreground">
-                    No tags available. Create tags first.
-                  </p>
+                  <p className="text-center py-8 text-muted-foreground">{t('NoTags')}</p>
                 )}
               </CardContent>
             </Card>

@@ -24,10 +24,6 @@ async function applyToEach(
     : { success: true, failedIds };
 }
 
-export async function duplicateProductAction(_id: number) {
-  return { success: false, error: 'Not implemented - needs repository-based refactoring' };
-}
-
 export async function bulkActivateAction(ids: number[]) {
   return applyToEach(ids, (id) => setProductStatus(id, true));
 }

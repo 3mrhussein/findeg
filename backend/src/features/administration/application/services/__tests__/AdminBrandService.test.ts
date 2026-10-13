@@ -52,4 +52,33 @@ describe('AdminBrandService', () => {
     expect(updateBrand).toHaveBeenCalledWith(14, expect.objectContaining({ isActive: false }));
     expect(toggled.isActive).toBe(false);
   });
+
+  it('refuses deletion when brand is in use by products', async () => {
+    const { countProductsByBrandId, deleteBrand } = await import('@findeg/db/queries');
+    vi.mocked(countProductsByBrandId).mockResolvedValue(3);
+
+    await expect(service.delete(14)).rejects.toThrow(
+      'Cannot delete brand with 3 associated product(s)',
+    );
+    expect(deleteBrand).not.toHaveBeenCalled();
+  });
+
+  it('allows deletion when brand has zero products', async () => {
+    const { countProductsByBrandId, deleteBrand } = await import('@findeg/db/queries');
+    vi.mocked(countProductsByBrandId).mockResolvedValue(0);
+
+    await service.delete(14);
+    expect(deleteBrand).toHaveBeenCalledWith(14);
+  });
+
+  it('checks slug availability correctly', async () => {
+    const { getBrandBySlug } = await import('@findeg/db/queries');
+    vi.mocked(getBrandBySlug).mockResolvedValue(storedBrand as never);
+
+    expect(await service.checkSlugAvailable('faber', 14)).toBe(true);
+    expect(await service.checkSlugAvailable('faber', 99)).toBe(false);
+
+    vi.mocked(getBrandBySlug).mockResolvedValue(null);
+    expect(await service.checkSlugAvailable('new-brand')).toBe(true);
+  });
 });

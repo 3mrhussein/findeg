@@ -5,8 +5,10 @@
  */
 'use server';
 
-import { revalidateTag, updateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -14,6 +16,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function updateStock(input: { variantId: number; quantity: number }) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'update stock');
     const { inventory } = createAdministrationServices();
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
@@ -35,13 +38,13 @@ export async function bulkUpdateStock(
   updates: { variantId: number; quantity: number; lowStockThreshold?: number }[],
 ) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'bulk update stock');
     const { inventory } = createAdministrationServices();
-    // Assuming backend has a bulkUpdateStock or similar.
-    // If not, we could loop, but let's assume it exists as per frontend expectation.
     await inventory.bulkUpdateStock(updates);
 
     // Invalidate inventory caches
-    revalidateTag('inventory', 'max');
+    updateTag('inventory');
+    updateTag('products');
 
     return { success: true };
   } catch (error: unknown) {

@@ -34,6 +34,7 @@ export interface OrderItem {
   productSkuSnapshot: string | null;
   variantSkuSnapshot: string | null;
   variantSnapshot: VariantSnapshot | null;
+  isSubstitute: boolean | null;
 }
 export interface Order {
   id: number;
@@ -68,15 +69,25 @@ export interface OrderActivityEntry {
   newValues: Record<string, unknown>;
   createdAt: Date;
 }
+export interface OrderNote {
+  id: number;
+  orderId: number;
+  authorId: number | null;
+  authorName: string;
+  note: string;
+  createdAt: Date;
+}
 export interface OrderDetail {
   order: Order;
   activity: OrderActivityEntry[];
+  notes: OrderNote[];
 }
 export interface OrderStatsOptions {
   from?: string;
   to?: string;
   trendDays?: number;
   topProductsLimit?: number;
+  liveOnly?: boolean;
 }
 export interface OrderStats {
   currency: 'EGP';
@@ -108,4 +119,6 @@ export interface Orders {
     id: number,
     status: PaymentStatus,
   ): Promise<PaymentStatusTransitionResult>;
+  addNote(actor: OrderStaffActor, id: number | string, note: string): Promise<OrderNote>;
+  listNotes(id: number | string): Promise<OrderNote[]>;
 }

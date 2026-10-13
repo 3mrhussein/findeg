@@ -2,7 +2,7 @@
 import { type Locale } from '@findeg/domain';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { Tag } from '@findeg/backend/features/catalog';
+import type { Tag } from '@findeg/backend/features/catalog';
 import { Card, CardContent } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Edit, Trash2, Eye, EyeOff } from 'lucide-react';

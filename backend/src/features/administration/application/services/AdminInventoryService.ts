@@ -2,7 +2,15 @@ import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Product } from '../../../catalog/domain/entities/Product';
 import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos/InventoryUpdate';
-import { getBalance, adjustStock, getLowStock, productQueries } from '@findeg/db/queries';
+import {
+  getBalance,
+  adjustStock,
+  getLowStock,
+  productQueries,
+  withTransaction,
+} from '@findeg/db/queries';
+import { warehouses } from '@findeg/db/schema';
+import { eq } from 'drizzle-orm';
 import { createProductService } from '../../../catalog';
 
 /**
@@ -55,6 +63,8 @@ export class AdminInventoryService implements IAdminInventoryService {
    * Updates the stock level for a specific variant.
    * Triggers an audit log entry with the old and new values.
    *
+   * Resolves the warehouse before reading the balance, inside a transaction.
+   *
    * @param update - The inventory update payload (variant ID, quantity).
    * @throws Error if the variant is not found.
    */
@@ -62,27 +72,59 @@ export class AdminInventoryService implements IAdminInventoryService {
     const variant = (await productQueries.getVariantsByIds([update.variantId as number]))[0];
     if (!variant) throw new Error(`Variant #${update.variantId} not found`);
 
-    const balance = await getBalance(update.variantId as number, update.warehouseId as number);
-    const currentQty = balance?.onHand || 0;
-    const diff = update.quantity - currentQty;
+    let oldQty = 0;
+    await withTransaction(undefined, async (tx) => {
+      // 1. Resolve warehouse before reading balance
+      let warehouseId = update.warehouseId ? Number(update.warehouseId) : undefined;
+      if (!warehouseId) {
+        const [activeWarehouse] = await tx
+          .select({ id: warehouses.id })
+          .from(warehouses)
+          .where(eq(warehouses.isActive, true))
+          .orderBy(warehouses.id)
+          .limit(1);
+        if (!activeWarehouse) {
+          throw new Error('No active warehouse found');
+        }
+        warehouseId = activeWarehouse.id;
+      } else {
+        const [existing] = await tx
+          .select({ id: warehouses.id })
+          .from(warehouses)
+          .where(eq(warehouses.id, warehouseId))
+          .limit(1);
+        if (!existing) {
+          throw new Error(`Warehouse #${warehouseId} not found`);
+        }
+      }
 
-    // Default to primary warehouse (ID 1) if not specified
-    const warehouseId = update.warehouseId || 1;
+      // 2. Read balance inside transaction with resolved warehouse
+      const balance = await getBalance(update.variantId as number, warehouseId, tx);
+      const currentQty = balance?.onHand || 0;
+      oldQty = currentQty;
+      const diff = update.quantity - currentQty;
 
-    if (diff !== 0) {
-      await adjustStock(update.variantId as number, Number(warehouseId), {
-        movementType: 'adjustment',
-        quantity: diff,
-        notes: update.notes || 'Admin manual update',
-      });
-    }
+      // 3. Adjust stock inside the same transaction
+      if (diff !== 0) {
+        await adjustStock(
+          update.variantId as number,
+          warehouseId,
+          {
+            movementType: 'adjustment',
+            quantity: diff,
+            notes: update.notes || 'Admin manual update',
+          },
+          tx,
+        );
+      }
+    });
 
     await this.auditLogService.logAction({
       entityType: 'variant',
       entityId: String(update.variantId),
       action: 'update_inventory',
       oldValues: {
-        onHand: currentQty,
+        onHand: oldQty,
       },
       newValues: {
         onHand: update.quantity,

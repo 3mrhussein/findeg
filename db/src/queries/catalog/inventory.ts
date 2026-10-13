@@ -42,13 +42,15 @@ export interface StockMovementInput {
 export async function getBalance(
   variantId: number,
   warehouseId?: number,
+  tx?: DbTransaction,
 ): Promise<InventoryBalanceResult | null> {
+  const client = tx ?? db;
   const conditions = [eq(inventoryBalances.variantId, variantId)];
   if (warehouseId) {
     conditions.push(eq(inventoryBalances.warehouseId, warehouseId));
   }
 
-  const [result] = await db
+  const [result] = await client
     .select({
       variantId: inventoryBalances.variantId,
       warehouseId: inventoryBalances.warehouseId,
@@ -116,23 +118,37 @@ export async function adjustStock(
   variantId: number,
   warehouseId: number,
   movement: StockMovementInput,
+  tx?: DbTransaction,
 ): Promise<void> {
-  await db.transaction(async (tx) => {
-    // 1. Update/Upsert balance
-    await tx
-      .insert(inventoryBalances)
-      .values({
+  return await withTransaction(tx, async (tx) => {
+    // 1. Update/Upsert balance with row-level lock
+    const [existing] = await tx
+      .select({ id: inventoryBalances.id })
+      .from(inventoryBalances)
+      .where(
+        and(
+          eq(inventoryBalances.variantId, variantId),
+          eq(inventoryBalances.warehouseId, warehouseId),
+        ),
+      )
+      .for('update');
+
+    if (existing) {
+      await tx
+        .update(inventoryBalances)
+        .set({
+          onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
+          updatedAt: new Date(),
+        })
+        .where(eq(inventoryBalances.id, existing.id));
+    } else {
+      await tx.insert(inventoryBalances).values({
         variantId,
         warehouseId,
-        onHand: movement.quantity,
+        onHand: Math.max(0, movement.quantity),
         reserved: 0,
-      })
-      .onConflictDoUpdate({
-        target: [inventoryBalances.variantId, inventoryBalances.warehouseId],
-        set: {
-          onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
-        },
       });
+    }
 
     // 2. Record movement
     await tx.insert(stockMovements).values({
