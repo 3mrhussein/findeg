@@ -3,6 +3,7 @@ packages:
   - 'configs/env'
   - 'packages/orders'
   - 'packages/school-lists'
+  - 'packages/catalog'
   - 'packages/domain-errors'
   - 'packages/identity'
   - 'packages/domain'

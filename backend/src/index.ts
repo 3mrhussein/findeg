@@ -2,7 +2,7 @@
 // Identity, Catalog and Orders are published by their own packages.
 import { createIdentityServices } from '@findeg/identity';
 import { createOrders } from '@findeg/orders';
-import { createProductService } from './features/catalog';
+import { createProductService } from '@findeg/catalog';
 import { parse } from './features/core';
 
 export * from './features/core';

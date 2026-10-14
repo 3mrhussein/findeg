@@ -28,7 +28,7 @@ import { Button } from '@findeg/ui';
 import { Textarea } from '@findeg/ui';
 import { CollapsibleCategoryPicker } from '@/app/[locale]/_components/shared/CollapsibleCategoryPicker';
 import { Save, X, Check, AlertCircle, Loader2 } from 'lucide-react';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { useTranslations } from 'next-intl';
 import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 

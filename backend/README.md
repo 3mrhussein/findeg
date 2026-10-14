@@ -131,7 +131,7 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 
 | Feature Module | Business Purpose | Key Domain Entities |
 | --- | --- | --- |
-| [**Catalog**](src/features/catalog/README.md) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
+| **Catalog** (`@findeg/catalog`, `packages/catalog`) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
 | [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
 | [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
 | [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
@@ -140,7 +140,7 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 | [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |
 | [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
 | [**School**](src/features/school/README.md) | B2B2C School Supply Lists (secure gateways). | `SchoolSupplyList`, `PartnerSchool` |
-| [**Review**](src/features/review/README.md) | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote` |
+| **Review** (`@findeg/catalog`) | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote` |
 | [**Media**](src/features/media/README.md) | Media delivery, S3 uploads, image compression. | `MediaAsset`, `FileLink` |
 | [**Outbox**](src/features/outbox/README.md) | Transactional outbox: messages written in-transaction, delivered at least once. | `OutboxService`, `OutgoingEmail` |
 | [**Core**](src/features/core/README.md) | System-wide building blocks. | `ServiceResult` |

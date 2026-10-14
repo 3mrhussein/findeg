@@ -1,4 +1,4 @@
-// Temporary compatibility entry; the owning context publishes this contract.
+// Temporary compatibility entry; the Catalog package (@findeg/catalog) publishes the locale helpers.
 export {
   SUPPORTED_LOCALES,
   DEFAULT_LOCALE,
@@ -10,4 +10,4 @@ export {
   type TranslationMap,
   asTranslationMap,
   pick,
-} from '../../../catalog/contracts';
+} from '@findeg/catalog';

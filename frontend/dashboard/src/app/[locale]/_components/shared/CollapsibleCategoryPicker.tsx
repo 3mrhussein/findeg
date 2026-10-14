@@ -15,7 +15,7 @@
 import * as React from 'react';
 import { Plus, Minus, Check } from 'lucide-react';
 import { cn } from '@lib/utils';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { Button } from '@findeg/ui';
 import { ScrollArea } from '@findeg/ui';
 

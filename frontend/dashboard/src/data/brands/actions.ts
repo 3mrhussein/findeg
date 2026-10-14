@@ -1,6 +1,6 @@
 'use server';
 
-import { BrandInput } from '@findeg/backend/features/catalog';
+import { BrandInput } from '@findeg/catalog';
 import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { PERMISSION_CODES } from '@findeg/identity/types';

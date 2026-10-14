@@ -17,7 +17,7 @@ export { RatingSchema, type Rating } from '@findeg/db/types';
 
 // ─── Locale & Translations ──────────────────────────────────────────────────
 export type { Locale } from '@findeg/domain';
-export { TranslationMapSchema, type TranslationMap } from '../value-objects/Locale';
+export { TranslationMapSchema, type TranslationMap } from '@findeg/catalog';
 
 /** Decimal numeric representation in legacy application DTOs, not domain Money. */
 export type Price = number;

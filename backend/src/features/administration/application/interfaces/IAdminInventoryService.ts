@@ -1,5 +1,5 @@
-import { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
-import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos';
+import { Product } from '@findeg/catalog';
+import { InventoryUpdate } from '@findeg/catalog';
 
 export interface IAdminInventoryService {
   /**

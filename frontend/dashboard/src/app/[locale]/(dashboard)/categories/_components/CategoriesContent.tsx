@@ -1,7 +1,7 @@
 import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { getCategories } from '@data/categories/queries';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { CategoryTree } from './CategoryTree';
 import {
   createCategoryAction,
@@ -97,7 +97,7 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
 
   // Server action for reordering categories
   async function handleReorderCategories(
-    reorderedCategories: import('@findeg/backend/features/catalog').Category[],
+    reorderedCategories: import('@findeg/catalog').Category[],
   ) {
     'use server';
 

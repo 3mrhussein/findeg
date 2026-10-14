@@ -8,7 +8,7 @@
 
 import { revalidatePath, updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import type { CategoryInput } from '@findeg/backend/features/catalog';
+import type { CategoryInput } from '@findeg/catalog';
 import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';

@@ -1,7 +1,7 @@
 'use client';
 import { type Locale } from '@findeg/domain';
 
-import type { Collection } from '@findeg/backend/features/catalog';
+import type { Collection } from '@findeg/catalog';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@findeg/ui';

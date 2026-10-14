@@ -2,7 +2,7 @@ import type { OrderStatus, Locale } from '@findeg/domain';
 import React from 'react';
 import { OrderStatusSchema } from '@findeg/orders';
 import { orderQueries } from '@findeg/db/queries';
-import { DEFAULT_LOCALE } from '../../core';
+import { DEFAULT_LOCALE } from '@findeg/catalog';
 import { OrderStatusUpdateEmail } from '../../notifications';
 import { isNotifiedOrderStatus, type OutboxHandler } from '../domain/types';
 import type { EmailProvider } from './EmailProvider';

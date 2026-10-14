@@ -1,7 +1,7 @@
 'use cache';
 
-import { DEFAULT_CURRENCY } from '@findeg/domain';
 import 'server-only';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 /**
  * Catalog Data Layer (Storefront)
  *
@@ -16,8 +16,8 @@ import {
   createBrandService,
   createSearchService,
   createCollectionService,
-} from '@findeg/backend/features/catalog';
-import { parse } from '@findeg/backend/features/core';
+} from '@findeg/catalog';
+import { parse } from '@findeg/catalog';
 import type {
   ShopPlpViewModel,
   SearchPageViewModel,
@@ -146,7 +146,7 @@ export async function getSearchPageViewModel(
   const searchSort =
     listing.backendSort === 'popular'
       ? 'relevance'
-      : (listing.backendSort as import('@findeg/backend/features/catalog').SearchParams['sort']);
+      : (listing.backendSort as import('@findeg/catalog').SearchParams['sort']);
 
   const result = await searchService.search({
     query: rawQuery,

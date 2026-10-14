@@ -1,10 +1,7 @@
 import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import { DashboardStats } from '../dtos';
-import {
-  CatalogHealthStats,
-  CategoryProductDistribution,
-} from '@findeg/backend/features/catalog/application/dtos';
+import { CatalogHealthStats, CategoryProductDistribution } from '@findeg/catalog';
 import type { Order } from '@findeg/orders';
 import {
   getCatalogHealthRaw,

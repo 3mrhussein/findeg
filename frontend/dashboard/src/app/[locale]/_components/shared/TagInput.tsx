@@ -7,7 +7,7 @@ import { Button } from '@findeg/ui';
 import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
 import { ScrollArea } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { type Tag } from '@findeg/backend/features/catalog';
+import { type Tag } from '@findeg/catalog';
 
 interface TagInputProps {
   tags: Tag[];

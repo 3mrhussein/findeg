@@ -1,2 +1,2 @@
-export * from './admin-product.helpers';
-export * from './admin-product.validation';
+export * from '@findeg/catalog';
+export * from '@findeg/catalog';

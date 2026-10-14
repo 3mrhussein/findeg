@@ -6,10 +6,10 @@ import {
   deleteBrandAction,
   toggleBrandStatusAction,
 } from '@data/brands/actions';
-import { BrandInput } from '@findeg/backend/features/catalog';
+import { BrandInput } from '@findeg/catalog';
 import { revalidatePath } from 'next/cache';
 import { getAllBrands } from '@data/resources/queries';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 
 interface BrandsContentProps {
   locale: string;

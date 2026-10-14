@@ -8,3 +8,4 @@
 export { DomainError } from './DomainError';
 export { NotAuthorizedError } from './NotAuthorizedError';
 export { ResourceNotFoundError } from './ResourceNotFoundError';
+export { ValidationError, ValidationErrors } from './ValidationError';

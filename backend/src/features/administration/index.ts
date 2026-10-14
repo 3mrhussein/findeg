@@ -1,8 +1,8 @@
-export type { AuditLogEntry } from './domain/entities/AuditLogEntry';
+export type { AuditLogEntry } from '@findeg/catalog';
 export type { DashboardStats } from './application/dtos/DashboardStats';
-export type { IAdminBrandService } from './application/interfaces/IAdminBrandService';
-export type { IAdminCategoryService } from './application/interfaces/IAdminCategoryService';
-export type { IAdminCollectionService } from './application/interfaces/IAdminCollectionService';
+export type { IAdminBrandService } from '@findeg/catalog';
+export type { IAdminCategoryService } from '@findeg/catalog';
+export type { IAdminCollectionService } from '@findeg/catalog';
 export type { IAdminDashboardService } from './application/interfaces/IAdminDashboardService';
 export type { IAdminInventoryService } from './application/interfaces/IAdminInventoryService';
 export type {
@@ -11,18 +11,10 @@ export type {
   ProductListResult,
   ProductEditData,
   IAdminProductService,
-} from './application/interfaces/IAdminProductService';
-export type { IAdminTagService } from './application/interfaces/IAdminTagService';
-export type {
-  AuditLogCreateInput,
-  AuditLogFilters,
-  IAuditLogRepository,
-} from './application/interfaces/IAuditLogRepository';
-export type { IAuditLogService } from './application/interfaces/IAuditLogService';
-export type {
-  ImportResult,
-  ImportRowPreview,
-  IProductImportService,
-} from './application/interfaces/IProductImportService';
+} from '@findeg/catalog';
+export type { IAdminTagService } from '@findeg/catalog';
+export type { AuditLogCreateInput, AuditLogFilters, IAuditLogRepository } from '@findeg/catalog';
+export type { IAuditLogService } from '@findeg/catalog';
+export type { ImportResult, ImportRowPreview, IProductImportService } from '@findeg/catalog';
 export { createAdministrationServices } from './application/services/factory';
 export type { AdministrationServices } from './application/services/factory';

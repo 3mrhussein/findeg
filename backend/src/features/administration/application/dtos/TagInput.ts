@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TagScopeSchema } from '../../../catalog/domain/entities/Tag';
+import { TagScopeSchema } from '@findeg/catalog';
 
 export const TagInputSchema = z.object({
   group: z.string().min(1, 'Group is required'),

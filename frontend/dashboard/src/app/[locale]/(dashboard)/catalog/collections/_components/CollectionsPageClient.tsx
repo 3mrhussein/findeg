@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Collection } from '@findeg/backend/features/catalog';
+import type { Collection } from '@findeg/catalog';
 import { CollectionGrid } from './CollectionGrid';
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';

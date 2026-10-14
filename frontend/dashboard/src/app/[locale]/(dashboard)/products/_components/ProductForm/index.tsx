@@ -17,13 +17,13 @@ import { InfoTab } from './tabs/InfoTab';
 import { VariantsTab } from './tabs/VariantsTab';
 import { MediaTab } from './tabs/MediaTab';
 import { SeoTab } from './tabs/SeoTab';
-import type { Brand, Tag } from '@findeg/backend/features/catalog';
+import type { Brand, Tag } from '@findeg/catalog';
 import { ProductFormSchema, ProductFormValues } from '@/interfaces';
 import { createProduct, updateProduct } from '@data/products/actions';
 
 interface ProductFormProps {
-  initialData?: import('@findeg/backend/features/catalog').Product;
-  categories: import('@findeg/backend/features/catalog').Category[];
+  initialData?: import('@findeg/catalog').Product;
+  categories: import('@findeg/catalog').Category[];
   brands: Brand[];
   tags: Tag[];
   locale: string;

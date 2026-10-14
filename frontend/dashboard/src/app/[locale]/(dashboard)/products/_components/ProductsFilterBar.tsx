@@ -36,8 +36,8 @@ interface ProductsFilterBarProps {
     }>,
     options?: Options,
   ) => Promise<URLSearchParams>;
-  categories: import('@findeg/backend/features/catalog').Category[];
-  brands: import('@findeg/backend/features/catalog').Brand[];
+  categories: import('@findeg/catalog').Category[];
+  brands: import('@findeg/catalog').Brand[];
 }
 
 export function ProductsFilterBar({
@@ -67,9 +67,7 @@ export function ProductsFilterBar({
   };
 
   /** Resolve display name for a category, preferring localizedContent.name.en */
-  const getCategoryDisplayName = (
-    cat: import('@findeg/backend/features/catalog').Category,
-  ): string => {
+  const getCategoryDisplayName = (cat: import('@findeg/catalog').Category): string => {
     return cat.localizedContent?.name?.en ?? cat.name ?? cat.slug ?? '—';
   };
 

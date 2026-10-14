@@ -1,6 +1,6 @@
 import { CategoryForm } from '../CategoryForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { getCategories } from '@data/categories/queries';
 import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';

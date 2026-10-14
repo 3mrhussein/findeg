@@ -7,27 +7,33 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with actions
  */
 
-import type { IAdminProductService } from '../interfaces/IAdminProductService';
-import type { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
-import type { IAdminBrandService } from '../interfaces/IAdminBrandService';
-import type { IAdminTagService } from '../interfaces/IAdminTagService';
-import type { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
+import type {
+  IAdminBrandService,
+  IAdminCategoryService,
+  IAdminCollectionService,
+  IAdminProductService,
+  IAdminTagService,
+  IAuditLogService,
+  IProductImportService,
+} from '@findeg/catalog';
 import type { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
-import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { IProductImportService } from '../interfaces/IProductImportService';
 import type { IAdminSchoolSupplyListService } from '@findeg/school-lists/types';
 
-// Admin services
-import { AdminProductService } from './AdminProductService';
-import { AdminCategoryService } from './AdminCategoryService';
-import { AdminBrandService } from './AdminBrandService';
-import { AdminTagService } from './AdminTagService';
-import { AdminCollectionService } from './AdminCollectionService';
+// Catalog-owned admin services
+import {
+  AdminBrandService,
+  AdminCategoryService,
+  AdminCollectionService,
+  AdminProductService,
+  AdminTagService,
+  ProductImportService,
+} from '@findeg/catalog';
+
+// Administration-owned services
 import { AdminInventoryService } from './AdminInventoryService';
 import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
-import { ProductImportService } from './ProductImportService';
 import { createAdminSchoolSupplyListService } from '@findeg/school-lists';
 
 /**

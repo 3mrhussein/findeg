@@ -1,4 +1,4 @@
-import type { TranslationMap } from '../../../core/domain/value-objects';
+import type { TranslationMap } from '@findeg/catalog';
 
 export type PricingMode = 'shared' | 'per-variant';
 

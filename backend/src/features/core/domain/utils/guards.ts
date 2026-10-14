@@ -1,6 +1,5 @@
 import { EmailSchema, IdSchema } from '../types/common';
-import { valid } from '../value-objects/Locale';
-import type { Locale } from '../value-objects/Locale';
+import { valid, type Locale } from '@findeg/catalog';
 
 /**
  * Type-safe check if a value is defined (not null or undefined).

@@ -71,7 +71,7 @@ vi.mock('@findeg/backend/features/administration', () => ({
     tags: tagsService,
   }),
 }));
-vi.mock('@findeg/backend/features/catalog', () => ({
+vi.mock('@findeg/catalog', () => ({
   createCategoryService: () => categoriesService,
   createTagService: () => tagsService,
 }));

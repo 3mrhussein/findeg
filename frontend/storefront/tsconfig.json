@@ -20,7 +20,6 @@
       "@findeg/backend/features/administration": [
         "../../backend/src/features/administration/index.ts"
       ],
-      "@findeg/backend/features/catalog": ["../../backend/src/features/catalog/index.ts"],
       "@findeg/backend/features/core": ["../../backend/src/features/core/index.ts"],
       "@findeg/backend/features/media": ["../../backend/src/features/media/index.ts"],
       "@findeg/backend/features/notifications": [
@@ -29,7 +28,6 @@
       "@findeg/backend/features/partner-membership": [
         "../../backend/src/features/partner-membership/index.ts"
       ],
-      "@findeg/backend/features/review": ["../../backend/src/features/review/index.ts"],
       "@findeg/backend/features/school": ["../../backend/src/features/school/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../configs/env/src"]

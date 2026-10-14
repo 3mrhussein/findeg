@@ -1,9 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  isNewProduct,
-  getProductDisplayPrice,
-  type Product,
-} from '@findeg/backend/features/catalog';
+import { isNewProduct, getProductDisplayPrice, type Product } from '@findeg/catalog';
 import type { SortOption } from '@lib/types';
 
 /**

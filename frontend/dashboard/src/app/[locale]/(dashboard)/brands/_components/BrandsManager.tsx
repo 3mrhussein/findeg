@@ -7,7 +7,7 @@ import { Search, Plus } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import type { Brand } from '@findeg/backend/features/catalog';
+import type { Brand } from '@findeg/catalog';
 import { BrandCard } from './BrandCard';
 import { BrandFormPanel } from './BrandFormPanel';
 import { BrandDrawer } from './BrandDrawer';
@@ -17,7 +17,7 @@ import { useToast } from '@hooks/use-toast';
 interface BrandsManagerProps {
   initialBrands: Brand[];
   onSave: (
-    data: import('@findeg/backend/features/catalog').BrandInput,
+    data: import('@findeg/catalog').BrandInput,
     id?: number,
   ) => Promise<{ success: boolean; error?: string }>;
   onDelete: (id: number) => Promise<{ success: boolean; error?: string }>;
@@ -118,7 +118,7 @@ export function BrandsManager({
     }
   };
 
-  const handleFormSubmit = async (data: import('@findeg/backend/features/catalog').BrandInput) => {
+  const handleFormSubmit = async (data: import('@findeg/catalog').BrandInput) => {
     const result = await onSave(data, selectedBrand?.id);
     if (result.success) {
       handleClosePanel();
