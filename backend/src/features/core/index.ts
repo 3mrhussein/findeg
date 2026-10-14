@@ -9,6 +9,7 @@ export {
 } from './domain/value-objects/Locale';
 export { PortalRoleSchema } from './domain/types/common';
 export type { PortalRole, OrderStatus, PaymentStatus } from './domain/types/common';
+export { createGuestOrderTokens } from './infrastructure/auth/GuestOrderTokens';
 export type { Notification } from './domain/types/Notification';
 export type {
   ILoggerService,

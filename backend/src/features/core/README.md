@@ -15,7 +15,7 @@ owning feature's entry; these delegates can disappear with package extraction.
 | Locale/translation adapters, catalogue cache tags, catalogue DTO defaults/messages | `catalog/contracts` | catalog |
 | Media metadata contracts | `media/contracts` | backend media infrastructure |
 | Notification DTO | `notifications/contracts` | backend notifications infrastructure |
-| Order success messages | `checkout/contracts` | orders |
+| Order success messages | `@findeg/orders` | orders |
 | SessionPayload, CurrentSessionProvider, JWT/cookie adapters, token settings | core | backend core infrastructure |
 | HTTP error catalogue and error-to-response mapping | core | backend infrastructure |
 

@@ -1,0 +1,207 @@
+import { and, asc, eq, inArray } from 'drizzle-orm';
+import {
+  attributes,
+  products,
+  productVariants,
+  schoolSupplyListItems,
+  schoolSupplyLists,
+  variantAttributes,
+} from '@findeg/db/schema';
+import type { Db } from '@findeg/db/connection';
+import type { DbTransaction } from '@findeg/db/queries';
+import {
+  isLineQuantity,
+  moneyFromDecimal,
+  priceQuote,
+  publicCode,
+  sku,
+  type Quote,
+  type SupplyListId,
+  type SupplyListItemId,
+  type VariantId,
+} from '@findeg/domain';
+import { eligibleVariants } from '@findeg/school-lists';
+import { ListUnavailableError, SelectionInvalidError } from '../checkout-errors/helpers';
+import type { ListCheckoutLine } from '../checkout-input/types';
+import type { CatalogVariantMetadata, ListAttribution, ListQuoteCalculation } from './types';
+
+type Executor = Db | DbTransaction;
+
+const invalidIds = (ids: number[]) => [...new Set(ids)].sort((a, b) => a - b);
+
+/** Lazily loads the default connection; only a call without an acceptance transaction needs it. */
+const defaultExecutor = () => import('@findeg/db/connection').then(({ db }) => db);
+
+/**
+ * Re-quotes one School Supply List selection. When given an acceptance
+ * transaction, every list/item/candidate fact used for eligibility and price
+ * is held with FOR SHARE until the Order is committed.
+ */
+export async function calculateListQuote(
+  input: { publicCode: string; lines: ListCheckoutLine[] },
+  tx?: DbTransaction,
+  now: Date = new Date(),
+): Promise<ListQuoteCalculation> {
+  const executor: Executor = tx ?? (await defaultExecutor());
+  const listQuery = executor
+    .select()
+    .from(schoolSupplyLists)
+    .where(eq(schoolSupplyLists.publicCode, input.publicCode))
+    .limit(1);
+  const [list] = tx ? await listQuery.for('share') : await listQuery;
+  if (!list || list.status !== 'published' || !list.publicCode || !list.publishedAt) {
+    throw new ListUnavailableError();
+  }
+
+  const itemQuery = executor
+    .select()
+    .from(schoolSupplyListItems)
+    .where(eq(schoolSupplyListItems.listId, list.id))
+    .orderBy(asc(schoolSupplyListItems.id));
+  const items = tx ? await itemQuery.for('share') : await itemQuery;
+  const itemById = new Map(items.map((item) => [item.id, item]));
+
+  const failures: number[] = [];
+  const seen = new Set<number>();
+  if (input.lines.length === 0) throw new SelectionInvalidError([]);
+  for (const line of input.lines) {
+    if (
+      !Number.isSafeInteger(line.listItemId) ||
+      !Number.isSafeInteger(line.variantId) ||
+      line.variantId < 1 ||
+      !isLineQuantity(line.quantity) ||
+      seen.has(line.listItemId) ||
+      !itemById.has(line.listItemId)
+    ) {
+      failures.push(line.listItemId);
+    }
+    seen.add(line.listItemId);
+  }
+  if (failures.length > 0) throw new SelectionInvalidError(invalidIds(failures));
+
+  const variantIds = [...new Set(input.lines.map((line) => line.variantId))].sort((a, b) => a - b);
+  const variantQuery = executor
+    .select({
+      id: productVariants.id,
+      productId: productVariants.productId,
+      sku: productVariants.sku,
+      localizedLabel: productVariants.localizedLabel,
+      productName: products.localizedName,
+      basePrice: productVariants.basePrice,
+      categoryId: products.categoryId,
+    })
+    .from(productVariants)
+    .innerJoin(products, eq(products.id, productVariants.productId))
+    .where(
+      and(
+        inArray(productVariants.id, variantIds),
+        eq(productVariants.isActive, true),
+        eq(products.isActive, true),
+      ),
+    )
+    .orderBy(asc(productVariants.id));
+  const variants = tx ? await variantQuery.for('share') : await variantQuery;
+  const variantById = new Map(variants.map((variant) => [variant.id, variant]));
+
+  const attributeQuery = executor
+    .select({
+      variantId: variantAttributes.variantId,
+      key: attributes.key,
+      value: variantAttributes.valueText,
+    })
+    .from(variantAttributes)
+    .innerJoin(attributes, eq(attributes.id, variantAttributes.attributeId))
+    .where(inArray(variantAttributes.variantId, variantIds))
+    .orderBy(asc(variantAttributes.variantId), asc(attributes.key));
+  const attributeRows = tx ? await attributeQuery.for('share') : await attributeQuery;
+  const attributesByVariant = new Map<number, Record<string, string>>();
+  for (const row of attributeRows) {
+    if (row.value === null) continue;
+    const values = attributesByVariant.get(row.variantId) ?? {};
+    values[row.key] = row.value;
+    attributesByVariant.set(row.variantId, values);
+  }
+
+  for (const line of input.lines) {
+    const item = itemById.get(line.listItemId)!;
+    const variant = variantById.get(line.variantId);
+    const eligible =
+      item.variantId !== null &&
+      variant &&
+      eligibleVariants(
+        {
+          variantId: item.variantId,
+          exactItem: item.exactItem,
+          specification: item.specification,
+        },
+        [
+          {
+            variantId: variant.id,
+            categoryId: variant.categoryId,
+            attributes: attributesByVariant.get(variant.id) ?? {},
+          },
+        ],
+      ).length === 1;
+    if (!eligible) failures.push(line.listItemId);
+  }
+  if (failures.length > 0) throw new SelectionInvalidError(invalidIds(failures));
+
+  // The offer is read after the list row is locked FOR SHARE. Staff offer edits take the list
+  // FOR UPDATE first, so an offer created or changed mid-acceptance cannot slip past this read.
+  const { getListOffer } = await import('@findeg/db/queries/school-supply-lists');
+  const offer = await getListOffer(executor, list.id, tx ? { lock: 'share' } : {});
+  const quote: Quote = priceQuote(
+    {
+      kind: 'list',
+      supplyListId: list.id as SupplyListId,
+      publicCode: publicCode(list.publicCode),
+      offer: offer ?? null,
+    },
+    input.lines.map((line) => {
+      const variant = variantById.get(line.variantId)!;
+      const name = variant.productName as Record<string, string>;
+      return {
+        variantId: line.variantId as VariantId,
+        quantity: line.quantity,
+        unitPrice: moneyFromDecimal(variant.basePrice),
+        productName: name.en || name.ar || '',
+        sku: sku(variant.sku),
+        listItem: {
+          supplyListItemId: line.listItemId as SupplyListItemId,
+          defaultVariantId: itemById.get(line.listItemId)!.variantId as VariantId,
+        },
+      };
+    }),
+    now,
+  );
+
+  return {
+    quote,
+    variantMap: new Map(
+      variants.map((variant) => [
+        variant.id,
+        {
+          id: variant.id,
+          productId: variant.productId,
+          sku: variant.sku,
+          localizedLabel: variant.localizedLabel,
+          productName: variant.productName,
+        } satisfies CatalogVariantMetadata,
+      ]),
+    ),
+    attribution: {
+      schoolSupplyListId: list.id,
+      schoolSupplyListPublicCode: list.publicCode,
+      schoolSupplyListPublishedAt: list.publishedAt,
+      businessPartnerId: list.businessPartnerId,
+      items: new Map(
+        items.flatMap((item) =>
+          item.variantId === null
+            ? []
+            : [[item.id, { defaultVariantId: item.variantId, exactItem: item.exactItem }] as const],
+        ),
+      ),
+      listOfferBasisPoints: quote.source.kind === 'list' ? quote.source.listOfferBasisPoints : null,
+    } satisfies ListAttribution,
+  };
+}

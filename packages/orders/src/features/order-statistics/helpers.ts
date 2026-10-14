@@ -1,12 +1,23 @@
-import { DEFAULT_CURRENCY, BUSINESS_TIME_ZONE } from '@findeg/domain';
 import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { orders, orderItems, products } from '@findeg/db/schema';
-import { LIVE_ORDER_STATUSES, type OrderStatus } from '@findeg/domain';
-import { moneyFromDecimal } from '@findeg/domain';
+import {
+  BUSINESS_TIME_ZONE,
+  DEFAULT_CURRENCY,
+  LIVE_ORDER_STATUSES,
+  ORDER_STATUSES,
+  moneyFromDecimal,
+} from '@findeg/domain';
 import { statsOptionsSchema } from '../validation';
 import type { OrderContext, Orders } from '../../types';
 
 /** Order totals, status counts, revenue trend and top products in the business time zone. */
+/** One zeroed counter per value of a Domain value set, keyed exhaustively by that set. */
+function zeroCounts<const Values extends readonly string[]>(
+  values: Values,
+): Record<Values[number], number> {
+  return Object.fromEntries(values.map((value) => [value, 0])) as Record<Values[number], number>;
+}
+
 export function createOrderStatistics({ database, now }: OrderContext): Pick<Orders, 'getStats'> {
   return {
     async getStats(input = {}) {
@@ -49,15 +60,7 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .from(orders)
             .where(range)
             .groupBy(orders.status);
-          const ordersByStatus = {
-            pending: 0,
-            confirmed: 0,
-            processing: 0,
-            shipped: 0,
-            delivered: 0,
-            cancelled: 0,
-            refunded: 0,
-          } satisfies Record<OrderStatus, number>;
+          const ordersByStatus = zeroCounts(ORDER_STATUSES);
           for (const row of statuses) ordersByStatus[row.status] = row.count;
           const trend = await tx.execute<{ date: string; revenue: string }>(sql`
           with dates as (

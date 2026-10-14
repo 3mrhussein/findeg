@@ -1,7 +1,8 @@
 import { after } from 'next/server';
-import { createGuestAccessService } from '@findeg/backend/features/guest-access';
+import { createGuestAccessService } from '@findeg/orders';
 import { createLogger } from '@findeg/backend/features/core/logger';
-import { drainOutbox } from '@findeg/backend/features/outbox';
+import { drainOutbox, enqueue, requireGuestAccessSecret } from '@findeg/backend/features/outbox';
+import { createGuestOrderTokens } from '@findeg/backend/features/core';
 
 /**
  * Answers `{ success: true }` for every well-formed lookup, matching order or not, so the response
@@ -9,7 +10,11 @@ import { drainOutbox } from '@findeg/backend/features/outbox';
  */
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
-  const result = await createGuestAccessService().requestAccess(body);
+  const result = await createGuestAccessService({
+    enqueue,
+    secret: requireGuestAccessSecret,
+    tokens: createGuestOrderTokens(requireGuestAccessSecret),
+  }).requestAccess(body);
 
   if (!result.success) {
     return Response.json(

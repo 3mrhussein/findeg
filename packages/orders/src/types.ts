@@ -143,4 +143,38 @@ export interface Orders {
   listNotes(id: number | string): Promise<OrderNote[]>;
 }
 
+export type {
+  CheckoutAcceptedOrder,
+  CheckoutLine,
+  CheckoutOrderContext,
+  CheckoutOrderInput,
+  CheckoutQuote,
+  CheckoutQuoteLine,
+  CheckoutReceipt,
+  CheckoutShippingAddress,
+  CheckoutValidateInput,
+  ListCheckoutLine,
+} from './features/checkout-input';
+export type {
+  CheckoutAcceptFailure,
+  CheckoutAcceptResult,
+  CheckoutAcceptSuccess,
+  CheckoutServiceOptions,
+  CheckoutValidateFailure,
+  CheckoutValidateResult,
+  CheckoutValidateSuccess,
+  ICheckoutService,
+  OutboxEnqueue,
+} from './features/order-acceptance';
+export type { GuestAccessTokens } from './features/guest-access-token';
+export type {
+  GuestAccessServiceOptions,
+  GuestOrderView,
+  RequestAccessResult,
+  VerifyResult,
+} from './features/guest-access';
+export type {
+  GuestAccessRequestInput,
+  GuestAccessVerifyInput,
+} from './features/guest-access-input';
 export type * from './index';

@@ -1,0 +1,1 @@
+export const MAX_IDEMPOTENCY_SCOPE_LENGTH = 255;

@@ -885,6 +885,9 @@ importers:
       '@findeg/domain-errors':
         specifier: workspace:*
         version: link:../domain-errors
+      '@findeg/school-lists':
+        specifier: workspace:*
+        version: link:../school-lists
       drizzle-orm:
         specifier: ^0.45.3
         version: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)

@@ -132,9 +132,9 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 | Feature Module | Business Purpose | Key Domain Entities |
 | --- | --- | --- |
 | **Catalog** (`@findeg/catalog`, `packages/catalog`) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
-| [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
+| [**Checkout**](../packages/orders/src/features/order-acceptance/index.ts) | Checkout validation and order acceptance (in `@findeg/orders`). | `CheckoutService` |
 | [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
-| [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
+| [**Guest Access**](../packages/orders/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
 | [**Identity**](../packages/identity/README.md) (`@findeg/identity`) | Hardened auth, RBAC permissions, account administration. Token infrastructure stays in backend core. | `User`, `Role`, `PasswordCredentials` |
 | **Partners** (`@findeg/partners`, `packages/partners`) | Business Partners, their memberships and invitations, and Partner Reports over Attributed Orders. | `PartnerMembershipServices`, `SalesFigures` |
 | [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
@@ -275,7 +275,7 @@ formatRelativeTime(pastDate, 'en'); // e.g. "2 days ago"
 
 - `.` maps to `src/index.ts`, the root barrel that also re-exports the lib helpers.
 - `./features/<name>` maps to `src/features/<name>/index.ts` for each feature barrel.
-- `./features/core/logger`, `./features/core/schemas` and the `schemas` entries of checkout, catalog and guest-access are also exported.
+- `./features/core/logger` and `./features/core/schemas` are also exported.
 - `./lib` and `./types` have no exports entry. Import lib helpers from the root barrel `@findeg/backend`. The validation schemas in `src/types` are reachable only from inside the backend workspace via tsconfig paths.
 
 ## Testing

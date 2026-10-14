@@ -1,7 +1,7 @@
 import { after } from 'next/server';
-import { createCheckoutService } from '@findeg/backend/features/checkout';
+import { createCheckoutService } from '@findeg/orders';
 import { createLogger } from '@findeg/backend/features/core/logger';
-import { drainOutbox } from '@findeg/backend/features/outbox';
+import { drainOutbox, enqueue } from '@findeg/backend/features/outbox';
 import { getSession } from '@lib/session';
 
 export async function POST(request: Request) {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   const idempotencyKey = request.headers.get('idempotency-key') || undefined;
   const guestId = request.headers.get('x-guest-id') || undefined;
 
-  const checkoutService = createCheckoutService();
+  const checkoutService = createCheckoutService({ enqueue });
   const result = await checkoutService.accept(body, {
     userId,
     guestId,

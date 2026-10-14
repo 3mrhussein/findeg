@@ -15,7 +15,7 @@ The **Storefront Order Feature** surfaces the high-stakes checkout funnel. It pr
 
 - **`CheckoutStepper`**: Purely visual timeline sync hook utilizing Next.js `searchParams` for step isolation (`?step=shipping`).
 - **`AddressBookSelector`**: Client heavy component retrieving backend pre-saved addresses and injecting them into the form context.
-- **`PaymentPortal`**: Locked UI that acts as the final irreversible trigger to `@findeg/backend/features/checkout`.
+- **`PaymentPortal`**: Locked UI that acts as the final irreversible trigger to `@findeg/orders` (Order Acceptance).
 
 ---
 
