@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { PERMISSION_CODES } from '../../contracts';
 import {
   buildCurrentSessionPayload,
   type CurrentSessionUser,

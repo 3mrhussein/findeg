@@ -1,26 +1,4 @@
-import {
-  ActorTypeSchema,
-  type ActorType,
-  RoleIdSchema,
-  type RoleId,
-  PermissionIdSchema,
-  type PermissionId,
-  PermissionCodeSchema,
-  type PermissionCode,
-  RoleScopeSchema,
-  type RoleScope,
-  OrganizationIdSchema,
-  type OrganizationId,
-  GuestPrincipalIdSchema,
-  type GuestPrincipalId,
-  AuthProviderSchema,
-  type AuthProvider,
-  PaymentProviderSchema,
-  type PaymentProvider,
-  RoleGrantSchema,
-  type RoleGrant,
-} from '@findeg/db/types';
-
+// Temporary compatibility entry; the owning context publishes this contract.
 export {
   ActorTypeSchema,
   type ActorType,
@@ -42,4 +20,4 @@ export {
   type PaymentProvider,
   RoleGrantSchema,
   type RoleGrant,
-};
+} from '../../../identity/contracts';

@@ -1,10 +1,4 @@
-/**
- * Public core contracts and shared helpers. Concrete providers and errors
- * stay internal. Client Components needing only TranslationMapSchema should
- * import from './schemas' instead, which has no import path to
- * './application/services/factory' or 'db/src/connection.ts'. See
- * docs/adr/0001-backend-feature-barrels.md.
- */
+/** Core infrastructure and temporary context-contract compatibility exports. */
 export type { AuthResult } from './domain/auth/AuthResult';
 export type { SessionPayload } from './domain/auth/SessionPayload';
 export {

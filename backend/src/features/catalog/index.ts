@@ -57,3 +57,5 @@ export {
   createBrandService,
   createAdminSearchAnalyticsService,
 } from './application/services/factory';
+
+export * from './contracts';

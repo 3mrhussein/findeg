@@ -12,7 +12,7 @@
 
 import { IAuthService } from '../interfaces/IAuthService';
 import { AuthResult, SessionPayload } from '../../../core/domain/auth';
-import { adminSession } from '../../../core/domain/auth/authorization';
+import { adminSession } from '../../contracts';
 import { RegisterInput } from '../dtos/RegisterInput';
 import bcrypt from 'bcryptjs';
 import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/errors';

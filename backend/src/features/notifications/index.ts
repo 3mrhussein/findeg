@@ -10,3 +10,5 @@ export { default as OrderStatusUpdateEmail } from './infrastructure/templates/Or
 export { default as GuestAccessCodeEmail } from './infrastructure/templates/GuestAccessCodeEmail';
 export { default as PartnerInvitationEmail } from './infrastructure/templates/PartnerInvitationEmail';
 export type { IEmailService } from './application/services/IEmailService';
+
+export * from './contracts';

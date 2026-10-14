@@ -1,3 +1,2 @@
-import { UserVOSchema, type UserVO, createUserVO } from '@findeg/db/types';
-
-export { UserVOSchema, type UserVO, createUserVO };
+// Temporary compatibility entry; the owning context publishes this contract.
+export { UserVOSchema, type UserVO, createUserVO } from '../../../identity/contracts';

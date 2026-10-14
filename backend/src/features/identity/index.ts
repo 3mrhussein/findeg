@@ -12,3 +12,5 @@ export type {
 export type { RoleWithPermissions } from './application/interfaces/IAdminRoleService';
 
 export { createIdentityServices } from './application/services/factory';
+
+export * from './contracts';
