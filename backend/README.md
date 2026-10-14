@@ -44,7 +44,7 @@ The dirty boundaries talking to the outside world.
 The `@findeg/backend` owns the entire truth of the data.
 
 **Database ER Diagram & Deep Schema Docs**:
-👉 [Read the detailed SCHEMA.md & Global ER Diagram](docs/database/SCHEMA.md)
+👉 [Read the detailed SCHEMA.md & Global ER Diagram](../db/docs/SCHEMA.md)
 
 Services throw `AppError` subclasses (`NotFoundError`, `ForbiddenError`, `UnauthorizedError`) from `@findeg/backend`. App-layer code translates them into framework behaviour.
 
@@ -127,20 +127,24 @@ pnpm db:studio
 
 ## 📦 Feature Inventory
 
-The backend is composed of 10 rigidly bounded context modules:
+The backend is composed of 13 bounded context modules under `src/features`, plus the Orders package:
 
-| Feature Module                                              | Business Purpose                                       | Key Domain Entities                       |
-| ----------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------- |
-| [**Catalog**](src/features/catalog/README.md)               | Central PIM handling all discoverability.              | `Product`, `Category`, `Variant`, `Brand` |
-| [**Cart**](src/features/cart/README.md)                     | Ephemeral shopping session state.                      | `CartHeader`, `CartItem`                  |
-| [**Orders**](../packages/orders/README.md)                   | Workspace Order reads and lifecycle; Checkout owns Acceptance.       | `Order`, `OrderItem`, `Transaction`       |
-| [**Identity**](src/features/identity/README.md)             | Hardened auth, RBAC permissions, token vending.        | `User`, `Role`, `PasswordCredentials`     |
-| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics.           | `AuditLog`, `DashboardMetric`             |
-| [**School**](src/features/school/README.md)                 | B2B2C School Supply Lists (secure gateways).           | `SchoolSupplyList`, `PartnerSchool`       |
-| [**Review**](src/features/review/README.md)                 | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote`                   |
-| [**Media**](src/features/media/README.md)                   | Media delivery, S3 uploads, image compression.         | `MediaAsset`, `FileLink`                  |
-| [**Core**](src/features/core/README.md)                     | System-wide building blocks.                           | `ServiceResult`, `Pagination`             |
-| [**Notifications**](src/features/notifications/README.md)   | Broadcasts, transactional emails, Bell-alerts.         | `Notification`, `EmailTemplate`           |
+| Feature Module | Business Purpose | Key Domain Entities |
+| --- | --- | --- |
+| [**Catalog**](src/features/catalog/README.md) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
+| [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
+| [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
+| [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
+| [**Identity**](src/features/identity/README.md) | Hardened auth, RBAC permissions, token vending. | `User`, `Role`, `PasswordCredentials` |
+| [**Partner Membership**](src/features/partner-membership/README.md) | Business Partners and who may work in their Partner Workspace. | `PartnerMembershipServices` |
+| [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |
+| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
+| [**School**](src/features/school/README.md) | B2B2C School Supply Lists (secure gateways). | `SchoolSupplyList`, `PartnerSchool` |
+| [**Review**](src/features/review/README.md) | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote` |
+| [**Media**](src/features/media/README.md) | Media delivery, S3 uploads, image compression. | `MediaAsset`, `FileLink` |
+| [**Outbox**](src/features/outbox/README.md) | Transactional outbox: messages written in-transaction, delivered at least once. | `OutboxService`, `OutgoingEmail` |
+| [**Core**](src/features/core/README.md) | System-wide building blocks. | `ServiceResult` |
+| [**Notifications**](src/features/notifications/README.md) | Broadcasts, transactional emails, Bell-alerts. | `Notification`, `EmailTemplate` |
 
 ---
 
@@ -149,15 +153,16 @@ The backend is composed of 10 rigidly bounded context modules:
 To maintain extreme purity in `@findeg/backend`:
 
 - **NO FRAMEWORK LEAKS**: Do NOT import Next.js specific functions (`cookies()`, `headers()`, `redirect()`).
-- **NO THROWING EXCEPTIONS**: Services employ the **Railway Oriented Programming** pattern via the custom `ServiceResult` utility.
+- **TYPED ERRORS**: Services throw `AppError` subclasses (`NotFoundError`, `ForbiddenError`, `UnauthorizedError`) for failures, and the app layer translates them. Successful results may carry cache metadata through the `ServiceResult` type.
 
 ### Example Integration Contract
 
 ```typescript
 // Good
-export async function getProduct(slug: string): Promise<ServiceResult<Product, CatalogError>> {
-  if (!product) return Err(new ProductNotFoundError(slug));
-  return Ok(product);
+export async function getProduct(slug: string): Promise<ServiceResult<Product>> {
+  const product = await ...; // load by slug
+  if (!product) throw new NotFoundError(`Product ${slug} not found`);
+  return { success: true, data: product, cacheTags: ['catalog'] };
 }
 ```
 
@@ -214,8 +219,6 @@ openssl rand -base64 32
 ```typescript
 // Root barrel: services, JWTService, errors, lib helpers
 import { JWTService, getMyAccountData, formatCurrency } from '@findeg/backend';
-// Validation schemas (see Package Exports)
-import { CreateUserSchema } from '@findeg/backend/types';
 ```
 
 ## Public API
@@ -233,8 +236,7 @@ const payload = jwtService.verifyToken(tokens.accessToken, 'access');
 ### Validation
 
 ```typescript
-import { CreateUserSchema } from '@findeg/backend/types';
-
+// CreateUserSchema lives in backend/src/types (workspace-internal, see Package Exports)
 const result = CreateUserSchema.safeParse(data);
 if (!result.success) {
   return { errors: result.error.flatten().fieldErrors };
@@ -274,7 +276,7 @@ formatRelativeTime(pastDate, 'en'); // e.g. "2 days ago"
 - `.` maps to `src/index.ts`, the root barrel that also re-exports the lib helpers.
 - `./features/<name>` maps to `src/features/<name>/index.ts` for each feature barrel.
 - `./features/core/logger`, `./features/core/schemas` and the `schemas` entries of checkout, catalog and guest-access are also exported.
-- `./lib` and `./types` have no exports entry. Use the root barrel for lib helpers, and `@findeg/backend/types` only where the workspace tsconfig paths resolve it.
+- `./lib` and `./types` have no exports entry. Import lib helpers from the root barrel `@findeg/backend`. The validation schemas in `src/types` are reachable only from inside the backend workspace via tsconfig paths.
 
 ## Testing
 
@@ -298,7 +300,6 @@ All exports are fully typed with TypeScript. Import types:
 
 ```typescript
 import type { User } from '@findeg/backend';
-import type { CreateUserInput, UpdateProductInput } from '@findeg/backend/types';
 ```
 
 ## Contributing
