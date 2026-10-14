@@ -38,13 +38,10 @@ const APPLICATION_ERRORS = {
 
 /**
  * Turns a thrown partner domain error into the typed failure a service returns. The caller
- * names the errors its operation can produce as type arguments; `_expected` only carries that
- * type and is never read. Any other error is rethrown.
+ * names its expected failure type explicitly; all mapped partner codes retain the same
+ * runtime mapping regardless of that type. Unmapped errors are rethrown.
  */
-export function partnerFailure<E extends string>(
-  error: unknown,
-  ..._expected: readonly E[]
-): { success: false; error: E } {
+export function partnerFailure<E extends string>(error: unknown): { success: false; error: E } {
   if (
     error instanceof DomainError &&
     typeof error.code === 'string' &&

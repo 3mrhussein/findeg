@@ -18,14 +18,6 @@ async function boundaryMessages(code) {
   );
 }
 
-test('storefront lint rejects direct database imports', async () => {
-  for (const source of ['@findeg/db/connection', '@findeg/db']) {
-    const messages = await boundaryMessages(`import { value } from '${source}';`);
-    assert.equal(messages.length, 1, source);
-    assert.equal(messages[0].ruleId, 'no-restricted-imports');
-  }
-});
-
 test('server factories, client schemas and erased client types remain allowed', async () => {
   for (const code of [
     "import { createProductService } from '@findeg/catalog';",

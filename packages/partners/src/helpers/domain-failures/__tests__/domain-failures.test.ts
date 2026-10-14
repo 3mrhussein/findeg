@@ -24,3 +24,10 @@ it('rethrows errors that are not partner domain errors', () => {
   const unexpected = new Error('database unavailable');
   expect(() => partnerFailure(unexpected)).toThrow(unexpected);
 });
+
+it('maps known partner codes even outside the caller expected type', () => {
+  expect(partnerFailure<'invalid-input'>(domainError())).toEqual({
+    success: false,
+    error: 'role-not-held',
+  });
+});

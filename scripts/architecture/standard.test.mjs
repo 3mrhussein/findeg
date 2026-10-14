@@ -71,15 +71,27 @@ test('L1: modules the runtime cannot provide are reported outside tests only', a
     'packages/domain/src/fixture.ts',
     "import 'node:fs'; import 'react'; import 'next/headers';",
   );
-  assert.equal(only(isomorphic, 'local/runtime-imports').length, 3);
+  assert.equal(only(isomorphic, 'no-restricted-imports').length, 3);
   const node = await lint('backend', 'backend/src/fixture.ts', "import 'next/server';");
-  assert.equal(only(node, 'local/runtime-imports').length, 1);
+  assert.equal(only(node, 'no-restricted-imports').length, 1);
   const inTest = await lint(
     'packages/domain',
     'packages/domain/src/fixture.test.ts',
     "import 'node:fs';",
   );
-  assert.deepEqual(only(inTest, 'local/runtime-imports'), []);
+  assert.deepEqual(only(inTest, 'no-restricted-imports'), []);
+});
+
+test('runtime restrictions cover dynamic, require and erased type imports', async () => {
+  for (const code of [
+    "export const load = () => import('next/headers');",
+    'export const load = () => import(`next/headers`);',
+    "export const value = require('next/headers');",
+    "export type Value = import('next/headers').Value;",
+  ]) {
+    const messages = await lint('backend', 'backend/src/fixture.ts', code);
+    assert.equal(only(messages, 'no-restricted-syntax').length, 1, code);
+  }
 });
 
 test('ratchet: new warnings and stale baselines both fail, an exact baseline passes', () => {

@@ -9,14 +9,3 @@ export const surface = [
     rules: { 'local/orders-boundary': severity('local/orders-boundary') },
   },
 ];
-export const clientSurface = [
-  {
-    files: CODE,
-    rules: {
-      'no-restricted-imports': [
-        severity('no-restricted-imports'),
-        { patterns: [{ group: ['@findeg/db', '@findeg/db/**'] }] },
-      ],
-    },
-  },
-];

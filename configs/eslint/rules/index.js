@@ -2,7 +2,6 @@ import { declaredWorkspaceDependenciesRule } from './declared-workspace-dependen
 import { noSuppressionCommentsRule } from './no-suppression-comments.js';
 import { ordersBoundaryRule } from './orders-boundary.js';
 import { requiredPackageScriptsRule } from './required-package-scripts.js';
-import { runtimeImportsRule } from './runtime-imports.js';
 import { noDomainValueSetCopiesRule } from './no-domain-value-set-copies.js';
 
 // The one `local` plugin every layer registers. Flat config rejects two different objects
@@ -14,6 +13,5 @@ export const local = {
     'no-suppression-comments': noSuppressionCommentsRule,
     'orders-boundary': ordersBoundaryRule,
     'required-package-scripts': requiredPackageScriptsRule,
-    'runtime-imports': runtimeImportsRule,
   },
 };

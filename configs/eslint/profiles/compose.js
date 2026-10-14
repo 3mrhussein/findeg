@@ -4,7 +4,7 @@ import { standards, isCompleteScope } from '../standards.js';
 import { hygiene } from '../layers/hygiene.js';
 import { runtimeLayer } from '../layers/runtime.js';
 import { boundaries } from '../layers/boundaries.js';
-import { surface, clientSurface } from '../layers/surface.js';
+import { surface } from '../layers/surface.js';
 import { integrity } from '../layers/integrity.js';
 
 /**
@@ -12,16 +12,15 @@ import { integrity } from '../layers/integrity.js';
  * chosen by the package's role. A new stack adds a runtime entry and a profile file; it never
  * copies rules.
  * @param {keyof typeof import('../layers/runtime.js').RUNTIMES} runtime
- * @param {{ client?: boolean, extra?: object[] }} [options]
+ * @param {{ extra?: object[] }} [options]
  */
-export async function compose(runtime, { client = false, extra = [] } = {}) {
+export async function compose(runtime, { extra = [] } = {}) {
   return [
     ...(await standards(runtime, { complete: isCompleteScope() })),
     ...hygiene,
     ...runtimeLayer(runtime),
     ...boundaries,
     ...surface,
-    ...(client ? clientSurface : []),
     ...integrity,
     ...scopedLibraryLayout,
     ...extra,

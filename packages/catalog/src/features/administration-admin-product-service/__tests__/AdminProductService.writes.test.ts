@@ -17,7 +17,6 @@ import {
   updateProductVariantKey,
   upsertProductVariantImages,
 } from '@findeg/db/queries';
-import type { IAuditLogService } from '../../administration-i-audit-log-service/types';
 import { AdminProductService } from '../index';
 
 const mocks = vi.hoisted(() => {
@@ -59,7 +58,12 @@ vi.mock('@findeg/db/schema', () => ({
 }));
 
 describe('AdminProductService writes', () => {
-  let auditLogService: { logAction: ReturnType<typeof vi.fn> };
+  let auditLogService: {
+    logAction: ReturnType<typeof vi.fn>;
+    getLogs: ReturnType<typeof vi.fn>;
+    getEntityLogs: ReturnType<typeof vi.fn>;
+    getRecentActivity: ReturnType<typeof vi.fn>;
+  };
   let service: AdminProductService;
 
   beforeEach(() => {
@@ -67,9 +71,12 @@ describe('AdminProductService writes', () => {
 
     auditLogService = {
       logAction: vi.fn().mockResolvedValue(undefined),
+      getLogs: vi.fn().mockResolvedValue({ data: [], total: 0 }),
+      getEntityLogs: vi.fn().mockResolvedValue([]),
+      getRecentActivity: vi.fn().mockResolvedValue([]),
     };
 
-    service = new AdminProductService(auditLogService as unknown as IAuditLogService);
+    service = new AdminProductService(auditLogService);
   });
 
   it('delegates product creation to the db helper after validation and logs the action', async () => {
