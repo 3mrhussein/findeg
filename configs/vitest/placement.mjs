@@ -78,15 +78,20 @@ function files(directory) {
       : [];
   });
 }
-export function placementReporter({ enabled, library, measure }) {
+export function placementReporter({ enabled, library, measure, scope }) {
   return {
     name: 'findeg-placement',
     onInit(vitest) {
       if (!(enabled || measure) || !library) return;
       const root = vitest.config.root;
+      const inScope = (file) =>
+        !scope ||
+        scope.some((directory) =>
+          path.relative(root, file).split(path.sep).join('/').startsWith(`${directory}/`),
+        );
       const directories = new Set(
         files(path.join(root, 'src'))
-          .filter(implementation)
+          .filter((file) => inScope(file) && implementation(file))
           .map((file) => path.dirname(file)),
       );
       const missing = [...directories].filter((directory) => {

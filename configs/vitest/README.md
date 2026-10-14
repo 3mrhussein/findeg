@@ -11,8 +11,9 @@ fixture projects, including the Node/browser compatibility fixtures from #435.
 
 `activeWorkspaces` in `policy.mjs` is the single activation list. Domain Errors is
 active: its existing local tests and measured implementation coverage meet the
-policy. Domain, Orders, Env, Backend, DB, UI, Dashboard and Storefront remain
-inactive pending #445. Inactivity preserves existing test runs; it is not evidence
+policy. Domain is active for its pilot library scopes (`configs/library-scopes.mjs`:
+Common, Customers, Catalog), which measure only those subtrees. Orders, Env, Backend,
+DB, UI, Dashboard and Storefront remain inactive pending #440-#445. Inactivity preserves existing test runs; it is not evidence
 of sufficient coverage. Activating a workspace enables the same four 80% per-file
 thresholds and, for libraries under `packages/`, local test validation. There are
 no workspace-specific coverage thresholds. UI, backend, db and applications do

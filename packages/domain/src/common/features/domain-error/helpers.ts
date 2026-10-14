@@ -6,7 +6,7 @@
 export abstract class DomainError<Code extends string = string> extends Error {
   readonly code: Code;
 
-  protected constructor(code: Code, message: string) {
+  constructor(code: Code, message: string) {
     super(message);
     this.name = new.target.name;
     this.code = code;

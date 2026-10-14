@@ -1,4 +1,4 @@
-import { drawRandomBytes, type RandomBytes } from '../common/random';
+import { drawRandomBytes, type RandomBytes } from '../common/features/random';
 import { OrderError } from './order-error';
 
 declare const reference: unique symbol;

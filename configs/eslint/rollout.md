@@ -53,7 +53,7 @@ Non-function mutable variables receive no naming convention.
 
 | Scope | Complete mode today | Activation / remediation owner |
 | --- | --- | --- |
-| Domain | Available, opt-in | #439–442 migrate their areas; #445 final activation |
+| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog) enforced; #440–442 migrate the remaining areas; #445 final activation |
 | Domain Errors | Available, opt-in | #445 measured remediation |
 | Money | Package absent from this checkout | Retirement stays with #415; nothing to activate here |
 | UI | Available, opt-in | #445 measured remediation |
@@ -62,6 +62,19 @@ Non-function mutable variables receive no naming convention.
 | Backend, db | Available, opt-in | #445 measured remediation/activation |
 | Dashboard, Storefront | Available, opt-in | After #400/#401 app rebuilds; #445 measured remediation/activation |
 | Shared configuration | Available, opt-in | #445 config/CI activation audit |
+
+## Library layout pilot (#439)
+
+`configs/eslint/rules/library-layout.js` enforces the recursive library vocabulary:
+index, types, constants and helpers (`.ts`, or `.tsx` for index/helpers) inside a module;
+`helpers/` and `features/` as containers of module directories; `__tests__/` and test
+files exempt. A module holds either `helpers.ts` (which needs an `index.ts`) or a
+`helpers/` container, never both. It applies only to the subtrees listed in
+`configs/library-scopes.mjs`, through `libraryLayout(scopes)` in each package's
+flat configuration, so applications and the UI library keep their own layouts. Shared
+Vitest uses the same list: pilot scopes measure 80% per file and require local
+executable `__tests__` only inside those scopes. `scripts/architecture/library-layout.test.mjs`
+exercises positive and negative fixtures and the real Domain pilot.
 
 ## Measurement
 
@@ -78,7 +91,7 @@ FINDEG_ESLINT_STANDARDS=1 pnpm --filter <workspace> exec eslint . --format json
 
 Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` is absent from this checkout, so it is not measured.
 
-- `packages/domain` (isomorphic): 88 files, 86 errors, 0 warnings
+- `packages/domain` (isomorphic): 108 files, 72 errors, 0 warnings (pilot scopes `src/common`, `src/customers`, `src/catalog` report 0)
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
 - `packages/env` (node): 7 files, 7 errors, 0 warnings

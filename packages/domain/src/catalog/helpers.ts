@@ -1,10 +1,23 @@
-import { moneyToDecimal, type Money } from '../common';
-import { CatalogError } from './catalog-error';
-import { sku } from './sku';
-import type { ProductVariant } from './index';
+import { DomainError, type Money, moneyToDecimal } from '../common';
+import { NEW_ARRIVAL_TAG_KEY } from './constants';
+import type { CatalogErrorCode, ProductVariant, ProductVariantProps, Sku, Tag } from './types';
 
-/** The data a Product Variant is made from, with its SKU still as plain text. */
-export type ProductVariantProps = Omit<ProductVariant, 'sku'> & { sku: string };
+/** A catalogue entry that breaks a catalogue rule. */
+export class CatalogError extends DomainError<CatalogErrorCode> {}
+
+/** A SKU from its text, as written. Blank or padded text is refused, never trimmed. */
+export function sku(text: string): Sku {
+  if (typeof text !== 'string') {
+    throw new TypeError(`Expected a SKU as a string, received ${typeof text}`);
+  }
+  if (text.length === 0 || text.trim() !== text) {
+    throw new CatalogError(
+      'INVALID_SKU',
+      `Invalid SKU ${JSON.stringify(text)}: expected non-empty text with no surrounding whitespace`,
+    );
+  }
+  return text as Sku;
+}
 
 /**
  * A Product Variant from catalogue data. The SKU must be non-empty with no surrounding
@@ -52,4 +65,9 @@ export function discountPercentage(
   const saving = compareAtPrice - price;
   // Half up in whole numbers: floor((2 x saving x 100 + compareAt) / (2 x compareAt)).
   return Number((2n * saving * 100n + compareAtPrice) / (2n * compareAtPrice));
+}
+
+/** A product is a New Arrival when it carries the `new-arrival` tag. Its age plays no part. */
+export function isNewArrival(productTags: readonly Pick<Tag, 'key'>[]): boolean {
+  return productTags.some((tag) => tag.key === NEW_ARRIVAL_TAG_KEY);
 }

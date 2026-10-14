@@ -1,18 +1,18 @@
 {
   "packages/domain": {
     "role": "isomorphic",
-    "files": 88,
-    "errors": 86,
+    "files": 108,
+    "errors": 72,
     "warnings": 0,
     "byRule": {
-      "@typescript-eslint/no-confusing-void-expression": 10,
-      "@typescript-eslint/no-non-null-assertion": 7,
-      "@typescript-eslint/no-unnecessary-condition": 2,
-      "@typescript-eslint/no-unnecessary-type-assertion": 3,
+      "@typescript-eslint/no-confusing-void-expression": 9,
+      "@typescript-eslint/no-non-null-assertion": 5,
+      "@typescript-eslint/no-unnecessary-condition": 1,
+      "@typescript-eslint/no-unnecessary-type-assertion": 2,
       "@typescript-eslint/no-unsafe-argument": 1,
-      "@typescript-eslint/no-unsafe-return": 20,
-      "@typescript-eslint/no-useless-constructor": 11,
-      "@typescript-eslint/restrict-template-expressions": 30,
+      "@typescript-eslint/no-unsafe-return": 18,
+      "@typescript-eslint/no-useless-constructor": 9,
+      "@typescript-eslint/restrict-template-expressions": 25,
       "findeg/naming": 1,
       "parse": 1
     }

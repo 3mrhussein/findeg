@@ -8,7 +8,9 @@
     "./eslint/node": "./eslint/profiles/node.js",
     "./eslint/react-ui": "./eslint/profiles/react-ui.js",
     "./eslint/next": "./eslint/profiles/next.js",
-    "./eslint/standards": "./eslint/standards.js"
+    "./eslint/standards": "./eslint/standards.js",
+    "./eslint/library": "./eslint/library.js",
+    "./library-scopes": "./library-scopes.mjs"
   },
   "dependencies": {
     "@eslint/js": "^9.10.0",

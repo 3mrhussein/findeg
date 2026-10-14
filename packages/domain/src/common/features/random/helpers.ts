@@ -1,5 +1,4 @@
-/** Returns `length` random bytes, e.g. `(n) => crypto.getRandomValues(new Uint8Array(n))`. */
-export type RandomBytes = (length: number) => Uint8Array;
+import type { RandomBytes } from './types';
 
 /**
  * Exactly `length` bytes from a random source. A source that returns any other number is a
@@ -8,7 +7,9 @@ export type RandomBytes = (length: number) => Uint8Array;
 export function drawRandomBytes(random: RandomBytes, length: number): Uint8Array {
   const bytes = random(length);
   if (bytes.length !== length) {
-    throw new TypeError(`The random source returned ${bytes.length} bytes, not ${length}`);
+    throw new TypeError(
+      `The random source returned ${bytes.length.toString()} bytes, not ${length.toString()}`,
+    );
   }
   return bytes;
 }
