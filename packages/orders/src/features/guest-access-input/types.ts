@@ -1,5 +1,8 @@
 import type { z } from 'zod';
-import type { GuestAccessRequestSchema, GuestAccessVerifySchema } from './helpers';
+import type {
+  GuestAccessRequestSchema as guestAccessRequestSchema,
+  GuestAccessVerifySchema as guestAccessVerifySchema,
+} from './helpers';
 
-export type GuestAccessRequestInput = z.infer<typeof GuestAccessRequestSchema>;
-export type GuestAccessVerifyInput = z.infer<typeof GuestAccessVerifySchema>;
+export type GuestAccessRequestInput = z.infer<typeof guestAccessRequestSchema>;
+export type GuestAccessVerifyInput = z.infer<typeof guestAccessVerifySchema>;

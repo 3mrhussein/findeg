@@ -57,9 +57,9 @@ describe('AdminCollectionService', () => {
   it('updates a collection, replacing tags only when they are supplied', async () => {
     queries.getCollectionByIdWithTags.mockResolvedValue({ id: 1, tags: [] });
     queries.updateCollection.mockResolvedValue({ id: 1, slug: 'new' });
-    await service.update(1, { slug: 'new' } as never);
+    await service.update(1, { slug: 'new' });
     expect(queries.setCollectionTags).not.toHaveBeenCalled();
-    await service.update(1, { tagIds: [7] } as never, 2);
+    await service.update(1, { tagIds: [7] }, 2);
     expect(queries.setCollectionTags).toHaveBeenCalledWith(1, [7]);
     expect(audit.logAction).toHaveBeenLastCalledWith(
       expect.objectContaining({ action: 'update', oldValues: { id: 1, tags: [] } }),

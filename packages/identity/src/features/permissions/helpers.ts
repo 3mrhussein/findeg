@@ -12,7 +12,7 @@ export class PermissionService implements IPermissionService {
       const authContext = await userQueries.getAuthorizationContext(userId);
       return authContext.permissionCodes.includes(permission);
     } catch (error) {
-      console.error(`Error checking permission for user ${userId}:`, error);
+      console.error(`Error checking permission for user ${String(userId)}:`, error);
       return false;
     }
   }
@@ -22,7 +22,7 @@ export class PermissionService implements IPermissionService {
       const authContext = await userQueries.getAuthorizationContext(userId);
       return authContext.activeRoleIds.includes(role);
     } catch (error) {
-      console.error(`Error checking role for user ${userId}:`, error);
+      console.error(`Error checking role for user ${String(userId)}:`, error);
       return false;
     }
   }
@@ -32,7 +32,7 @@ export class PermissionService implements IPermissionService {
       const authContext = await userQueries.getAuthorizationContext(userId);
       return authContext.permissionCodes;
     } catch (error) {
-      console.error(`Error getting permissions for user ${userId}:`, error);
+      console.error(`Error getting permissions for user ${String(userId)}:`, error);
       return [];
     }
   }
@@ -42,7 +42,7 @@ export class PermissionService implements IPermissionService {
       const authContext = await userQueries.getAuthorizationContext(userId);
       return authContext.activeRoleIds;
     } catch (error) {
-      console.error(`Error getting roles for user ${userId}:`, error);
+      console.error(`Error getting roles for user ${String(userId)}:`, error);
       return [];
     }
   }

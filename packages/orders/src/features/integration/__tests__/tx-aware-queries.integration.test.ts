@@ -30,12 +30,12 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
     sequence += 1;
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `tx-category-${sequence}` })
+      .values({ slug: `tx-category-${String(sequence)}` })
       .returning();
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `tx-product-${sequence}`,
+        slug: `tx-product-${String(sequence)}`,
         localizedName: { en: 'Pen', ar: 'قلم' },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
@@ -47,13 +47,13 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `TX-${sequence}`,
+        sku: `TX-${String(sequence)}`,
         basePrice: '10.00',
       })
       .returning();
     const [warehouse] = await testDb.db
       .insert(warehouses)
-      .values({ code: `tx-warehouse-${sequence}`, name: 'Main' })
+      .values({ code: `tx-warehouse-${String(sequence)}`, name: 'Main' })
       .returning();
     await testDb.db
       .insert(inventoryBalances)

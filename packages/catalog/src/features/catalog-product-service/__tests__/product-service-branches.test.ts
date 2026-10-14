@@ -22,7 +22,7 @@ const productRow = (id: number) => ({
   isActive: true,
   brandId: null,
   categoryId: null,
-  slug: `p-${id}`,
+  slug: `p-${String(id)}`,
   localizedName: null,
   localizedDescription: null,
   localizedLongDescription: null,
@@ -67,7 +67,7 @@ describe('ProductService branches', () => {
 
   it('pages filtered products through getByIds and returns an empty page when none match', async () => {
     productQueries.getFiltered.mockResolvedValueOnce({ products: [], total: 0 });
-    expect(await service.getFilteredProducts({ isActive: true } as never)).toEqual({
+    expect(await service.getFilteredProducts({ isActive: true })).toEqual({
       products: [],
       total: 0,
     });

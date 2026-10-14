@@ -173,7 +173,7 @@ for (const locale of ['en', 'ar']) {
             cy.task<{ basisPoints: number } | null>('getTestSupplyListOffer', {
               listId: listBId,
             }).then((offerB) => {
-              expect(offerB).not.to.be.null;
+              expect(offerB).not.to.equal(null);
               expect(offerB?.basisPoints).to.eq(1500);
             });
 

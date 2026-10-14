@@ -37,7 +37,7 @@ export class NotificationService implements INotificationService {
   }
 
   async getUnread(userId: number): Promise<Notification[]> {
-    return notificationQueries.getUnread(userId, 5) as Promise<Notification[]>;
+    return notificationQueries.getUnread(userId, 5);
   }
 
   async getAll(
@@ -52,7 +52,7 @@ export class NotificationService implements INotificationService {
     const notificationsList = await notificationQueries.getAll(userId, page, perPage);
 
     return {
-      notifications: notificationsList as Notification[],
+      notifications: notificationsList,
       total: 0,
       hasMore: notificationsList.length === perPage,
     };

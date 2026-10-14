@@ -21,12 +21,13 @@ export class TagService implements ITagService {
     const grouped: Record<string, Tag[]> = {};
 
     for (const tag of allTags) {
-      if (!grouped[tag.group]) {
-        grouped[tag.group] = [];
-      }
-      grouped[tag.group].push(tag as unknown as Tag);
+      const entries = Object.prototype.hasOwnProperty.call(grouped, tag.group)
+        ? grouped[tag.group]
+        : [];
+      entries.push(tag as unknown as Tag);
+      grouped[tag.group] = entries;
     }
 
-    return grouped as Record<TagGroup, Tag[]>;
+    return grouped;
   }
 }

@@ -45,22 +45,22 @@ describe('catalogue existence checks', () => {
 
 describe('catalogue write rules', () => {
   it('accepts well-formed SKUs and compare-at prices above the price', () => {
-    expect(() =>
+    expect(() => {
       assertCatalogueWriteRules([
         { sku: 'SKU-1', basePrice: 10, strikePrice: 12 },
         { sku: 'SKU-2', basePrice: 5, strikePrice: null },
         { basePrice: 5 },
-      ]),
-    ).not.toThrow();
+      ]);
+    }).not.toThrow();
   });
 
   it('maps a domain rule breach to a ValidationError on the variants field', () => {
-    expect(() => assertCatalogueWriteRules([{ sku: ' padded ', basePrice: 1 }])).toThrow(
-      ValidationError,
-    );
-    expect(() => assertCatalogueWriteRules([{ basePrice: 10, strikePrice: 10 }])).toThrow(
-      ValidationError,
-    );
+    expect(() => {
+      assertCatalogueWriteRules([{ sku: ' padded ', basePrice: 1 }]);
+    }).toThrow(ValidationError);
+    expect(() => {
+      assertCatalogueWriteRules([{ basePrice: 10, strikePrice: 10 }]);
+    }).toThrow(ValidationError);
   });
 
   it('rethrows other errors unchanged', () => {

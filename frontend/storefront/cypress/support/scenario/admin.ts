@@ -202,7 +202,7 @@ export const shouldReflectNewlyCreatedProductFromAdminInShop = () => {
   ).then((categoriesResponse) => {
     const categories = categoriesResponse.body as Array<{ id: number; slug: string }>;
     const keychains = categories.find((category) => category.slug === SHOP_MESSAGES.keychainsSlug);
-    expect(keychains, 'keychains category').to.not.be.undefined;
+    expect(keychains, 'keychains category').not.to.equal(undefined);
 
     cy.request(
       buildApiUrl(API_ROUTES.products, {
@@ -469,7 +469,7 @@ export const shouldReflectInventoryUpdateFromAdminInStorefrontStockBehavior = ()
     getGuestCart(guestId).then((cart) => {
       const items = (cart?.items || []) as Array<{ id: number; quantity: number }>;
       const matched = items.find((item) => item.id === productId);
-      expect(matched, 'restocked product should be addable').to.not.be.undefined;
+      expect(matched, 'restocked product should be addable').not.to.equal(undefined);
       expect(matched?.quantity, 'restocked cart quantity').to.eq(1);
     });
   });

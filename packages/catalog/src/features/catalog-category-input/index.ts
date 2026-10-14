@@ -1,20 +1,24 @@
 import { z } from 'zod';
-import { IdSchema, SlugSchema } from '@findeg/db/types';
-import { LocaleSchema } from '../../helpers/index';
+import { IdSchema as idSchema, SlugSchema as slugSchema } from '@findeg/db/types';
+import { LocaleSchema as localeSchema } from '../../helpers/index';
 
-const CategoryTranslationSchema = z.object({
-  language: LocaleSchema,
+const categoryTranslationSchema = z.object({
+  language: localeSchema,
   name: z.string().min(2),
   description: z.string().optional(),
 });
 
-export const CategoryInputSchema = z.object({
-  slug: SlugSchema,
-  parentId: IdSchema.optional(),
+const categoryInputSchema = z.object({
+  slug: slugSchema,
+  parentId: idSchema.optional(),
   icon: z.string().optional(),
   sortOrder: z.number().int().min(0).optional().default(0),
   isActive: z.boolean().optional().default(true),
-  translations: z.array(CategoryTranslationSchema).min(1, 'At least one translation is required'),
+  translations: z.array(categoryTranslationSchema).min(1, 'At least one translation is required'),
 });
 
-export type CategoryInput = z.infer<typeof CategoryInputSchema>;
+export type CategoryInput = Omit<z.infer<typeof categoryInputSchema>, 'isActive'> & {
+  isActive?: boolean;
+};
+
+export { categoryInputSchema as CategoryInputSchema };

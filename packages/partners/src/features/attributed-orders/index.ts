@@ -60,11 +60,11 @@ export interface IAttributedOrderService {
   ): Promise<PartnerSalesResult<AttributedOrdersView, AttributedOrdersError>>;
 }
 
-const isStatusList = <T extends string>(values: unknown, allowed: readonly T[]) =>
+const isStatusList = (values: unknown, allowed: readonly string[]) =>
   values === undefined ||
   (Array.isArray(values) &&
     values.length > 0 &&
-    values.every((value) => allowed.includes(value as T)));
+    values.every((value) => typeof value === 'string' && allowed.includes(value)));
 
 export function isValidAttributedOrdersFilter(filter: AttributedOrdersFilter): boolean {
   return (

@@ -88,7 +88,7 @@ export function fetchAdminToken(): Cypress.Chainable<string> {
     .then((response) => {
       expect(response.status).to.eq(200);
       const token = response.body?.data?.token as string | undefined;
-      expect(token, 'admin JWT token').to.be.a('string').and.not.empty;
+      expect(token, 'admin JWT token').to.be.a('string').and.to.have.length.greaterThan(0);
       return token!;
     });
 }
@@ -124,7 +124,7 @@ export function registerUserViaApi(
       const token = body?.data?.token;
       const userId = body?.data?.user?.id;
 
-      expect(token, 'user registration token').to.be.a('string').and.not.empty;
+      expect(token, 'user registration token').to.be.a('string').and.to.have.length.greaterThan(0);
       expect(userId, 'registered user id').to.be.a('number');
 
       return {

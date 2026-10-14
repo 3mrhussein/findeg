@@ -48,7 +48,7 @@ function row(overrides: Record<string, unknown> = {}) {
 }
 
 function service() {
-  return new PartnerReportService(async () => executor as never, now);
+  return new PartnerReportService(() => Promise.resolve().then(() => executor as never), now);
 }
 
 beforeEach(() => {
@@ -63,7 +63,7 @@ beforeEach(() => {
 describe('row projection helpers', () => {
   it('falls back from the requested locale to the other one, then to the snapshot', () => {
     const view = toSalesRowView(
-      row({ listTitle: null, productName: null, variantLabel: null }) as never,
+      row({ listTitle: null, productName: null, variantLabel: null }),
       'ar',
     );
     expect(view.listName).toBeNull();
@@ -73,7 +73,7 @@ describe('row projection helpers', () => {
   });
 
   it('suppresses rows under the Order threshold into Other items', () => {
-    const big: SalesRowView = toSalesRowView(row() as never, 'en');
+    const big: SalesRowView = toSalesRowView(row(), 'en');
     const small: SalesRowView = {
       ...big,
       listItemId: 9,
@@ -136,7 +136,7 @@ describe('getPartnerReport', () => {
 
   it('allows only the current month when a partner has no attributed orders yet', async () => {
     vi.mocked(getActiveMembershipRoles).mockResolvedValue(['report-viewer'] as never);
-    vi.mocked(getFirstAttributedOrderMonth).mockResolvedValue(null as never);
+    vi.mocked(getFirstAttributedOrderMonth).mockResolvedValue(null);
     const current = await service().getPartnerReport(member, 1, { month: '2026-10' });
     expect(current.success && current.data.months).toEqual([]);
     expect(await service().getPartnerReport(member, 1, { month: '2026-09' })).toEqual({

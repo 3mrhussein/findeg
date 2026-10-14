@@ -4,7 +4,7 @@ import { fakeDatabase } from '../../../__tests__/fixture';
 import { SelectionInvalidError } from '../../checkout-errors/index';
 
 vi.mock('@findeg/db/queries/school-supply-lists', () => ({
-  getListOffer: vi.fn(async () => undefined),
+  getListOffer: vi.fn(() => Promise.resolve().then(() => undefined)),
 }));
 
 import { calculateListQuote } from '../index';

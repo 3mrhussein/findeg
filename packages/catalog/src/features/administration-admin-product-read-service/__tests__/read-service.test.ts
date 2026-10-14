@@ -24,7 +24,7 @@ describe('AdminProductReadService', () => {
       page: 1,
       pageSize: 20,
     });
-    expect(await service.getProductsList({ page: 1 } as never)).toEqual({
+    expect(await service.getProductsList({ page: 1 })).toEqual({
       products: [],
       total: 0,
       page: 1,

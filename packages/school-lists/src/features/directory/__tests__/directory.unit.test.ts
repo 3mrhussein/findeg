@@ -12,7 +12,7 @@ vi.mock('@findeg/db', async (importOriginal) => ({
   ...mocks,
 }));
 
-const directory = () => new SchoolDirectory(async () => ({}) as never);
+const directory = () => new SchoolDirectory(() => Promise.resolve().then(() => ({}) as never));
 
 beforeEach(() => vi.clearAllMocks());
 

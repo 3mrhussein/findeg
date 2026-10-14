@@ -8,14 +8,14 @@ export async function ensureCategoryExists(categoryId?: number | null): Promise<
   if (!categoryId) return;
 
   const category = await getCategoryById(categoryId);
-  if (!category) throw new Error(`Category ${categoryId} not found`);
+  if (!category) throw new Error(`Category ${String(categoryId)} not found`);
 }
 
 export async function ensureBrandExists(brandId?: number | null): Promise<void> {
   if (!brandId) return;
 
   const brand = await getBrandById(brandId);
-  if (!brand) throw new Error(`Brand ${brandId} not found`);
+  if (!brand) throw new Error(`Brand ${String(brandId)} not found`);
 }
 
 /**
@@ -25,8 +25,8 @@ export async function ensureBrandExists(brandId?: number | null): Promise<void> 
  * @throws Error if product not found
  */
 export async function getExistingProductOrThrow(id: ID) {
-  const existing = await getProductById(id as number);
-  if (!existing) throw new Error(`Product ${id} not found`);
+  const existing = await getProductById(id);
+  if (!existing) throw new Error(`Product ${String(id)} not found`);
 
   return existing;
 }

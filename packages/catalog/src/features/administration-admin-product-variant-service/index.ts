@@ -43,7 +43,7 @@ export class AdminProductVariantService {
       entityId: String(productId),
       action: 'generate_variants',
       adminUserId,
-      newValues: { count: newIds.length } as Record<string, unknown>,
+      newValues: { count: newIds.length },
     });
 
     return newIds;

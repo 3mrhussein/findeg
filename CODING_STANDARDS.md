@@ -1,9 +1,9 @@
 # Coding standards
 
 Shared tooling now lives in `configs/` (#435), with compatibility delegates and Turbo
-cache/change-selection inputs. Existing lint and test behavior is preserved.
-Complete preset/naming configuration (#436) is available through staged opt-in;
-see [activation and measured violations](configs/eslint/rollout.md). Shared coverage/test
+cache/change-selection inputs. Complete presets and naming are default-on for libraries and shared configuration (#476);
+remaining applications use the recommended preset tier pending #445.
+See [activation and measured violations](configs/eslint/rollout.md). Shared coverage/test
 placement (#437) is implemented with staged activation; see
 [the Vitest policy](configs/vitest/README.md). Environment relocation (#438) and measured
 full activation/delegate removal (#445) remain pending.

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { VariantEntity, VariantSchema, getVariantAvailableStock, type Variant } from '../index';
+import {
+  VariantEntity,
+  VariantSchema as variantSchema,
+  getVariantAvailableStock,
+  type Variant,
+} from '../index';
 
 const variant = (overrides: Partial<Variant> = {}): Variant =>
   ({
@@ -15,7 +20,7 @@ const variant = (overrides: Partial<Variant> = {}): Variant =>
 
 describe('VariantSchema', () => {
   it('defaults sortOrder, isDefault and isActive', () => {
-    const parsed = VariantSchema.parse({
+    const parsed = variantSchema.parse({
       id: 1,
       productId: 1,
       sku: 'S',

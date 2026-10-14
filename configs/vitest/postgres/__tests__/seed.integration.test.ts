@@ -1,13 +1,14 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, inject, it } from 'vitest';
 import { users, brands } from '../../../../db/src/schema';
 import { truncateTables } from '../../../../db/seeds/helpers';
 import { connectToTestDatabase, type TestDatabase } from '..';
 
 const run = promisify(execFile);
-const root = resolve(import.meta.dirname, '../../../..');
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..');
 const schemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
 
 describe('seeded database generated IDs', () => {
@@ -34,14 +35,18 @@ describe('seeded database generated IDs', () => {
   });
 
   it('accepts a new user and catalog brand without colliding with fixture IDs', async () => {
-    const [{ maximum: maxUser }] = await testDb.sql`select max(id) as maximum from identity.users`;
+    const [{ maximum: maxUser }] = await testDb.sql<
+      { maximum: number }[]
+    >`select max(id) as maximum from identity.users`;
     const [user] = await testDb.db
       .insert(users)
       .values({ email: 'after-seed@example.test' })
       .returning();
     expect(user.id).toBeGreaterThan(maxUser);
 
-    const [{ maximum: maxBrand }] = await testDb.sql`select max(id) as maximum from catalog.brands`;
+    const [{ maximum: maxBrand }] = await testDb.sql<
+      { maximum: number }[]
+    >`select max(id) as maximum from catalog.brands`;
     const [brand] = await testDb.db
       .insert(brands)
       .values({ slug: 'after-seed', localizedName: { en: 'After seed' } })
@@ -60,12 +65,13 @@ describe('seeded database generated IDs', () => {
     const sequences = columns.filter((column) => column.sequence !== null);
     expect(sequences.length).toBeGreaterThan(20);
     for (const column of sequences) {
-      const [{ maximum }] = await testDb.sql`
+      const [{ maximum }] = await testDb.sql<{ maximum: number | null }[]>`
         select max(${testDb.sql(column.column)}) as maximum
         from ${testDb.sql(column.schema)}.${testDb.sql(column.table)}
       `;
-      const [{ next }] =
-        await testDb.sql`select nextval(${column.sequence}::regclass)::int as next`;
+      const [{ next }] = await testDb.sql<
+        { next: number }[]
+      >`select nextval(${column.sequence}::regclass)::int as next`;
       expect(next, `${column.schema}.${column.table}.${column.column}`).toBeGreaterThan(
         maximum ?? 0,
       );
@@ -87,6 +93,9 @@ describe('seeded database generated IDs', () => {
         cwd: resolve(root, 'db'),
         env: { ...process.env, DATABASE_URL: missingDatabase.toString(), DB_SEEDING: 'true' },
       }),
-    ).rejects.toMatchObject({ code: 1, stderr: expect.stringContaining('Seeding failed') });
+    ).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining('Seeding failed') as unknown,
+    });
   });
 });

@@ -6,19 +6,23 @@
  */
 
 import { z } from 'zod';
-import { TagSchema } from '../catalog-tag/index';
-import { IdSchema, SlugSchema, TranslationMapSchema } from '@findeg/db/types';
+import { TagSchema as tagSchema } from '../catalog-tag/index';
+import {
+  IdSchema as idSchema,
+  SlugSchema as slugSchema,
+  TranslationMapSchema as translationMapSchema,
+} from '@findeg/db/types';
 
-export const CollectionSchema = z.object({
-  id: IdSchema,
+const collectionSchema = z.object({
+  id: idSchema,
 
   /** URL-friendly identifier (e.g., 'back-to-school') */
-  slug: SlugSchema,
+  slug: slugSchema,
 
-  localizedTitle: TranslationMapSchema,
+  localizedTitle: translationMapSchema,
 
   /** Optional localized subtitle or descriptive text for landing heroes */
-  localizedSubtitle: TranslationMapSchema.optional(),
+  localizedSubtitle: translationMapSchema.optional(),
 
   /** Relative or absolute URL for the collection hero imagery */
   heroImageUrl: z.string().optional(),
@@ -30,10 +34,12 @@ export const CollectionSchema = z.object({
    * Associated Tags
    * These tags define the membership rules (Rule-based OR).
    */
-  tags: z.array(TagSchema).optional(),
+  tags: z.array(tagSchema).optional(),
 });
 
-export type Collection = z.infer<typeof CollectionSchema>;
+export type Collection = z.infer<typeof collectionSchema>;
 
-export const CreateCollectionSchema = CollectionSchema.omit({ id: true });
-export type CreateCollection = z.infer<typeof CreateCollectionSchema>;
+const createCollectionSchema = collectionSchema.omit({ id: true });
+export type CreateCollection = z.infer<typeof createCollectionSchema>;
+
+export { collectionSchema as CollectionSchema, createCollectionSchema as CreateCollectionSchema };

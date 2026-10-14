@@ -1,5 +1,6 @@
 import { scopedLibraryLayout } from '../library.js';
 import globals from 'globals';
+import { standards, isCompleteScope } from '../standards.js';
 import { hygiene } from '../layers/hygiene.js';
 import { runtimeLayer } from '../layers/runtime.js';
 import { boundaries } from '../layers/boundaries.js';
@@ -13,8 +14,9 @@ import { integrity } from '../layers/integrity.js';
  * @param {keyof typeof import('../layers/runtime.js').RUNTIMES} runtime
  * @param {{ client?: boolean, extra?: object[] }} [options]
  */
-export function compose(runtime, { client = false, extra = [] } = {}) {
+export async function compose(runtime, { client = false, extra = [] } = {}) {
   return [
+    ...(await standards(runtime, { complete: isCompleteScope() })),
     ...hygiene,
     ...runtimeLayer(runtime),
     ...boundaries,

@@ -42,10 +42,10 @@ export class AdminCatalogMetrics {
       const totalProducts = results.reduce((sum, result) => sum + result.productCount, 0);
 
       return results.map((result) => {
-        const nameMap = (result.localizedName || {}) as Record<string, string>;
+        const nameMap = result.localizedName || {};
 
         return {
-          categoryId: String(result.categoryId),
+          categoryId: result.categoryId,
           categoryName: nameMap.en || result.slug || 'Unknown',
           productCount: result.productCount,
           percentage:

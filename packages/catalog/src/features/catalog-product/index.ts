@@ -9,30 +9,39 @@
  */
 
 import { z } from 'zod';
-import { TagSchema } from '../catalog-tag/index';
-import { ProductAttributeValueSchema } from '../catalog-attribute/index';
-import { VariantSchema, type Variant, VariantEntity } from '../catalog-variant/index';
+import { TagSchema as tagSchema } from '../catalog-tag/index';
+import { ProductAttributeValueSchema as productAttributeValueSchema } from '../catalog-attribute/index';
+import {
+  VariantSchema as variantSchema,
+  type Variant,
+  VariantEntity,
+} from '../catalog-variant/index';
 import { pick } from '../../helpers/index';
-import { ID, IdSchema, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
+import {
+  ID,
+  IdSchema as idSchema,
+  RatingSchema as ratingSchema,
+  TranslationMapSchema as translationMapSchema,
+} from '@findeg/db/types';
 import { LOCALES, type Locale } from '@findeg/domain';
 import { defaultVariant, isNewArrival } from '@findeg/domain';
-export const ProductLocalizedContentSchema = z.object({
-  name: TranslationMapSchema,
-  description: TranslationMapSchema,
-  longDescription: TranslationMapSchema,
+const productLocalizedContentSchema = z.object({
+  name: translationMapSchema,
+  description: translationMapSchema,
+  longDescription: translationMapSchema,
 });
-export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSchema>;
+export type ProductLocalizedContent = z.infer<typeof productLocalizedContentSchema>;
 
 /**
  * Product Domain Schema (SPU)
  */
-export const ProductSchema = z.object({
-  id: IdSchema,
+const productSchema = z.object({
+  id: idSchema,
 
   slug: z.string(),
-  localizedName: TranslationMapSchema.optional(),
-  localizedDescription: TranslationMapSchema.optional(),
-  localizedLongDescription: TranslationMapSchema.optional(),
+  localizedName: translationMapSchema.optional(),
+  localizedDescription: translationMapSchema.optional(),
+  localizedLongDescription: translationMapSchema.optional(),
 
   // Resolved Content (for specific locale)
   name: z.string(),
@@ -41,12 +50,12 @@ export const ProductSchema = z.object({
   locale: z.string().optional(),
 
   // Legacy/Compatibility mapping
-  localizedContent: ProductLocalizedContentSchema.optional(),
+  localizedContent: productLocalizedContentSchema.optional(),
 
   // Relationships
-  categoryId: IdSchema.optional(),
+  categoryId: idSchema.optional(),
   categoryName: z.string().optional(),
-  brandId: IdSchema.optional(),
+  brandId: idSchema.optional(),
   brandName: z.string().optional(),
 
   // Media
@@ -54,29 +63,29 @@ export const ProductSchema = z.object({
   isActive: z.boolean().default(true),
 
   // Aggregate Ratings
-  rating: RatingSchema,
+  rating: ratingSchema,
   reviewsCount: z.number(),
 
   // Hydrated children
-  hydratedDefaultVariant: VariantSchema.optional(),
-  variants: z.array(VariantSchema).optional(),
-  tags: z.array(TagSchema).optional(),
-  attributes: z.array(ProductAttributeValueSchema).optional(),
+  hydratedDefaultVariant: variantSchema.optional(),
+  variants: z.array(variantSchema).optional(),
+  tags: z.array(tagSchema).optional(),
+  attributes: z.array(productAttributeValueSchema).optional(),
 
   // Timestamps
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
-export type Product = z.infer<typeof ProductSchema>;
+export type Product = z.infer<typeof productSchema>;
 
-export type CreateProduct = z.infer<typeof CreateProductSchema>;
+export type CreateProduct = z.infer<typeof createProductSchema>;
 
-export const CreateProductSchema = ProductSchema.omit({ id: true });
+const createProductSchema = productSchema.omit({ id: true });
 /** Input type for updating an existing product */
-export const UpdateProductSchema = CreateProductSchema.partial().extend({
-  id: IdSchema,
+const updateProductSchema = createProductSchema.partial().extend({
+  id: idSchema,
 });
-export type UpdateProduct = z.infer<typeof UpdateProductSchema>;
+export type UpdateProduct = z.infer<typeof updateProductSchema>;
 
 /**
  * Domain methods for Product entity (SPU level)
@@ -109,7 +118,7 @@ export class ProductEntity {
   }
 
   getAvailableLocales(): Locale[] {
-    return LOCALES.filter((locale) => this.product.localizedContent?.name?.[locale] !== undefined);
+    return LOCALES.filter((locale) => this.product.localizedContent?.name[locale] !== undefined);
   }
 
   // ─── Variant Access ───────────────────────────────────────────────
@@ -202,3 +211,10 @@ export function isNewProduct(product: Product): boolean {
 export function getProductDisplayPrice(product: Product): number {
   return new ProductEntity(product).getDisplayPrice();
 }
+
+export {
+  productLocalizedContentSchema as ProductLocalizedContentSchema,
+  productSchema as ProductSchema,
+  createProductSchema as CreateProductSchema,
+  updateProductSchema as UpdateProductSchema,
+};

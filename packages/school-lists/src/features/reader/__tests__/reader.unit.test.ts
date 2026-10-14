@@ -3,7 +3,8 @@ import { SchoolSupplyListReader } from '../index';
 
 const mocks = vi.hoisted(() => ({
   getPublicSupplyListByCode: vi.fn(),
-  findVariantCandidates: vi.fn(),
+  findVariantCandidates:
+    vi.fn<(_tx: unknown, filter: { categoryId?: number }) => Promise<unknown>>(),
   getVariantDisplayDetails: vi.fn(),
   getAvailableQuantities: vi.fn(),
   getListOffer: vi.fn(),
@@ -17,7 +18,7 @@ vi.mock('@findeg/db', async (importOriginal) => ({
 const CODE = '0123456789abcdef0123456789abcdef';
 const transaction = vi.fn((run: (tx: unknown) => unknown) => run({}));
 const db = { transaction } as never;
-const reader = () => new SchoolSupplyListReader(async () => db);
+const reader = () => new SchoolSupplyListReader(() => Promise.resolve().then(() => db));
 
 const found = (overrides: Record<string, unknown> = {}, items: unknown[] = []) => ({
   list: {
@@ -48,7 +49,7 @@ const specItem = {
 
 const details = (variantId: number, productName = { en: 'Notebook' }) => ({
   variantId,
-  sku: `SKU-${variantId}`,
+  sku: `SKU-${String(variantId)}`,
   productName,
   variantLabel: { en: 'Blue' },
   brandName: null,
@@ -57,16 +58,18 @@ const details = (variantId: number, productName = { en: 'Notebook' }) => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mocks.findVariantCandidates.mockImplementation(async (_tx, filter) =>
-    filter.categoryId !== undefined
-      ? [
-          { variantId: 5, categoryId: 2, attributes: { color: 'blue' } },
-          { variantId: 6, categoryId: 2, attributes: { color: 'red' } },
-        ]
-      : [{ variantId: 5, categoryId: 2, attributes: { color: 'blue' } }],
+  mocks.findVariantCandidates.mockImplementation((_tx, filter) =>
+    Promise.resolve().then(() =>
+      filter.categoryId !== undefined
+        ? [
+            { variantId: 5, categoryId: 2, attributes: { color: 'blue' } },
+            { variantId: 6, categoryId: 2, attributes: { color: 'red' } },
+          ]
+        : [{ variantId: 5, categoryId: 2, attributes: { color: 'blue' } }],
+    ),
   );
-  mocks.getVariantDisplayDetails.mockImplementation(async (_tx, ids: number[]) =>
-    ids.map((id) => details(id)),
+  mocks.getVariantDisplayDetails.mockImplementation((_tx, ids: number[]) =>
+    Promise.resolve().then(() => ids.map((id) => details(id))),
   );
   mocks.getAvailableQuantities.mockResolvedValue(new Map([[5, 4]]));
   mocks.getListOffer.mockResolvedValue(null);

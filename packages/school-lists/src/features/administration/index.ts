@@ -1,4 +1,7 @@
-import { SupplyListIdSchema, SupplyListItemSchema } from '@findeg/db';
+import {
+  SupplyListIdSchema as supplyListIdSchema,
+  SupplyListItemSchema as supplyListItemSchema,
+} from '@findeg/db';
 import { canReadSupplyLists, canWriteSupplyLists } from '../permissions';
 import type {
   CreateSupplyListDraftInput,
@@ -30,7 +33,8 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     private readonly querySpecificationOptions: SpecificationOptionsQuery,
     private readonly queryVariantCandidates: VariantCandidatesQuery,
     private readonly queryListAll?: ListAllQuery,
-    private readonly queryPartnerOptions: () => Promise<SchoolListPartnerOption[]> = async () => [],
+    private readonly queryPartnerOptions: () => Promise<SchoolListPartnerOption[]> = () =>
+      Promise.resolve([]),
   ) {}
 
   async listPartnerOptions(actor: SupplyListStaffActor) {
@@ -78,7 +82,7 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
 
   async addItem(actor: SupplyListStaffActor, listId: number, input: SupplyListItemInput) {
     if (!canWriteSupplyLists(actor)) return forbidden();
-    const parsed = SupplyListItemSchema.safeParse(input);
+    const parsed = supplyListItemSchema.safeParse(input);
     if (!parsed.success || !(await this.specificationExists(parsed.data))) {
       return invalid();
     }
@@ -92,7 +96,7 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     input: Partial<SupplyListItemInput>,
   ) {
     if (!canWriteSupplyLists(actor)) return forbidden();
-    const parsed = SupplyListItemSchema.partial().safeParse(input);
+    const parsed = supplyListItemSchema.partial().safeParse(input);
     if (!parsed.success || !(await this.specificationExists(parsed.data))) {
       return invalid();
     }
@@ -150,7 +154,7 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     query: (categoryId: number) => Promise<T[]>,
   ) {
     if (!canWriteSupplyLists(actor)) return forbidden();
-    const parsed = SupplyListIdSchema.safeParse(categoryId);
+    const parsed = supplyListIdSchema.safeParse(categoryId);
     if (!parsed.success) return invalid();
     return { success: true as const, data: await query(parsed.data) };
   }

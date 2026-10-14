@@ -17,18 +17,23 @@ const reader: SupplyListStaffActor = {
 const lifecycle = () =>
   new Proxy(
     {},
-    { get: () => vi.fn(async () => ({ success: true, data: undefined })) },
+    { get: () => vi.fn(() => Promise.resolve().then(() => ({ success: true, data: undefined }))) },
   ) as ISchoolSupplyListService;
 
 function service(
   options: { specs?: { attributeKey: string; values: string[] }[]; list?: boolean } = {},
 ) {
-  const specs = vi.fn(async () => options.specs ?? []);
-  const candidates = vi.fn(async () => []);
-  const all = options.list === false ? undefined : vi.fn(async () => [{ id: 7 }] as never);
-  const partners = vi.fn(async () => [
-    { id: 3, nameEn: 'Nile', nameAr: 'النيل', status: 'active' as const },
-  ]);
+  const specs = vi.fn(() => Promise.resolve().then(() => options.specs ?? []));
+  const candidates = vi.fn(() => Promise.resolve().then(() => []));
+  const all =
+    options.list === false
+      ? undefined
+      : vi.fn(() => Promise.resolve().then(() => [{ id: 7 }] as never));
+  const partners = vi.fn(() =>
+    Promise.resolve().then(() => [
+      { id: 3, nameEn: 'Nile', nameAr: 'النيل', status: 'active' as const },
+    ]),
+  );
   return {
     specs,
     candidates,
@@ -139,7 +144,7 @@ describe('AdminSchoolSupplyListService item validation', () => {
     expect(
       await svc.updateItem(writer, 7, 11, {
         specification: { categoryId: 2, attributes: { color: 'blue' } },
-      } as never),
+      }),
     ).toMatchObject({ success: true });
   });
 

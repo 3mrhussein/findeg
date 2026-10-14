@@ -85,7 +85,7 @@ export class UserService implements IUserService {
   async getProfile(userId: number): Promise<User> {
     const user = await userQueries.getById(userId);
     if (!user) throw new ResourceNotFoundError('User', userId);
-    return user as User;
+    return user;
   }
 
   /** Retrieves profile and order summary for "My Account". */
@@ -98,7 +98,7 @@ export class UserService implements IUserService {
 
     if (!user) throw new ResourceNotFoundError('User', userId);
 
-    return { user: user as User, orders: userOrders };
+    return { user: user, orders: userOrders };
   }
 
   private async fetchAdminUsers(userIds: number[]): Promise<AdminUser[]> {

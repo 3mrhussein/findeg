@@ -46,7 +46,7 @@ describe('Partner Membership management', () => {
   async function newPartner() {
     sequence += 1;
     const created = await services.partners.createPartner(staff, {
-      code: `management-partner-${sequence}`,
+      code: `management-partner-${String(sequence)}`,
       nameEn: 'Management School',
       nameAr: 'مدرسة الإدارة',
     });
@@ -57,7 +57,7 @@ describe('Partner Membership management', () => {
   /** A member created through the real invite and accept path. */
   async function addMember(partnerId: number, roles: PartnerRole[] = [ADMIN]) {
     sequence += 1;
-    const email = `member-${sequence}@findeg.test`;
+    const email = `member-${String(sequence)}@findeg.test`;
     const [user] = await testDb.db.insert(users).values({ email }).returning();
     const invited = await services.invitations.invite(staff, partnerId, { email, roles });
     if (!invited.success) throw new Error(invited.error);

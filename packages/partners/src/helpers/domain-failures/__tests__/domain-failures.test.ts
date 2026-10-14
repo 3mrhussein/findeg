@@ -17,10 +17,14 @@ function domainError(): unknown {
 }
 
 it('maps a partner domain error to its application failure', () => {
-  expect(partnerFailure(domainError())).toEqual({ success: false, error: 'role-not-held' });
+  expect(
+    partnerFailure(domainError(), (code): code is 'role-not-held' => code === 'role-not-held'),
+  ).toEqual({ success: false, error: 'role-not-held' });
 });
 
 it('rethrows errors that are not partner domain errors', () => {
   const unexpected = new Error('database unavailable');
-  expect(() => partnerFailure(unexpected)).toThrow(unexpected);
+  expect(() =>
+    partnerFailure(unexpected, (code): code is 'role-not-held' => code === 'role-not-held'),
+  ).toThrow(unexpected);
 });

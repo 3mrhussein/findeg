@@ -8,9 +8,9 @@ function toRegExp(pattern) {
   const escaped = pattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
   return new RegExp(
     `^${escaped
-      .replace(/\*\*/g, '\u0000')
+      .replace(/\*\*/g, '__FINDEG_GLOB__')
       .replace(/\*/g, '[^/]*')
-      .replace(/\u0000/g, '.*')}$`,
+      .replace(/__FINDEG_GLOB__/g, '.*')}$`,
   );
 }
 

@@ -91,6 +91,7 @@ export interface Value { API_KEY: number }
 export enum State { Ready }
 export class Store { value = 1; }
 export const StoreAlias = Store;
+export const store = new Store();
 `,
   );
   assert.equal(valid.status, 0, valid.output);

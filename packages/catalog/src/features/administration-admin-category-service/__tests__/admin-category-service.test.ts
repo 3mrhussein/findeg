@@ -29,7 +29,7 @@ const input = {
 
 const row = (id: number, overrides: Record<string, unknown> = {}) => ({
   id,
-  slug: `cat-${id}`,
+  slug: `cat-${String(id)}`,
   parentId: null,
   sortOrder: id,
   ...overrides,
@@ -114,8 +114,8 @@ describe('AdminCategoryService', () => {
       row(2, { parentId: 1, sortOrder: 1 }),
       row(3, { parentId: undefined, sortOrder: 1 }),
     ]);
-    queries.getCategoryProductCount.mockImplementation(
-      async (id: number) => ({ 1: 1, 2: 4, 3: 2 })[id],
+    queries.getCategoryProductCount.mockImplementation((id: number) =>
+      Promise.resolve().then(() => ({ 1: 1, 2: 4, 3: 2 })[id]),
     );
     const tree = await service.getTree();
     expect(tree.map((c) => c.id)).toEqual([3, 1]);
@@ -198,7 +198,7 @@ describe('AdminCategoryService edge branches', () => {
         isActive: true,
       }),
     );
-    await service.update(8, { slug: 'bare' } as never);
+    await service.update(8, { slug: 'bare' });
     expect(queries.updateCategory).toHaveBeenCalledWith(
       8,
       expect.objectContaining({ localizedName: {} }),

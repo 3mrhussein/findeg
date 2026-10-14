@@ -19,7 +19,7 @@ export class BrandService implements IBrandService {
 
     return {
       id: dbBrand.id,
-      slug: dbBrand.slug as Slug,
+      slug: dbBrand.slug,
       localizedName,
       localizedDescription,
       name: pick(localizedName, language),

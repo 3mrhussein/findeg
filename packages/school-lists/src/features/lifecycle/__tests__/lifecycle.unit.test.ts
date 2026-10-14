@@ -82,7 +82,7 @@ const item = (overrides: Record<string, unknown> = {}) => ({
 const fakeDb = { transaction: (run: (tx: unknown) => unknown) => run({}) };
 const service = () =>
   new SchoolSupplyListService(
-    async () => fakeDb as never,
+    () => Promise.resolve().then(() => fakeDb as never),
     () => new Date('2026-10-14T00:00:00Z'),
   );
 
@@ -136,7 +136,7 @@ describe('SchoolSupplyListService draft authoring', () => {
       grade: 'Grade 5',
       academicYear: '2026-2027',
       localizedTitle: { en: 'Grade 5 list' },
-    } as never);
+    });
     expect(result.success).toBe(true);
     expect(mocks.insertSupplyListDraft).toHaveBeenCalledOnce();
     expect(result).toMatchObject({ data: { id: 7, items: [expect.objectContaining({ id: 11 })] } });
@@ -149,13 +149,13 @@ describe('SchoolSupplyListService draft authoring', () => {
       grade: 'Grade 5',
       academicYear: '2026-2027',
       localizedTitle: { en: 'Grade 5 list' },
-    } as never);
+    });
     expect(result).toEqual({ success: false, error: 'partner-school-not-found' });
   });
 
   it('reports not-found when the list does not exist', async () => {
     mocks.getSupplyList.mockResolvedValueOnce(null);
-    expect(await service().updateDraft(staff(), 7, { grade: 'Grade 6' } as never)).toEqual({
+    expect(await service().updateDraft(staff(), 7, { grade: 'Grade 6' })).toEqual({
       success: false,
       error: 'not-found',
     });
@@ -164,14 +164,14 @@ describe('SchoolSupplyListService draft authoring', () => {
   it('refuses to edit a list that is no longer a draft', async () => {
     mocks.getSupplyList.mockResolvedValue(list({ status: 'published' }));
     mocks.lockSupplyList.mockResolvedValue(list({ status: 'published' }));
-    expect(await service().updateDraft(staff(), 7, { grade: 'Grade 6' } as never)).toEqual({
+    expect(await service().updateDraft(staff(), 7, { grade: 'Grade 6' })).toEqual({
       success: false,
       error: 'not-draft',
     });
   });
 
   it('updates a draft and returns the aggregate', async () => {
-    const result = await service().updateDraft(staff(), 7, { grade: 'Grade 6' } as never);
+    const result = await service().updateDraft(staff(), 7, { grade: 'Grade 6' });
     expect(result).toMatchObject({
       success: true,
       data: { grade: 'Grade 6', items: [expect.anything()] },
@@ -186,7 +186,7 @@ describe('SchoolSupplyListService draft authoring', () => {
       required: true,
       quantity: 1,
       localizedLabel: { en: 'Notebook' },
-    } as never);
+    });
     expect(mocks.insertSupplyListItem).toHaveBeenCalledWith(
       expect.anything(),
       7,
@@ -195,7 +195,7 @@ describe('SchoolSupplyListService draft authoring', () => {
   });
 
   it('reports a missing item on update and remove', async () => {
-    expect(await service().updateItem(staff(), 7, 999, { quantity: 2 } as never)).toEqual({
+    expect(await service().updateItem(staff(), 7, 999, { quantity: 2 })).toEqual({
       success: false,
       error: 'item-not-found',
     });
@@ -208,7 +208,7 @@ describe('SchoolSupplyListService draft authoring', () => {
 
   it('updates an item and clears its specification when it becomes exact', async () => {
     mocks.getSupplyListItems.mockResolvedValue([item({ id: 11, exactItem: false })]);
-    await service().updateItem(staff(), 7, 11, { exactItem: true } as never);
+    await service().updateItem(staff(), 7, 11, { exactItem: true });
     expect(mocks.updateSupplyListItem).toHaveBeenCalledWith(
       expect.anything(),
       7,
@@ -259,8 +259,8 @@ describe('SchoolSupplyListService publication and archive', () => {
       { variantId: 5, categoryId: 2, attributes: {}, variantActive: true, productActive: true },
     ]);
     mocks.getSupplyListStockFacts.mockResolvedValue({ balances: [], warehouses: [] });
-    mocks.publishSupplyList.mockImplementation(async (_tx, id, publicCode) =>
-      list({ id, status: 'published', publicCode }),
+    mocks.publishSupplyList.mockImplementation((_tx, id, publicCode) =>
+      Promise.resolve().then(() => list({ id, status: 'published', publicCode })),
     );
     const result = await service().publish(staff(), 7);
     expect(result.success).toBe(true);
@@ -353,11 +353,11 @@ describe('SchoolSupplyListService remaining rejections', () => {
       success: false,
       error: 'invalid-input',
     });
-    expect(await service().updateItem(staff(), 7, 11, { quantity: 0 } as never)).toEqual({
+    expect(await service().updateItem(staff(), 7, 11, { quantity: 0 })).toEqual({
       success: false,
       error: 'invalid-input',
     });
-    expect(await service().updateItem(staff(), 7, 0, {} as never)).toEqual({
+    expect(await service().updateItem(staff(), 7, 0, {})).toEqual({
       success: false,
       error: 'invalid-input',
     });
@@ -412,8 +412,8 @@ describe('SchoolSupplyListService remaining rejections', () => {
       { variantId: 5, categoryId: 2, attributes: {}, variantActive: true, productActive: true },
     ]);
     mocks.getSupplyListStockFacts.mockResolvedValue({ balances: [], warehouses: [] });
-    mocks.publishSupplyList.mockImplementation(async (_tx, id, publicCode) =>
-      list({ id, status: 'published', publicCode }),
+    mocks.publishSupplyList.mockImplementation((_tx, id, publicCode) =>
+      Promise.resolve().then(() => list({ id, status: 'published', publicCode })),
     );
     const result = await service().publish(staff(), 7);
     expect(result.success).toBe(true);
@@ -449,7 +449,7 @@ describe('SchoolSupplyListService branch coverage', () => {
     mocks.getSupplyListItems.mockResolvedValue([
       item({ id: 11, exactItem: false, specification: { categoryId: 2, attributes: {} } }),
     ]);
-    await service().updateItem(staff(), 7, 11, { quantity: 3 } as never);
+    await service().updateItem(staff(), 7, 11, { quantity: 3 });
     expect(mocks.updateSupplyListItem).toHaveBeenLastCalledWith(expect.anything(), 7, 11, {
       quantity: 3,
     });

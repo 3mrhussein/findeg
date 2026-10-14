@@ -86,7 +86,7 @@ export class SchoolSupplyListReader implements ISchoolSupplyListReader {
         const detailsById = new Map(details.map((d) => [d.variantId, d]));
         const toVariant = (variantId: number): PublicSupplyListVariant => {
           const d = detailsById.get(variantId);
-          if (!d) throw new Error(`Variant ${variantId} is missing from the list read`);
+          if (!d) throw new Error(`Variant ${String(variantId)} is missing from the list read`);
           return {
             variantId,
             sku: d.sku,

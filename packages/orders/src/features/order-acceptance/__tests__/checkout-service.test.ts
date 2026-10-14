@@ -8,13 +8,13 @@ vi.mock('@findeg/db/connection', async () => {
 vi.mock('@findeg/db/queries', () => ({
   checkoutIdempotencyQueries: {
     // A stored row with another fingerprint answers the replay check without a database.
-    findByScopeAndKey: async () => ({ fingerprint: 'stored-elsewhere', response: null }),
+    findByScopeAndKey: () => Promise.resolve({ fingerprint: 'stored-elsewhere', response: null }),
   },
 }));
 
 import { CheckoutService, createCheckoutService } from '../index';
 
-const enqueue = vi.fn(async () => undefined);
+const enqueue = vi.fn(() => Promise.resolve().then(() => undefined));
 const service = () => new CheckoutService({ enqueue });
 
 const address = {

@@ -78,7 +78,7 @@ export class SearchService implements ISearchService {
         query: normalizedQuery,
         locale,
         resultsCount,
-        userId: userId ? Number(userId) : undefined,
+        userId: userId ? userId : undefined,
         sessionId,
       });
     } catch (error) {
@@ -184,7 +184,7 @@ export class SearchService implements ISearchService {
     void this.logSearch(query, locale, total, undefined, undefined);
 
     return {
-      items: finalItems as unknown as SearchResult['items'],
+      items: finalItems,
       total,
     };
   }

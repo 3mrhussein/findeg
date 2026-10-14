@@ -11,53 +11,56 @@ import { z } from 'zod';
 import { discountPercentage } from '@findeg/domain';
 import { freeUnits, stockLevel } from '@findeg/domain';
 import { moneyFromDecimal, type Money } from '@findeg/domain';
-import { IdSchema, TranslationMapSchema } from '@findeg/db/types';
+import {
+  IdSchema as idSchema,
+  TranslationMapSchema as translationMapSchema,
+} from '@findeg/db/types';
 import type { Locale } from '@findeg/domain';
-import { pick, ResponsiveMediaSetSchema } from '../../helpers/index';
+import { pick, ResponsiveMediaSetSchema as responsiveMediaSetSchema } from '../../helpers/index';
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
-export const VariantImageSchema = z.object({
-  id: IdSchema.optional(),
-  variantId: IdSchema.optional(),
+const variantImageSchema = z.object({
+  id: idSchema.optional(),
+  variantId: idSchema.optional(),
   url: z.string(),
   alt: z.string().optional(),
   displayOrder: z.number().default(0),
 });
-export type VariantImage = z.infer<typeof VariantImageSchema>;
+export type VariantImage = z.infer<typeof variantImageSchema>;
 
 // ─── Inventory Balance ───────────────────────────────────────────────────────
 
-export const InventoryBalanceSchema = z.object({
-  warehouseId: IdSchema.optional(),
+const inventoryBalanceSchema = z.object({
+  warehouseId: idSchema.optional(),
   warehouseCode: z.string().optional(),
   /** Only active warehouses are sold from. Unknown warehouses are not. */
   warehouseActive: z.boolean().optional(),
   onHand: z.number().int().nonnegative().default(0),
   reserved: z.number().int().nonnegative().default(0),
 });
-export type InventoryBalance = z.infer<typeof InventoryBalanceSchema>;
+export type InventoryBalance = z.infer<typeof inventoryBalanceSchema>;
 
 // ─── Variant Attribute Value ─────────────────────────────────────────────────
 
-export const VariantAttributeValueSchema = z.object({
-  attributeId: IdSchema,
+const variantAttributeValueSchema = z.object({
+  attributeId: idSchema,
   key: z.string(),
   valueText: z.string().optional(),
 });
-export type VariantAttributeValue = z.infer<typeof VariantAttributeValueSchema>;
+export type VariantAttributeValue = z.infer<typeof variantAttributeValueSchema>;
 
 // ─── Variant Schema ──────────────────────────────────────────────────────────
 
-export const VariantSchema = z.object({
-  id: IdSchema,
-  productId: IdSchema,
+const variantSchema = z.object({
+  id: idSchema,
+  productId: idSchema,
   sku: z.string(),
   variantKey: z.string(),
-  localizedLabel: TranslationMapSchema.optional(),
+  localizedLabel: translationMapSchema.optional(),
   sortOrder: z.number().default(0),
   isDefault: z.boolean().default(false),
-  mediaSet: ResponsiveMediaSetSchema.optional(),
+  mediaSet: responsiveMediaSetSchema.optional(),
   isActive: z.boolean().default(true),
 
   // Pricing
@@ -70,26 +73,26 @@ export const VariantSchema = z.object({
   barcode: z.string().optional(),
 
   // Hydrated children (loaded by query layer)
-  images: z.array(VariantImageSchema).optional(),
-  attributes: z.array(VariantAttributeValueSchema).optional(),
-  inventory: z.array(InventoryBalanceSchema).optional(),
+  images: z.array(variantImageSchema).optional(),
+  attributes: z.array(variantAttributeValueSchema).optional(),
+  inventory: z.array(inventoryBalanceSchema).optional(),
 
   // Timestamps
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
 
-export type Variant = z.infer<typeof VariantSchema>;
+export type Variant = z.infer<typeof variantSchema>;
 
 // ─── Input Schemas ───────────────────────────────────────────────────────────
 
-export const CreateVariantSchema = VariantSchema.omit({ id: true });
-export type CreateVariant = z.infer<typeof CreateVariantSchema>;
+const createVariantSchema = variantSchema.omit({ id: true });
+export type CreateVariant = z.infer<typeof createVariantSchema>;
 
-export const UpdateVariantSchema = CreateVariantSchema.partial().extend({
-  id: IdSchema,
+const updateVariantSchema = createVariantSchema.partial().extend({
+  id: idSchema,
 });
-export type UpdateVariant = z.infer<typeof UpdateVariantSchema>;
+export type UpdateVariant = z.infer<typeof updateVariantSchema>;
 
 // ─── Domain Methods ──────────────────────────────────────────────────────────
 
@@ -155,3 +158,12 @@ export class VariantEntity {
 export function getVariantAvailableStock(variant: Variant): number {
   return new VariantEntity(variant).getAvailableStock();
 }
+
+export {
+  variantImageSchema as VariantImageSchema,
+  inventoryBalanceSchema as InventoryBalanceSchema,
+  variantAttributeValueSchema as VariantAttributeValueSchema,
+  variantSchema as VariantSchema,
+  createVariantSchema as CreateVariantSchema,
+  updateVariantSchema as UpdateVariantSchema,
+};

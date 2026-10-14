@@ -9,7 +9,7 @@ vi.mock('@findeg/db/queries', () => ({
 
 vi.mock('@findeg/db/connection', () => ({
   db: {},
-  Db: class {},
+  Db: vi.fn(),
 }));
 
 vi.mock('@findeg/db/schema', () => ({

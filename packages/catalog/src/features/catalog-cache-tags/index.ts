@@ -15,11 +15,11 @@ export const CACHE_TAGS = {
 
   // Entity-level tag factories — use for surgical per-item invalidation
   /** Tag for a single product detail cache entry. */
-  productDetail: (id: number) => `catalog:product:${id}`,
+  productDetail: (id: number) => `catalog:product:${String(id)}`,
   /** Tag for a single category detail cache entry. */
   categoryDetail: (slug: string) => `catalog:category:${slug}`,
   /** Tag for a single tag detail cache entry. */
-  tagDetail: (id: number) => `catalog:tag:${id}`,
+  tagDetail: (id: number) => `catalog:tag:${String(id)}`,
   /** Tag for a single collection detail cache entry. */
-  collectionDetail: (id: number) => `catalog:collection:${id}`,
+  collectionDetail: (id: number) => `catalog:collection:${String(id)}`,
 } as const;

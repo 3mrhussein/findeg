@@ -54,9 +54,9 @@ describe('Partner School directory on real Postgres', () => {
     const [partner] = await testDb.db
       .insert(businessPartners)
       .values({
-        code: `${tag}-school-${sequence}`,
-        nameEn: options.nameEn ?? `${tag} School ${sequence}`,
-        nameAr: `مدرسة ${sequence}`,
+        code: `${tag}-school-${String(sequence)}`,
+        nameEn: options.nameEn ?? `${tag} School ${String(sequence)}`,
+        nameAr: `مدرسة ${String(sequence)}`,
         status: options.status ?? 'active',
       })
       .returning();
@@ -85,12 +85,12 @@ describe('Partner School directory on real Postgres', () => {
     );
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `${tag}-cat-${sequence}` })
+      .values({ slug: `${tag}-cat-${String(sequence)}` })
       .returning();
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `${tag}-product-${sequence}`,
+        slug: `${tag}-product-${String(sequence)}`,
         localizedName: { en: 'Pen', ar: 'قلم' },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
@@ -102,7 +102,7 @@ describe('Partner School directory on real Postgres', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `${tag}-sku-${sequence}`,
+        sku: `${tag}-sku-${String(sequence)}`,
         basePrice: '5.00',
       })
       .returning();
@@ -133,7 +133,7 @@ describe('Partner School directory on real Postgres', () => {
       expect.objectContaining({
         code: maadi.code,
         nameEn: `${tag} Maadi Language School`,
-        nameAr: expect.any(String),
+        nameAr: expect.any(String) as unknown,
         governorate: 'Cairo',
         area: 'Maadi',
         schoolType: 'private',
@@ -303,7 +303,12 @@ describe('Partner School directory on real Postgres', () => {
       academicYear: '2026/2027',
       localizedTitle: { en: 'Grade 1 list', ar: 'قائمة' },
     });
-    expect(JSON.stringify(profile)).not.toContain(archived.publicCode!);
+    expect(JSON.stringify(profile)).not.toContain(
+      archived.publicCode ??
+        (() => {
+          throw new Error('Expected a value');
+        })(),
+    );
   });
 
   it('gives a school with no published list an empty list collection', async () => {

@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
   listSchoolListPartners: vi.fn(),
   listAttributeValuesForCategory: vi.fn(),
   findVariantCandidates: vi.fn(),
-  transaction: vi.fn(),
+  transaction: vi.fn<(run: (tx: unknown) => unknown) => unknown>(),
 }));
 
 vi.mock('@findeg/db', async (importOriginal) => ({

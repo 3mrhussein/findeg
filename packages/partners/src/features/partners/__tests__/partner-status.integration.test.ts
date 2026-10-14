@@ -48,7 +48,7 @@ describe('Business Partner status changes', () => {
   async function createPartner() {
     sequence += 1;
     const result = await services.partners.createPartner(staff, {
-      code: `status-partner-${sequence}`,
+      code: `status-partner-${String(sequence)}`,
       nameEn: 'Status School',
       nameAr: 'مدرسة الحالة',
     });
@@ -59,7 +59,7 @@ describe('Business Partner status changes', () => {
   /** Invites and accepts a member with `roles`; returns the membership id. */
   async function addMember(partnerId: number, roles: PartnerRole[]) {
     sequence += 1;
-    const email = `status-member-${sequence}@findeg.test`;
+    const email = `status-member-${String(sequence)}@findeg.test`;
     const [user] = await testDb.db.insert(users).values({ email }).returning();
     const invited = await services.invitations.invite(staff, partnerId, { email, roles });
     if (!invited.success) throw new Error(invited.error);

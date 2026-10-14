@@ -48,15 +48,19 @@ function invitationRow(overrides: Record<string, unknown> = {}) {
 
 const enqueue = vi.fn();
 function service(clock = () => NOW) {
-  return new InvitationService(async () => executor as never, clock, enqueue);
+  return new InvitationService(
+    () => Promise.resolve().then(() => executor as never),
+    clock,
+    enqueue,
+  );
 }
 
 const mq = vi.mocked(q);
 
 beforeEach(() => {
   vi.resetAllMocks();
-  mq.insertPartnerAccessHistory.mockResolvedValue(undefined as never);
-  mq.insertPartnerInvitationToken.mockResolvedValue(undefined as never);
+  mq.insertPartnerAccessHistory.mockResolvedValue(undefined);
+  mq.insertPartnerInvitationToken.mockResolvedValue(undefined);
   mq.getCurrentPartnerMembershipByEmail.mockResolvedValue(undefined);
   mq.getPendingPartnerInvitationByEmail.mockResolvedValue(undefined);
   mq.lockBusinessPartnerById.mockResolvedValue(partner as never);
@@ -188,7 +192,7 @@ describe('resend and revoke', () => {
 
   it('refuses a partner actor who is not an administrator of the partner', async () => {
     mq.getPartnerInvitationById.mockResolvedValue(invitationRow() as never);
-    mq.getCurrentPartnerMembership.mockResolvedValue(undefined as never);
+    mq.getCurrentPartnerMembership.mockResolvedValue(undefined);
     expect(await service().revokeInvitation(partnerAdmin, 11, 5)).toEqual({
       success: false,
       error: 'forbidden',
@@ -216,7 +220,16 @@ describe('reads and delivery', () => {
     expect(mq.insertPartnerInvitationToken).toHaveBeenCalledWith(
       executor,
       11,
-      createHash('sha256').update(delivery!.token).digest('hex'),
+      createHash('sha256')
+        .update(
+          (
+            delivery ??
+            (() => {
+              throw new Error('Expected a value');
+            })()
+          ).token,
+        )
+        .digest('hex'),
     );
   });
 

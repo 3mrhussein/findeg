@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { IdSchema, SlugSchema } from '@findeg/db/types';
-import { TranslationMapSchema } from '../../helpers/index';
+import { IdSchema as idSchema, SlugSchema as slugSchema } from '@findeg/db/types';
+import { TranslationMapSchema as translationMapSchema } from '../../helpers/index';
 
-export const BrandSchema = z.object({
-  id: IdSchema,
-  slug: SlugSchema,
-  localizedName: TranslationMapSchema,
-  localizedDescription: TranslationMapSchema.optional(),
+const brandSchema = z.object({
+  id: idSchema,
+  slug: slugSchema,
+  localizedName: translationMapSchema,
+  localizedDescription: translationMapSchema.optional(),
   isActive: z.boolean().default(true),
 
   // Resolved Content (for specific locale)
@@ -20,12 +20,18 @@ export const BrandSchema = z.object({
   updatedAt: z.date(),
 });
 
-export type Brand = z.infer<typeof BrandSchema>;
+export type Brand = z.infer<typeof brandSchema>;
 
-export const CreateBrandSchema = BrandSchema.omit({ id: true, createdAt: true, updatedAt: true });
-export type CreateBrand = z.infer<typeof CreateBrandSchema>;
+const createBrandSchema = brandSchema.omit({ id: true, createdAt: true, updatedAt: true });
+export type CreateBrand = z.infer<typeof createBrandSchema>;
 
-export const UpdateBrandSchema = CreateBrandSchema.partial().extend({
-  id: IdSchema,
+const updateBrandSchema = createBrandSchema.partial().extend({
+  id: idSchema,
 });
-export type UpdateBrand = z.infer<typeof UpdateBrandSchema>;
+export type UpdateBrand = z.infer<typeof updateBrandSchema>;
+
+export {
+  brandSchema as BrandSchema,
+  createBrandSchema as CreateBrandSchema,
+  updateBrandSchema as UpdateBrandSchema,
+};

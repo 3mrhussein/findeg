@@ -65,7 +65,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     const [partner] = await testDb.db
       .insert(businessPartners)
       .values({
-        code: `lifecycle-school-${sequence}`,
+        code: `lifecycle-school-${String(sequence)}`,
         nameEn: 'Partner School',
         nameAr: 'مدرسة',
       })
@@ -93,12 +93,12 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     sequence += 1;
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `lifecycle-category-${sequence}` })
+      .values({ slug: `lifecycle-category-${String(sequence)}` })
       .returning();
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `lifecycle-product-${sequence}`,
+        slug: `lifecycle-product-${String(sequence)}`,
         localizedName: { en: 'Blue pen', ar: 'قلم أزرق' },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
@@ -111,7 +111,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `LIFECYCLE-${sequence}`,
+        sku: `LIFECYCLE-${String(sequence)}`,
         basePrice: '12.50',
         isActive: options.variantActive ?? true,
       })
@@ -120,7 +120,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       const [warehouse] = await testDb.db
         .insert(warehouses)
         .values({
-          code: `lifecycle-warehouse-${sequence}`,
+          code: `lifecycle-warehouse-${String(sequence)}`,
           name: 'Main',
           isActive: options.warehouseActive ?? true,
         })
@@ -436,7 +436,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     const [attribute] = await testDb.db
       .insert(attributes)
       .values({
-        key: `lifecycle-color-${++sequence}`,
+        key: `lifecycle-color-${String(++sequence)}`,
         dataType: 'text',
         localizedLabel: { en: 'Color' },
       })
@@ -446,7 +446,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       .values({ variantId: defaultVariant.id, attributeId: attribute.id, valueText: 'blue' });
     const [otherCategory] = await testDb.db
       .insert(categories)
-      .values({ slug: `lifecycle-mismatch-${sequence}` })
+      .values({ slug: `lifecycle-mismatch-${String(sequence)}` })
       .returning();
     for (const specification of [
       { categoryId: otherCategory.id, attributes: {} },
@@ -498,7 +498,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       .where(eq(inventoryBalances.variantId, defaultVariant.id));
     const [warehouse] = await testDb.db
       .insert(warehouses)
-      .values({ code: `lifecycle-stock-${++sequence}`, name: 'Other' })
+      .values({ code: `lifecycle-stock-${String(++sequence)}`, name: 'Other' })
       .returning();
     await testDb.db
       .insert(inventoryBalances)
@@ -775,7 +775,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     const clone = data(await service.cloneToDraft(staff, list.id));
     // Force a failure only after snapshots and source archival have been written.
     await testDb.sql.unsafe(
-      `create function school_engine.fail_lifecycle_test_publish() returns trigger language plpgsql as $$ begin if NEW.id = ${clone.id} and NEW.status = 'published' then raise exception 'forced publication failure'; end if; return NEW; end $$`,
+      `create function school_engine.fail_lifecycle_test_publish() returns trigger language plpgsql as $$ begin if NEW.id = ${String(clone.id)} and NEW.status = 'published' then raise exception 'forced publication failure'; end if; return NEW; end $$`,
     );
     await testDb.sql`create trigger fail_lifecycle_test_publish before update on school_engine.school_supply_lists for each row execute function school_engine.fail_lifecycle_test_publish()`;
     try {
@@ -820,7 +820,11 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       .from(schoolSupplyLists)
       .where(eq(schoolSupplyLists.businessPartnerId, first.list.businessPartnerId));
     expect(rows.filter((row) => row.status === 'published')).toHaveLength(1);
-    const loser = rows.find((row) => row.status === 'draft')!;
+    const loser =
+      rows.find((row) => row.status === 'draft') ??
+      (() => {
+        throw new Error('Expected a value');
+      })();
     expect(loser.publicCode).toBeNull();
     expect(
       (

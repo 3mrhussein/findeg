@@ -60,25 +60,25 @@ const invitation = {
 
 const service = () =>
   new MembershipService(
-    async () => executor as never,
+    () => Promise.resolve().then(() => executor as never),
     () => NOW,
   );
 
 beforeEach(() => {
   vi.resetAllMocks();
-  mq.insertPartnerAccessHistory.mockResolvedValue(undefined as never);
+  mq.insertPartnerAccessHistory.mockResolvedValue(undefined);
   mq.lockBusinessPartnerById.mockResolvedValue(partner as never);
   mq.getPartnerUserById.mockResolvedValue({
     id: 7,
     email: 'admin@example.com',
     isActive: true,
     authorizationVersion: 3,
-  } as never);
+  });
   mq.getCurrentPartnerMembership.mockResolvedValue(undefined);
   mq.getPartnerMembershipById.mockResolvedValue(membership() as never);
-  mq.countOtherActivePartnerAdministrators.mockResolvedValue(1 as never);
-  mq.updatePartnerMembership.mockImplementation(
-    async (_tx, _id, patch) => membership({ ...patch, authorizationVersion: 3 }) as never,
+  mq.countOtherActivePartnerAdministrators.mockResolvedValue(1);
+  mq.updatePartnerMembership.mockImplementation((_tx, _id, patch) =>
+    Promise.resolve().then(() => membership({ ...patch, authorizationVersion: 3 }) as never),
   );
 });
 
@@ -195,7 +195,7 @@ describe('updateMembership', () => {
   });
 
   it('maps a domain refusal (removing the last administrator) to its application error', async () => {
-    mq.countOtherActivePartnerAdministrators.mockResolvedValue(0 as never);
+    mq.countOtherActivePartnerAdministrators.mockResolvedValue(0);
     expect(await service().updateMembership(staff, 20, { roles: ['list-manager'] }, 2)).toEqual({
       success: false,
       error: 'last-administrator',
@@ -239,7 +239,7 @@ describe('updateMembership', () => {
   });
 
   it('suspends a membership, then reactivates it, with the matching audit actions', async () => {
-    mq.countOtherActivePartnerAdministrators.mockResolvedValue(2 as never);
+    mq.countOtherActivePartnerAdministrators.mockResolvedValue(2);
     await service().updateMembership(staff, 20, { status: 'suspended' }, 2);
     expect(mq.insertPartnerAccessHistory).toHaveBeenLastCalledWith(
       executor,
@@ -254,7 +254,7 @@ describe('updateMembership', () => {
   });
 
   it('ends a membership with the ended audit action', async () => {
-    mq.countOtherActivePartnerAdministrators.mockResolvedValue(2 as never);
+    mq.countOtherActivePartnerAdministrators.mockResolvedValue(2);
     await service().updateMembership(staff, 20, { status: 'ended' }, 2);
     expect(mq.insertPartnerAccessHistory).toHaveBeenLastCalledWith(
       executor,
@@ -274,7 +274,7 @@ describe('leave', () => {
   });
 
   it('maps leaving as the last administrator to its application error', async () => {
-    mq.countOtherActivePartnerAdministrators.mockResolvedValue(0 as never);
+    mq.countOtherActivePartnerAdministrators.mockResolvedValue(0);
     expect(await service().leave(admin, 20)).toEqual({
       success: false,
       error: 'last-administrator',

@@ -30,7 +30,7 @@ export function monthRange(month: string): { from: string; to: string } {
 export function monthsBetween(first: string, last: string): string[] {
   const months: string[] = [];
   let [year, month] = first.split('-').map(Number);
-  for (let key = first; key <= last; key = `${year}-${String(month).padStart(2, '0')}`) {
+  for (let key = first; key <= last; key = `${String(year)}-${String(month).padStart(2, '0')}`) {
     months.push(key);
     month += 1;
     if (month > 12) {

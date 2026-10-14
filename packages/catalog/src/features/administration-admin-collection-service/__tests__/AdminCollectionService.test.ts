@@ -10,7 +10,6 @@ import {
   checkCollectionSlugAvailable,
 } from '@findeg/db/queries';
 import { AdminCollectionService } from '../index';
-import { IAuditLogService } from '../../administration-i-audit-log-service/types';
 
 vi.mock('@findeg/db/queries', () => ({
   getCollectionsAll: vi.fn(),
@@ -23,7 +22,7 @@ vi.mock('@findeg/db/queries', () => ({
   checkCollectionSlugAvailable: vi.fn(),
 }));
 
-const mockAuditLog: IAuditLogService = {
+const mockAuditLog = {
   logAction: vi.fn().mockResolvedValue(undefined),
   getLogs: vi.fn().mockResolvedValue([]),
   getEntityLogs: vi.fn().mockResolvedValue([]),
@@ -61,7 +60,7 @@ describe('AdminCollectionService', () => {
   });
 
   it('retrieves collection by id with tags', async () => {
-    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection as never);
+    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection);
 
     const result = await service.getById(1);
     expect(getCollectionByIdWithTags).toHaveBeenCalledWith(1);
@@ -69,7 +68,7 @@ describe('AdminCollectionService', () => {
   });
 
   it('creates collection and associates tags with audit log', async () => {
-    vi.mocked(createCollection).mockResolvedValue(sampleCollection as never);
+    vi.mocked(createCollection).mockResolvedValue(sampleCollection);
 
     const input = {
       slug: 'summer-sale',
@@ -79,7 +78,7 @@ describe('AdminCollectionService', () => {
       tagIds: [10, 20],
     };
 
-    const created = await service.create(input as never, 99);
+    const created = await service.create(input, 99);
 
     expect(createCollection).toHaveBeenCalledWith({
       slug: 'summer-sale',
@@ -99,8 +98,8 @@ describe('AdminCollectionService', () => {
   });
 
   it('updates collection and tag associations', async () => {
-    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection as never);
-    vi.mocked(updateCollection).mockResolvedValue({ ...sampleCollection, sortOrder: 5 } as never);
+    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection);
+    vi.mocked(updateCollection).mockResolvedValue({ ...sampleCollection, sortOrder: 5 });
 
     const updated = await service.update(1, { sortOrder: 5, tagIds: [30] }, 99);
 
@@ -117,7 +116,7 @@ describe('AdminCollectionService', () => {
   });
 
   it('deletes collection and logs audit entry', async () => {
-    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection as never);
+    vi.mocked(getCollectionByIdWithTags).mockResolvedValue(sampleCollection);
 
     await service.delete(1, 99);
 

@@ -44,21 +44,21 @@ describe('BrandService', () => {
     brandQueries.getById.mockResolvedValue(undefined);
     brandQueries.getBySlug.mockResolvedValue(undefined);
     expect(await service.getById(9)).toBeNull();
-    expect(await service.getBySlug('missing' as never)).toBeNull();
+    expect(await service.getBySlug('missing')).toBeNull();
   });
 
   it('maps a found brand by id and slug, using the default locale', async () => {
     brandQueries.getById.mockResolvedValue(row());
     brandQueries.getBySlug.mockResolvedValue(row());
     expect((await service.getById(1))?.name).toBe('Acme');
-    expect((await service.getBySlug('acme' as never))?.slug).toBe('acme');
+    expect((await service.getBySlug('acme'))?.slug).toBe('acme');
   });
 
   it('creates, updates and deletes through the repository', async () => {
     brandQueries.create.mockResolvedValue(row());
     brandQueries.update.mockResolvedValue(row({ isActive: false }));
     expect((await service.create({ slug: 'acme' } as never)).id).toBe(1);
-    expect((await service.update(1, { isActive: false } as never)).isActive).toBe(false);
+    expect((await service.update(1, { isActive: false })).isActive).toBe(false);
     await service.delete(1);
     expect(brandQueries.deleteById).toHaveBeenCalledWith(1);
   });

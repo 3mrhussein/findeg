@@ -1,6 +1,9 @@
 import { GUEST_ORDER_TOKEN_SECONDS } from '../guest-access-token/constants';
 import { matchesAnyHash } from '../guest-access-codes';
-import { GuestAccessRequestSchema, GuestAccessVerifySchema } from '../guest-access-input/helpers';
+import {
+  GuestAccessRequestSchema as guestAccessRequestSchema,
+  GuestAccessVerifySchema as guestAccessVerifySchema,
+} from '../guest-access-input/helpers';
 import { GUEST_ACCESS_KIND, guestAccessId } from './constants';
 import type {
   GuestAccessServiceOptions,
@@ -22,7 +25,7 @@ export class GuestAccessService {
    * email match an Order (or the hourly limit was hit), so nobody can probe which Orders exist.
    */
   async requestAccess(input: unknown): Promise<RequestAccessResult> {
-    const parsed = GuestAccessRequestSchema.safeParse(input);
+    const parsed = guestAccessRequestSchema.safeParse(input);
     if (!parsed.success) return { success: false, reason: 'invalid-input' };
 
     const reference = normalizeReference(parsed.data.reference);
@@ -43,7 +46,7 @@ export class GuestAccessService {
 
   /** A correct code consumes its whole request and yields a token that unlocks only that Order. */
   async verify(input: unknown): Promise<VerifyResult> {
-    const parsed = GuestAccessVerifySchema.safeParse(input);
+    const parsed = guestAccessVerifySchema.safeParse(input);
     if (!parsed.success) return { success: false, reason: 'invalid-input' };
 
     const orderReference = normalizeReference(parsed.data.reference);

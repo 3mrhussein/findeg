@@ -318,7 +318,7 @@ describe('Business Partners (Staff operations)', () => {
           schoolType: 'Private',
           academicSystem: 'National',
           logoUrl: 'https://example.com/logo.png',
-        }),
+        }) as unknown,
       });
 
       const getResult = await services.partners.getPartnerSchoolProfile(staff, partner.id);
@@ -331,7 +331,7 @@ describe('Business Partners (Staff operations)', () => {
           schoolType: 'Private',
           academicSystem: 'National',
           logoUrl: 'https://example.com/logo.png',
-        }),
+        }) as unknown,
       });
     });
 

@@ -71,12 +71,12 @@ describe('identity composition', () => {
 
   it('delegates admin self-updates to the admin user service', async () => {
     const { getAdminUsersSnapshotRaw, updateAdminUserRaw } = await import('@findeg/db/queries');
-    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined as never);
+    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined);
     vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue({
       users: [],
       roles: [],
       permissionOverrides: [],
-    } as never);
+    });
 
     await expect(updateMyProfile(2, { isActive: true })).rejects.toThrow(
       'Admin user not found after update',

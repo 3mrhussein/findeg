@@ -1,9 +1,9 @@
 import { PERMISSION_CODES, systemAdmin } from '@findeg/db';
-import { SupplyListIdSchema } from '@findeg/db';
+import { SupplyListIdSchema as supplyListIdSchema } from '@findeg/db';
 import type { SupplyListStaffActor } from '../../types';
 
 function isStaff(actor: SupplyListStaffActor): boolean {
-  return actor?.kind === 'staff' && SupplyListIdSchema.safeParse(actor.userId).success;
+  return supplyListIdSchema.safeParse(actor.userId).success;
 }
 
 export function canWriteSupplyLists(actor: SupplyListStaffActor): boolean {

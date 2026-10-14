@@ -48,7 +48,8 @@ export async function calculateListQuote(
     .from(schoolSupplyLists)
     .where(eq(schoolSupplyLists.publicCode, input.publicCode))
     .limit(1);
-  const [list] = tx ? await listQuery.for('share') : await listQuery;
+  const lists = tx ? await listQuery.for('share') : await listQuery;
+  const list = lists.at(0);
   if (!list || list.status !== 'published' || !list.publicCode || !list.publishedAt) {
     throw new ListUnavailableError();
   }
@@ -62,18 +63,22 @@ export async function calculateListQuote(
   const itemById = new Map(items.map((item) => [item.id, item]));
 
   const failures: number[] = [];
+  const selections: Array<{ line: ListCheckoutLine; item: (typeof items)[number] }> = [];
   const seen = new Set<number>();
   if (input.lines.length === 0) throw new SelectionInvalidError([]);
   for (const line of input.lines) {
+    const item = itemById.get(line.listItemId);
     if (
       !Number.isSafeInteger(line.listItemId) ||
       !Number.isSafeInteger(line.variantId) ||
       line.variantId < 1 ||
       !isLineQuantity(line.quantity) ||
       seen.has(line.listItemId) ||
-      !itemById.has(line.listItemId)
+      !item
     ) {
       failures.push(line.listItemId);
+    } else {
+      selections.push({ line, item });
     }
     seen.add(line.listItemId);
   }
@@ -122,18 +127,18 @@ export async function calculateListQuote(
     attributesByVariant.set(row.variantId, values);
   }
 
-  for (const line of input.lines) {
-    const item = itemById.get(line.listItemId)!;
+  const eligibleSelections: Array<{
+    line: ListCheckoutLine;
+    item: (typeof items)[number];
+    variant: (typeof variants)[number];
+  }> = [];
+  for (const { line, item } of selections) {
     const variant = variantById.get(line.variantId);
-    const eligible =
-      item.variantId !== null &&
-      variant &&
+    if (
+      item.variantId === null ||
+      !variant ||
       eligibleVariants(
-        {
-          variantId: item.variantId,
-          exactItem: item.exactItem,
-          specification: item.specification,
-        },
+        { variantId: item.variantId, exactItem: item.exactItem, specification: item.specification },
         [
           {
             variantId: variant.id,
@@ -141,8 +146,12 @@ export async function calculateListQuote(
             attributes: attributesByVariant.get(variant.id) ?? {},
           },
         ],
-      ).length === 1;
-    if (!eligible) failures.push(line.listItemId);
+      ).length !== 1
+    ) {
+      failures.push(line.listItemId);
+    } else {
+      eligibleSelections.push({ line, item, variant });
+    }
   }
   if (failures.length > 0) throw new SelectionInvalidError(invalidIds(failures));
 
@@ -157,8 +166,7 @@ export async function calculateListQuote(
       publicCode: publicCode(list.publicCode),
       offer: offer ?? null,
     },
-    input.lines.map((line) => {
-      const variant = variantById.get(line.variantId)!;
+    eligibleSelections.map(({ line, item, variant }) => {
       const name = variant.productName as Record<string, string>;
       return {
         variantId: line.variantId as VariantId,
@@ -168,7 +176,7 @@ export async function calculateListQuote(
         sku: sku(variant.sku),
         listItem: {
           supplyListItemId: line.listItemId as SupplyListItemId,
-          defaultVariantId: itemById.get(line.listItemId)!.variantId as VariantId,
+          defaultVariantId: item.variantId as VariantId,
         },
       };
     }),

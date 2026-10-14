@@ -1,7 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import bcrypt from 'bcryptjs';
 import { userQueries } from '@findeg/db/queries';
-import { AuthService, AuthCredentialsSchema, RegisterInputSchema } from '../helpers';
+import {
+  AuthService,
+  AuthCredentialsSchema as authCredentialsSchema,
+  RegisterInputSchema as registerInputSchema,
+} from '../helpers';
 
 vi.mock('bcryptjs', () => ({
   default: { compare: vi.fn(), hash: vi.fn() },
@@ -162,14 +166,14 @@ describe('AuthService', () => {
   });
 
   it('validates credential and registration input', () => {
-    expect(AuthCredentialsSchema.safeParse({ email: 'a@example.com', password: '' }).success).toBe(
+    expect(authCredentialsSchema.safeParse({ email: 'a@example.com', password: '' }).success).toBe(
       false,
     );
     expect(
-      RegisterInputSchema.safeParse({ email: 'a@example.com', password: 'short' }).success,
+      registerInputSchema.safeParse({ email: 'a@example.com', password: 'short' }).success,
     ).toBe(false);
     expect(
-      RegisterInputSchema.safeParse({ email: 'a@example.com', password: 'longenough' }).success,
+      registerInputSchema.safeParse({ email: 'a@example.com', password: 'longenough' }).success,
     ).toBe(true);
   });
 });

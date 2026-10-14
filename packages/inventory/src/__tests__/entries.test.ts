@@ -8,7 +8,7 @@ vi.mock('@findeg/catalog', () => ({
 import {
   createAdminInventoryService,
   createInventoryService,
-  InventoryUpdateSchema,
+  InventoryUpdateSchema as inventoryUpdateSchema,
 } from '../index';
 
 describe('@findeg/inventory entries', () => {
@@ -23,6 +23,6 @@ describe('@findeg/inventory entries', () => {
   });
 
   it('exposes the inventory update schema from the root entry', () => {
-    expect(InventoryUpdateSchema.safeParse({ variantId: 1, quantity: 2 }).success).toBe(true);
+    expect(inventoryUpdateSchema.safeParse({ variantId: 1, quantity: 2 }).success).toBe(true);
   });
 });

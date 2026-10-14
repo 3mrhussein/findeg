@@ -73,7 +73,7 @@ describe('CategoryService', () => {
     categoryQueries.getById.mockResolvedValue(undefined);
     categoryQueries.getBySlug.mockResolvedValue(undefined);
     expect(await service.getById(9)).toBeNull();
-    expect(await service.getBySlug('none' as never)).toBeNull();
+    expect(await service.getBySlug('none')).toBeNull();
     categoryQueries.getAll.mockResolvedValue([]);
     expect(await service.getAll()).toEqual([]);
     expect(categoryQueries.getProductCounts).not.toHaveBeenCalled();

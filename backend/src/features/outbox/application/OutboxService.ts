@@ -58,10 +58,12 @@ export class OutboxService {
 
       if (outcome === 'expired') {
         const owned = await outboxQueries.markExpired(row.id, leaseToken);
-        owned ? result.expired++ : result.leaseLost++;
+        if (owned) result.expired++;
+        else result.leaseLost++;
       } else {
         const owned = await outboxQueries.markDelivered(row.id, leaseToken);
-        owned ? result.delivered++ : result.leaseLost++;
+        if (owned) result.delivered++;
+        else result.leaseLost++;
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);

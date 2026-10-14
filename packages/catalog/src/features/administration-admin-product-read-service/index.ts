@@ -45,7 +45,7 @@ export class AdminProductReadService {
    * @param _language - Ignored for query primitive compatibility
    */
   async getById(id: ID, _language?: Locale): Promise<ProductRow | null> {
-    return getProductById(id as number);
+    return getProductById(id);
   }
 
   /**

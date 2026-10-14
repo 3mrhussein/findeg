@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { SearchService } from '../index';
 import { ProductService } from '../../catalog-product-service/index';
 
@@ -22,7 +22,7 @@ vi.mock('@findeg/db/queries', () => ({
 
 describe('SearchService', () => {
   let service: SearchService;
-  let getByIds: ReturnType<typeof vi.spyOn>;
+  let getByIds: MockInstance<ProductService['getByIds']>;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -56,13 +56,13 @@ describe('SearchService', () => {
       { productId: 1, score: 1 },
       { productId: 2, score: 5 },
     ]);
-    getByIds.mockResolvedValue([{ id: 2 }, { id: 1 }]);
+    getByIds.mockResolvedValue([{ id: 2 }, { id: 1 }] as never);
     const result = await service.search({ query: 'Pen', locale: 'en', limit: 2 } as never);
     expect(executeCatalogScoredSearchRaw).toHaveBeenCalledWith(
       expect.objectContaining({ normalizedTerm: 'pen', locale: 'en' }),
     );
     expect(getByIds).toHaveBeenCalledWith([2, 1], 'en');
-    expect(result).toEqual({ items: [{ id: 2 }, { id: 1 }], total: 2 });
+    expect(result).toEqual({ items: [{ id: 2 }, { id: 1 }] as never, total: 2 });
   });
 
   it('keeps sort order when the sort is not relevance and pages the ids', async () => {
@@ -71,7 +71,7 @@ describe('SearchService', () => {
       { productId: 2, score: 5 },
       { productId: 3, score: 3 },
     ]);
-    getByIds.mockResolvedValue([{ id: 1 }]);
+    getByIds.mockResolvedValue([{ id: 1 }] as never);
     const result = await service.search({
       query: 'pen',
       locale: 'en',
@@ -88,7 +88,7 @@ describe('SearchService', () => {
       { productId: 1, score: 2 },
       { productId: 2, score: 1 },
     ]);
-    getByIds.mockResolvedValue([{ id: 1 }]);
+    getByIds.mockResolvedValue([{ id: 1 }] as never);
     const result = await service.search({ query: 'pen', locale: 'en' } as never);
     expect(result).toEqual({ items: [{ id: 1 }], total: 1 });
   });
@@ -117,7 +117,7 @@ describe('SearchService', () => {
         { productId: 1, score: 3 },
         { productId: 2, score: 1 },
       ]);
-    getByIds.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+    getByIds.mockResolvedValue([{ id: 1 }, { id: 2 }] as never);
     const result = await service.search({ query: 'قلم pen', locale: 'ar' } as never);
     expect(getByIds).toHaveBeenCalledWith([1, 2], 'ar');
     expect(result.total).toBe(2);

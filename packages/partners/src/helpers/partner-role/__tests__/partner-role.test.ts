@@ -16,7 +16,7 @@ function context(roles: PartnerContext['membership']['roles']): PartnerContext {
       createdAt: new Date('2026-01-01T00:00:00Z'),
       updatedAt: new Date('2026-01-01T00:00:00Z'),
     },
-  } as PartnerContext;
+  };
 }
 
 it('passes the context through when the member holds a required role', () => {
@@ -31,5 +31,14 @@ it('fails with role-not-held when the member holds none of the required roles', 
   expect(requirePartnerRole(context([]), ['partner-administrator'], 'membership-change')).toEqual({
     success: false,
     error: 'role-not-held',
+  });
+});
+
+it('refuses membership changes when the Business Partner status disallows them', () => {
+  const closed = context(['partner-administrator']);
+  closed.partner.status = 'closed';
+  expect(requirePartnerRole(closed, ['partner-administrator'], 'membership-change')).toEqual({
+    success: false,
+    error: 'partner-status-not-allowed',
   });
 });

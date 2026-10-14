@@ -57,7 +57,7 @@ export function mapDomainError(error: unknown): CheckoutAcceptFailure | undefine
     'INVALID_CART_QUANTITY',
     'EMPTY_ORDER',
   ];
-  if (codes.includes(error.code)) {
+  if (typeof error.code === 'string' && codes.includes(error.code)) {
     return {
       success: false,
       status: 400,

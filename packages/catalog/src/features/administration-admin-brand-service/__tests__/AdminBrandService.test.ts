@@ -29,9 +29,9 @@ describe('AdminBrandService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     service = new AdminBrandService();
-    vi.mocked(getBrandById).mockResolvedValue(storedBrand as never);
-    vi.mocked(updateBrand).mockImplementation(
-      async (_id, data) => ({ ...storedBrand, ...data }) as never,
+    vi.mocked(getBrandById).mockResolvedValue(storedBrand);
+    vi.mocked(updateBrand).mockImplementation((_id, data) =>
+      Promise.resolve().then(() => ({ ...storedBrand, ...data })),
     );
   });
 
@@ -41,7 +41,7 @@ describe('AdminBrandService', () => {
       nameEn: 'Faber',
       nameAr: 'فابر',
       isActive: false,
-    } as never);
+    });
 
     expect(updateBrand).toHaveBeenCalledWith(14, expect.objectContaining({ isActive: false }));
   });
@@ -73,7 +73,7 @@ describe('AdminBrandService', () => {
 
   it('checks slug availability correctly', async () => {
     const { getBrandBySlug } = await import('@findeg/db/queries');
-    vi.mocked(getBrandBySlug).mockResolvedValue(storedBrand as never);
+    vi.mocked(getBrandBySlug).mockResolvedValue(storedBrand);
 
     expect(await service.checkSlugAvailable('faber', 14)).toBe(true);
     expect(await service.checkSlugAvailable('faber', 99)).toBe(false);

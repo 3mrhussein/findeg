@@ -3,9 +3,9 @@ import type { DbTransaction } from '@findeg/db/queries';
 import { fakeDatabase } from '../../../__tests__/fixture';
 import { ListUnavailableError, SelectionInvalidError } from '../../checkout-errors/helpers';
 
-const offers = vi.hoisted(() => ({ current: undefined as unknown }));
+const offers = vi.hoisted((): { current: unknown } => ({ current: undefined }));
 vi.mock('@findeg/db/queries/school-supply-lists', () => ({
-  getListOffer: vi.fn(async () => offers.current),
+  getListOffer: vi.fn(() => Promise.resolve().then(() => offers.current)),
 }));
 
 import { calculateListQuote } from '../index';

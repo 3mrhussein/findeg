@@ -4,13 +4,13 @@ See [transition and delegate ownership](compatibility.md).
 
 # @findeg/config
 
-The lint standard for every package, as five layers composed into profiles. Nothing here is named after an app: a package picks a **profile** by what it is, and the profile applies every layer.
+The ecosystem lint baseline plus FindEg layers, composed into profiles. Nothing here is named after an app: a package picks a **profile** by what it is, and the profile applies every layer.
 
 ## Layers
 
 | Layer | Question it answers | File | Rule |
 | --- | --- | --- | --- |
-| L0 hygiene | Is the code well formed? | `eslint/layers/hygiene.js` | Prettier, TypeScript basics, `required-package-scripts` |
+| L0 hygiene | Is the code well formed? | `eslint/layers/hygiene.js` | `required-package-scripts` (ecosystem checks live in `standards.js`) |
 | L1 runtime | What may it assume about where it runs? | `eslint/layers/runtime.js` | `local/runtime-imports` |
 | L2 boundaries | Which workspace packages may it depend on? | `eslint/layers/boundaries.js` | `local/declared-workspace-dependencies` |
 | L3 surface | Which entries of another package may it use? | `eslint/layers/surface.js` | `local/orders-boundary`, barrel rules (Next apps) |
@@ -61,6 +61,7 @@ exempt. Missing or invalid domain source fails lint configuration loading.
 ## Complete global baseline (#436)
 
 See [staged activation, preset composition and measurements](eslint/rollout.md).
-Set `FINDEG_ESLINT_STANDARDS=1` for the existing workspace lint command to extend
-the complete maintained ecosystem presets and global naming checks. Library
-structure policy remains separate. #445 owns full activation after remediation.
+The explicit list in `eslint/activation.mjs` enables complete maintained ecosystem
+presets and naming for libraries and shared configuration by default. Remaining
+workspaces use the recommended TypeScript tier; #445 owns their measured activation.
+Prettier remains the formatter through lint-staged, outside ESLint.

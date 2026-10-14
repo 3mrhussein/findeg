@@ -19,7 +19,7 @@ import { Tag } from '../catalog-tag/index';
 import { type ProductAttributeValue } from '../catalog-attribute/index';
 
 export class ProductService implements IProductService {
-  private async mapToDomain(
+  private mapToDomain(
     dbProduct: Awaited<ReturnType<typeof productQueries.getById>>,
     variants: Variant[] = [],
     categoryName?: string,
@@ -29,13 +29,13 @@ export class ProductService implements IProductService {
     language: Locale = 'en',
     hydratedDefaultVariant?: Variant,
   ): Promise<Product | null> {
-    if (!dbProduct) return null;
+    if (!dbProduct) return Promise.resolve(null);
 
     const nameMap = asTranslationMap(dbProduct.localizedName);
     const descMap = asTranslationMap(dbProduct.localizedDescription);
     const longDescMap = asTranslationMap(dbProduct.localizedLongDescription);
 
-    return {
+    return Promise.resolve({
       id: dbProduct.id,
       isActive: dbProduct.isActive,
       brandId: dbProduct.brandId ?? undefined,
@@ -60,13 +60,23 @@ export class ProductService implements IProductService {
       attributes,
       createdAt: dbProduct.createdAt,
       updatedAt: dbProduct.updatedAt,
-    };
+    });
   }
 
   private mapVariantToDomain(
-    dbVariant: Awaited<ReturnType<typeof productQueries.getVariantsByProductIds>>[number][number],
+    dbVariant: Omit<
+      NonNullable<
+        Awaited<ReturnType<typeof productQueries.getVariantsByProductIds>>[number]
+      >[number],
+      'basePrice' | 'strikePrice' | 'costPrice'
+    > & {
+      basePrice: string | number;
+      strikePrice: string | number | null;
+      costPrice: string | number | null;
+    },
   ): Variant {
-    const labelMap = (dbVariant.localizedLabel as TranslationMap) || translationMapBy(() => '');
+    const labelMap =
+      (dbVariant.localizedLabel as TranslationMap | null) || translationMapBy(() => '');
     return {
       id: dbVariant.id,
       productId: dbVariant.productId,
@@ -98,7 +108,7 @@ export class ProductService implements IProductService {
       icon: dbTag.icon || undefined,
       color: dbTag.color || undefined,
       isActive: dbTag.isActive,
-      scope: (dbTag.scope as TagScope) || 'catalog',
+      scope: (dbTag.scope as TagScope | null) || 'catalog',
       createdAt: dbTag.createdAt,
       updatedAt: dbTag.updatedAt,
     };
@@ -124,10 +134,10 @@ export class ProductService implements IProductService {
       const defaultVariant = domainDefaultVariant(productVariantsList);
 
       const catName = row.category
-        ? pick(asTranslationMap(row.category.localizedName ?? {}), lang)
+        ? pick(asTranslationMap(row.category.localizedName), lang)
         : undefined;
       const brandNameStr = row.brand
-        ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)
+        ? pick(asTranslationMap(row.brand.localizedName), lang)
         : undefined;
 
       const domain = await this.mapToDomain(
@@ -152,24 +162,22 @@ export class ProductService implements IProductService {
    */
   async getById(id: ID, language?: Locale): Promise<Product | null> {
     const lang = parse(language);
-    const result = await productQueries.getByIdWithBrandAndCategory(id as number);
+    const result = await productQueries.getByIdWithBrandAndCategory(id);
 
     if (!result) return null;
 
-    const variants = await productQueries.getVariantsByProductIds([id as number]);
-    const tagsData = await productQueries.getProductTags(id as number);
-    const attrs = await productQueries.getProductAttributes(id as number);
+    const variants = await productQueries.getVariantsByProductIds([id]);
+    const tagsData = await productQueries.getProductTags(id);
+    const attrs = await productQueries.getProductAttributes(id);
 
-    const productVariantsList = (variants[id as number] || []).map((v) =>
-      this.mapVariantToDomain(v),
-    );
+    const productVariantsList = (variants[id] || []).map((v) => this.mapVariantToDomain(v));
     const defaultVariant = domainDefaultVariant(productVariantsList);
 
     const catName = result.category
-      ? pick(asTranslationMap(result.category.localizedName ?? {}), lang)
+      ? pick(asTranslationMap(result.category.localizedName), lang)
       : undefined;
     const brandNameStr = result.brand
-      ? pick(asTranslationMap(result.brand.localizedName ?? {}), lang)
+      ? pick(asTranslationMap(result.brand.localizedName), lang)
       : undefined;
     const tags = tagsData.map((t) => this.mapTagToDomain(t));
 
@@ -192,7 +200,7 @@ export class ProductService implements IProductService {
   async getByIds(ids: ID[], language?: Locale): Promise<Product[]> {
     if (ids.length === 0) return [];
     const lang = parse(language);
-    const numericIds = ids as number[];
+    const numericIds = ids;
 
     const [rows, variantsMap, tagsMap, attrsMap] = await Promise.all([
       productQueries.getByIdsWithBrandAndCategory(numericIds),
@@ -209,10 +217,10 @@ export class ProductService implements IProductService {
       const variants = (variantsMap[id] || []).map((v) => this.mapVariantToDomain(v));
       const defaultVariant = domainDefaultVariant(variants);
       const catName = row.category
-        ? pick(asTranslationMap(row.category.localizedName ?? {}), lang)
+        ? pick(asTranslationMap(row.category.localizedName), lang)
         : undefined;
       const brandName = row.brand
-        ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)
+        ? pick(asTranslationMap(row.brand.localizedName), lang)
         : undefined;
       const domain = await this.mapToDomain(
         row.product,
@@ -260,7 +268,7 @@ export class ProductService implements IProductService {
 
   async getByCategory(categoryId: ID, language?: Locale): Promise<Product[]> {
     const lang = parse(language);
-    const results = await productQueries.getByCategory(categoryId as number);
+    const results = await productQueries.getByCategory(categoryId);
 
     if (results.length === 0) return [];
 
@@ -359,7 +367,7 @@ export class ProductService implements IProductService {
     });
 
     const result = await this.getById(newProduct.id);
-    if (!result) throw new Error(`Failed to retrieve created product ${newProduct.id}`);
+    if (!result) throw new Error(`Failed to retrieve created product ${String(newProduct.id)}`);
 
     return result;
   }
@@ -373,7 +381,7 @@ export class ProductService implements IProductService {
       input.translations.map((t) => [t.language, t.longDescription]),
     );
 
-    await productQueries.update(id as number, {
+    await productQueries.update(id, {
       isActive: input.isActive,
       categoryId: input.categoryId,
       brandId: input.brandId,
@@ -383,12 +391,12 @@ export class ProductService implements IProductService {
     });
 
     const result = await this.getById(id);
-    if (!result) throw new Error(`Failed to retrieve updated product ${id}`);
+    if (!result) throw new Error(`Failed to retrieve updated product ${String(id)}`);
 
     return result;
   }
 
   async delete(id: ID): Promise<void> {
-    await productQueries.deleteProduct(id as number);
+    await productQueries.deleteProduct(id);
   }
 }

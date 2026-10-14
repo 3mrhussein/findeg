@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { CollectionSchema, CreateCollectionSchema } from '../index';
+import {
+  CollectionSchema as collectionSchema,
+  CreateCollectionSchema as createCollectionSchema,
+} from '../index';
 
 describe('collection schemas', () => {
   it('parses a stored collection and omits identity from create', () => {
@@ -10,9 +13,9 @@ describe('collection schemas', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    expect(CollectionSchema.safeParse(stored).success).toBe(true);
+    expect(collectionSchema.safeParse(stored).success).toBe(true);
     expect(
-      CreateCollectionSchema.parse({ slug: 'summer', localizedTitle: stored.localizedTitle }),
+      createCollectionSchema.parse({ slug: 'summer', localizedTitle: stored.localizedTitle }),
     ).not.toHaveProperty('id');
   });
 });

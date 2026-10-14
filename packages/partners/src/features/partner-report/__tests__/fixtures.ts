@@ -38,7 +38,12 @@ export function partnerSalesFixtures(testDb: TestDatabase, prefix: string) {
   ) {
     const [partner] = await testDb.db
       .insert(businessPartners)
-      .values({ code: `${prefix}-school-${next()}`, nameEn: 'School', nameAr: 'مدرسة', status })
+      .values({
+        code: `${prefix}-school-${String(next())}`,
+        nameEn: 'School',
+        nameAr: 'مدرسة',
+        status,
+      })
       .returning();
     return partner.id;
   }
@@ -50,7 +55,7 @@ export function partnerSalesFixtures(testDb: TestDatabase, prefix: string) {
   ) {
     const [user] = await testDb.db
       .insert(users)
-      .values({ email: `${prefix}-member-${next()}@findeg.test` })
+      .values({ email: `${prefix}-member-${String(next())}@findeg.test` })
       .returning();
     const [invitation] = await testDb.db
       .insert(partnerInvitations)
@@ -76,7 +81,7 @@ export function partnerSalesFixtures(testDb: TestDatabase, prefix: string) {
   async function createListing(partnerId: number) {
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `${prefix}-cat-${next()}` })
+      .values({ slug: `${prefix}-cat-${String(next())}` })
       .returning();
     const [list] = await testDb.db
       .insert(schoolSupplyLists)
@@ -109,7 +114,7 @@ export function partnerSalesFixtures(testDb: TestDatabase, prefix: string) {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `${prefix.toUpperCase()}-SKU-${n}`,
+        sku: `${prefix.toUpperCase()}-SKU-${String(n)}`,
         basePrice: '25.00',
         localizedLabel: { en: 'Blue', ar: 'أزرق' },
       })

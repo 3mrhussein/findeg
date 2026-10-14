@@ -57,7 +57,7 @@ describe('Partner Invitations (Staff operations)', () => {
 
   const newPartner = async () => {
     const result = await services.partners.createPartner(staff, {
-      code: `inv-school-${++seq}`,
+      code: `inv-school-${String(++seq)}`,
       nameEn: 'Inv School',
       nameAr: 'مدرسة',
     });

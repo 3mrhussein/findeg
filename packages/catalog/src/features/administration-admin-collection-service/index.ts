@@ -48,7 +48,7 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     const collection = await createCollection(collectionData);
 
-    if (tagIds && tagIds.length > 0) {
+    if (tagIds.length > 0) {
       await setCollectionTags(collection.id, tagIds);
     }
 
@@ -82,7 +82,7 @@ export class AdminCollectionService implements IAdminCollectionService {
       entityType: 'collection',
       entityId: String(id),
       action: 'update',
-      oldValues: oldCollection as unknown as Record<string, unknown>,
+      oldValues: oldCollection,
       newValues: { ...collection, tagIds },
     });
 
@@ -101,7 +101,7 @@ export class AdminCollectionService implements IAdminCollectionService {
       entityType: 'collection',
       entityId: String(id),
       action: 'delete',
-      oldValues: oldCollection as unknown as Record<string, unknown>,
+      oldValues: oldCollection,
     });
   }
 

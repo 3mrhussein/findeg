@@ -7,27 +7,31 @@ vi.mock('@findeg/db/connection', () => ({
   db: { transaction: (run: (tx: unknown) => unknown) => run({}) },
 }));
 vi.mock('@findeg/db/queries/partners', () => ({
-  listBusinessPartners: vi.fn(async () => []),
-  lockBusinessPartnerById: vi.fn(async () => ({
-    id: 5,
-    code: 'sch-100',
-    nameEn: 'Nile',
-    nameAr: 'النيل',
-    status: 'active',
-  })),
-  getCurrentPartnerMembershipByEmail: vi.fn(async () => undefined),
-  getPendingPartnerInvitationByEmail: vi.fn(async () => undefined),
-  insertPartnerAccessHistory: vi.fn(async () => undefined),
-  insertPartnerInvitation: vi.fn(async () => ({
-    id: 11,
-    businessPartnerId: 5,
-    email: 'teacher@example.com',
-    roles: ['list-manager'],
-    status: 'pending',
-    expiresAt: new Date('2026-10-30T00:00:00Z'),
-    createdAt: new Date('2026-10-14T00:00:00Z'),
-  })),
-  insertPartnerInvitationToken: vi.fn(async () => undefined),
+  listBusinessPartners: vi.fn(() => Promise.resolve().then(() => [])),
+  lockBusinessPartnerById: vi.fn(() =>
+    Promise.resolve().then(() => ({
+      id: 5,
+      code: 'sch-100',
+      nameEn: 'Nile',
+      nameAr: 'النيل',
+      status: 'active',
+    })),
+  ),
+  getCurrentPartnerMembershipByEmail: vi.fn(() => Promise.resolve().then(() => undefined)),
+  getPendingPartnerInvitationByEmail: vi.fn(() => Promise.resolve().then(() => undefined)),
+  insertPartnerAccessHistory: vi.fn(() => Promise.resolve().then(() => undefined)),
+  insertPartnerInvitation: vi.fn(() =>
+    Promise.resolve().then(() => ({
+      id: 11,
+      businessPartnerId: 5,
+      email: 'teacher@example.com',
+      roles: ['list-manager'],
+      status: 'pending',
+      expiresAt: new Date('2026-10-30T00:00:00Z'),
+      createdAt: new Date('2026-10-14T00:00:00Z'),
+    })),
+  ),
+  insertPartnerInvitationToken: vi.fn(() => Promise.resolve().then(() => undefined)),
 }));
 
 describe('createPartnerMembershipServices', () => {
