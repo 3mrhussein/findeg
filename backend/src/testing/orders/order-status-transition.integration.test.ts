@@ -11,7 +11,8 @@ import {
   users,
   warehouses,
 } from '@findeg/db/schema';
-import { createCheckoutService } from '../../features/checkout';
+import { createCheckoutService as createOrderCheckoutService } from '@findeg/orders';
+import { enqueue } from '../../features/outbox';
 import {
   createOutbox,
   retryOutbox,
@@ -33,7 +34,7 @@ describe('transitionOrderStatus on real Postgres', () => {
     id: number,
     update: Parameters<ReturnType<typeof createOrders>['changeStatus']>[2],
   ) => createOrders({ db: testDb.db }).changeStatus(writer, id, update);
-  const checkout = createCheckoutService({});
+  const checkout = createOrderCheckoutService({ enqueue });
 
   beforeAll(async () => {
     testDb = connectToTestDatabase();

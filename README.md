@@ -219,7 +219,7 @@ FindEg uses a strict **3-tier documentation hierarchy** to capture deep technica
   - [Identity](./backend/src/features/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
   - [Cart](./backend/src/features/cart/README.md) — Transient user selection and unit verification.
   - [School](./backend/src/features/school/README.md) — B2B token access layers.
-  - [Guest Access](./backend/src/features/guest-access/README.md) — Guest order access.
+  - [Guest Access](./packages/orders/README.md) — Guest order access (in `@findeg/orders`).
   - [Partner Membership](./backend/src/features/partner-membership/README.md) — Business partner memberships.
   - [Partner Sales](./backend/src/features/partner-sales/README.md) — Attributed order reads.
   - [Outbox](./backend/src/features/outbox/README.md) — Transactional outbox events.

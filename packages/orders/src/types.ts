@@ -1,4 +1,5 @@
 import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/types';
+import type { BUSINESS_TIME_ZONE, DEFAULT_CURRENCY } from '@findeg/domain';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as Schema from '@findeg/db/schema';
 import type {
@@ -108,8 +109,8 @@ export interface OrderStatsOptions {
 }
 
 export interface OrderStats {
-  currency: 'EGP';
-  timezone: 'Africa/Cairo';
+  currency: typeof DEFAULT_CURRENCY;
+  timezone: typeof BUSINESS_TIME_ZONE;
   totalOrders: number;
   totalRevenue: bigint;
   todayOrders: number;
@@ -142,4 +143,38 @@ export interface Orders {
   listNotes(id: number | string): Promise<OrderNote[]>;
 }
 
+export type {
+  CheckoutAcceptedOrder,
+  CheckoutLine,
+  CheckoutOrderContext,
+  CheckoutOrderInput,
+  CheckoutQuote,
+  CheckoutQuoteLine,
+  CheckoutReceipt,
+  CheckoutShippingAddress,
+  CheckoutValidateInput,
+  ListCheckoutLine,
+} from './features/checkout-input';
+export type {
+  CheckoutAcceptFailure,
+  CheckoutAcceptResult,
+  CheckoutAcceptSuccess,
+  CheckoutServiceOptions,
+  CheckoutValidateFailure,
+  CheckoutValidateResult,
+  CheckoutValidateSuccess,
+  ICheckoutService,
+  OutboxEnqueue,
+} from './features/order-acceptance';
+export type { GuestAccessTokens } from './features/guest-access-token';
+export type {
+  GuestAccessServiceOptions,
+  GuestOrderView,
+  RequestAccessResult,
+  VerifyResult,
+} from './features/guest-access';
+export type {
+  GuestAccessRequestInput,
+  GuestAccessVerifyInput,
+} from './features/guest-access-input';
 export type * from './index';

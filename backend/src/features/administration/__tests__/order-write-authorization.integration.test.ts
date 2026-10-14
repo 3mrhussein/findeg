@@ -14,9 +14,15 @@ import {
   warehouses,
 } from '@findeg/db/schema';
 import { PERMISSION_CODES } from '@findeg/db';
-import { createCheckoutService } from '../../checkout';
+import { createCheckoutService as createOrderCheckoutService } from '@findeg/orders';
+import type { CheckoutServiceOptions } from '@findeg/orders/types';
+import { enqueue } from '../../outbox';
 import { createOrders, type OrderStaffActor } from '@findeg/orders';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+
+/** Acceptance with the backend outbox port; tests pass only what they vary. */
+const createCheckoutService = (options: Partial<CheckoutServiceOptions> = {}) =>
+  createOrderCheckoutService({ enqueue, ...options });
 
 const notAuthorized = { code: 'NOT_AUTHORIZED', message: 'Not authorized to change orders' };
 

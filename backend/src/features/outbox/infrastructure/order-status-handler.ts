@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Locale, NotifiedOrderStatus } from '@findeg/domain';
 import { OrderStatusSchema } from '@findeg/orders';
 import { orderQueries } from '@findeg/db/queries';
 import { DEFAULT_LOCALE } from '../../core';
@@ -10,7 +11,7 @@ const SUBJECTS = {
   shipped: { en: 'has shipped', ar: 'تم شحنه' },
   delivered: { en: 'was delivered', ar: 'تم توصيله' },
   cancelled: { en: 'was cancelled', ar: 'تم إلغاؤه' },
-} as const;
+} satisfies Record<NotifiedOrderStatus, Record<Locale, string>>;
 
 /** Renders the status email at send time; the payload carries only `{ orderId, status }`. */
 export function createOrderStatusHandler(emailProvider: EmailProvider): OutboxHandler {

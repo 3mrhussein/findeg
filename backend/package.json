@@ -6,10 +6,6 @@
     ".": "./src/index.ts",
     "./features/administration": "./src/features/administration/index.ts",
     "./features/administration/*": null,
-    "./features/checkout": "./src/features/checkout/index.ts",
-    "./features/checkout/contracts": "./src/features/checkout/contracts.ts",
-    "./features/checkout/schemas": "./src/features/checkout/schemas.ts",
-    "./features/checkout/*": null,
     "./features/catalog": "./src/features/catalog/index.ts",
     "./features/catalog/contracts": "./src/features/catalog/contracts.ts",
     "./features/catalog/schemas": "./src/features/catalog/schemas.ts",
@@ -18,9 +14,6 @@
     "./features/core/logger": "./src/features/core/logger.ts",
     "./features/core/schemas": "./src/features/core/schemas.ts",
     "./features/core/*": null,
-    "./features/guest-access": "./src/features/guest-access/index.ts",
-    "./features/guest-access/schemas": "./src/features/guest-access/schemas.ts",
-    "./features/guest-access/*": null,
     "./features/identity": "./src/features/identity/index.ts",
     "./features/identity/contracts": "./src/features/identity/contracts.ts",
     "./features/media": "./src/features/media/index.ts",
@@ -66,8 +59,7 @@
     "resend": "^4.0.2",
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
-    "zod": "^4.6.5",
-    "@findeg/orders": "workspace:*"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

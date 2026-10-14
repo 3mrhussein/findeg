@@ -1,5 +1,12 @@
 # Orders
 
+Sales and Orders context: Order reads and Staff lifecycle commands (`createOrders`), Checkout (`createCheckoutService`: Quote, validation and Order Acceptance) and Guest Order Access (`createGuestAccessService`). Checkout and Guest Order Access moved here from Backend (ADR-0020).
+
+- Checkout `validate` quotes a cart or School Supply List selection; `accept` runs the acceptance transaction (idempotency, re-quote under locks, stock allocation, Order and Outbox row together). The Outbox enqueue is a port: the composition supplies `enqueue` from Backend infrastructure. Checkout's receipts and Quote shapes are in `@findeg/orders/types`.
+- Guest Order Access (ADR-0008): `requestAccess` answers success for well-formed input and enqueues one access email only for a matching guest Order. `verify` consumes the request on a correct code and returns a 30-minute token for that one reference; `getOrder` returns the Order only for that token. The secret is injected as `secret()` and read per operation, so a missing secret fails closed. Codes are minted per send and stored only as HMACs.
+- Limits: `requestAccess` creates a request only when the reference and checkout `guestEmail` match and fewer than 3 requests exist for the Order in the last hour. A request is valid 15 minutes with 5 verification attempts. The outbox handler mints a fresh code per send attempt, so a retried email carries another working code; a consumed, expired or out-of-attempts request ends as `expired` without sending. Verification tokens last 30 minutes and are issued by the injected `GuestAccessTokens` port.
+- The Outbox row kinds and ids (`order-accepted:<ref>`, `guest-access:<requestId>`) are exported from this package; Backend's Outbox delivers them.
+
 `createOrders({ db?, now? })` owns Order reads and Staff lifecycle commands. Construction is connection-free. Injected operations use only the supplied database; a default first operation loads `@findeg/db/connection` lazily.
 
 - `get`, `list`, `listForCustomer`, `recent`, `detail` and `latestShippingAddress` return historical Order data. Reads are ungated here; apps authenticate and enforce Customer ownership at their edges.
@@ -7,7 +14,7 @@
 - Order and line amounts are bigint piasters from canonical stored decimals. Deleted products retain a null product ID and their historical snapshots.
 - `getStats({ from?, to?, trendDays?, topProductsLimit? })` returns exact accepted-value revenue across all statuses, zero-filled Cairo calendar trends and current catalog top products from historical line totals. Inclusive date keys use PostgreSQL DST conversion. Options validate before database resolution; all aggregates share one read-only repeatable-read snapshot. Defaults are 30 trend days and five top products.
 
-Public entries are `@findeg/orders` (factory, errors, permission, input schemas and notification protocol) and `@findeg/orders/types` (types only). Area, schema, event, helper and source subpaths do not resolve. The root loads without application configuration. Client validation facades derive schemas from Domain values; server app queries enforce their boundary with `server-only`. Notification rendering and delivery remain in Backend Outbox; Checkout owns Acceptance. See ADR-0016 for dependency direction. Backend and both apps consume these public entries directly; there are no Backend Order adapters.
+Public entries are `@findeg/orders` (factories, errors, permission, input schemas, notification protocol, guest token helpers) and `@findeg/orders/types` (types only). Area, schema, event, helper and source subpaths do not resolve. The root loads without application configuration. Client validation facades derive schemas from Domain values; server app queries enforce their boundary with `server-only`. Notification rendering and delivery remain in Backend Outbox; Checkout owns Acceptance. See ADR-0016 for dependency direction. Backend and both apps consume these public entries directly; there are no Backend Order adapters.
 
 Unit tests run here, in local `__tests__` directories beside each feature. Database-bound features run against a scripted, test-only client injected through the factory, so this package measures without PostgreSQL. Real PostgreSQL tests live in Backend and use the public factory, keeping the integration harness outside this package.
 

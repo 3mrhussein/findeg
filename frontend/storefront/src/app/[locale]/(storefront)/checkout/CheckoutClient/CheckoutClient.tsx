@@ -10,7 +10,7 @@ import type {
   CheckoutOrderInput,
   CheckoutQuote,
   CheckoutReceipt,
-} from '@findeg/backend/features/checkout';
+} from '@findeg/orders/types';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 import { useCheckoutForm, type CheckoutValidationError } from './useCheckoutForm';
 import { ShippingForm } from '../_components/ShippingForm';

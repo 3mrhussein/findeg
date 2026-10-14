@@ -1,12 +1,15 @@
 import { cookies } from 'next/headers';
-import {
-  GUEST_ORDER_COOKIE,
-  createGuestAccessService,
-} from '@findeg/backend/features/guest-access';
+import { GUEST_ORDER_COOKIE, createGuestAccessService } from '@findeg/orders';
+import { enqueue, requireGuestAccessSecret } from '@findeg/backend/features/outbox';
+import { createGuestOrderTokens } from '@findeg/backend/features/core';
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
-  const result = await createGuestAccessService().verify(body);
+  const result = await createGuestAccessService({
+    enqueue,
+    secret: requireGuestAccessSecret,
+    tokens: createGuestOrderTokens(requireGuestAccessSecret),
+  }).verify(body);
 
   if (!result.success) {
     const invalidInput = result.reason === 'invalid-input';

@@ -132,9 +132,9 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 | Feature Module | Business Purpose | Key Domain Entities |
 | --- | --- | --- |
 | [**Catalog**](src/features/catalog/README.md) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
-| [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
+| [**Checkout**](../packages/orders/src/features/order-acceptance/index.ts) | Checkout validation and order acceptance (moved to `@findeg/orders`). | `CheckoutService` |
 | [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
-| [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
+| [**Guest Access**](../packages/orders/README.md) | Lets a guest reach one Order without an account (ADR-0008); moved to `@findeg/orders`. | `GuestAccessService` |
 | [**Identity**](src/features/identity/README.md) | Hardened auth, RBAC permissions, token vending. | `User`, `Role`, `PasswordCredentials` |
 | [**Partner Membership**](src/features/partner-membership/README.md) | Business Partners and who may work in their Partner Workspace. | `PartnerMembershipServices` |
 | [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |

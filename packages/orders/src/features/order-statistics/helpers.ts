@@ -1,11 +1,23 @@
 import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { orders, orderItems, products } from '@findeg/db/schema';
-import { LIVE_ORDER_STATUSES, ORDER_STATUSES } from '@findeg/domain';
-import { moneyFromDecimal } from '@findeg/domain';
+import {
+  BUSINESS_TIME_ZONE,
+  DEFAULT_CURRENCY,
+  LIVE_ORDER_STATUSES,
+  ORDER_STATUSES,
+  moneyFromDecimal,
+} from '@findeg/domain';
 import { statsOptionsSchema } from '../validation';
 import type { OrderContext, Orders } from '../../types';
 
 /** Order totals, status counts, revenue trend and top products in the business time zone. */
+/** One zeroed counter per value of a Domain value set, keyed exhaustively by that set. */
+function zeroCounts<const Values extends readonly string[]>(
+  values: Values,
+): Record<Values[number], number> {
+  return Object.fromEntries(values.map((value) => [value, 0])) as Record<Values[number], number>;
+}
+
 export function createOrderStatistics({ database, now }: OrderContext): Pick<Orders, 'getStats'> {
   return {
     async getStats(input = {}) {
@@ -48,17 +60,15 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .from(orders)
             .where(range)
             .groupBy(orders.status);
-          const ordersByStatus = Object.fromEntries(
-            ORDER_STATUSES.map((status) => [status, 0]),
-          ) as Record<(typeof ORDER_STATUSES)[number], number>;
+          const ordersByStatus = zeroCounts(ORDER_STATUSES);
           for (const row of statuses) ordersByStatus[row.status] = row.count;
           const trend = await tx.execute<{ date: string; revenue: string }>(sql`
           with dates as (
             select generate_series(greatest(${today} - (${options.trendDays}::int - 1), ${from})::timestamp, least(${today}, ${to})::timestamp, interval '1 day')::date as date
           )
           select dates.date::text as date, coalesce(sum(${orders.totalAmount}), 0)::text as revenue
-          from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
-            and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+          from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')
+            and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')
             ${trendLiveClause}
           group by dates.date order by dates.date
         `);
@@ -77,8 +87,8 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .orderBy(desc(sql`sum(${orderItems.quantity})`), products.id)
             .limit(options.topProductsLimit);
           return {
-            currency: 'EGP' as const,
-            timezone: 'Africa/Cairo' as const,
+            currency: DEFAULT_CURRENCY,
+            timezone: BUSINESS_TIME_ZONE,
             totalOrders: totals.totalOrders,
             totalRevenue: moneyFromDecimal(totals.revenue),
             todayOrders: totals.todayOrders,
