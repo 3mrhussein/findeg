@@ -8,4 +8,4 @@ export {
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,
-} from '../../../identity/contracts';
+} from '@findeg/identity/types';

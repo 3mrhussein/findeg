@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SessionPayload } from '@findeg/backend/features/core';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 
 const {
   getSession,
@@ -105,7 +105,7 @@ vi.mock('@findeg/backend/features/administration', () => ({
     schoolSupplyLists: schoolSupplyListService,
   }),
 }));
-vi.mock('@findeg/backend/features/identity', () => ({
+vi.mock('@findeg/identity', () => ({
   createIdentityServices: () => ({
     adminRoles: identityRolesService,
     adminUsers: identityUsersService,

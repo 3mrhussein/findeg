@@ -4,7 +4,7 @@ import { getOrderDetail } from '@data/orders/queries';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@i18n/navigation';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 import { OrderHeader } from './_components/OrderHeader';

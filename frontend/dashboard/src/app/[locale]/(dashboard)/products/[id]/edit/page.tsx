@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { parse } from '@findeg/backend/features/core';
 import { getProductForEdit } from '@data/products/queries';
 import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 

@@ -4,7 +4,11 @@
  * Centralized machine-readable error codes and default messages.
  */
 
+import { AUTH_ERROR_CATALOG } from '@findeg/identity/types';
+
 export const ERROR_CATALOG = {
+  // Identity-owned authentication errors are defined by @findeg/identity.
+  ...AUTH_ERROR_CATALOG,
   VALIDATION_INVALID_REQUEST: {
     message: 'Invalid request.',
     httpStatus: 400,
@@ -165,18 +169,6 @@ export const ERROR_CATALOG = {
     message: 'Failed to update order payment status.',
     httpStatus: 500,
   },
-  AUTH_INVALID_CREDENTIALS: {
-    message: 'Invalid email or password.',
-    httpStatus: 401,
-  },
-  AUTH_ACCOUNT_NO_PASSWORD: {
-    message: 'Account has no password set.',
-    httpStatus: 401,
-  },
-  AUTH_EMAIL_ALREADY_REGISTERED: {
-    message: 'Email already registered.',
-    httpStatus: 409,
-  },
   AUTH_UNAUTHORIZED: {
     message: 'Authentication required or session expired.',
     httpStatus: 401,
@@ -195,10 +187,6 @@ export const ERROR_CATALOG = {
   },
   AUTH_LOGIN_FAILED: {
     message: 'Login failed.',
-    httpStatus: 500,
-  },
-  AUTH_REGISTER_FAILED: {
-    message: 'Registration failed.',
     httpStatus: 500,
   },
   AUTH_REFRESH_FAILED: {

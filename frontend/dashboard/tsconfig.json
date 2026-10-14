@@ -24,7 +24,6 @@
       ],
       "@findeg/backend/features/catalog": ["../../backend/src/features/catalog/index.ts"],
       "@findeg/backend/features/core": ["../../backend/src/features/core/index.ts"],
-      "@findeg/backend/features/identity": ["../../backend/src/features/identity/index.ts"],
       "@findeg/backend/features/media": ["../../backend/src/features/media/index.ts"],
       "@findeg/backend/features/notifications": [
         "../../backend/src/features/notifications/index.ts"

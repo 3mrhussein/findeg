@@ -2,7 +2,7 @@ import 'server-only';
 import type { SessionPayload } from '@findeg/backend/features/core';
 import { getSession } from '@/lib/session';
 import { createOrders } from '@findeg/orders';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 import {
   GUEST_ORDER_COOKIE,
   createGuestAccessService,

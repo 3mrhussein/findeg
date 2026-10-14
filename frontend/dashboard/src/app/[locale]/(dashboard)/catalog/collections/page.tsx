@@ -1,6 +1,6 @@
 import { CollectionsPageClient } from './_components/CollectionsPageClient';
 import { Metadata } from 'next';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 

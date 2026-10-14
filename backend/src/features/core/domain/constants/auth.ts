@@ -12,4 +12,4 @@ export const AUTH_CONSTANTS = {
 } as const;
 
 // Temporary compatibility export for the Identity response contract.
-export { AUTH_SUCCESS_MESSAGES } from '../../../identity/contracts';
+export { AUTH_SUCCESS_MESSAGES } from '@findeg/identity/types';

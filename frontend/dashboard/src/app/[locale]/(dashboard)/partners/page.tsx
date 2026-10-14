@@ -3,7 +3,7 @@ import { Badge, Button } from '@findeg/ui';
 import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { listPartners } from '@data/partners/queries';
 
 export const metadata = {

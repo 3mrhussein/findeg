@@ -1,6 +1,6 @@
 import { getInventoryWithProducts, getLowStockAlerts } from '@data/inventory/queries';
 import { InventoryTable } from './_components/InventoryTable';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 

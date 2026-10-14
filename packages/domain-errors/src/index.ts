@@ -7,3 +7,4 @@
  */
 export { DomainError } from './DomainError';
 export { NotAuthorizedError } from './NotAuthorizedError';
+export { ResourceNotFoundError } from './ResourceNotFoundError';

@@ -3,7 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ProductListSkeleton } from '@components/skeletons';
 import type { ProductListFilters } from '@findeg/backend/features/administration';
 import { ProductsContent } from './_components/ProductsContent';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 import { routing } from '@i18n/routing';

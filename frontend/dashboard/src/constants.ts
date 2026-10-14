@@ -1,4 +1,4 @@
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { NavGroup } from './interfaces';
 
 export const ADMIN_NAV: NavGroup[] = [

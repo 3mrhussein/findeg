@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { getCachedSession } from '@data/auth/queries';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 
 /**
  * Get current user from session.

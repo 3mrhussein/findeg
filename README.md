@@ -216,7 +216,7 @@ FindEg uses a strict **3-tier documentation hierarchy** to capture deep technica
 - **Orders**: [`@findeg/orders`](./packages/orders/README.md) — Order reads, Staff lifecycle commands.
 - **Tier 3 Feature Domains (Node/Services)**:
   - [Catalog](./backend/src/features/catalog/README.md) — Products, Arrays, Search execution.
-  - [Identity](./backend/src/features/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
+  - [Identity](./packages/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
   - [Cart](./backend/src/features/cart/README.md) — Transient user selection and unit verification.
   - [School](./backend/src/features/school/README.md) — B2B token access layers.
   - [Guest Access](./backend/src/features/guest-access/README.md) — Guest order access.

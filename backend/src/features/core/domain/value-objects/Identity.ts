@@ -20,4 +20,4 @@ export {
   type PaymentProvider,
   RoleGrantSchema,
   type RoleGrant,
-} from '../../../identity/contracts';
+} from '@findeg/identity/types';

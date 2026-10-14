@@ -11,7 +11,7 @@ import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
 } from '@findeg/backend/features/catalog';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 

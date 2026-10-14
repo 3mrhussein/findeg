@@ -19,6 +19,7 @@
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
+    "@findeg/identity": "workspace:*",
     "@findeg/orders": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",

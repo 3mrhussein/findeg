@@ -135,7 +135,7 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 | [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
 | [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
 | [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
-| [**Identity**](src/features/identity/README.md) | Hardened auth, RBAC permissions, token vending. | `User`, `Role`, `PasswordCredentials` |
+| [**Identity**](../packages/identity/README.md) (`@findeg/identity`) | Hardened auth, RBAC permissions, account administration. Token infrastructure stays in backend core. | `User`, `Role`, `PasswordCredentials` |
 | [**Partner Membership**](src/features/partner-membership/README.md) | Business Partners and who may work in their Partner Workspace. | `PartnerMembershipServices` |
 | [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |
 | [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
@@ -217,8 +217,9 @@ openssl rand -base64 32
 ## Usage
 
 ```typescript
-// Root barrel: services, JWTService, errors, lib helpers
-import { JWTService, getMyAccountData, formatCurrency } from '@findeg/backend';
+// Root barrel: infrastructure, JWTService, errors, lib helpers. Identity facades come from @findeg/identity.
+import { JWTService, formatCurrency } from '@findeg/backend';
+import { getMyAccountData } from '@findeg/identity';
 ```
 
 ## Public API

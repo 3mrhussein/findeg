@@ -1,64 +1,35 @@
-// Backend package main entry point - re-exports all public interfaces and services
-import { createIdentityServices } from './features/identity/application/services/factory';
-import { UpdateAdminInput } from './features/identity/application/interfaces/IUserService';
+// Backend package main entry point: infrastructure, composition and session token adapters.
+// Identity, Catalog and Orders are published by their own packages.
+import { createIdentityServices } from '@findeg/identity';
+import { createOrders } from '@findeg/orders';
+import { createProductService } from './features/catalog';
+import { parse } from './features/core';
 
-// Core feature exports (shared types, domain models, errors)
 export * from './features/core';
 
-// Identity feature exports (auth, users)
-export * from './features/identity/domain/entities';
-export type { User, Address } from './features/identity/domain/entities';
-
-export * from './features/identity/application/interfaces/IPermissionService';
-export * from './features/identity/application/services/AuthService';
-
-// JWT Service
-import {
+export {
   JWTService,
   type TokenPair,
   type JWTPayload,
   type TokenType,
   type IJWTService,
-} from './features/identity/application/services/JWTService';
-export { JWTService, type TokenPair, type JWTPayload, type TokenType, type IJWTService };
+} from './features/core/infrastructure/auth/JwtTokenService';
 
-export async function login(
-  email: string | { email: string; password?: string },
-  password?: string,
-) {
-  const { auth } = createIdentityServices();
-  // Handle both (email, password) and ({ email, password }) signatures
-  if (typeof email === 'object' && !password) {
-    return auth.login(email.email, email.password!);
-  }
-  return auth.login(email as string, password!);
-}
+export { login, logout, updateMyProfile, updateProfile, getMyAccountData } from '@findeg/identity';
 
-export async function logout() {
-  return { success: true };
-}
-
-export async function updateMyProfile(userId: number, input: UpdateAdminInput) {
-  const { userService } = createIdentityServices();
-  return userService.updateAdmin(userId, input);
-}
-
-export async function updateProfile(
-  userId: number,
-  input: { firstName?: string; lastName?: string; phone?: string },
-) {
-  const { userService } = createIdentityServices();
-  return userService.updateProfile(userId, input);
-}
-
+/** Aggregates the products, Orders and account for the customer dashboard. */
 export async function getDashboardData(locale: string, userId: number) {
   const { userService } = createIdentityServices();
-  return userService.getDashboardData(locale, userId);
-}
+  const products = createProductService();
+  const orders = createOrders();
+  const resolvedLocale = parse(locale);
+  const [allProducts, userOrders, user] = await Promise.all([
+    products.getAll(resolvedLocale),
+    orders.listForCustomer(userId),
+    userService.getAdmin(userId),
+  ]);
 
-export async function getMyAccountData(userId: number) {
-  const { userService } = createIdentityServices();
-  return userService.getProfileData(userId);
+  return { products: allProducts, orders: userOrders, session: user };
 }
 
 export { MediaService } from './features/media/application/services';

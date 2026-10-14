@@ -8,7 +8,7 @@
 'use cache';
 
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 import { cacheLife, cacheTag } from 'next/cache';
 
 /**
