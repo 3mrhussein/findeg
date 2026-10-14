@@ -2,5 +2,6 @@
 // Paths are relative to each workspace root; bounded contexts live under src/features/.
 export const libraryScopes = {
   'packages/domain': ['src'],
+  'packages/identity': ['src'],
   'packages/orders': ['src'],
 };

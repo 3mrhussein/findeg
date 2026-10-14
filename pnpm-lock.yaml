@@ -44,6 +44,9 @@ importers:
       '@findeg/env':
         specifier: workspace:*
         version: link:../configs/env
+      '@findeg/identity':
+        specifier: workspace:*
+        version: link:../packages/identity
       '@findeg/orders':
         specifier: workspace:*
         version: link:../packages/orders
@@ -276,6 +279,9 @@ importers:
       '@findeg/env':
         specifier: workspace:*
         version: link:../../configs/env
+      '@findeg/identity':
+        specifier: workspace:*
+        version: link:../../packages/identity
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
@@ -433,6 +439,9 @@ importers:
       '@findeg/env':
         specifier: workspace:*
         version: link:../../configs/env
+      '@findeg/identity':
+        specifier: workspace:*
+        version: link:../../packages/identity
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
@@ -742,6 +751,49 @@ importers:
       '@findeg/config':
         specifier: workspace:*
         version: link:../../configs
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.9.9
+      '@vitest/coverage-v8':
+        specifier: ^4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      eslint:
+        specifier: ^9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/identity:
+    dependencies:
+      '@findeg/db':
+        specifier: workspace:*
+        version: link:../../db
+      '@findeg/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@findeg/domain-errors':
+        specifier: workspace:*
+        version: link:../domain-errors
+      '@findeg/orders':
+        specifier: workspace:*
+        version: link:../orders
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@findeg/config':
+        specifier: workspace:*
+        version: link:../../configs
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
       '@types/node':
         specifier: ^25.6.0
         version: 25.9.9

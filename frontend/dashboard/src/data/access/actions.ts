@@ -7,15 +7,11 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { createIdentityServices } from '@findeg/backend/features/identity';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { createIdentityServices } from '@findeg/identity';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
-import type {
-  CreateAdminInput,
-  UpdateAdminInput,
-  PermissionOverrideInput,
-} from '@findeg/backend/features/identity';
+import type { CreateAdminInput, UpdateAdminInput, PermissionOverrideInput } from '@findeg/identity';
 
 /**
  * Create a new custom role

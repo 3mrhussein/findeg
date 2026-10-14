@@ -4,7 +4,7 @@ import { Badge } from '@findeg/ui';
 import type { Locale, SupplyListStatus } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { getSchoolSupplyListById, getSchoolSupplyListOffer } from '@data/school-lists/queries';
 import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 import { getCategories } from '@data/categories/queries';

@@ -2,7 +2,7 @@
 
 import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { SupplyListItemInput } from '@findeg/backend/features/administration';
 import { toListActor } from '../_lib/toListActor';

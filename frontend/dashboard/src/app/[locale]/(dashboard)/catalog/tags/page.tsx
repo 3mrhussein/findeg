@@ -1,7 +1,7 @@
 import { getAllTagsGrouped } from '@data/resources/queries';
 import { TagsClient } from './_components/TagsClient';
 import { Metadata } from 'next';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 

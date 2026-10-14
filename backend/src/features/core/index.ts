@@ -1,25 +1,12 @@
-/** Core infrastructure and temporary context-contract compatibility exports. */
-export type { AuthResult } from './domain/auth/AuthResult';
+/** Core infrastructure exports. Identity-owned contracts are published by @findeg/identity. */
 export type { SessionPayload } from './domain/auth/SessionPayload';
 export {
-  PERMISSION_CODES,
-  systemAdmin,
-  staffRole,
-  customerRole,
-  adminSession,
-  hasPermission,
-  hasAnyPermission,
-  hasAllPermissions,
-} from './domain/auth/authorization';
-export { createUserVO, type UserVO } from './domain/value-objects/User';
-export {
+  DEFAULT_LOCALE,
   TranslationMapSchema,
   parse,
   type Locale,
   type TranslationMap,
 } from './domain/value-objects/Locale';
-export { DEFAULT_LOCALE } from './domain/value-objects/Locale';
-export type { PermissionCode } from './domain/value-objects/Identity';
 export { PortalRoleSchema } from './domain/types/common';
 export type { PortalRole, OrderStatus, PaymentStatus } from './domain/types/common';
 export type { Notification } from './domain/types/Notification';

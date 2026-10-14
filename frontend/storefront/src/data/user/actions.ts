@@ -4,7 +4,7 @@ import { getSession } from '@lib/session';
 import { revalidatePath } from 'next/cache';
 import { UpdateProfileInputSchema, validateInput } from '../schemas';
 import { getCurrentUser } from './queries';
-import { updateProfile as backendUpdateProfile } from '@findeg/backend';
+import { updateProfile as backendUpdateProfile } from '@findeg/identity';
 
 function splitName(name: string): { firstName?: string; lastName?: string } {
   const trimmed = name.trim();

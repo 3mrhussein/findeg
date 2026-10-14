@@ -4,7 +4,7 @@ import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { allowedPartnerStatusChanges, type Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import {
   getPartner,
   getPartnerSchoolProfile,

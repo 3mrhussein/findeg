@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { BrandsContent } from './_components/BrandsContent';
 import { routing } from '@i18n/routing';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';
 

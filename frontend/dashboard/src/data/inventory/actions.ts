@@ -7,7 +7,7 @@
 
 import { updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 

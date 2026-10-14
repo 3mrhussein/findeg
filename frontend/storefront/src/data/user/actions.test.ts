@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { updateProfile, updateProfileAction } from './actions';
 import { getSession } from '@lib/session';
 import { revalidatePath } from 'next/cache';
-import { updateProfile as backendUpdateProfile } from '@findeg/backend';
+import { updateProfile as backendUpdateProfile } from '@findeg/identity';
 
 vi.mock('@lib/session', () => ({
   getSession: vi.fn(),
@@ -12,7 +12,7 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }));
 
-vi.mock('@findeg/backend', () => ({
+vi.mock('@findeg/identity', () => ({
   updateProfile: vi.fn(),
 }));
 

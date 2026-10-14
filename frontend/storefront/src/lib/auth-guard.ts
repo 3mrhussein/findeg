@@ -1,6 +1,6 @@
 import { getCachedSession } from '@data/auth/queries';
 import { redirect } from '@i18n/navigation';
-import { adminSession } from '@findeg/backend/features/core';
+import { adminSession } from '@findeg/identity/types';
 import type { SessionPayload } from '@findeg/backend/features/core';
 
 /**

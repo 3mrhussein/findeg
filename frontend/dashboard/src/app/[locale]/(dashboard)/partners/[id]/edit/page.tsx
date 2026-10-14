@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Locale } from '@findeg/domain';
 import { requirePermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { PartnerForm } from '../../_components/PartnerForm';
 import { toStaffActor } from '../../_lib/toStaffActor';
