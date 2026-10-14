@@ -1,10 +1,10 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Shared standards and package source conventions
 
-We want shared coding-quality standards with additional checks for each workspace's role, plus consistent package structure and public APIs. The following decisions were agreed during the design discussion and captured in spec #434; enforcement and migration have not been implemented. This ADR documents the target for that migration.
+We want shared coding-quality standards with additional checks for each workspace's role, plus consistent package structure and public APIs. The following decisions were agreed during the design discussion and captured in spec #434; enforcement and migration are staged and remain incomplete. Acceptance records the target, not full activation.
 
 Shared ESLint configuration extends maintained ecosystem presets and adds project-specific standards on top. The common baseline extends JavaScript recommended checks and TypeScript `strictTypeChecked`. It preserves the preset checks rather than replacing them with a hand-picked subset. Framework presets apply to the relevant code; library structure rules apply only to the library scope described below. Overrides must be narrow and justified by a concrete conflict or equivalent enforcement, rather than used to silence violations.
 
@@ -26,4 +26,4 @@ The Domain package supplied by PR #433 is the library baseline. Spec #399 owns a
 
 ## Relationship to existing decisions
 
-ADR-0016 and spec #399 retain three Orders public entries, including `schemas` and `events`. The proposed index/types export policy changes that public surface after consumer migration; this draft does not prematurely supersede the existing contract. ADR-0018 supersedes ADR-0017 and establishes Domain as the pure, rich business domain. Its business ownership, purity, and dependency contract remain unchanged by these standards.
+The accepted [ADR-0020](0020-domain-single-source-and-bounded-context-packages.md) supersedes conflicting Backend topology and Orders export decisions. Existing entries remain transitional until the coordinated consumer migration; acceptance does not remove them. ADR-0018 supersedes ADR-0017 and establishes Domain as the pure, rich business domain. Its business ownership, purity, and dependency contract remain unchanged by these standards.

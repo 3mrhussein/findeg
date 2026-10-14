@@ -4,6 +4,9 @@ status: accepted
 
 # Record and enforce the Orders package boundary
 
+> Amended by [ADR-0020](0020-domain-single-source-and-bounded-context-packages.md): the accepted target is bounded-context application packages with root/types exports, derived from Domain, and Backend infrastructure/composition. The historical feature/schema entry contracts below remain transitional until coordinated consumer migration. The client-safe barrel splitting and custom client-boundary checks described below are superseded; Next.js owns the server/client boundary.
+
+
 ADR-0001 gives other Backend features explicit public entries, but it does not yet describe the extracted Orders package or the dependency direction between Backend features. This decision records the Orders graph from #361 and adds lint enforcement at import sites.
 
 ```text
