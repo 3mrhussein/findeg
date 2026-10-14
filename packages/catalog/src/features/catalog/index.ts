@@ -53,7 +53,6 @@ export {
   createTagService,
   createCollectionService,
   createSearchService,
-  createAuditLogService,
   createBrandService,
   createAdminSearchAnalyticsService,
 } from '../catalog-factory/index';

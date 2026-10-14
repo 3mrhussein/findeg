@@ -17,7 +17,7 @@ export default defineConfig({
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
     },
     // Integration tests need Postgres; they run via vitest.integration.config.ts.
-    exclude: [...nodeTest.exclude, 'src/**/*.integration.test.ts'],
+    exclude: [...(nodeTest.exclude ?? []), 'src/**/*.integration.test.ts'],
   },
   resolve: {
     alias: {
@@ -25,11 +25,6 @@ export default defineConfig({
       '@features': resolve(import.meta.dirname, './src/features'),
       '@findeg/backend': resolve(import.meta.dirname, './src'),
       '@lib': resolve(import.meta.dirname, './src/lib'),
-      '@types/validation': resolve(
-        import.meta.dirname,
-        './src/features/core/domain/types/validation',
-      ),
-      '@types/domain': resolve(import.meta.dirname, './src/features/core/domain/types'),
       '@findeg/env': resolve(import.meta.dirname, '../configs/env/src'),
     },
   },

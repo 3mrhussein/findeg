@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 
 const { getSession, orders, updateTag } = vi.hoisted(() => ({
   getSession: vi.fn(),

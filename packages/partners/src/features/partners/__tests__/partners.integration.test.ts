@@ -5,7 +5,7 @@ import { partnerAccessHistory, users } from '@findeg/db/schema';
 import {
   connectToTestDatabase,
   type TestDatabase,
-} from '../../../../../../backend/src/testing/postgres';
+} from '../../../../../../configs/vitest/postgres';
 import {
   createPartnerMembershipServices,
   type PartnerServices,

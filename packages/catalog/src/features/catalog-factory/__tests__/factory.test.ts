@@ -6,7 +6,6 @@ import {
   createBrandService,
   createCategoryService,
   createCollectionService,
-  createAuditLogService,
   createProductService,
   createSearchService,
   createTagService,
@@ -22,7 +21,6 @@ describe('catalog service factories', () => {
       createTagService,
       createCollectionService,
       createSearchService,
-      createAuditLogService,
       createBrandService,
       createAdminSearchAnalyticsService,
     ];

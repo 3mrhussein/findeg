@@ -7,7 +7,10 @@ import {
   products,
   productVariants,
 } from '@findeg/db';
-import { connectToTestDatabase, type TestDatabase } from '../../../../testing/postgres';
+import {
+  connectToTestDatabase,
+  type TestDatabase,
+} from '../../../../../../configs/vitest/postgres';
 import {
   createSchoolDirectory,
   createSchoolSupplyListService,

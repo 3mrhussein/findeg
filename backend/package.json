@@ -4,30 +4,15 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./features/administration": "./src/features/administration/index.ts",
-    "./features/administration/*": null,
     "./features/core": "./src/features/core/index.ts",
     "./features/core/logger": "./src/features/core/logger.ts",
-    "./features/core/schemas": "./src/features/core/schemas.ts",
-    "./features/core/*": null,
     "./features/media": "./src/features/media/index.ts",
     "./features/media/contracts": "./src/features/media/contracts.ts",
-    "./features/media/*": null,
     "./features/notifications": "./src/features/notifications/index.ts",
     "./features/notifications/contracts": "./src/features/notifications/contracts.ts",
     "./features/outbox": "./src/features/outbox/index.ts",
-    "./features/outbox/*": null,
-    "./features/partner-membership": null,
-    "./features/partner-membership/*": null,
-    "./features/partner-sales": null,
-    "./features/partner-sales/*": null,
-    "./features/order": null,
-    "./features/order/*": null,
-    "./features/review": null,
-    "./features/review/*": null,
-    "./features/school": null,
-    "./features/school/*": null,
-    "./features/*": "./src/features/*"
+    "./features/audit": "./src/features/audit/index.ts",
+    "./lib/sanitize-html": "./src/lib/sanitize-html.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -58,7 +43,6 @@
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
     "zod": "^4.6.5",
-    "@findeg/catalog": "workspace:*",
     "@findeg/partners": "workspace:*"
   },
   "devDependencies": {

@@ -18,7 +18,7 @@ import { getSession, createSession } from '@lib/session';
 import { createIdentityServices } from '@findeg/identity';
 import { revalidatePath } from 'next/cache';
 import { getErrorMessage } from '@lib/type-guards';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 
 /**
  * Server Action: Update current user's profile

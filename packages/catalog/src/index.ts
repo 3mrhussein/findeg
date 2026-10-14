@@ -22,3 +22,6 @@ export * from './features/administration-i-audit-log-repository';
 export * from './features/administration-i-audit-log-service';
 export * from './features/administration-i-product-import-service';
 export * from './features/administration-product-import-service';
+
+export { AdminCatalogMetrics } from './features/admin-metrics';
+export { QueryError } from './features/admin-metrics/helpers';

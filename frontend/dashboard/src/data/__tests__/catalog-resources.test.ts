@@ -63,7 +63,7 @@ vi.mock('@i18n/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
   Link: () => null,
 }));
-vi.mock('@findeg/backend/features/administration', () => ({
+vi.mock('@/lib/administration', () => ({
   createAdministrationServices: () => ({
     categories: categoriesService,
     brands: brandsService,

@@ -1,5 +1,5 @@
 import 'server-only';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 import { getSession } from '@/lib/session';
 import { createOrders, GUEST_ORDER_COOKIE, createGuestAccessService } from '@findeg/orders';
 import { createIdentityServices } from '@findeg/identity';

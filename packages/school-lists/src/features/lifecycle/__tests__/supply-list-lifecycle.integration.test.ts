@@ -21,7 +21,7 @@ import {
   runConcurrently,
   waitUntilBlocked,
   type TestDatabase,
-} from '../../../../testing/postgres';
+} from '../../../../../../configs/vitest/postgres';
 import {
   createSchoolSupplyListService,
   type ISchoolSupplyListService,

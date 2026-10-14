@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SignJWT } from 'jose';
-import { PERMISSION_CODES } from '../../../domain/auth/authorization';
+import { PERMISSION_CODES } from '@findeg/identity';
 import { JwtSessionManager } from '../JwtSessionManager';
 
 const user = {

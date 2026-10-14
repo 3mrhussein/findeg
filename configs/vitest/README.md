@@ -58,3 +58,9 @@ independent coverage configuration.
 
 Coverage providers are declared in each consumer's devDependencies so a clean
 install can load coverage without Vitest's interactive dependency installation.
+
+Integration suites use `vitest.integration.config.ts` and the shared `integrationTest`
+policy from `configs/vitest/integration.ts`. It includes unit suites for complete per-file
+coverage and installs the PostgreSQL global setup and connection setup. No package-specific
+environment switch is needed. The PostgreSQL harness creates and migrates one isolated
+database per run; set `INTEGRATION_DATABASE_URL` or the documented DB variables.

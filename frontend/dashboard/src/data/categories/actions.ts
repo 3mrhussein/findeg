@@ -7,7 +7,7 @@
 'use server';
 
 import { revalidatePath, updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import type { CategoryInput } from '@findeg/catalog';
 import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';

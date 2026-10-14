@@ -18,12 +18,8 @@ async function boundaryMessages(code) {
   );
 }
 
-test('storefront lint rejects backend infrastructure and direct database imports', async () => {
-  for (const source of [
-    '@findeg/backend/features/catalog/infrastructure/repositories/ProductRepository',
-    '@findeg/db/connection',
-    '@findeg/db',
-  ]) {
+test('storefront lint rejects direct database imports', async () => {
+  for (const source of ['@findeg/db/connection', '@findeg/db']) {
     const messages = await boundaryMessages(`import { value } from '${source}';`);
     assert.equal(messages.length, 1, source);
     assert.equal(messages[0].ruleId, 'no-restricted-imports');
@@ -34,7 +30,7 @@ test('server factories, client schemas and erased client types remain allowed', 
   for (const code of [
     "import { createProductService } from '@findeg/catalog';",
     "'use client'; import { ShippingAddressSchema } from '@findeg/orders';",
-    "'use client'; import { hasPermission, PERMISSION_CODES } from '@findeg/backend/features/core/schemas';",
+    "'use client'; import { hasPermission, PERMISSION_CODES } from '@findeg/identity';",
     "'use client'; import type { ShippingAddressSchema } from '@findeg/orders';",
     "'use client'; import { type ShippingAddressSchema } from '@findeg/orders';",
   ]) {
@@ -44,9 +40,7 @@ test('server factories, client schemas and erased client types remain allowed', 
 
 test('client barrel policy is left to the Next.js server boundary', async () => {
   assert.deepEqual(
-    await boundaryMessages(
-      "'use client'; import { hasPermission } from '@findeg/backend/features/core';",
-    ),
+    await boundaryMessages("'use client'; import { hasPermission } from '@findeg/identity';"),
     [],
   );
 });

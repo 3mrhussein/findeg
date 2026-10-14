@@ -4,7 +4,7 @@ import { FileText, Package, Ruler } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import type { Product, Variant } from '@findeg/catalog';
-import { sanitizeHtml } from '@findeg/backend/lib';
+import { sanitizeHtml } from '@findeg/backend/lib/sanitize-html';
 
 interface ProductTabsSectionProps {
   product: Product;

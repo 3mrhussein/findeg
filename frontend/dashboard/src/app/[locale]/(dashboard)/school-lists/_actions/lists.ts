@@ -4,7 +4,7 @@ import type { Locale } from '@findeg/domain';
 import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/identity/types';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import type { SupplyListItemInput } from '@findeg/school-lists/types';
 import { toListActor } from '../_lib/toListActor';
 

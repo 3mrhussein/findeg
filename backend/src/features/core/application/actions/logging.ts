@@ -2,7 +2,7 @@
  * Pure TypeScript logging action (backend - framework-agnostic)
  */
 
-import { type ILoggerService, type LogMetadata } from '@findeg/backend/features/core';
+import { type ILoggerService, type LogMetadata } from '../..';
 
 /**
  * usage by client components to log specific events or errors to the server.

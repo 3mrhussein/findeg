@@ -15,7 +15,7 @@ import {
   hasAnyPermission,
   hasAllPermissions,
 } from '@findeg/identity/types';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 import type { PermissionCode } from '@findeg/identity/types';
 
 /**

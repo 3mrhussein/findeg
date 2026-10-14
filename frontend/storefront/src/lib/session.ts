@@ -1,4 +1,4 @@
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 import { createCookieSessionProvider, type ICookieStore } from '@findeg/backend/features/core';
 import { cookies } from 'next/headers';
 

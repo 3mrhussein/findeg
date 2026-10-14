@@ -37,3 +37,15 @@ export interface IAdminInventoryService {
    */
   getLowStockAlerts(threshold?: number): Promise<Product[]>;
 }
+
+/** Audit delivery is supplied by infrastructure composition. */
+export interface InventoryAuditPort {
+  logAction(entry: {
+    adminUserId?: number;
+    entityType: string;
+    entityId: string;
+    action: string;
+    oldValues?: Record<string, unknown>;
+    newValues?: Record<string, unknown>;
+  }): Promise<void>;
+}

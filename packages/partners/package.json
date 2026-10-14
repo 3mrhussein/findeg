@@ -13,7 +13,7 @@
     "lint": "findeg-lint .",
     "test": "vitest --run",
     "clean": "rm -rf node_modules dist .turbo",
-    "test:integration": "FINDEG_PARTNERS_INTEGRATION=1 vitest --run"
+    "test:integration": "vitest --run --config vitest.integration.config.ts"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

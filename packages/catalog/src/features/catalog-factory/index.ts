@@ -7,7 +7,7 @@ import { TagService } from '../catalog-tag-service/index';
 import { CollectionService } from '../catalog-collection-service/index';
 import { SearchService } from '../catalog-search-service/index';
 import { BrandService } from '../catalog-brand-service/index';
-import { AuditLogService } from '../administration-audit-log-service/index';
+
 import { AdminSearchAnalyticsService } from '../catalog-admin-search-analytics-service/index';
 
 export function createProductService() {
@@ -32,10 +32,6 @@ export function createCollectionService() {
 
 export function createSearchService() {
   return new SearchService();
-}
-
-export function createAuditLogService() {
-  return new AuditLogService();
 }
 
 export function createBrandService() {

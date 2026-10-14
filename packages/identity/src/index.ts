@@ -20,3 +20,10 @@ export * from './features/current-session';
 export * from './features/admin-users';
 export * from './features/admin-roles';
 export * from './features/accounts';
+
+export { createNotificationInbox } from './features/notification-inbox';
+export type {
+  INotificationService,
+  Notification,
+  CreateNotificationInput,
+} from './features/notification-inbox/types';

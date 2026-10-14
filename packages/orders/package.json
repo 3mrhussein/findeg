@@ -12,7 +12,8 @@
     "type-check": "tsc --noEmit",
     "lint": "findeg-lint .",
     "test": "vitest --run",
-    "clean": "rm -rf node_modules dist .turbo"
+    "clean": "rm -rf node_modules dist .turbo",
+    "test:integration": "vitest --run --config vitest.integration.config.ts"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

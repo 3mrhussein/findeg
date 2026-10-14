@@ -107,7 +107,7 @@ graph TD
 | [**@findeg/storefront**](frontend/storefront/README.md) | `frontend/storefront`     | Customer-facing Next.js app (port 3000).                                                      | `pnpm --filter @findeg/storefront dev` |
 | [**@findeg/dashboard**](frontend/dashboard/README.md)   | `frontend/dashboard`      | Staff admin Next.js app (port 3001).                                                          | `pnpm --filter @findeg/dashboard dev`  |
 | [**@findeg/ui**](frontend/ui/README.md)                 | `frontend/ui`             | Shared design system & shadcn primitives.                                                     | N/A                                    |
-| [**@findeg/backend**](backend/README.md)                | `backend`                 | Pure TypeScript business kernel: feature modules, services, entities.                         | N/A                                    |
+| [**@findeg/backend**](backend/README.md)                | `backend`                 | Infrastructure adapters, delivery workers and composition.                         | N/A                                    |
 | **@findeg/db**                                           | `db`                      | Drizzle tables, migrations and seeds ([docs](db/docs/SETUP.md)).                              | `pnpm db:setup`, `pnpm db:studio`      |
 | [**@findeg/orders**](packages/orders/README.md)         | `packages/orders`         | Order reads and Staff lifecycle commands.                                                     | N/A                                    |
 | **@findeg/domain-errors**                                | `packages/domain-errors`  | Shared domain error classes.                                                                  | N/A                                    |
@@ -181,7 +181,7 @@ Ensure you have Node.js 24 (see `.nvmrc`), `pnpm 11`, and `Docker` installed.
 
 ### Coding Rules
 
-- **No Direct Imports**: Frontend code MUST import from `@findeg/backend` and NEVER `../../backend/src`.
+- **No Direct Imports**: Apps import business operations from context package root entries and infrastructure only from the published `@findeg/backend` entries.
 - **RTL-First CSS**: Use Tailwind's logical properties (`ps-4`, `me-2`) instead of physical ones (`pl-4`, `mr-2`) so the system elegantly maps English/Arabic alignments.
 - **ServiceResult Protocol**: All backend services do NOT throw standard JS errors; they return an `Err` or `Ok` standard `ServiceResult<T, FindEgError>`.
 
@@ -200,7 +200,7 @@ pnpm test:integration  # backend integration tests only; `pnpm test` still runs 
 
 Each run creates a fresh `findeg_it_<timestamp>_<id>` database on that server, applies `db/init-db.sql` and every migration in `db/migrations`, and drops it when the run ends, so runs never share state and your dev data is untouched. Databases left behind by killed runs are dropped by the next run once they're over 6 hours old. Test files within a run share the database and run one at a time, so use unique data per test. To target another server, set `INTEGRATION_DATABASE_URL` (a URL to any database on it whose user can `CREATE DATABASE`); CI does this with a Postgres 16 service container.
 
-Write tests as `*.integration.test.ts` under `backend/src` and use the helpers in `backend/src/testing/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections (each is given its peer's backend pid), and `waitUntilBlocked(sql, peer.pid)` to hold a lock until the peer is provably blocked on it.
+Write tests as `*.integration.test.ts` in the owning context package's local `__tests__` (or Backend for delivery composition) and use the helpers in `configs/vitest/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections (each is given its peer's backend pid), and `waitUntilBlocked(sql, peer.pid)` to hold a lock until the peer is provably blocked on it.
 
 ---
 

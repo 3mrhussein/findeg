@@ -5,3 +5,9 @@
 export type * from './index';
 export * from './constants';
 export * from './features/contracts';
+
+export type {
+  INotificationService,
+  Notification,
+  CreateNotificationInput,
+} from './features/notification-inbox/types';

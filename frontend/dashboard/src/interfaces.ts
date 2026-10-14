@@ -1,5 +1,5 @@
 import type { Locale } from '@findeg/domain';
-import type { PortalRole } from '@findeg/backend/features/core';
+import type { PortalRole } from '@findeg/identity';
 import { TranslationMapSchema } from '@findeg/catalog';
 import { z } from 'zod';
 
