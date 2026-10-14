@@ -14,6 +14,5 @@ export default defineConfig({
   test: {
     ...browserTest,
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
   },
 });

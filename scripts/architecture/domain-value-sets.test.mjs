@@ -21,6 +21,36 @@ async function copies(code, file = 'backend/src/domain-values-fixture.ts') {
   return result.messages.filter((message) => message.ruleId === ruleId);
 }
 
+test('canonical and compatibility profiles preserve Domain ownership enforcement', async () => {
+  for (const [profile, name] of [
+    ['isomorphic', 'isomorphic'],
+    ['node', 'node'],
+    ['react-ui', 'reactUi'],
+    ['next', 'next'],
+  ]) {
+    for (const directory of ['configs', 'packages/config']) {
+      const shared = await import(
+        new URL(`../../${directory}/eslint/profiles/${profile}.js`, import.meta.url)
+      );
+      const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: shared[name] });
+      const [violation] = await eslint.lintText(
+        "export const statuses = ['inactive', 'active'] as const;\n",
+        { filePath: 'domain-values-fixture.ts' },
+      );
+      assert.equal(violation.fatalErrorCount, 0, JSON.stringify(violation.messages));
+      const messages = violation.messages.filter((message) => message.ruleId === ruleId);
+      assert.equal(messages.length, 1, `${directory}/${profile}`);
+      assert.equal(messages[0].severity, 2);
+      assert.match(messages[0].message, /ACTIVE_STATUSES/);
+      const [compliant] = await eslint.lintText(
+        "export { ACTIVE_STATUSES } from '@findeg/domain';\n",
+        { filePath: 'domain-values-fixture.ts' },
+      );
+      assert.equal(compliant.errorCount, 0, JSON.stringify(compliant.messages));
+    }
+  }
+});
+
 test('domain ownership rejects a reversed complete value set as an error', async () => {
   const messages = await copies("export const statuses = ['inactive', 'active'] as const;");
   assert.equal(messages.length, 1);
@@ -200,13 +230,27 @@ test('findeg-lint rejects a copied set rather than ratcheting it as a warning', 
       path.join(fixture, 'index.ts'),
       "export const statuses = ['inactive', 'active'] as const;",
     );
-    const result = spawnSync(
-      process.execPath,
-      [path.join(root, 'configs/bin/lint.mjs'), 'index.ts'],
-      { cwd: fixture, encoding: 'utf8' },
+    for (const directory of ['configs', 'packages/config']) {
+      const result = spawnSync(
+        process.execPath,
+        [path.join(root, directory, 'bin/lint.mjs'), 'index.ts'],
+        { cwd: fixture, encoding: 'utf8' },
+      );
+      assert.equal(result.status, 1, result.stderr);
+      assert.match(result.stdout, /error\s+Use ACTIVE_STATUSES.*local\/no-domain-value-set-copies/);
+    }
+    fs.writeFileSync(
+      path.join(fixture, 'index.ts'),
+      'export { ACTIVE_STATUSES } from "@findeg/domain";\n',
     );
-    assert.equal(result.status, 1, result.stderr);
-    assert.match(result.stdout, /error\s+Use ACTIVE_STATUSES.*local\/no-domain-value-set-copies/);
+    for (const directory of ['configs', 'packages/config']) {
+      const result = spawnSync(
+        process.execPath,
+        [path.join(root, directory, 'bin/lint.mjs'), 'index.ts'],
+        { cwd: fixture, encoding: 'utf8' },
+      );
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+    }
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
