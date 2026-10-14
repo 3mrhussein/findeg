@@ -5,6 +5,7 @@ packages:
   - 'packages/school-lists'
   - 'packages/catalog'
   - 'packages/partners'
+  - 'packages/inventory'
   - 'packages/domain-errors'
   - 'packages/identity'
   - 'packages/domain'

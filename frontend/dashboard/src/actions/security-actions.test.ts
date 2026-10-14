@@ -104,6 +104,9 @@ vi.mock('@findeg/backend/features/administration', () => ({
     schoolSupplyLists: schoolSupplyListService,
   }),
 }));
+vi.mock('@findeg/inventory', () => ({
+  createAdminInventoryService: () => inventoryService,
+}));
 vi.mock('@findeg/identity', () => ({
   createIdentityServices: () => ({
     adminRoles: identityRolesService,

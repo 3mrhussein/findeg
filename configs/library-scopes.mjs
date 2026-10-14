@@ -7,4 +7,5 @@ export const libraryScopes = {
   'packages/school-lists': ['src'],
   'packages/catalog': ['src'],
   'packages/partners': ['src'],
+  'packages/inventory': ['src'],
 };

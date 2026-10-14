@@ -1,6 +1,5 @@
 export { ProductService } from '../catalog-product-service/index';
 export { VariantService } from '../catalog-variant-service/index';
-export { InventoryService } from '../catalog-inventory-service/index';
 export { CategoryService } from '../catalog-category-service/index';
 export { TagService } from '../catalog-tag-service/index';
 export { CollectionService } from '../catalog-collection-service/index';
@@ -13,7 +12,6 @@ export {
   createTagService,
   createCollectionService,
   createSearchService,
-  createInventoryService,
   createBrandService,
   createAdminSearchAnalyticsService,
 } from '../catalog-factory/index';

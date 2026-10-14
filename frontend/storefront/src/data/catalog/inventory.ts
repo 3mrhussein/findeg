@@ -1,5 +1,5 @@
 import 'server-only';
-import { createInventoryService } from '@findeg/catalog';
+import { createInventoryService } from '@findeg/inventory';
 import type { Product } from './types';
 import { mapProduct } from '../helpers/mappers';
 

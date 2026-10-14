@@ -2,12 +2,6 @@ export type { ProductFilters } from '../catalog-product-filters/types';
 export type { BrandInput } from '../catalog-brand-input/index';
 export type { CategoryInput } from '../catalog-category-input/index';
 export type { ProductInput, VariantInput } from '../catalog-product-input/index';
-export type {
-  IInventoryRepository,
-  InventoryBalanceResult,
-  StockMovementInput,
-  LowStockResult,
-} from '../catalog-i-inventory-repository/types';
 export type { IProductService } from '../catalog-i-product-service/types';
 export type { IVariantService } from '../catalog-i-variant-service/types';
 export type { ICategoryService } from '../catalog-i-category-service/types';

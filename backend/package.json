@@ -37,11 +37,13 @@
     "clean": " rm -rf node_modules dist .turbo"
   },
   "dependencies": {
+    "@findeg/catalog": "workspace:*",
     "@findeg/db": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
     "@findeg/identity": "workspace:*",
+    "@findeg/inventory": "workspace:*",
     "@findeg/orders": "workspace:*",
     "@findeg/school-lists": "workspace:*",
     "@react-email/components": "^1.0.12",

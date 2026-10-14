@@ -53,11 +53,10 @@ export {
   createTagService,
   createCollectionService,
   createSearchService,
-  createInventoryService,
+  createAuditLogService,
   createBrandService,
   createAdminSearchAnalyticsService,
 } from '../catalog-factory/index';
 
 export * from '../catalog-contracts/index';
 export { TagScopeSchema, type TagScope } from '../catalog-tag/index';
-export * from '../catalog-inventory-update/index';

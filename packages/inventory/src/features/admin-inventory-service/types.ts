@@ -1,5 +1,5 @@
-import { Product } from '@findeg/catalog';
-import { InventoryUpdate } from '@findeg/catalog';
+import type { Product } from '@findeg/catalog';
+import type { InventoryUpdate } from '../inventory-update';
 
 export interface IAdminInventoryService {
   /**

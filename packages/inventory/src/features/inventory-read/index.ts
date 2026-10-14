@@ -1,5 +1,5 @@
 import { type ID } from '@findeg/db/types';
-import { type InventoryBalanceResult } from '../catalog-i-inventory-repository/types';
+import { type InventoryBalanceResult } from '../inventory-ports/types';
 import { inventoryQueries } from '@findeg/db/queries';
 
 export class InventoryService {
@@ -16,4 +16,9 @@ export class InventoryService {
     const stock = await this.getTotalAvailableStock(variantId);
     return stock > 0;
   }
+}
+
+/** Inventory read service factory. Each call creates a fresh service instance. */
+export function createInventoryService(): InventoryService {
+  return new InventoryService();
 }

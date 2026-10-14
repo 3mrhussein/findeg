@@ -4,7 +4,7 @@ export type { IAdminBrandService } from '@findeg/catalog';
 export type { IAdminCategoryService } from '@findeg/catalog';
 export type { IAdminCollectionService } from '@findeg/catalog';
 export type { IAdminDashboardService } from './application/interfaces/IAdminDashboardService';
-export type { IAdminInventoryService } from './application/interfaces/IAdminInventoryService';
+export type { IAdminInventoryService } from '@findeg/inventory/types';
 export type {
   ProductListFilters,
   ProductListItem,
