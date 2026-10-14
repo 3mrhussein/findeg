@@ -85,12 +85,12 @@ shape (`order-status`, `cart`, `quote`, `acceptance`, and so on). Every implemen
 directory has local executable tests in its `__tests__/`. Their scopes are listed in
 `configs/library-scopes.mjs`, so Vitest measures 80% per file for those subtrees.
 
-Preserved public behavior: `@findeg/domain`, `@findeg/domain/orders` and
-`@findeg/domain/inventory` export the same names with the same runtime kinds as before the
-restructure (checked against the pre-change export list). Internal filenames such as
-`order-status.ts` or `allocation.ts` are not public; consumers import the subpaths, so the
-temporary bounded-context subpath aliases keep parallel consumer migration (#399, #443) decoupled from internal
-file moves. Business rules, Money, branded identities, injected time and randomness, and typed
+Public behavior: `@findeg/domain` (root) and `@findeg/domain/types` export the same names with
+the same runtime kinds as before the restructure (checked against the pre-change export list).
+Internal filenames such as `order-status.ts` or `allocation.ts` are not public. The temporary
+bounded-context subpath aliases (`@findeg/domain/orders`, `@findeg/domain/inventory`, ...) kept
+parallel consumer migration (#399) decoupled from internal file moves and were removed in #443
+phase 2. Business rules, Money, branded identities, injected time and randomness, and typed
 errors are unchanged.
 
 ## Orders library and root entries (#443 phase 1)
