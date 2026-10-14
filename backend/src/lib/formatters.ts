@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { Locale } from '@findeg/domain';
 
 /**
@@ -15,7 +16,7 @@ import { Locale } from '@findeg/domain';
 export function formatCurrency(
   amount: number,
   locale: Locale = 'en',
-  currency: string = 'EGP',
+  currency: string = DEFAULT_CURRENCY,
 ): string {
   try {
     return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {

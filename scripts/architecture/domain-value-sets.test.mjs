@@ -473,7 +473,7 @@ test('stock comparisons and aliased Domain money factories cannot hard-code busi
     assert.equal((await copies(code, undefined, true)).length, 0, code);
 });
 
-test('expanded lint mode fails the existing CLI while default lint preserves the original guard', () => {
+test('default lint rejects redefinitions and accepts exhaustive Domain maps', () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-derive-cli-'));
   try {
     fs.copyFileSync(path.join(root, '.prettierrc'), path.join(fixture, '.prettierrc'));
@@ -491,31 +491,26 @@ test('expanded lint mode fails the existing CLI while default lint preserves the
       path.join(fixture, 'eslint.config.js'),
       `export { isomorphic as default } from '${profile}';`,
     );
-    const run = (extended) =>
+    const run = () =>
       spawnSync(process.execPath, [path.join(root, 'configs/bin/lint.mjs'), 'index.ts'], {
         cwd: fixture,
         encoding: 'utf8',
-        env: { ...process.env, FINDEG_DOMAIN_DERIVATION: extended ? '1' : '0' },
       });
     fs.writeFileSync(
       path.join(fixture, 'index.ts'),
       "export const labels = { en: 'English', ar: 'Arabic' };\n",
     );
-    const compatibility = run(false);
-    assert.equal(compatibility.status, 0, compatibility.stdout + compatibility.stderr);
-    const invalid = run(true);
+    const invalid = run();
     assert.equal(invalid.status, 1, invalid.stdout + invalid.stderr);
     assert.match(invalid.stdout, /local\/no-domain-value-set-copies/);
     fs.writeFileSync(
       path.join(fixture, 'index.ts'),
       "import type { Locale } from '@findeg/domain';\nexport const labels = { en: 'English', ar: 'Arabic' } satisfies Record<Locale, string>;\n",
     );
-    const valid = run(true);
+    const valid = run();
     assert.equal(valid.status, 0, valid.stdout + valid.stderr);
     fs.writeFileSync(path.join(fixture, 'index.ts'), "export const locales = ['en', 'ar'];\n");
-    assert.equal(run(false).status, 1, 'Original #416 guard must stay active');
-    const turbo = fs.readFileSync(path.join(root, 'turbo.json'), 'utf8');
-    assert.match(turbo, /"env":\s*\[[^\]]*"FINDEG_DOMAIN_DERIVATION"/);
+    assert.equal(run().status, 1, 'Redefinitions of Domain values must stay rejected');
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
@@ -538,28 +533,6 @@ test('assertions cannot hide incomplete Domain maps and inferred Map keys are co
     ).length,
     0,
   );
-});
-
-test('expanded mode has a separate Turbo lint hash and is passed in strict environment mode', () => {
-  const hashes = [];
-  for (const mode of ['0', '1']) {
-    const result = spawnSync(
-      'pnpm',
-      ['exec', 'turbo', 'run', 'lint', '--filter=@findeg/ui', '--dry=json'],
-      {
-        cwd: root,
-        encoding: 'utf8',
-        env: { ...process.env, FINDEG_DOMAIN_DERIVATION: mode },
-      },
-    );
-    assert.equal(result.status, 0, result.stderr);
-    const task = JSON.parse(result.stdout).tasks.find(
-      (candidate) => candidate.taskId === '@findeg/ui#lint',
-    );
-    assert.ok(task.environmentVariables.specified.env.includes('FINDEG_DOMAIN_DERIVATION'));
-    hashes.push(task.hash);
-  }
-  assert.notEqual(hashes[0], hashes[1], 'Measurement must not reuse a default-mode lint result');
 });
 
 test('tuple-derived Domain types require exhaustive maps and permit complete per-value data', async () => {

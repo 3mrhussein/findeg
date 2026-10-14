@@ -1,12 +1,13 @@
 'use client';
+import { moneyToDecimal, type Money } from '@findeg/domain';
 
 import type { ListCompleteness } from '@/lib/list-selection/list-selection';
 
 interface OrderSummaryProps {
   orderSummary: {
-    subtotal: number;
-    shippingCost: number;
-    total: number;
+    subtotal: Money;
+    shippingCost: Money;
+    total: Money;
     currency: string;
   };
   cartItemsCount: number;
@@ -37,13 +38,13 @@ export function OrderSummary({
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>{t('Pages.Checkout.Subtotal')}</span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {orderSummary.currency} {orderSummary.subtotal.toFixed(2)}
+            {orderSummary.currency} {moneyToDecimal(orderSummary.subtotal)}
           </span>
         </div>
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
           <span>{t('Pages.Checkout.Shipping')}</span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {orderSummary.currency} {orderSummary.shippingCost.toFixed(2)}
+            {orderSummary.currency} {moneyToDecimal(orderSummary.shippingCost)}
           </span>
         </div>
       </div>
@@ -64,7 +65,7 @@ export function OrderSummary({
           {t('Pages.Checkout.Total')}
         </span>
         <span className="text-3xl font-black tracking-tight text-primary">
-          {orderSummary.currency} {orderSummary.total.toFixed(2)}
+          {orderSummary.currency} {moneyToDecimal(orderSummary.total)}
         </span>
       </div>
 

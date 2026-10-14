@@ -1,5 +1,14 @@
 'use client';
-import { type PaymentMethod } from '@findeg/domain';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
+
+import {
+  FLAT_SHIPPING_FEE,
+  sumMoney,
+  multiplyMoney,
+  addMoney,
+  moneyFromDecimal,
+  type PaymentMethod,
+} from '@findeg/domain';
 
 import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@hooks/useCart';
@@ -48,9 +57,9 @@ interface PendingAttempt {
 
 function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
   return {
-    subtotal: Number(quote.subtotal),
-    shippingCost: Number(quote.shipping),
-    total: Number(quote.total),
+    subtotal: moneyFromDecimal(quote.subtotal),
+    shippingCost: moneyFromDecimal(quote.shipping),
+    total: moneyFromDecimal(quote.total),
     currency: quote.currency,
   };
 }
@@ -149,22 +158,22 @@ export function CheckoutClient({
     setAcceptanceFailure(null);
   }
 
-  const optimisticShipping = 50;
-  const listTotal = list
-    ? selectedLines.reduce((sum, line) => {
-        const item = list.items.find((candidate) => candidate.id === line.listItemId);
-        const variant = item?.eligibleVariants.find(
-          (candidate) => candidate.variantId === line.variantId,
-        );
-        return sum + Number(variant?.price ?? 0) * line.quantity;
-      }, 0)
+  const subtotal = list
+    ? sumMoney(
+        selectedLines.map((line) => {
+          const item = list.items.find((candidate) => candidate.id === line.listItemId);
+          const variant = item?.eligibleVariants.find(
+            (candidate) => candidate.variantId === line.variantId,
+          );
+          return multiplyMoney(moneyFromDecimal(variant?.price ?? '0'), line.quantity);
+        }),
+      )
     : cartTotal;
-  const optimisticTotal = listTotal + optimisticShipping;
   const orderSummary = validatedTotals || {
-    subtotal: listTotal,
-    shippingCost: optimisticShipping,
-    total: optimisticTotal,
-    currency: 'EGP',
+    subtotal,
+    shippingCost: FLAT_SHIPPING_FEE,
+    total: addMoney(subtotal, FLAT_SHIPPING_FEE),
+    currency: DEFAULT_CURRENCY,
   };
   const acceptanceItems = list
     ? selectedLines.flatMap((line) => {

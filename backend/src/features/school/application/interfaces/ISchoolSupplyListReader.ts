@@ -42,6 +42,7 @@ export interface PublicSupplyListOffer {
 }
 
 export interface PublicSupplyList {
+  id: number;
   publicCode: string;
   status: PublicSupplyListStatus;
   grade: string;

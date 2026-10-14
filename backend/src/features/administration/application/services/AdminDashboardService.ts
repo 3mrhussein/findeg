@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import { DashboardStats } from '../dtos';
 import {
@@ -53,7 +54,7 @@ export class AdminDashboardService implements IAdminDashboardService {
         totalRevenue: stats.totalRevenue,
         todayRevenue: stats.todayRevenue,
         todayOrders: stats.todayOrders,
-        currency: 'EGP',
+        currency: DEFAULT_CURRENCY,
         lowStockCount,
         timezone: stats.timezone,
         ordersByStatus: stats.ordersByStatus,

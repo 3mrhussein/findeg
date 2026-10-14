@@ -31,6 +31,7 @@ export interface SelectionLine {
 
 export interface ListSelection {
   v: 1;
+  supplyListId: SupplyListId;
   lines: SelectionLine[];
 }
 
@@ -51,7 +52,7 @@ export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`
 
 function toSelectableList(list: PublicSupplyList): SelectableList {
   return {
-    id: ((list as unknown as { id?: number }).id ?? 1) as unknown as SupplyListId,
+    id: list.id as SupplyListId,
     items: list.items.map((item) => ({
       id: item.id as unknown as SupplyListItemId,
       required: item.required,
@@ -95,7 +96,7 @@ const isLine = (value: unknown): value is SelectionLine => {
   );
 };
 
-function parseSelection(raw: string | null): ListSelection | null {
+function parseSelection(raw: string | null): Pick<ListSelection, 'v' | 'lines'> | null {
   if (!raw) return null;
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -112,6 +113,7 @@ export function seedSelection(list: PublicSupplyList): ListSelection {
   const seeded = seedListSelection(toSelectableList(list));
   return {
     v: 1,
+    supplyListId: seeded.supplyListId,
     lines: fromDomainLines(seeded.lines),
   };
 }
@@ -124,7 +126,7 @@ export function loadSelection(
   list: PublicSupplyList,
   storage: SelectionStorage,
 ): { selection: ListSelection; flaggedItemIds: number[] } {
-  let stored: ListSelection | null = null;
+  let stored: Pick<ListSelection, 'v' | 'lines'> | null = null;
   try {
     stored = parseSelection(storage.getItem(selectionKey(list.publicCode)));
   } catch {
@@ -138,6 +140,7 @@ export function loadSelection(
   return {
     selection: {
       v: 1,
+      supplyListId: selection.supplyListId,
       lines: fromDomainLines(selection.lines),
     },
     flaggedItemIds: staleItemIds as number[],
@@ -146,7 +149,7 @@ export function loadSelection(
 
 export function saveSelection(
   publicCode: string,
-  selection: ListSelection,
+  selection: Pick<ListSelection, 'v' | 'lines'>,
   storage: SelectionStorage,
 ): void {
   try {
@@ -179,7 +182,7 @@ export function setQuantity(
   quantity: number,
 ): ListSelection {
   const domainSelection: DomainListSelection = {
-    supplyListId: 1 as unknown as SupplyListId,
+    supplyListId: selection.supplyListId,
     lines: toDomainLines(selection.lines),
   };
   const updated = setSelectionQuantity(
@@ -189,6 +192,7 @@ export function setQuantity(
   );
   return {
     v: 1,
+    supplyListId: updated.supplyListId,
     lines: fromDomainLines(updated.lines),
   };
 }
@@ -213,6 +217,7 @@ export function setEnabled(
   );
   return {
     v: 1,
+    supplyListId: updated.supplyListId,
     lines: fromDomainLines(updated.lines),
   };
 }
@@ -223,7 +228,7 @@ export function chooseVariant(
   variantId: number,
 ): ListSelection {
   const domainSelection: DomainListSelection = {
-    supplyListId: 1 as unknown as SupplyListId,
+    supplyListId: selection.supplyListId,
     lines: toDomainLines(selection.lines),
   };
   const updated = chooseSelectionVariant(
@@ -233,6 +238,7 @@ export function chooseVariant(
   );
   return {
     v: 1,
+    supplyListId: updated.supplyListId,
     lines: fromDomainLines(updated.lines),
   };
 }
@@ -240,7 +246,7 @@ export function chooseVariant(
 /** The lines that would be posted: switched-off (quantity 0) lines are stripped. */
 export function linesForPost(selection: ListSelection): SelectionLine[] {
   const domainSelection: DomainListSelection = {
-    supplyListId: 1 as unknown as SupplyListId,
+    supplyListId: selection.supplyListId,
     lines: toDomainLines(selection.lines),
   };
   return fromDomainLines(orderedSelectionLines(domainSelection));

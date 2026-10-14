@@ -1,3 +1,4 @@
+import type { Money } from '@findeg/domain';
 /**
  * CheckoutClient — shared types & interfaces
  */
@@ -6,9 +7,9 @@ import { type CheckoutPrefillData } from '@/data/order/queries';
 import type { PublicSupplyList } from '@findeg/backend/features/school';
 
 export interface CheckoutTotals {
-  subtotal: number;
-  shippingCost: number;
-  total: number;
+  subtotal: Money;
+  shippingCost: Money;
+  total: Money;
   currency: string;
 }
 

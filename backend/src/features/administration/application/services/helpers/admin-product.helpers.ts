@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import type { getAdminProductForEditRaw, getAdminProductsListRaw } from '@findeg/db/queries';
 import type {
   ProductEditData,
@@ -92,7 +93,9 @@ export function buildGeneratedProductVariants(
     return {
       sku: defaults.sku ?? suggestedSku,
       variantKey,
-      localizedLabel: defaults.localizedLabel ?? { en: '', ar: '' },
+      localizedLabel:
+        defaults.localizedLabel ??
+        ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
       sortOrder: index,
       isDefault:
         index === 0 && defaults.isDefault === undefined ? true : (defaults.isDefault ?? false),
@@ -143,7 +146,7 @@ function mapAdminProductListItem({ defaultVariantSku, ...row }: ProductListRow):
     localizedName: {
       en: row.localizedName.en ?? '',
       ar: row.localizedName.ar ?? '',
-    },
+    } satisfies Record<Locale, string | undefined>,
     completeness,
   };
 }

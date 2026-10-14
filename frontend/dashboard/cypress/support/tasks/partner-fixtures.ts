@@ -1,3 +1,6 @@
+import type { Locale } from '@findeg/domain';
+
+import { CROCKFORD_BASE32_ALPHABET } from '@findeg/domain';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -199,7 +202,7 @@ export const partnerFixtureTasks = {
   }): Promise<{ orderId: number; listId: number }> {
     return withSql(async (sql) => {
       const tag = randomBytes(4).toString('hex');
-      const alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+      const alphabet = CROCKFORD_BASE32_ALPHABET;
       let code = '';
       for (let i = 0; i < 6; i++) {
         code += alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -216,7 +219,7 @@ export const partnerFixtureTasks = {
           ${options.partnerId},
           'Grade 1',
           '2026/2027',
-          ${sql.json({ en: 'Grade 1 Supply List', ar: 'قائمة الصف الأول' })},
+          ${sql.json({ en: 'Grade 1 Supply List', ar: 'قائمة الصف الأول' } satisfies Record<Locale, string | undefined>)},
           'published',
           ${publicCode},
           now()
@@ -313,7 +316,7 @@ export const partnerFixtureTasks = {
           ${grade},
           ${academicYear},
           ${status},
-          ${sql.json({ en: titleEn, ar: titleAr })},
+          ${sql.json({ en: titleEn, ar: titleAr } satisfies Record<Locale, string | undefined>)},
           ${status === 'published' ? randomBytes(16).toString('hex') : null},
           ${status === 'published' ? sql`now()` : null},
           ${sourceListId}
@@ -349,7 +352,7 @@ export const partnerFixtureTasks = {
           (list_id, localized_label, quantity, required, exact_item, variant_id, specification)
         values (
           ${options.listId},
-          ${sql.json({ en: labelEn, ar: labelAr })},
+          ${sql.json({ en: labelEn, ar: labelAr } satisfies Record<Locale, string | undefined>)},
           ${quantity},
           ${required},
           ${exactItem},

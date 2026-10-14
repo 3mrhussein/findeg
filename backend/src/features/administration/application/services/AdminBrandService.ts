@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { ID, Slug } from '../../../core/domain/types/common';
 import { IAdminBrandService } from '../interfaces/IAdminBrandService';
 import { Brand } from '../../../catalog/domain/entities/Brand';
@@ -12,12 +13,7 @@ import {
   deleteBrand,
   countProductsByBrandId,
 } from '@findeg/db/queries';
-import {
-  DEFAULT_LOCALE,
-  asTranslationMap,
-  type Locale,
-  pick,
-} from '../../../core/domain/value-objects';
+import { DEFAULT_LOCALE, asTranslationMap, pick } from '../../../core/domain/value-objects';
 
 /**
  * Admin Brand Service
@@ -93,8 +89,14 @@ export class AdminBrandService implements IAdminBrandService {
     const brand = await createBrand({
       slug: input.slug as Slug,
       logoUrl: input.logoUrl,
-      localizedName: { en: input.nameEn!, ar: input.nameAr! },
-      localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
+      localizedName: { en: input.nameEn!, ar: input.nameAr! } satisfies Record<
+        Locale,
+        string | undefined
+      >,
+      localizedDescription: {
+        en: input.descriptionEn || '',
+        ar: input.descriptionAr || '',
+      } satisfies Record<Locale, string | undefined>,
     });
 
     if (this.auditLogService) {
@@ -127,8 +129,14 @@ export class AdminBrandService implements IAdminBrandService {
       slug: input.slug as Slug,
       logoUrl: input.logoUrl,
       isActive: input.isActive,
-      localizedName: { en: input.nameEn!, ar: input.nameAr! },
-      localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
+      localizedName: { en: input.nameEn!, ar: input.nameAr! } satisfies Record<
+        Locale,
+        string | undefined
+      >,
+      localizedDescription: {
+        en: input.descriptionEn || '',
+        ar: input.descriptionAr || '',
+      } satisfies Record<Locale, string | undefined>,
     });
 
     if (this.auditLogService) {

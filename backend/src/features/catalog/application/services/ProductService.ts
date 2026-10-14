@@ -65,7 +65,9 @@ export class ProductService implements IProductService {
   private mapVariantToDomain(
     dbVariant: Awaited<ReturnType<typeof productQueries.getVariantsByProductIds>>[number][number],
   ): Variant {
-    const labelMap = (dbVariant.localizedLabel as TranslationMap) || { en: '', ar: '' };
+    const labelMap =
+      (dbVariant.localizedLabel as TranslationMap) ||
+      ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>);
     return {
       id: dbVariant.id,
       productId: dbVariant.productId,
@@ -123,7 +125,7 @@ export class ProductService implements IProductService {
       const defaultVariant = domainDefaultVariant(productVariantsList);
 
       const catName = row.category
-        ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
+        ? pick(asTranslationMap(row.category.localizedName ?? {}), lang)
         : undefined;
       const brandNameStr = row.brand
         ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)
@@ -165,7 +167,7 @@ export class ProductService implements IProductService {
     const defaultVariant = domainDefaultVariant(productVariantsList);
 
     const catName = result.category
-      ? pick(asTranslationMap(result.category.localizedName ?? { en: '' }), lang)
+      ? pick(asTranslationMap(result.category.localizedName ?? {}), lang)
       : undefined;
     const brandNameStr = result.brand
       ? pick(asTranslationMap(result.brand.localizedName ?? {}), lang)
@@ -208,7 +210,7 @@ export class ProductService implements IProductService {
       const variants = (variantsMap[id] || []).map((v) => this.mapVariantToDomain(v));
       const defaultVariant = domainDefaultVariant(variants);
       const catName = row.category
-        ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
+        ? pick(asTranslationMap(row.category.localizedName ?? {}), lang)
         : undefined;
       const brandName = row.brand
         ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)

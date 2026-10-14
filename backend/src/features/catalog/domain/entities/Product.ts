@@ -1,3 +1,4 @@
+import { LOCALES } from '@findeg/domain';
 /**
  * Domain Entity: Product (SPU)
  *
@@ -109,11 +110,7 @@ export class ProductEntity {
   }
 
   getAvailableLocales(): Locale[] {
-    const locales = new Set<Locale>();
-    if (this.product.localizedContent?.name) {
-      Object.keys(this.product.localizedContent.name).forEach((k) => locales.add(k as Locale));
-    }
-    return Array.from(locales);
+    return LOCALES.filter((locale) => this.product.localizedContent?.name?.[locale] !== undefined);
   }
 
   // ─── Variant Access ───────────────────────────────────────────────

@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { cn } from '../lib/utils';
 
 interface PriceProps {
@@ -15,14 +16,14 @@ export function Price({ price, strikePrice, className }: PriceProps) {
       <span className="font-semibold">
         {new Intl.NumberFormat('en-EG', {
           style: 'currency',
-          currency: 'EGP',
+          currency: DEFAULT_CURRENCY,
         }).format(price)}
       </span>
       {strikePrice ? (
         <span className="text-sm text-muted-foreground line-through">
           {new Intl.NumberFormat('en-EG', {
             style: 'currency',
-            currency: 'EGP',
+            currency: DEFAULT_CURRENCY,
           }).format(strikePrice)}
         </span>
       ) : null}

@@ -16,6 +16,7 @@ export {
 } from './features/availability';
 export type { StockLevel } from './features/availability';
 export {
+  RESERVATION_SETTLEMENTS,
   RESERVATION_STATES,
   reservationSettlement,
   reservationState,

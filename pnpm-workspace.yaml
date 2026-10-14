@@ -1,7 +1,6 @@
 packages:
   - 'configs'
   - 'configs/env'
-  - 'packages/money'
   - 'packages/orders'
   - 'packages/domain-errors'
   - 'packages/domain'

@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 
 import { formatEgp } from '@findeg/ui';
 
@@ -183,7 +184,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
        */
       cell: ({ row }) => {
         const total = row.original.totalAmount;
-        const currency = row.original.currency || 'EGP';
+        const currency = row.original.currency || DEFAULT_CURRENCY;
         return (
           <span className="font-medium">
             {currency} {formatEgp(total)}

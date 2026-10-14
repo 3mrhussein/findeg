@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 /** Explicit persistence-to-domain projections. Raw Drizzle rows remain available. */
 import {
   DEFAULT_CURRENCY,
@@ -43,7 +44,7 @@ export function mapBusinessPartner(row: typeof businessPartners.$inferSelect): B
   return {
     id: domainId<'BusinessPartner'>(row.id),
     code: row.code,
-    name: { en: row.nameEn, ar: row.nameAr },
+    name: { en: row.nameEn, ar: row.nameAr } satisfies Record<Locale, string | undefined>,
     status: row.status,
   };
 }

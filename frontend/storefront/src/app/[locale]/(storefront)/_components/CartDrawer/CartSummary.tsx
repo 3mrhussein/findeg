@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_CURRENCY, moneyToDecimal, type Money } from '@findeg/domain';
 
 import { Link } from '@i18n/navigation';
 import { Button } from '@findeg/ui';
@@ -6,10 +7,13 @@ import { Separator } from '@findeg/ui';
 import { SheetClose, SheetFooter } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
 
-const egpFormatter = new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP' });
+const egpFormatter = new Intl.NumberFormat('en-EG', {
+  style: 'currency',
+  currency: DEFAULT_CURRENCY,
+});
 
 interface CartSummaryProps {
-  cartTotal: number;
+  cartTotal: Money;
 }
 
 /**
@@ -24,7 +28,7 @@ export function CartSummary({ cartTotal }: CartSummaryProps) {
         <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
           <span>Subtotal</span>
           <span className="font-semibold text-slate-900 dark:text-white">
-            {egpFormatter.format(cartTotal)}
+            {egpFormatter.format(Number(moneyToDecimal(cartTotal)))}
           </span>
         </div>
         <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
@@ -36,7 +40,9 @@ export function CartSummary({ cartTotal }: CartSummaryProps) {
           <span className="font-bold text-slate-900 dark:text-white">
             {t('Pages.Checkout.Total')}
           </span>
-          <span className="text-2xl font-black text-primary">{egpFormatter.format(cartTotal)}</span>
+          <span className="text-2xl font-black text-primary">
+            {egpFormatter.format(Number(moneyToDecimal(cartTotal)))}
+          </span>
         </div>
       </div>
 

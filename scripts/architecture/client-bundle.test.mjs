@@ -62,7 +62,7 @@ test('allows client schemas and UI while ignoring server output and package name
     'turbopack:///[project]/packages/orders/src/features/input-schemas/helpers.ts',
     'turbopack:///[project]/packages/orders/src/features/order-events/index.ts',
     'turbopack:///[project]/packages/domain/src/features/orders/features/order-status/helpers.ts',
-    'turbopack:///[project]/packages/money/src/piasters.ts',
+    'turbopack:///[project]/packages/domain/src/features/common/features/money/helpers.ts',
     'turbopack:///[project]/frontend/storefront/src/components/cart.tsx',
     'turbopack:///[project]/node_modules/zod/index.js',
     'turbopack:///[project]/db/src/types/sales.ts',

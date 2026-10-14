@@ -1,3 +1,4 @@
+import { LOCALES } from '@findeg/domain';
 import { safeReturnTarget } from '@lib/return-target';
 import { Suspense } from 'react';
 import type { Locale } from '@findeg/domain';
@@ -13,7 +14,7 @@ type Props = {
  * Generate static params for supported locales
  */
 export async function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'ar' }];
+  return LOCALES.map((locale) => ({ locale }));
 }
 
 /**

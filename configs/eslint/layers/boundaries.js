@@ -11,10 +11,7 @@ export const boundaries = [
     plugins: { local },
     rules: {
       'local/declared-workspace-dependencies': [severity('local/declared-workspace-dependencies')],
-      'local/no-domain-value-set-copies': [
-        'error',
-        { deriveNeverRedefine: process.env.FINDEG_DOMAIN_DERIVATION === '1' },
-      ],
+      'local/no-domain-value-set-copies': ['error', { deriveNeverRedefine: true }],
     },
   },
 ];

@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import type { PortalRole } from '@findeg/backend/features/core';
 import { TranslationMapSchema } from '@findeg/backend/features/core/schemas';
 import { z } from 'zod';
@@ -32,7 +33,10 @@ export const VariantFormSchema = z.object({
     .min(2)
     .max(100)
     .regex(/^[A-Z0-9-]+$/, 'SKU must be uppercase, digits, or hyphens'),
-  localizedLabel: TranslationMapSchema.default({ en: '', ar: '' }),
+  localizedLabel: TranslationMapSchema.default({ en: '', ar: '' } satisfies Record<
+    Locale,
+    string | undefined
+  >),
   sortOrder: z.number().int().nonnegative().default(0),
   isDefault: z.boolean().default(false),
   isActive: z.boolean().default(true),
@@ -53,17 +57,32 @@ export const VariantFormSchema = z.object({
 export const ProductFormSchema = z
   .object({
     localizedName: TranslationMapSchema,
-    localizedDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
-    localizedLongDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
-    localizedSlug: TranslationMapSchema.optional().default({ en: '', ar: '' }),
+    localizedDescription: TranslationMapSchema.optional().default({
+      en: '',
+      ar: '',
+    } satisfies Record<Locale, string | undefined>),
+    localizedLongDescription: TranslationMapSchema.optional().default({
+      en: '',
+      ar: '',
+    } satisfies Record<Locale, string | undefined>),
+    localizedSlug: TranslationMapSchema.optional().default({ en: '', ar: '' } satisfies Record<
+      Locale,
+      string | undefined
+    >),
     categoryId: z.number().nullable().optional(),
     brandId: z.number().nullable().optional(),
     tagIds: z.array(z.number()).default([]),
     isActive: z.boolean().default(true),
 
     variants: z.array(VariantFormSchema).min(1, 'At least one variant is required'),
-    localizedMetaTitle: TranslationMapSchema.optional().default({ en: '', ar: '' }),
-    localizedMetaDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
+    localizedMetaTitle: TranslationMapSchema.optional().default({ en: '', ar: '' } satisfies Record<
+      Locale,
+      string | undefined
+    >),
+    localizedMetaDescription: TranslationMapSchema.optional().default({
+      en: '',
+      ar: '',
+    } satisfies Record<Locale, string | undefined>),
   })
   .superRefine((data, ctx) => {
     const defaultCount = data.variants.filter((v) => v.isDefault).length;

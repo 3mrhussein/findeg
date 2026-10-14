@@ -1,7 +1,7 @@
 import { SupplyListError as DomainSupplyListError, type SupplyListErrorCode } from '@findeg/domain';
 import type { SupplyListError } from '../application/interfaces/ISchoolSupplyListService';
 
-const applicationCodes: Record<SupplyListErrorCode, SupplyListError> = {
+const applicationCodes = {
   INVALID_ITEM_QUANTITY: 'invalid-input',
   INVALID_PUBLIC_CODE: 'invalid-input',
   PARTNER_STATUS_NOT_ALLOWED: 'partner-status-not-allowed',
@@ -11,7 +11,7 @@ const applicationCodes: Record<SupplyListErrorCode, SupplyListError> = {
   DEFAULT_UNAVAILABLE: 'default-unavailable',
   DEFAULT_INELIGIBLE: 'default-ineligible',
   SLOT_TAKEN: 'slot-taken',
-};
+} satisfies Record<SupplyListErrorCode, SupplyListError>;
 
 /** Preserve the feature's public rejection codes; technical errors still roll back and propagate. */
 export function schoolListFailure(error: unknown): { success: false; error: SupplyListError } {

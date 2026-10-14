@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import {
   generateOrderReference as domainOrderReference,
   ORDER_REFERENCE_PATTERN,
@@ -72,7 +73,10 @@ export const orders = salesSchema.table(
     shippingCost: decimal('shipping_cost', { precision: 10, scale: 2 }).default('0'),
     /** Final amount: subtotal + shippingCost */
     totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
-    currency: varchar('currency', { length: 3 }).$type<CurrencyCode>().default('EGP').notNull(),
+    currency: varchar('currency', { length: 3 })
+      .$type<CurrencyCode>()
+      .default(DEFAULT_CURRENCY)
+      .notNull(),
 
     // Payment
     /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */

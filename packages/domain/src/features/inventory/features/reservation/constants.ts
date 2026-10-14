@@ -1,6 +1,8 @@
 import type { OrderStatus } from '../../../orders';
 import type { ReservationState } from './types';
 
+export const RESERVATION_SETTLEMENTS = ['consume', 'release'] as const;
+
 export const RESERVATION_STATES = ['held', 'consumed', 'released'] as const;
 
 export const STATE_BY_ORDER_STATUS: Readonly<Record<OrderStatus, ReservationState>> = {

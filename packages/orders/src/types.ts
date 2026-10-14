@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY, BUSINESS_TIME_ZONE } from '@findeg/domain';
 import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/types';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as Schema from '@findeg/db/schema';
@@ -108,8 +109,8 @@ export interface OrderStatsOptions {
 }
 
 export interface OrderStats {
-  currency: 'EGP';
-  timezone: 'Africa/Cairo';
+  currency: typeof DEFAULT_CURRENCY;
+  timezone: typeof BUSINESS_TIME_ZONE;
   totalOrders: number;
   totalRevenue: bigint;
   todayOrders: number;

@@ -7,7 +7,7 @@ import {
   type OrderProgress,
 } from '@findeg/domain';
 
-const orderLabels: Record<OrderStatus, string> = {
+const orderLabels = {
   pending: 'Pending',
   confirmed: 'Confirmed',
   processing: 'Processing',
@@ -15,12 +15,12 @@ const orderLabels: Record<OrderStatus, string> = {
   delivered: 'Delivered',
   cancelled: 'Cancelled',
   refunded: 'Refunded',
-};
-const paymentLabels: Record<PaymentStatus, string> = {
+} satisfies Record<OrderStatus, string>;
+const paymentLabels = {
   unpaid: 'Unpaid',
   paid: 'Paid',
   refunded: 'Refunded',
-};
+} satisfies Record<PaymentStatus, string>;
 export const getOrderStatusLabel = (status: OrderStatus) => orderLabels[status];
 export const getPaymentStatusLabel = (status: PaymentStatus) => paymentLabels[status];
 export const getAllowedOrderStatusTransitions = (status: OrderStatus) =>

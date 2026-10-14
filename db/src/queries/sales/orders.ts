@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import {
   LIVE_ORDER_STATUSES,
   type PaymentMethod,
@@ -372,7 +373,7 @@ export async function create(
               subtotal: orderData.subtotal,
               shippingCost: orderData.shippingCost,
               totalAmount: orderData.totalAmount,
-              currency: orderData.currency || 'EGP',
+              currency: orderData.currency || DEFAULT_CURRENCY,
               paymentMethod: (orderData.paymentMethod as PaymentMethod) || null,
               schoolSupplyListId: orderData.schoolSupplyListId,
               schoolSupplyListPublicCode: orderData.schoolSupplyListPublicCode,
