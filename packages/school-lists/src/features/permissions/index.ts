@@ -3,7 +3,9 @@ import { SupplyListIdSchema as supplyListIdSchema } from '@findeg/db';
 import type { SupplyListStaffActor } from '../../types';
 
 function isStaff(actor: SupplyListStaffActor): boolean {
-  return supplyListIdSchema.safeParse(actor.userId).success;
+  // Runtime guard: untyped callers can pass any kind, so widen before comparing.
+  const kind: string = actor.kind;
+  return kind === 'staff' && supplyListIdSchema.safeParse(actor.userId).success;
 }
 
 export function canWriteSupplyLists(actor: SupplyListStaffActor): boolean {

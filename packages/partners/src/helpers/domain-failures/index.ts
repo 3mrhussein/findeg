@@ -38,11 +38,12 @@ const APPLICATION_ERRORS = {
 
 /**
  * Turns a thrown partner domain error into the typed failure a service returns. The caller
- * narrows `E` to the errors its operation can produce. Any other error is rethrown.
+ * names the errors its operation can produce as type arguments; `_expected` only carries that
+ * type and is never read. Any other error is rethrown.
  */
 export function partnerFailure<E extends string>(
   error: unknown,
-  accepts: (code: string) => code is E,
+  ..._expected: readonly E[]
 ): { success: false; error: E } {
   if (
     error instanceof DomainError &&
@@ -50,8 +51,7 @@ export function partnerFailure<E extends string>(
     Object.prototype.hasOwnProperty.call(APPLICATION_ERRORS, error.code)
   ) {
     const code = error.code as PartnerDomainErrorCode;
-    const mapped = APPLICATION_ERRORS[code];
-    if (accepts(mapped)) return { success: false, error: mapped };
+    return { success: false, error: APPLICATION_ERRORS[code] as E };
   }
   throw error;
 }

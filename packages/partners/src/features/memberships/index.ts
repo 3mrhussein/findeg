@@ -174,22 +174,13 @@ export class MembershipService implements IMembershipService {
           alreadyMember: existing !== undefined,
         });
       } catch (error) {
-        return partnerFailure(
-          error,
-          (
-            code,
-          ): code is
-            | 'invitation-not-pending'
-            | 'invitation-expired'
-            | 'email-mismatch'
-            | 'already-member'
-            | 'partner-not-open' =>
-            code === 'invitation-not-pending' ||
-            code === 'invitation-expired' ||
-            code === 'email-mismatch' ||
-            code === 'already-member' ||
-            code === 'partner-not-open',
-        );
+        return partnerFailure<
+          | 'invitation-not-pending'
+          | 'invitation-expired'
+          | 'email-mismatch'
+          | 'already-member'
+          | 'partner-not-open'
+        >(error);
       }
       // The stored account email must also be the invited one, not only the session's.
       if (normalizeEmail(user.email) !== invitation.email) return fail('email-mismatch');
@@ -240,13 +231,7 @@ export class MembershipService implements IMembershipService {
           otherActivePartnerAdministrators: others,
         });
       } catch (error) {
-        return partnerFailure(
-          error,
-          (code): code is 'membership-ended' | 'last-administrator' | 'invalid-input' =>
-            code === 'membership-ended' ||
-            code === 'last-administrator' ||
-            code === 'invalid-input',
-        );
+        return partnerFailure<'membership-ended' | 'last-administrator' | 'invalid-input'>(error);
       }
       if (expectedVersion !== current.authorizationVersion) return fail('stale-membership');
 
@@ -280,11 +265,7 @@ export class MembershipService implements IMembershipService {
           otherActivePartnerAdministrators: others,
         });
       } catch (error) {
-        return partnerFailure(
-          error,
-          (code): code is 'membership-ended' | 'last-administrator' =>
-            code === 'membership-ended' || code === 'last-administrator',
-        );
+        return partnerFailure<'membership-ended' | 'last-administrator'>(error);
       }
       return this.commitChange(tx, actor, partner, current, left, ['membership.left']);
     });

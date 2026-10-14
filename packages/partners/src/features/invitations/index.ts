@@ -116,11 +116,7 @@ export class InvitationService implements IInvitationService {
           { partnerStatus: partner.status, now: this.clock(), alreadyMember },
         );
       } catch (error) {
-        return partnerFailure(
-          error,
-          (code): code is 'invalid-input' | 'partner-not-open' | 'already-member' =>
-            code === 'invalid-input' || code === 'partner-not-open' || code === 'already-member',
-        );
+        return partnerFailure<'invalid-input' | 'partner-not-open' | 'already-member'>(error);
       }
 
       const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, issued.email);
@@ -160,11 +156,7 @@ export class InvitationService implements IInvitationService {
           now: this.clock(),
         });
       } catch (error) {
-        return partnerFailure(
-          error,
-          (code): code is 'invitation-not-pending' | 'partner-not-open' =>
-            code === 'invitation-not-pending' || code === 'partner-not-open',
-        );
+        return partnerFailure<'invitation-not-pending' | 'partner-not-open'>(error);
       }
       const updated = await setPartnerInvitationExpiry(tx, invitation.id, renewed.expiresAt);
       await this.audit(
@@ -191,10 +183,7 @@ export class InvitationService implements IInvitationService {
       try {
         withdrawn = revokePartnerInvitation(invitation, { partnerStatus: partner.status });
       } catch (error) {
-        return partnerFailure(
-          error,
-          (code): code is 'invitation-not-pending' => code === 'invitation-not-pending',
-        );
+        return partnerFailure<'invitation-not-pending'>(error);
       }
       const revoked = await setPartnerInvitationStatus(tx, invitation.id, withdrawn.status);
       await this.audit(
