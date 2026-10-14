@@ -1,4 +1,4 @@
-import type { ListOfferInput } from '@findeg/backend/features/school';
+import type { ListOfferInput } from '@findeg/school-lists';
 
 export type OfferFormParse = { ok: true; offer: ListOfferInput } | { ok: false; message: string };
 

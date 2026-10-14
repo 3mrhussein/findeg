@@ -8,7 +8,7 @@ import type {
   PublicSupplyList,
   PublicSupplyListItem,
   PublicSupplyListVariant,
-} from '@findeg/backend/features/school';
+} from '@findeg/school-lists';
 import { Link } from '@/i18n/navigation';
 import {
   chooseVariant,

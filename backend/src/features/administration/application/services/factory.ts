@@ -16,7 +16,7 @@ import type { IAdminInventoryService } from '../interfaces/IAdminInventoryServic
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { IProductImportService } from '../interfaces/IProductImportService';
-import type { IAdminSchoolSupplyListService } from '../interfaces/IAdminSchoolSupplyListService';
+import type { IAdminSchoolSupplyListService } from '@findeg/school-lists/types';
 
 // Admin services
 import { AdminProductService } from './AdminProductService';
@@ -28,18 +28,7 @@ import { AdminInventoryService } from './AdminInventoryService';
 import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
 import { ProductImportService } from './ProductImportService';
-import { AdminSchoolSupplyListService } from './AdminSchoolSupplyListService';
-import { createSchoolSupplyListService } from '../../../school';
-import {
-  findVariantCandidates,
-  listAttributeValuesForCategory,
-  listSchoolSupplyLists,
-  listSchoolListPartners,
-} from '@findeg/db/queries/school-supply-lists';
-
-async function loadDb() {
-  return (await import('@findeg/db/connection')).db;
-}
+import { createAdminSchoolSupplyListService } from '@findeg/school-lists';
 
 /**
  * Create administration services with all dependencies wired
@@ -67,14 +56,7 @@ export function createAdministrationServices(): AdministrationServices {
 
   // Create admin product service (uses query primitives - no repositories needed)
   const adminProductService = new AdminProductService(auditLogService);
-  const schoolSupplyListLifecycle = createSchoolSupplyListService();
-  const adminSchoolSupplyListService = new AdminSchoolSupplyListService(
-    schoolSupplyListLifecycle,
-    async (categoryId) => listAttributeValuesForCategory(await loadDb(), categoryId),
-    async (categoryId) => findVariantCandidates(await loadDb(), { categoryId }),
-    async (filters) => listSchoolSupplyLists(await loadDb(), filters),
-    async () => listSchoolListPartners(await loadDb()),
-  );
+  const adminSchoolSupplyListService = createAdminSchoolSupplyListService();
 
   // Create admin services (inject repository dependencies)
   return {

@@ -12,7 +12,7 @@ import {
   createSchoolDirectory,
   createSchoolSupplyListReader,
   type SchoolSearchParams,
-} from '@findeg/backend/features/school';
+} from '@findeg/school-lists';
 
 /**
  * Search the Partner School directory. Uncached: rows carry published-list counts.

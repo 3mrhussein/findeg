@@ -36,7 +36,7 @@
     "./features/order/*": null,
     "./features/review": "./src/features/review/index.ts",
     "./features/review/*": null,
-    "./features/school": "./src/features/school/index.ts",
+    "./features/school": null,
     "./features/school/*": null,
     "./features/*": "./src/features/*"
   },
@@ -54,6 +54,7 @@
     "@findeg/env": "workspace:*",
     "@findeg/identity": "workspace:*",
     "@findeg/orders": "workspace:*",
+    "@findeg/school-lists": "workspace:*",
     "@react-email/components": "^1.0.12",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",

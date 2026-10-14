@@ -3,10 +3,8 @@
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import type { SessionPayload } from '@findeg/backend/features/core';
-import {
-  createAdministrationServices,
-  type SchoolSupplyListIndexFilters,
-} from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import type { SchoolSupplyListIndexFilters } from '@findeg/school-lists/types';
 
 function toListActor(session: SessionPayload) {
   return {

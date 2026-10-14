@@ -4,4 +4,5 @@ export const libraryScopes = {
   'packages/domain': ['src'],
   'packages/identity': ['src'],
   'packages/orders': ['src'],
+  'packages/school-lists': ['src'],
 };

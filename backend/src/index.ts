@@ -34,8 +34,5 @@ export async function getDashboardData(locale: string, userId: number) {
 
 export { MediaService } from './features/media/application/services';
 
-// School feature exports
-export * from './features/school';
-
 // Shared libraries
 export * from './lib';

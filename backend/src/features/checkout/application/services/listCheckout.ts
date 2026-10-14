@@ -10,7 +10,7 @@ import {
 } from '@findeg/db/schema';
 import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
-import { eligibleVariants } from '@findeg/backend/features/school';
+import { eligibleVariants } from '@findeg/school-lists';
 import { moneyFromDecimal, isLineQuantity } from '@findeg/domain';
 import { sku, type VariantId } from '@findeg/domain';
 import { priceQuote, type Quote } from '@findeg/domain';

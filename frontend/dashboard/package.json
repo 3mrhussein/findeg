@@ -24,6 +24,7 @@
     "@findeg/env": "workspace:*",
     "@findeg/identity": "workspace:*",
     "@findeg/orders": "workspace:*",
+    "@findeg/school-lists": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",

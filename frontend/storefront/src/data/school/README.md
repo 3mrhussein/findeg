@@ -1,7 +1,7 @@
 # Storefront School Data
 
 Reads for the Partner School directory (`/schools`, `/schools/[slug]`), backed by
-`createSchoolDirectory()` from `@findeg/backend/features/school`.
+`createSchoolDirectory()` from `@findeg/school-lists`.
 
 - `getSchoolFilterOptions` is cached; `searchSchools` and `getSchoolProfile` are not, so list status
   changes (publish, archive, replace) show immediately. They read every Partner School and its
