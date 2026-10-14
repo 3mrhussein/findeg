@@ -13,7 +13,7 @@ fixture projects, including the Node/browser compatibility fixtures from #435.
 active: its existing local tests and measured implementation coverage meet the
 policy. Environment configuration (`configs/env`, #438) is active with its consumer-entry
 tests. Domain is active for its library scope (`configs/library-scopes.mjs`: `src`, every
-area including Relations), which measures the whole library. Orders is active for its library scope (`src`, #443 phase 1) with the same policy. Backend, DB,
+bounded context under `src/features/`, including Relations), which measures the whole library. Orders is active for its library scope (`src`, #443 phase 1) with the same policy. Backend, DB,
 UI, Dashboard and Storefront remain inactive pending #445. Inactivity preserves
 existing test runs; it is not evidence of sufficient coverage. Activating a workspace enables the same four 80% per-file
 thresholds and, for libraries under `packages/`, local test validation. There are
@@ -41,8 +41,7 @@ Shared discovery includes arbitrary JS/TS filenames under `__tests__` and existi
 (`placement.mjs`) at Vitest init, so `--passWithNoTests` cannot skip it. Local library tests may be nested inside
 the implementation directory's own `__tests__`; skipped/todo-only files do not
 satisfy placement. Types/declarations-only and re-export-only source directories
-are exempt, as are recursive `constants.ts` and `types.ts`. Test and generated
-directories do not recursively require tests. Implementation-bearing indexes,
+are exempt, as are recursive `constants.ts` and `types.ts`. Test directories do not recursively require tests. Library source has no generated-directory exemption. Implementation-bearing indexes,
 helpers and ordinary constant declarations remain measured.
 
 Coverage includes JS/TS implementation across the workspace, including root files

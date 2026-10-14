@@ -11,6 +11,6 @@ Public entries are the server factory/errors/permission at `@findeg/orders`, the
 
 Unit tests run here, in local `__tests__` directories beside each feature. Database-bound features run against a scripted, test-only client injected through the factory, so this package measures without PostgreSQL. Real PostgreSQL tests live in Backend and use the public factory, keeping the integration harness outside this package.
 
-Business status values and rules come from `@findeg/domain/orders`; this package exports no status lists, transition tables or display labels. Source is organised as `src/orders/` with `features/` modules (see `configs/eslint/rollout.md`, #443). The public entries are `.`, `./types`, `./schemas` and `./events` until phase 2.
+Business status values and rules come from `@findeg/domain/orders`; this package exports no status lists, transition tables or display labels. Source is organised as `src/` with root `index.ts`, `types.ts`, `helpers.ts` and named modules directly under `features/` (see `configs/eslint/rollout.md`, #443). The public entries are `.`, `./types`, `./schemas` and `./events` until phase 2.
 
 Cancelling a shipped Order requires `parcelBackInWarehouse: true` in the status input. Payment becomes paid only after delivery. `refund(actor, id)` atomically refunds a delivered, paid Order and its payment, records Staff, and sends no Customer email. Ordinary status changes to `refunded` use the same atomic Refund rule. Repeated Refund and same-status Order/payment changes preserve metadata, timestamps, history and the Outbox.

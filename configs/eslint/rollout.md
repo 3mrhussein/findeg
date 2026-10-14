@@ -63,22 +63,23 @@ Non-function mutable variables receive no naming convention.
 | Dashboard, Storefront | Available, opt-in | After #400/#401 app rebuilds; #445 measured remediation/activation |
 | Shared configuration | Available, opt-in | #445 config/CI activation audit |
 
-## Library layout pilot (#439)
+## Recursive library layout (#layout)
 
 `configs/eslint/rules/library-layout.js` enforces the recursive library vocabulary:
-index, types, constants and helpers (`.ts`, or `.tsx` for index/helpers) inside a module;
-`helpers/` and `features/` as containers of module directories; `__tests__/` and test
+index, types, constants and helpers (`.ts`, or `.tsx` for index/helpers) inside a module, including the source root;
+`helpers/` and `features/` as containers of named module directories, recursively from `src/`;
+free-named directories directly under a module are rejected; `__tests__/` and test
 files exempt. A module holds either `helpers.ts` (which needs an `index.ts`) or a
 `helpers/` container, never both. It applies only to the subtrees listed in
 `configs/library-scopes.mjs`, through `libraryLayout(scopes)` in each package's
 flat configuration, so applications and the UI library keep their own layouts. Shared
-Vitest uses the same list: pilot scopes measure 80% per file and require local
+Vitest uses the same list: library scopes measure 80% per file and require local
 executable `__tests__` only inside those scopes. `scripts/architecture/library-layout.test.mjs`
-exercises positive and negative fixtures and the real Domain pilot.
+exercises positive and negative fixtures and the real Domain and Orders trees.
 
 ## Inventory and Orders (#440)
 
-Inventory and Orders follow the library vocabulary: each area has `index`, `types`,
+Inventory and Orders follow the library vocabulary: each bounded context under `src/features/` has `index`, `types`,
 `constants` and `helpers` files, and each feature under `features/` is a module of the same
 shape (`order-status`, `cart`, `quote`, `acceptance`, and so on). Every implementation
 directory has local executable tests in its `__tests__/`. Their scopes are listed in
@@ -88,19 +89,18 @@ Preserved public behavior: `@findeg/domain`, `@findeg/domain/orders` and
 `@findeg/domain/inventory` export the same names with the same runtime kinds as before the
 restructure (checked against the pre-change export list). Internal filenames such as
 `order-status.ts` or `allocation.ts` are not public; consumers import the subpaths, so the
-temporary area aliases keep parallel consumer migration (#399, #443) decoupled from internal
+temporary bounded-context subpath aliases keep parallel consumer migration (#399, #443) decoupled from internal
 file moves. Business rules, Money, branded identities, injected time and randomness, and typed
 errors are unchanged.
 
 ## Orders library and root entries (#443 phase 1)
 
-`packages/orders/src` follows the same recursive vocabulary as Domain. The area is
-`src/orders/`: `index`, `types`, `helpers` (the `createOrders` factory), and `features/`
+`packages/orders/src` follows the same recursive vocabulary as Domain. Its root holds `index`, `types`, `helpers` (the `createOrders` factory), and `features/`
 modules. Each feature has its own `__tests__/` with executable tests:
 `input-schemas` (client-safe schemas), `order-events` (the pure status message protocol),
 `write-permission`, `order-errors`, `order-mapping`, `validation`, `order-reads`,
 `order-statistics` and `order-status-changes`. Database-bound features are exercised through
-the injected database seam with a scripted, test-only client (`src/orders/__tests__/fixture.ts`),
+the injected database seam with a scripted, test-only client (`src/__tests__/fixture.ts`),
 so Vitest measures them without PostgreSQL; the PostgreSQL integration suite in
 `backend/src/testing/orders` still covers the same commands on a real database.
 
@@ -117,12 +117,12 @@ migrates consumers to the root and types entries.
 
 ## Relations and root entries (#442)
 
-`src/relations/` follows the same vocabulary: `constants.ts` (`ENTITY_DOMAINS`, `RELATIONS`),
+`src/features/relations/` follows the same vocabulary: `constants.ts` (`ENTITY_DOMAINS`, `RELATIONS`),
 `types.ts` (`Relation` and entity names), `index.ts`, and `__tests__/relations.test.ts`, which
 checks the map against the public domain types. The root runtime index is `@findeg/domain`; the
 root type entry is `@findeg/domain/types` (`src/types.ts`, a type-only re-export of the root
 index, so it has no runtime value). `src/__tests__/entries.test.ts` pins the root runtime names
-and checks that every area subpath is a subset of the root. Area subpaths remain until #443.
+and checks that every bounded-context subpath is a subset of the root. Bounded-context subpaths remain until #443.
 
 Cycle checks: `scripts/architecture/domain-import-cycles.test.mjs` forbids runtime cycles.
 Type-only cycles (for example `types.ts` ↔ `constants.ts`) are erased and are not checked.
