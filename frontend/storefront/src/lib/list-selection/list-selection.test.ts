@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
+import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/school-lists';
 import {
   chooseVariant,
   isDefaultSelection,

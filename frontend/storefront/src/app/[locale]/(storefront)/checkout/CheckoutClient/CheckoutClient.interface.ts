@@ -3,7 +3,7 @@
  */
 
 import { type CheckoutPrefillData } from '@/data/order/queries';
-import type { PublicSupplyList } from '@findeg/backend/features/school';
+import type { PublicSupplyList } from '@findeg/school-lists';
 
 export interface CheckoutTotals {
   subtotal: number;

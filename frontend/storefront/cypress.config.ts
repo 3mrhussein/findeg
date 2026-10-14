@@ -117,7 +117,7 @@ export default defineConfig({
           const [{ db }, schema, { createSchoolSupplyListService }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
-            import('@findeg/backend/features/school'),
+            import('@findeg/school-lists'),
           ]);
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db

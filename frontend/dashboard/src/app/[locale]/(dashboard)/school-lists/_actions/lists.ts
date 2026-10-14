@@ -4,7 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import type { SupplyListItemInput } from '@findeg/backend/features/administration';
+import type { SupplyListItemInput } from '@findeg/school-lists/types';
 import { toListActor } from '../_lib/toListActor';
 
 export interface ActionState<T = unknown> {

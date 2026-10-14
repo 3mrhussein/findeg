@@ -1,4 +1,4 @@
-import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
+import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/school-lists';
 import {
   seedListSelection,
   reconcileListSelection,

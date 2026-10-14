@@ -8,4 +8,3 @@ export * from './IAdminDashboardService';
 export * from './IAdminInventoryService';
 export * from './IAdminProductService';
 export * from './IProductImportService';
-export * from './IAdminSchoolSupplyListService';

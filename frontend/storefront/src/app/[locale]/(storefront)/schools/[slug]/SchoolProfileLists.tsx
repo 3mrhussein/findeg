@@ -1,7 +1,7 @@
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import type { SchoolProfileList } from '@findeg/backend/features/school';
+import type { SchoolProfileList } from '@findeg/school-lists';
 
 interface SchoolProfileListsProps {
   lists: SchoolProfileList[];
