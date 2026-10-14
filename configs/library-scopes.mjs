@@ -4,4 +4,5 @@
 // per-area list once the whole workspace is enforced. Paths are relative to the workspace root.
 export const libraryScopes = {
   'packages/domain': ['src'],
+  'packages/orders': ['src'],
 };

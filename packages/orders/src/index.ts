@@ -1,23 +1,5 @@
-export { createOrders } from './orders';
-export type {
-  Orders,
-  OrderDatabase,
-  OrdersDependencies,
-  OrderFilters,
-  OrderStatsOptions,
-  OrderStats,
-  Order,
-  OrderItem,
-  OrderDetail,
-  OrderActivityEntry,
-} from './types';
-export * from './schemas';
-export {
-  OrderNotFoundError,
-  InvalidOrderStatusTransitionError,
-  InvalidPaymentStatusTransitionError,
-} from './errors';
-export type { OrderStatusTransitionResult, PaymentStatusTransitionResult } from './errors';
-export type { OrderStaffActor } from './OrderStaffActor';
-export { canWriteOrders, assertCanWriteOrders } from './orderWritePermission';
-export { NotAuthorizedError, DomainError } from '@findeg/domain-errors';
+/**
+ * @findeg/orders: the root runtime entry. Consumers import this root (or `./types` for types
+ * only); the area and feature folders underneath are internal.
+ */
+export * from './orders';

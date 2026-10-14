@@ -1,6 +1,6 @@
 import type { Order as StoredOrder, OrderItem as StoredItem, User } from '@findeg/db/schema';
 import { moneyFromDecimal } from '@findeg/domain';
-import type { Order } from './types';
+import type { Order } from '../../types';
 
 function amount(value: string | null): bigint {
   if (value === null) throw new TypeError('Missing canonical Order money snapshot');

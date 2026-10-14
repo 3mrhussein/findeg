@@ -15,7 +15,7 @@ export const ordersBoundaryRule = {
     docs: { description: 'enforce the Orders package public boundary' },
     schema: [],
     messages: {
-      deep: 'Import Orders through its public package entry (@findeg/orders, /schemas, or /events).',
+      deep: 'Import Orders through its public package entry (@findeg/orders, /types, /schemas, or /events).',
       forbidden: 'The Orders package cannot depend on Backend, applications, or Next.js.',
       relative: 'Do not bypass the Orders public package through a relative filesystem import.',
     },
@@ -50,6 +50,7 @@ export const ordersBoundaryRule = {
       }
       if (
         source === '@findeg/orders' ||
+        source === '@findeg/orders/types' ||
         source === '@findeg/orders/schemas' ||
         source === '@findeg/orders/events'
       )

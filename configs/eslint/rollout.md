@@ -58,7 +58,7 @@ Non-function mutable variables receive no naming convention.
 | Money | Package absent from this checkout | Retirement stays with #415; nothing to activate here |
 | UI | Available, opt-in | #445 measured remediation |
 | Env | Available, opt-in | #438 relocation, #445 remediation/activation |
-| Orders | Available, opt-in | #443 public contract migration, #445 remediation/activation |
+| Orders | Available, opt-in; whole library enforced (scope `src`) | #443 phase 1 (recursive layout, root and types entries) enforced; #443 phase 2 (subpath contraction and consumer migration); #445 final activation |
 | Backend, db | Available, opt-in | #445 measured remediation/activation |
 | Dashboard, Storefront | Available, opt-in | After #400/#401 app rebuilds; #445 measured remediation/activation |
 | Shared configuration | Available, opt-in | #445 config/CI activation audit |
@@ -92,6 +92,29 @@ temporary area aliases keep parallel consumer migration (#399, #443) decoupled f
 file moves. Business rules, Money, branded identities, injected time and randomness, and typed
 errors are unchanged.
 
+## Orders library and root entries (#443 phase 1)
+
+`packages/orders/src` follows the same recursive vocabulary as Domain. The area is
+`src/orders/`: `index`, `types`, `helpers` (the `createOrders` factory), and `features/`
+modules. Each feature has its own `__tests__/` with executable tests:
+`input-schemas` (client-safe schemas), `order-events` (the pure status message protocol),
+`write-permission`, `order-errors`, `order-mapping`, `validation`, `order-reads`,
+`order-statistics` and `order-status-changes`. Database-bound features are exercised through
+the injected database seam with a scripted, test-only client (`src/orders/__tests__/fixture.ts`),
+so Vitest measures them without PostgreSQL; the PostgreSQL integration suite in
+`backend/src/testing/orders` still covers the same commands on a real database.
+
+Public entries during phase 1: `@findeg/orders` (the root runtime, `src/index.ts`),
+`@findeg/orders/types` (the type-only root entry, `src/types.ts`, a type-only re-export of the
+root index), and the retained `@findeg/orders/schemas` and `@findeg/orders/events` subpaths,
+which now point at their feature indexes. `src/__tests__/entries.test.ts` pins the root runtime
+names and checks that every `schemas` and `events` name is also reachable from the root.
+
+Public PascalCase names (`OrderStatusSchema`, `PaymentStatusSchema`, `OrderStatusUpdateSchema`)
+are kept for consumers. Internally they are camelCase constants exported under those names, so
+the naming rule applies without renaming the public contract. Phase 2 removes the subpaths and
+migrates consumers to the root and types entries.
+
 ## Relations and root entries (#442)
 
 `src/relations/` follows the same vocabulary: `constants.ts` (`ENTITY_DOMAINS`, `RELATIONS`),
@@ -123,7 +146,7 @@ Measured with the complete configuration (`standards(role, { root: workspace })`
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
 - `configs/env` (node): 14 files, 0 errors, 0 warnings
-- `packages/orders` (node): 14 files, 15 errors, 0 warnings
+- `packages/orders` (node): 46 files, 0 errors, 0 warnings (library scope `src`; #443 phase 1)
 - `backend` (node): 331 files, 975 errors, 0 warnings
 - `db` (node): 138 files, 297 errors, 0 warnings
 - `frontend/ui` (browser): 56 files, 147 errors, 0 warnings

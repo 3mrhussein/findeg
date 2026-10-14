@@ -28,16 +28,10 @@
   },
   "packages/orders": {
     "role": "node",
-    "files": 14,
-    "errors": 15,
+    "files": 46,
+    "errors": 0,
     "warnings": 0,
-    "byRule": {
-      "@typescript-eslint/no-base-to-string": 1,
-      "@typescript-eslint/no-unnecessary-condition": 3,
-      "@typescript-eslint/restrict-template-expressions": 1,
-      "findeg/naming": 9,
-      "parse": 1
-    }
+    "byRule": {}
   },
   "backend": {
     "role": "node",

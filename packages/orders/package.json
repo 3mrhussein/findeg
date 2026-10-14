@@ -6,8 +6,9 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./schemas": "./src/schemas.ts",
-    "./events": "./src/events.ts"
+    "./types": "./src/types.ts",
+    "./schemas": "./src/orders/features/input-schemas/index.ts",
+    "./events": "./src/orders/features/order-events/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
