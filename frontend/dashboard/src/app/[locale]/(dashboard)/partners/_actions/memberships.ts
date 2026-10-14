@@ -4,10 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/identity/types';
 import type { Locale } from '@findeg/domain';
-import {
-  createPartnerMembershipServices,
-  type UpdateMembershipInput,
-} from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices, type UpdateMembershipInput } from '@findeg/partners';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export interface MembershipActionState {

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SessionPayload } from '@findeg/backend/features/core';
-import { PERMISSION_CODES } from '@findeg/identity/types';
+import { PERMISSION_CODES, type SessionPayload } from '@findeg/identity/types';
 
 const {
   getSession,
@@ -111,9 +110,8 @@ vi.mock('@findeg/identity', () => ({
     adminUsers: identityUsersService,
   }),
 }));
-vi.mock('@findeg/backend/features/partner-membership', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@findeg/backend/features/partner-membership')>();
+vi.mock('@findeg/partners', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@findeg/partners')>();
   return {
     ...actual,
     createPartnerMembershipServices: () => ({

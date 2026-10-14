@@ -6,4 +6,5 @@ export const libraryScopes = {
   'packages/orders': ['src'],
   'packages/school-lists': ['src'],
   'packages/catalog': ['src'],
+  'packages/partners': ['src'],
 };

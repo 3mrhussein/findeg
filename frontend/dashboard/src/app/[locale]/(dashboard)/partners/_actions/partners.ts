@@ -5,7 +5,7 @@ import { NotAuthorizedError } from '@findeg/domain-errors';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/identity/types';
 import type { AcademicSystem, Governorate, Locale, SchoolType } from '@findeg/domain';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices } from '@findeg/partners';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export interface PartnerFormState {

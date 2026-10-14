@@ -25,9 +25,6 @@
       "@findeg/backend/features/notifications": [
         "../../backend/src/features/notifications/index.ts"
       ],
-      "@findeg/backend/features/partner-membership": [
-        "../../backend/src/features/partner-membership/index.ts"
-      ],
       "@findeg/backend/features/school": ["../../backend/src/features/school/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../configs/env/src"]

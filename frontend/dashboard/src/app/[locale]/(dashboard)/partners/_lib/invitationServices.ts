@@ -1,10 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { after } from 'next/server';
 import { createLogger } from '@findeg/backend/features/core/logger';
-import {
-  createPartnerMembershipServices,
-  type EnqueueInvitation,
-} from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices, type EnqueueInvitation } from '@findeg/partners';
 import {
   drainOutbox,
   enqueue,

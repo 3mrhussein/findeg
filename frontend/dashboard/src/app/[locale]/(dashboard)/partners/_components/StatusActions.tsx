@@ -4,7 +4,7 @@ import type { Locale } from '@findeg/domain';
 import { useState, useTransition } from 'react';
 import { Button } from '@findeg/ui';
 import { useLocale } from 'next-intl';
-import type { BusinessPartner } from '@findeg/backend/features/partner-membership';
+import type { BusinessPartner } from '@findeg/partners';
 import { changePartnerStatusAction, type StatusActionState } from '../_actions/status';
 
 type Status = BusinessPartner['status'];

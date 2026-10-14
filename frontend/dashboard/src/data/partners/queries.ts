@@ -2,13 +2,13 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity/types';
 import type { Locale } from '@findeg/domain';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import {
+  createPartnerMembershipServices,
   createPartnerSalesServices,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
-} from '@findeg/backend/features/partner-sales';
+} from '@findeg/partners';
 
 export { MIN_DISTINCT_ORDERS_PER_SALES_ROW };
 

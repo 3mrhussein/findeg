@@ -136,8 +136,7 @@ The backend is composed of 13 bounded context modules under `src/features`, plus
 | [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
 | [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
 | [**Identity**](../packages/identity/README.md) (`@findeg/identity`) | Hardened auth, RBAC permissions, account administration. Token infrastructure stays in backend core. | `User`, `Role`, `PasswordCredentials` |
-| [**Partner Membership**](src/features/partner-membership/README.md) | Business Partners and who may work in their Partner Workspace. | `PartnerMembershipServices` |
-| [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |
+| **Partners** (`@findeg/partners`, `packages/partners`) | Business Partners, their memberships and invitations, and Partner Reports over Attributed Orders. | `PartnerMembershipServices`, `SalesFigures` |
 | [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
 | [**School**](src/features/school/README.md) | B2B2C School Supply Lists (secure gateways). | `SchoolSupplyList`, `PartnerSchool` |
 | **Review** (`@findeg/catalog`) | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote` |
