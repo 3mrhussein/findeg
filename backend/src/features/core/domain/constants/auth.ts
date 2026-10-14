@@ -11,6 +11,5 @@ export const AUTH_CONSTANTS = {
   GUEST_ROLE: 'guest',
 } as const;
 
-export const AUTH_SUCCESS_MESSAGES = {
-  LOGOUT_SUCCESS: 'Logged out successfully',
-} as const;
+// Temporary compatibility export for the Identity response contract.
+export { AUTH_SUCCESS_MESSAGES } from '../../../identity/contracts';

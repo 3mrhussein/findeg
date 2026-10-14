@@ -1,6 +1,6 @@
 import type { SessionPayload } from '../../../core/domain/auth';
 import { createUserVO } from '../../../core/domain/auth';
-import { PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { PERMISSION_CODES } from '../../contracts';
 
 export interface CurrentSessionUser {
   id: number;

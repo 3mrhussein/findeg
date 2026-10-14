@@ -1,12 +1,4 @@
-import {
-  MediaVariantKeySchema,
-  type MediaVariantKey,
-  MediaAssetSchema,
-  type MediaAsset,
-  ResponsiveMediaSetSchema,
-  type ResponsiveMediaSet,
-} from '@findeg/db/types';
-
+// Temporary compatibility entry; the owning context publishes this contract.
 export {
   MediaVariantKeySchema,
   type MediaVariantKey,
@@ -14,4 +6,4 @@ export {
   type MediaAsset,
   ResponsiveMediaSetSchema,
   type ResponsiveMediaSet,
-};
+} from '../../../media/contracts';

@@ -1,27 +1,2 @@
-import { PortalRole } from '../types';
-import type { SessionPayload } from './SessionPayload';
-
-/**
- * Result of an authentication attempt (login or registration).
- *
- * @description Returned by AuthService.login and AuthService.register.
- */
-export interface AuthResult {
-  success: boolean;
-  error?: string;
-  /** Signed into the app layer's cookie after successful authentication. */
-  session?: SessionPayload;
-  user?: {
-    id: number;
-    email: string;
-    name?: string;
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    portalRole: PortalRole;
-    activeRoleIds?: SessionPayload['activeRoleIds'];
-    permissionCodes?: SessionPayload['permissionCodes'];
-    actorType?: SessionPayload['actorType'];
-    organizationId?: SessionPayload['organizationId'];
-  };
-}
+// Temporary compatibility entry; the owning context publishes this contract.
+export { type AuthResult } from '../../../identity/contracts';
