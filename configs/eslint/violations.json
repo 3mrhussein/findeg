@@ -1,7 +1,7 @@
 {
   "configs": {
     "role": "node",
-    "files": 45,
+    "files": 44,
     "errors": 0,
     "warnings": 0,
     "byRule": {}
@@ -58,9 +58,11 @@
   "packages/partners": {
     "role": "node",
     "files": 44,
-    "errors": 0,
+    "errors": 1,
     "warnings": 0,
-    "byRule": {}
+    "byRule": {
+      "@typescript-eslint/no-unnecessary-type-parameters": 1
+    }
   },
   "packages/school-lists": {
     "role": "node",
