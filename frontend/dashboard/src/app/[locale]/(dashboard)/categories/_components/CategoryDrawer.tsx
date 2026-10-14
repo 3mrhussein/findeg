@@ -1,4 +1,3 @@
-import type { Locale } from '@findeg/domain';
 /**
  * CategoryDrawer — Slide-over form for creating/editing categories
  *
@@ -14,7 +13,9 @@ import type { Locale } from '@findeg/domain';
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-('use client');
+'use client';
+
+import type { Locale } from '@findeg/domain';
 
 import * as React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';

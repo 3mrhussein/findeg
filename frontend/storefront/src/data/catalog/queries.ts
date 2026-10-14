@@ -1,6 +1,6 @@
-import { DEFAULT_CURRENCY } from '@findeg/domain';
-('use cache');
+'use cache';
 
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import 'server-only';
 /**
  * Catalog Data Layer (Storefront)
