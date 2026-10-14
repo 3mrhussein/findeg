@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { ATTRIBUTE_DATA_TYPES } from '@findeg/domain/catalog';
+import { ATTRIBUTE_DATA_TYPES } from '@findeg/domain';
 import { IdSchema, TranslationMapSchema } from '../../../core/domain/types/common';
 
 export const AttributeDataTypeSchema = z.enum(ATTRIBUTE_DATA_TYPES);

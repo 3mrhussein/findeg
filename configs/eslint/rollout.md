@@ -122,10 +122,20 @@ migrates consumers to the root and types entries.
 checks the map against the public domain types. The root runtime index is `@findeg/domain`; the
 root type entry is `@findeg/domain/types` (`src/types.ts`, a type-only re-export of the root
 index, so it has no runtime value). `src/__tests__/entries.test.ts` pins the root runtime names
-and checks that every bounded-context subpath is a subset of the root. Bounded-context subpaths remain until #443.
+and rejects removed bounded-context subpaths after #443 phase 2.
 
 Cycle checks: `scripts/architecture/domain-import-cycles.test.mjs` forbids runtime cycles.
 Type-only cycles (for example `types.ts` ↔ `constants.ts`) are erased and are not checked.
+
+## Root/types contraction (#443 phase 2)
+
+Domain and Orders now expose only `.` and `./types`. All consumers, including application
+components, Cypress fixtures and the Outbox worker, use these entries. The root runtime
+names remain pinned; resolution tests reject former area, schema, event and internal paths.
+The phase 1 subpaths described above are historical and no longer resolve. TypeScript and
+Vitest resolve the actual package exports without Domain or Orders source aliases.
+Next.js enforces server/client boundaries through app query `server-only` imports.
+Shared Vitest continues to enforce local tests and 80% per file across both source trees.
 
 ## Measurement
 

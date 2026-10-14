@@ -1,5 +1,5 @@
-import { checkCompareAtPrice } from '@findeg/domain/catalog';
-import { moneyFromDecimal } from '@findeg/domain/common';
+import { checkCompareAtPrice } from '@findeg/domain';
+import { moneyFromDecimal } from '@findeg/domain';
 import { eq, inArray } from 'drizzle-orm';
 import { db } from '../../connection';
 import { products, productTags, productVariants, variantImages } from '../../schema';

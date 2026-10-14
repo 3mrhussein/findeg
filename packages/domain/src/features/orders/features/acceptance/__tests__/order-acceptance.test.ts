@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { sku, type VariantId } from '@findeg/domain/catalog';
-import type { CustomerId } from '@findeg/domain/customers';
-import { DomainError, moneyFromDecimal } from '@findeg/domain/common';
-import type { StockBalance, Warehouse, WarehouseId } from '@findeg/domain/inventory';
+import { sku, type VariantId } from '@findeg/domain';
+import type { CustomerId } from '@findeg/domain/types';
+import { DomainError, moneyFromDecimal } from '@findeg/domain';
+import type { StockBalance, Warehouse, WarehouseId } from '@findeg/domain/types';
 import {
   acceptOrder,
   acceptedPaymentMethod,
@@ -17,8 +17,8 @@ import {
   type QuoteSource,
   type Quote,
   type QuoteLineRequest,
-} from '@findeg/domain/orders';
-import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
+} from '@findeg/domain';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

@@ -1,7 +1,5 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import * as root from '@findeg/orders';
-import * as schemas from '@findeg/orders/schemas';
-import * as events from '@findeg/orders/events';
 import * as typesEntry from '@findeg/orders/types';
 import type { Order, OrderStatus, OrderStatusUpdate, ShippingAddress } from '@findeg/orders/types';
 
@@ -32,31 +30,6 @@ const ROOT_RUNTIME_EXPORTS = [
 describe('root runtime entry', () => {
   it('exposes exactly the pinned runtime names', () => {
     expect(Object.keys(root).sort()).toEqual([...ROOT_RUNTIME_EXPORTS].sort());
-  });
-
-  it('reaches every schemas and events runtime name from the root', () => {
-    const rootNames = new Set(Object.keys(root));
-    for (const name of [...Object.keys(schemas), ...Object.keys(events)]) {
-      expect(rootNames.has(name), `${name} must be reachable from the root`).toBe(true);
-      expect(root[name as keyof typeof root]).toBe(
-        name in schemas
-          ? schemas[name as keyof typeof schemas]
-          : events[name as keyof typeof events],
-      );
-    }
-  });
-
-  it('keeps the schemas and events subpaths until #443 phase 2 removes them', () => {
-    expect(Object.keys(schemas).sort()).toEqual(
-      [
-        'OrderStatusSchema',
-        'OrderStatusUpdateSchema',
-        'PaymentStatusSchema',
-        'ShippingAddressSchema',
-        'VariantSnapshotSchema',
-      ].sort(),
-    );
-    expect(Object.keys(events).sort()).toEqual(['ORDER_STATUS_KIND', 'orderStatusId']);
   });
 });
 

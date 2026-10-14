@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import * as root from '@findeg/domain';
 import type { Customer, Money, Order, OrderId, Relation, EntityName } from '@findeg/domain/types';
@@ -184,25 +185,27 @@ describe('root runtime entry', () => {
     expect(Object.keys(root).sort()).toEqual([...ROOT_RUNTIME_EXPORTS].sort());
   });
 
-  it('keeps every area subpath, each a subset of the root (contraction is #443)', async () => {
-    const areas = [
-      '@findeg/domain/common',
-      '@findeg/domain/customers',
-      '@findeg/domain/catalog',
-      '@findeg/domain/partners',
-      '@findeg/domain/school-lists',
-      '@findeg/domain/orders',
-      '@findeg/domain/inventory',
-      '@findeg/domain/relations',
-    ];
-    const rootNames = new Set(Object.keys(root));
-    for (const area of areas) {
-      const names = Object.keys(await (import(area) as Promise<object>));
-      expect(
-        names.filter((name) => !rootNames.has(name)),
-        area,
-      ).toEqual([]);
+  it('rejects obsolete area and internal package subpaths', () => {
+    const require = createRequire(import.meta.url);
+    for (const area of [
+      'common',
+      'customers',
+      'catalog',
+      'partners',
+      'school-lists',
+      'orders',
+      'inventory',
+      'relations',
+      'features/orders',
+      'helpers',
+      'src/index',
+    ]) {
+      expect(() => require.resolve(`@findeg/domain/${area}`), area).toThrow(
+        /not defined by "exports"/,
+      );
     }
+    expect(require.resolve('@findeg/domain')).toContain('/packages/domain/src/index.ts');
+    expect(require.resolve('@findeg/domain/types')).toContain('/packages/domain/src/types.ts');
   });
 });
 

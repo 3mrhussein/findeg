@@ -7,7 +7,7 @@ import { type Variant } from '@findeg/backend/features/catalog/domain/entities/V
 import { type Locale } from '@findeg/domain';
 import type { ProductInput } from '../dtos/ProductInput';
 import { productQueries } from '@findeg/db/queries';
-import { defaultVariant as domainDefaultVariant } from '@findeg/domain/catalog';
+import { defaultVariant as domainDefaultVariant } from '@findeg/domain';
 import {
   asTranslationMap,
   pick,

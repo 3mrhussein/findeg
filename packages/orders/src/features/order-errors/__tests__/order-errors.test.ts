@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OrderError } from '@findeg/domain/orders';
+import { OrderError } from '@findeg/domain';
 import {
   InvalidOrderStatusTransitionError,
   InvalidPaymentStatusTransitionError,

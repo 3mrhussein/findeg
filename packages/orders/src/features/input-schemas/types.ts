@@ -1,7 +1,7 @@
 import type {
   OrderStatus as DomainOrderStatus,
   PaymentStatus as DomainPaymentStatus,
-} from '@findeg/domain/orders';
+} from '@findeg/domain/types';
 
 export type OrderStatus = DomainOrderStatus;
 export type PaymentStatus = DomainPaymentStatus;

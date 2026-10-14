@@ -184,7 +184,7 @@ test('new live exports are protected through aliases and satisfies; private and 
 
 test('non-matches and compliant imports remain legal', async () => {
   for (const code of [
-    "import { ORDER_STATUSES } from '@findeg/domain/orders'; export { ORDER_STATUSES };",
+    "import { ORDER_STATUSES } from '@findeg/domain'; export { ORDER_STATUSES };",
     "const partial = ['pending', 'processing'];",
     "type Partial = 'pending' | 'processing';",
     "const mixed = ['pending', 'processing', 'not-a-status'];",

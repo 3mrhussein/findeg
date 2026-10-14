@@ -1,4 +1,4 @@
-import { GOVERNORATES } from '@findeg/domain/common';
+import { GOVERNORATES } from '@findeg/domain';
 import {
   getPartnerSchoolByCode,
   getPartnerSchoolFilterOptions,

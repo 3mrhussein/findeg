@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import type { VariantId } from '@findeg/domain/catalog';
-import { DomainError } from '@findeg/domain/common';
+import type { VariantId } from '@findeg/domain/types';
+import { DomainError } from '@findeg/domain';
 import {
   CART_QUANTITY_MAX,
   CART_QUANTITY_MIN,
@@ -10,7 +10,7 @@ import {
   removeFromCart,
   setCartQuantity,
   type CartLine,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

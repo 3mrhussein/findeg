@@ -10,8 +10,8 @@ import {
   persistOrderStock,
   checkoutIdempotencyQueries,
 } from '@findeg/db/queries';
-import { moneyFromDecimal, moneyToDecimal, sumMoney } from '@findeg/domain/common';
-import { sku, type VariantId } from '@findeg/domain/catalog';
+import { moneyFromDecimal, moneyToDecimal, sumMoney } from '@findeg/domain';
+import { sku, type VariantId } from '@findeg/domain';
 import {
   acceptOrder,
   acceptedPaymentMethod,
@@ -22,7 +22,7 @@ import {
   generateOrderReference,
   priceQuote,
   type Quote,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 import { computeConfirmation } from '../../domain/confirmation';
 import { toCheckoutQuote } from '../quote-mapping';
 import { mapDomainError } from '../domain-error';

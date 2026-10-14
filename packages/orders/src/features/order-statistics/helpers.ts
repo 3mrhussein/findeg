@@ -1,6 +1,6 @@
 import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { orders, orderItems, products } from '@findeg/db/schema';
-import { LIVE_ORDER_STATUSES, ORDER_STATUSES } from '@findeg/domain/orders';
+import { LIVE_ORDER_STATUSES, ORDER_STATUSES } from '@findeg/domain';
 import { moneyFromDecimal } from '@findeg/domain';
 import { statsOptionsSchema } from '../validation';
 import type { OrderContext, Orders } from '../../types';

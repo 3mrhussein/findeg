@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
+import { DomainError } from '@findeg/domain';
 import {
   BUSINESS_PARTNER_STATUSES,
   PARTNER_MEMBERSHIP_STATUSES,
@@ -7,7 +7,7 @@ import {
   leavePartnerMembership,
   type PartnerMembershipStatus,
   type PartnerRole,
-} from '@findeg/domain/partners';
+} from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

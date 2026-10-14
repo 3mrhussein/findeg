@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { VariantId } from '@findeg/domain/catalog';
+import type { VariantId } from '@findeg/domain/types';
 import {
   LOW_STOCK_MAX_UNITS,
   STOCK_LEVELS,
@@ -7,7 +7,7 @@ import {
   stockLevel,
   type Warehouse,
   type WarehouseId,
-} from '@findeg/domain/inventory';
+} from '@findeg/domain';
 
 const pen = 1 as VariantId;
 const pencil = 2 as VariantId;

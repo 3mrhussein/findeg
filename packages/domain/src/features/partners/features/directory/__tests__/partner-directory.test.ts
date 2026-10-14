@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isListedInPartnerSchoolDirectory } from '@findeg/domain/partners';
+import { isListedInPartnerSchoolDirectory } from '@findeg/domain';
 
 describe('Partner School directory', () => {
   // Rule change (spec #402, story 45): today the directory lists a school without a published

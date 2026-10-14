@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import type { OrderStatus } from '@findeg/domain/orders';
+import type { OrderStatus } from '@findeg/domain/types';
 import { OrderStatusUpdateEmail } from '../infrastructure/templates/OrderStatusUpdateEmail';
 
 const labels: [OrderStatus, string, string][] = [

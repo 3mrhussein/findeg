@@ -9,7 +9,7 @@ import { Check, Settings, Ban, X } from 'lucide-react';
 import { toast } from '@hooks/use-toast';
 import { useRouter } from '@i18n/navigation';
 import { bulkUpdateOrderStatusAction } from '@data/orders/actions';
-import type { OrderStatus } from '@findeg/domain/orders';
+import type { OrderStatus } from '@findeg/domain/types';
 
 interface OrderBulkActionBarProps {
   table: Table<Order>;

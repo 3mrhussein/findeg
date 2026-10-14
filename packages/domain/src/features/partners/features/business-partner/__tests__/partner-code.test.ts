@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
-import {
-  BUSINESS_PARTNER_STATUSES,
-  changePartnerCode,
-  isPartnerCode,
-} from '@findeg/domain/partners';
+import { DomainError } from '@findeg/domain';
+import { BUSINESS_PARTNER_STATUSES, changePartnerCode, isPartnerCode } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

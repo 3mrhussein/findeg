@@ -6,7 +6,7 @@ export interface DashboardStats {
   totalRevenue: bigint;
   currency: 'EGP';
   timezone: 'Africa/Cairo';
-  ordersByStatus: Record<import('@findeg/orders/schemas').OrderStatus, number>;
+  ordersByStatus: Record<import('@findeg/orders/types').OrderStatus, number>;
   lowStockCount: number;
   todayRevenue: bigint;
   todayOrders: number;

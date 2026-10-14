@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ORDER_STATUSES, PAYMENT_STATUSES } from '@findeg/domain/orders';
+import { ORDER_STATUSES, PAYMENT_STATUSES } from '@findeg/domain';
 
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
 export const paymentStatusSchema = z.enum(PAYMENT_STATUSES);

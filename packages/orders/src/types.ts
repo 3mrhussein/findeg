@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/types';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as Schema from '@findeg/db/schema';
 import type {

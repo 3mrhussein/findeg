@@ -1,4 +1,4 @@
-import type { NotifiedOrderStatus } from '@findeg/domain/orders';
+import type { NotifiedOrderStatus } from '@findeg/domain/types';
 
 export type { NotifiedOrderStatus };
 

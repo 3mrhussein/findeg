@@ -4,8 +4,8 @@ import {
   LINE_QUANTITY_MAX,
   GOVERNORATES,
   type CurrencyCode,
-} from '@findeg/domain/common';
-import { ACCEPTED_PAYMENT_TYPES } from '@findeg/domain/orders';
+} from '@findeg/domain';
+import { ACCEPTED_PAYMENT_TYPES } from '@findeg/domain';
 import { StoredShippingAddressSchema, type CheckoutReceipt } from '@findeg/db/types';
 
 export { type CheckoutReceipt };

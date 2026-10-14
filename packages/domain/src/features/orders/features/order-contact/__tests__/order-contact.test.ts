@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
-import { egyptianMobile, guestBuyer, shippingAddress } from '@findeg/domain/orders';
+import { DomainError } from '@findeg/domain';
+import { egyptianMobile, guestBuyer, shippingAddress } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

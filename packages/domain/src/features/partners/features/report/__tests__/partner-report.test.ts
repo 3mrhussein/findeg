@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { money, moneyFromDecimal } from '@findeg/domain/common';
+import { money, moneyFromDecimal } from '@findeg/domain';
 import {
   PARTNER_REPORT_MIN_ORDERS,
   partnerReportTotals,
   rollUpPartnerReport,
-} from '@findeg/domain/partners';
+} from '@findeg/domain';
 
 /** A sales row as the read side tallies it: one month × list × list item × variant. */
 const row = (name: string, distinctOrders: number, quantity: number, charged: string) => ({

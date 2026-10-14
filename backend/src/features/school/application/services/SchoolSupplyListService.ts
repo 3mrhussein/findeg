@@ -45,7 +45,7 @@ import {
   publishSupplyList as publishDomainSupplyList,
   generatePublicCode,
   type StaffListAuthoringAction,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 import type {
   CreateSupplyListDraftInput,

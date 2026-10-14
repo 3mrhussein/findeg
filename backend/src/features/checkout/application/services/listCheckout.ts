@@ -11,10 +11,10 @@ import {
 import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
-import { moneyFromDecimal, isLineQuantity } from '@findeg/domain/common';
-import { sku, type VariantId } from '@findeg/domain/catalog';
-import { priceQuote, type Quote } from '@findeg/domain/orders';
-import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
+import { moneyFromDecimal, isLineQuantity } from '@findeg/domain';
+import { sku, type VariantId } from '@findeg/domain';
+import { priceQuote, type Quote } from '@findeg/domain';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain';
 import { ListUnavailableError, SelectionInvalidError } from '../errors';
 import type { ListCheckoutLine } from '../../schemas';
 

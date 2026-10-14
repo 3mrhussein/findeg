@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
-import { ORDER_STATUSES } from '@findeg/domain/orders';
-import {
-  RESERVATION_STATES,
-  reservationSettlement,
-  reservationState,
-} from '@findeg/domain/inventory';
+import { DomainError } from '@findeg/domain';
+import { ORDER_STATUSES } from '@findeg/domain';
+import { RESERVATION_STATES, reservationSettlement, reservationState } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

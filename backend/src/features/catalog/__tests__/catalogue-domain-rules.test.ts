@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultVariant as domainDefaultVariant } from '@findeg/domain/catalog';
+import { defaultVariant as domainDefaultVariant } from '@findeg/domain';
 import { ProductEntity, isNewProduct, type Product } from '../domain/entities/Product';
 import { VariantEntity, getVariantAvailableStock, type Variant } from '../domain/entities/Variant';
 import type { Tag } from '../domain/entities/Tag';

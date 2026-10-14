@@ -5,7 +5,7 @@ import {
   type OrderProgress,
   type OrderStatus,
   type PaymentStatus,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 
 export class OrderNotFoundError extends Error {
   constructor(readonly orderId: number) {

@@ -1,5 +1,5 @@
-import { checkCompareAtPrice, sku as domainSku } from '@findeg/domain/catalog';
-import { DomainError, moneyFromDecimal } from '@findeg/domain/common';
+import { checkCompareAtPrice, sku as domainSku } from '@findeg/domain';
+import { DomainError, moneyFromDecimal } from '@findeg/domain';
 import { ValidationError } from '../../../../core/domain/errors/ValidationError';
 import { getCategoryById, getBrandById, getProductById } from '@findeg/db/queries';
 import type { ID } from '../../../../core/domain/types/common';

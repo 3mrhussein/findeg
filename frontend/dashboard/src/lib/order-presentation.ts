@@ -1,11 +1,11 @@
-import type { OrderStatusUpdate } from '@findeg/orders/schemas';
+import type { OrderStatusUpdate } from '@findeg/orders/types';
 import {
   ORDER_STATUS_TRANSITIONS,
   changePaymentStatus,
   type OrderStatus,
   type PaymentStatus,
   type OrderProgress,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 
 const orderLabels: Record<OrderStatus, string> = {
   pending: 'Pending',
