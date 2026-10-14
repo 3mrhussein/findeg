@@ -56,3 +56,12 @@ describe('Order mapping', () => {
     );
   });
 });
+
+describe('Order item substitutes', () => {
+  it('carries the substitute flag and treats an unset flag as null', () => {
+    const substitute = mapOrder(row(), [item()]).items[0];
+    expect(substitute.isSubstitute).toBeNull();
+    const flagged = mapOrder(row(), [{ ...item(), isSubstitute: true }]).items[0];
+    expect(flagged.isSubstitute).toBe(true);
+  });
+});

@@ -1,40 +1,26 @@
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
-import type { Locale } from '@findeg/domain';
+import { allowedPartnerStatusChanges, type Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import {
-  createPartnerSalesServices,
+  getPartner,
+  getPartnerSchoolProfile,
+  listMembers,
+  listPendingInvitations,
+  getPartnerStaffReport,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
-  type IPartnerReportService,
-  type PartnerSalesStaffActor,
-} from '@findeg/backend/features/partner-sales';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+} from '@data/partners/queries';
+import { listSchoolSupplyListsForPartner } from '@data/school-lists/queries';
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { SalesReportPanel } from '../_components/SalesReportPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { toSalesReportProps } from '../_lib/salesReport';
-import { toStaffActor } from '../_lib/toStaffActor';
-import { toListActor } from '../../school-lists/_lib/toListActor';
 
 export const metadata = { title: 'Business Partner - FindEg Admins' };
-
-/** An unknown or out-of-range `?month=` falls back to the current month. */
-async function readReport(
-  reports: IPartnerReportService,
-  session: PartnerSalesStaffActor,
-  partnerId: number,
-  month: string | undefined,
-) {
-  const requested = await reports.getStaffReport(session, partnerId, { month });
-  return month !== undefined && !requested.success && requested.error === 'invalid-input'
-    ? reports.getStaffReport(session, partnerId)
-    : requested;
-}
 
 export default async function PartnerDetailPage({
   params,
@@ -45,6 +31,7 @@ export default async function PartnerDetailPage({
 }) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'PartnerSales' });
+  const tPartners = await getTranslations({ locale, namespace: 'Partners' });
   const { month: monthParam } = await searchParams;
   const month = typeof monthParam === 'string' ? monthParam : undefined;
   const session = await requirePermission(locale as Locale, {
@@ -53,26 +40,18 @@ export default async function PartnerDetailPage({
   if (!/^\d+$/.test(id)) notFound();
 
   const partnerId = Number(id);
-  const actor = toStaffActor(session);
   const canManagePartner = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
   const canViewReports = sessionHasPermission(session, PERMISSION_CODES.PARTNER_REPORTS_VIEW);
 
-  const { partners, invitations, memberships } = createPartnerMembershipServices();
-  const partner = await partners.getPartner(actor, partnerId);
+  const partner = await getPartner(session, partnerId);
   if (!partner.success) notFound();
 
-  const [members, pending, lists, report] = await Promise.all([
-    canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
-    canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
-    canManagePartner
-      ? createAdministrationServices().schoolSupplyLists.listForPartner(
-          toListActor(session),
-          partnerId,
-        )
-      : Promise.resolve(null),
-    canViewReports
-      ? readReport(createPartnerSalesServices().partnerReports, session, partnerId, month)
-      : null,
+  const [profile, members, pending, lists, report] = await Promise.all([
+    canManagePartner ? getPartnerSchoolProfile(session, partnerId) : Promise.resolve(null),
+    canManagePartner ? listMembers(session, partnerId) : Promise.resolve(null),
+    canManagePartner ? listPendingInvitations(session, partnerId) : Promise.resolve(null),
+    canManagePartner ? listSchoolSupplyListsForPartner(session, partnerId) : Promise.resolve(null),
+    canViewReports ? getPartnerStaffReport(session, partnerId, month, locale as Locale) : null,
   ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
@@ -87,15 +66,19 @@ export default async function PartnerDetailPage({
           </p>
         </div>
         {canManagePartner && (
-          <Link href={`/partners/${partnerId}/edit`} className="text-sm underline">
-            Edit
+          <Link
+            href={`/partners/${partnerId}/edit`}
+            className="text-sm underline"
+            data-testid="edit-partner-link"
+          >
+            {tPartners('Edit')}
           </Link>
         )}
       </div>
 
       <Tabs defaultValue={canManagePartner && !month ? 'overview' : 'sales'} className="space-y-6">
         <TabsList>
-          {canManagePartner && <TabsTrigger value="overview">Overview</TabsTrigger>}
+          {canManagePartner && <TabsTrigger value="overview">{tPartners('Overview')}</TabsTrigger>}
           {canViewReports && <TabsTrigger value="sales">{t('Tab')}</TabsTrigger>}
         </TabsList>
 
@@ -104,8 +87,42 @@ export default async function PartnerDetailPage({
             <StatusActions
               partnerId={partnerId}
               current={partner.data.status}
-              targets={partners.allowedStatusChanges(partner.data.status)}
+              targets={allowedPartnerStatusChanges(partner.data.status)}
             />
+            {profile?.success && profile.data && (
+              <section
+                className="rounded-lg border p-4 space-y-3"
+                data-testid="school-profile-details"
+              >
+                <h2 className="text-xl font-semibold">{tPartners('SchoolProfile')}</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('Governorate')}</span>
+                    <span className="font-medium">{profile.data.governorate ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('Area')}</span>
+                    <span className="font-medium">{profile.data.area ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">{tPartners('SchoolType')}</span>
+                    <span className="font-medium">{profile.data.schoolType ?? '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">
+                      {tPartners('AcademicSystem')}
+                    </span>
+                    <span className="font-medium">{profile.data.academicSystem ?? '—'}</span>
+                  </div>
+                </div>
+                {profile.data.logoUrl && (
+                  <div className="pt-2">
+                    <span className="text-muted-foreground block text-xs">{tPartners('Logo')}</span>
+                    <span className="text-xs font-mono">{profile.data.logoUrl}</span>
+                  </div>
+                )}
+              </section>
+            )}
             {members?.success ? (
               <MembersPanel
                 canChange={canChange}
@@ -120,13 +137,12 @@ export default async function PartnerDetailPage({
               />
             ) : (
               <p role="alert" className="text-destructive text-sm">
-                Members could not be loaded. You may not have permission to manage this Business
-                Partner.
+                {tPartners('MembersLoadError')}
               </p>
             )}
             {lists?.success && lists.data.length > 0 && (
               <section className="space-y-2" data-testid="supply-lists">
-                <h2 className="text-xl font-semibold">School Supply Lists</h2>
+                <h2 className="text-xl font-semibold">{tPartners('SchoolSupplyLists')}</h2>
                 <ul className="divide-y rounded-lg border">
                   {lists.data.map((list) => (
                     <li key={list.id} className="flex items-center justify-between px-4 py-3">
@@ -137,7 +153,7 @@ export default async function PartnerDetailPage({
                       <span className="flex items-center gap-3">
                         <Badge variant="outline">{list.status}</Badge>
                         <Link href={`/school-lists/${list.id}`} className="text-sm underline">
-                          Offer
+                          {tPartners('Offer')}
                         </Link>
                       </span>
                     </li>

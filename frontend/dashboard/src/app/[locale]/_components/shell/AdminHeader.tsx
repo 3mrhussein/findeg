@@ -4,7 +4,6 @@ import { Search, Menu } from 'lucide-react';
 import { Button } from '@findeg/ui';
 import { ToggleTheme } from '@findeg/ui';
 import ToggleLanguage from '@components/shared/ToggleLanguage';
-import { WebMCPBadge } from '@components/shared/WebMCPBadge';
 // Removed unused useRouter
 import { useSidebar } from './SidebarContext';
 import { Suspense, useState, useRef, useEffect, ReactNode } from 'react';
@@ -22,7 +21,7 @@ export interface AdminHeaderProps {
 export function AdminHeader({
   locale: _locale = 'en',
   userSlot,
-  notificationSlot,
+  notificationSlot: _notificationSlot,
 }: AdminHeaderProps) {
   const { toggleSidebar } = useSidebar();
 
@@ -171,11 +170,7 @@ export function AdminHeader({
           <ToggleLanguage />
         </Suspense>
         <ToggleTheme />
-        <WebMCPBadge />
         <div className="h-6 w-px bg-gray-200 dark:bg-slate-800 mx-1 hidden sm:block" />
-
-        {/* Dynamic Notification Slot */}
-        {notificationSlot}
 
         {/* Dynamic User Menu Slot */}
         {userSlot}

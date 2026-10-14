@@ -10,6 +10,7 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { AuditLogEntry } from '@findeg/backend/features/administration';
+import { countExhaustedOutbox, listExhaustedOutbox } from '@findeg/backend/features/outbox';
 
 /**
  * Get catalog health statistics for admin dashboard
@@ -18,7 +19,7 @@ import type { AuditLogEntry } from '@findeg/backend/features/administration';
  */
 export async function getCatalogHealthStats() {
   cacheLife('minutes');
-  cacheTag('dashboard', 'catalog-health');
+  cacheTag('dashboard');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getCatalogHealthStats();
@@ -31,10 +32,25 @@ export async function getCatalogHealthStats() {
  */
 export async function getCategoryProductDistribution() {
   cacheLife('hours');
-  cacheTag('dashboard', 'category-distribution');
+  cacheTag('dashboard');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getCategoryProductDistribution();
+}
+
+/**
+ * Get outbox queue health metrics and exhausted records
+ */
+export async function getExhaustedOutboxHealth() {
+  cacheLife('minutes');
+  cacheTag('dashboard');
+
+  const [exhaustedOutbox, exhaustedCount] = await Promise.all([
+    listExhaustedOutbox(),
+    countExhaustedOutbox(),
+  ]);
+
+  return { exhaustedOutbox, exhaustedCount };
 }
 
 /**
@@ -44,7 +60,7 @@ export async function getCategoryProductDistribution() {
  */
 export async function getRecentActivity(options?: { limit?: number; entityTypes?: string[] }) {
   cacheLife('minutes');
-  cacheTag('audit-logs');
+  cacheTag('dashboard');
 
   const { auditLog } = createAdministrationServices();
   // Call getRecentActivity on the service
@@ -81,7 +97,7 @@ export async function getAuditLogs(options?: {
   offset?: number;
 }): Promise<{ data: AuditLogEntry[]; total: number }> {
   cacheLife('minutes');
-  cacheTag('audit-logs');
+  cacheTag('dashboard');
 
   const { auditLog } = createAdministrationServices();
   const logs = await auditLog.getRecentActivity({ limit: options?.limit || 50 });

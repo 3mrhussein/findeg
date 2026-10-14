@@ -2,6 +2,7 @@ import { redirect } from '@i18n/navigation';
 import { adminSession, hasPermission, systemAdmin } from '@findeg/backend/features/core';
 import type { PermissionCode, SessionPayload } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
+import { NotAuthorizedError } from '@findeg/domain-errors';
 import { getSession } from '@lib/session';
 
 /**
@@ -52,9 +53,47 @@ export async function getOptionalSession(): Promise<SessionPayload | null> {
 }
 
 /** Server-side permission policy, including the system-administrator bypass. */
-export function sessionHasPermission(session: SessionPayload, permission: PermissionCode): boolean {
+export function sessionHasPermission(
+  session: SessionPayload,
+  permission: PermissionCode | string,
+): boolean {
   return systemAdmin(session) || hasPermission(session, permission);
 }
+
+/**
+ * Shared guard for server actions: requires an authenticated Staff session
+ * and verifies that the staff member holds the required permission(s).
+ *
+ * System administrators bypass permission checks.
+ * Throws NotAuthorizedError on refusal.
+ */
+export async function requireStaffAction(
+  permission?: PermissionCode | string | (PermissionCode | string)[],
+  actionDescription?: string,
+): Promise<SessionPayload> {
+  const session = await getSession();
+  if (!session || !adminSession(session)) {
+    throw new NotAuthorizedError(
+      actionDescription ??
+        (Array.isArray(permission) ? permission.join(', ') : (permission ?? 'staff action')),
+    );
+  }
+
+  if (permission) {
+    const allowed = Array.isArray(permission)
+      ? permission.some((p) => sessionHasPermission(session, p))
+      : sessionHasPermission(session, permission);
+
+    if (!allowed) {
+      throw new NotAuthorizedError(
+        actionDescription ?? (Array.isArray(permission) ? permission.join(', ') : permission),
+      );
+    }
+  }
+
+  return session;
+}
+
 /**
  * Require specific permission — redirects to / if unauthorized.
  */
@@ -75,11 +114,11 @@ export async function requirePermission(
 
   let allowed = false;
   if (options.permission) {
-    allowed = session.permissionCodes?.includes(options.permission) ?? false;
+    allowed = sessionHasPermission(session, options.permission);
   } else if (options.any) {
-    allowed = options.any.some((c) => session.permissionCodes?.includes(c));
+    allowed = options.any.some((c) => sessionHasPermission(session, c));
   } else if (options.all) {
-    allowed = options.all.every((c) => session.permissionCodes?.includes(c));
+    allowed = options.all.every((c) => sessionHasPermission(session, c));
   }
 
   if (!allowed) {

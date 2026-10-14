@@ -11,6 +11,7 @@ export type {
   OrderDetail,
   OrderFilters,
   OrderItem,
+  OrderNote,
   Orders,
   OrdersDependencies,
   OrderStats,

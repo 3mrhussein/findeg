@@ -10,12 +10,16 @@ import type {
 } from '../../../school';
 import type {
   IAdminSchoolSupplyListService,
+  SchoolSupplyListIndexFilters,
+  SchoolSupplyListIndexRow,
+  SchoolListPartnerOption,
   SpecificationOption,
   SpecificationVariantCandidate,
 } from '../interfaces/IAdminSchoolSupplyListService';
 
 type SpecificationOptionsQuery = (categoryId: number) => Promise<SpecificationOption[]>;
 type VariantCandidatesQuery = (categoryId: number) => Promise<SpecificationVariantCandidate[]>;
+type ListAllQuery = (filters?: SchoolSupplyListIndexFilters) => Promise<SchoolSupplyListIndexRow[]>;
 
 const forbidden = () => ({ success: false as const, error: 'forbidden' as const });
 const invalid = () => ({ success: false as const, error: 'invalid-input' as const });
@@ -25,7 +29,20 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     private readonly lifecycle: ISchoolSupplyListService,
     private readonly querySpecificationOptions: SpecificationOptionsQuery,
     private readonly queryVariantCandidates: VariantCandidatesQuery,
+    private readonly queryListAll?: ListAllQuery,
+    private readonly queryPartnerOptions: () => Promise<SchoolListPartnerOption[]> = async () => [],
   ) {}
+
+  async listPartnerOptions(actor: SupplyListStaffActor) {
+    if (!canReadSupplyLists(actor)) return forbidden();
+    return { success: true as const, data: await this.queryPartnerOptions() };
+  }
+
+  async listAll(actor: SupplyListStaffActor, filters: SchoolSupplyListIndexFilters = {}) {
+    if (!canReadSupplyLists(actor)) return forbidden();
+    if (!this.queryListAll) return { success: true as const, data: [] };
+    return { success: true as const, data: await this.queryListAll(filters) };
+  }
 
   // These two queries back the authoring picker, so they need write access; read-only Staff are refused on purpose.
   async listSpecificationOptions(actor: SupplyListStaffActor, categoryId: number) {

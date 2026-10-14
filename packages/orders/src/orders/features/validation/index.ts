@@ -1,2 +1,9 @@
-/** Guards for Order identifiers, list filters and statistics options. Internal to Orders. */
-export { filtersSchema, orderId, pageSize, positiveId, statsOptionsSchema } from './helpers';
+/** Guards for Order identifiers, list filters, statistics options and note text. Internal to Orders. */
+export {
+  filtersSchema,
+  noteText,
+  orderId,
+  pageSize,
+  positiveId,
+  statsOptionsSchema,
+} from './helpers';

@@ -212,7 +212,7 @@ export function CategoryDrawer({
     <>
       <SlideOver
         open={open}
-        onOpenChange={(isOpen) => !isOpen && onClose()}
+        onOpenChange={(isOpen: boolean) => !isOpen && onClose()}
         title={isEditMode ? t('EditCategory') : t('NewCategory')}
         description={isEditMode ? t('Form.ProductCount', { count: 0 }) : undefined}
       >
@@ -285,7 +285,7 @@ export function CategoryDrawer({
                 <CollapsibleCategoryPicker
                   categories={categories.filter((c) => c.id !== category?.id)} // Don't allow self as parent
                   selectedId={parentId}
-                  onSelect={(id) => setValue('parentId', id === 0 ? null : id)}
+                  onSelect={(id: number) => setValue('parentId', id === 0 ? null : id)}
                   placeholder={t('Form.ParentNone')}
                 />
               </div>

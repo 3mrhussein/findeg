@@ -145,3 +145,20 @@ describe('Order reads', () => {
     ]);
   });
 });
+
+describe('Order detail notes', () => {
+  it('carries the internal notes of the Order alongside the activity trail', async () => {
+    const note = {
+      id: 3,
+      orderId: 9,
+      authorId: 5,
+      authorName: 'Amina Ali',
+      note: 'Customer asked for evening delivery',
+      createdAt: new Date('2026-10-03T08:00:00Z'),
+    };
+    const fake = fakeDatabase([row()], [storedItem()], [], [note]);
+    const detail = await createOrders({ db: fake.db as never }).detail(9);
+    expect(detail?.notes).toEqual([note]);
+    expect(detail?.activity).toEqual([]);
+  });
+});

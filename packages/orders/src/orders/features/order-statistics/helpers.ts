@@ -1,6 +1,6 @@
-import { and, count, desc, eq, sql } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { orders, orderItems, products } from '@findeg/db/schema';
-import { ORDER_STATUSES } from '@findeg/domain/orders';
+import { LIVE_ORDER_STATUSES, ORDER_STATUSES } from '@findeg/domain/orders';
 import { moneyFromDecimal } from '@findeg/domain';
 import { statsOptionsSchema } from '../validation';
 import type { OrderContext, Orders } from '../../types';
@@ -25,14 +25,21 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
       );
       const day = sql`(${orders.createdAt} at time zone 'UTC' at time zone 'Africa/Cairo')::date`;
       const today = sql`(${instant}::timestamptz at time zone 'Africa/Cairo')::date`;
+      // liveOnly counts only live Orders (LIVE_ORDER_STATUSES) in revenue, the trend and top products.
+      const liveStatuses = inArray(orders.status, LIVE_ORDER_STATUSES);
+      const revenueFilter = options.liveOnly ? sql`filter (where ${liveStatuses})` : sql``;
+      const todayRevenueFilter = options.liveOnly
+        ? sql`filter (where ${day} = ${today} and ${liveStatuses})`
+        : sql`filter (where ${day} = ${today})`;
+      const trendLiveClause = options.liveOnly ? sql`and ${liveStatuses}` : sql``;
       return db.transaction(
         async (tx) => {
           const [totals] = await tx
             .select({
               totalOrders: count(),
-              revenue: sql<string>`coalesce(sum(${orders.totalAmount}), 0)::text`,
+              revenue: sql<string>`coalesce(sum(${orders.totalAmount}) ${revenueFilter}, 0)::text`,
               todayOrders: sql<number>`count(*) filter (where ${day} = ${today})::int`,
-              todayRevenue: sql<string>`coalesce(sum(${orders.totalAmount}) filter (where ${day} = ${today}), 0)::text`,
+              todayRevenue: sql<string>`coalesce(sum(${orders.totalAmount}) ${todayRevenueFilter}, 0)::text`,
             })
             .from(orders)
             .where(range);
@@ -52,6 +59,7 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
           select dates.date::text as date, coalesce(sum(${orders.totalAmount}), 0)::text as revenue
           from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
             and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+            ${trendLiveClause}
           group by dates.date order by dates.date
         `);
           const top = await tx
@@ -64,7 +72,7 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .from(orderItems)
             .innerJoin(orders, eq(orderItems.orderId, orders.id))
             .innerJoin(products, eq(orderItems.productId, products.id))
-            .where(range)
+            .where(options.liveOnly ? and(range, liveStatuses) : range)
             .groupBy(products.id, products.localizedName)
             .orderBy(desc(sql`sum(${orderItems.quantity})`), products.id)
             .limit(options.topProductsLimit);

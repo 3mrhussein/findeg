@@ -1,6 +1,7 @@
 import { and, count, desc, eq, gte, ilike, inArray, isNotNull, lte, or } from 'drizzle-orm';
 import { auditLog, orders, orderItems, users } from '@findeg/db/schema';
 import { mapOrder } from '../order-mapping';
+import { selectOrderNotes } from '../order-notes';
 import { filtersSchema, orderId, positiveId } from '../validation';
 import type {
   Order,
@@ -130,6 +131,7 @@ export function createOrderReads({
         .leftJoin(users, eq(auditLog.adminUserId, users.id))
         .where(and(eq(auditLog.entityType, 'order'), eq(auditLog.entityId, String(order.id))))
         .orderBy(desc(auditLog.createdAt), desc(auditLog.id));
+      const notes = await selectOrderNotes(db, order.id);
       const activity: OrderActivityEntry[] = rows.map(({ log, firstName, lastName }) => {
         const oldValues = (log.oldValues ?? {}) as Record<string, unknown>;
         const newValues = (log.newValues ?? {}) as Record<string, unknown>;
@@ -151,7 +153,7 @@ export function createOrderReads({
           createdAt: log.createdAt,
         };
       });
-      return { order, activity };
+      return { order, activity, notes };
     },
   };
   return api;

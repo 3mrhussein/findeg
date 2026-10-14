@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { filtersSchema, orderId, pageSize, positiveId, statsOptionsSchema } from '../index';
+import {
+  filtersSchema,
+  noteText,
+  orderId,
+  pageSize,
+  positiveId,
+  statsOptionsSchema,
+} from '../index';
 
 describe('Order identifiers', () => {
   it('accepts positive integers and canonical numeric strings', () => {
@@ -56,5 +63,18 @@ describe('Order statistics options', () => {
     );
     expect(() => statsOptionsSchema.parse({ trendDays: 367 })).toThrow();
     expect(() => statsOptionsSchema.parse({ topProductsLimit: 0 })).toThrow();
+  });
+});
+
+describe('Order notes and live statistics', () => {
+  it('trims note text and bounds it at 2000 characters', () => {
+    expect(noteText.parse('  Check address  ')).toBe('Check address');
+    expect(() => noteText.parse('   ')).toThrow();
+    expect(() => noteText.parse('x'.repeat(2001))).toThrow();
+  });
+
+  it('accepts the liveOnly statistics flag', () => {
+    expect(statsOptionsSchema.parse({ liveOnly: true }).liveOnly).toBe(true);
+    expect(statsOptionsSchema.parse({}).liveOnly).toBeUndefined();
   });
 });

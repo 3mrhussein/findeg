@@ -46,6 +46,7 @@ export interface OrderItem {
   productSkuSnapshot: string | null;
   variantSkuSnapshot: string | null;
   variantSnapshot: VariantSnapshot | null;
+  isSubstitute: boolean | null;
 }
 
 export interface Order {
@@ -83,9 +84,19 @@ export interface OrderActivityEntry {
   createdAt: Date;
 }
 
+export interface OrderNote {
+  id: number;
+  orderId: number;
+  authorId: number | null;
+  authorName: string;
+  note: string;
+  createdAt: Date;
+}
+
 export interface OrderDetail {
   order: Order;
   activity: OrderActivityEntry[];
+  notes: OrderNote[];
 }
 
 export interface OrderStatsOptions {
@@ -93,6 +104,7 @@ export interface OrderStatsOptions {
   to?: string;
   trendDays?: number;
   topProductsLimit?: number;
+  liveOnly?: boolean;
 }
 
 export interface OrderStats {
@@ -126,4 +138,6 @@ export interface Orders {
     id: number,
     status: PaymentStatus,
   ): Promise<PaymentStatusTransitionResult>;
+  addNote(actor: OrderStaffActor, id: number | string, note: string): Promise<OrderNote>;
+  listNotes(id: number | string): Promise<OrderNote[]>;
 }

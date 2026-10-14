@@ -17,7 +17,16 @@ export type {
   IAdminSchoolSupplyListService,
   SpecificationOption,
   SpecificationVariantCandidate,
+  SchoolSupplyListIndexFilters,
+  SchoolSupplyListIndexRow,
 } from './application/interfaces/IAdminSchoolSupplyListService';
+export type {
+  CreateSupplyListDraftInput,
+  SchoolSupplyList,
+  SupplyListItemInput,
+  SupplyListResult,
+  UpdateSupplyListDraftInput,
+} from '../school';
 export type {
   AuditLogCreateInput,
   AuditLogFilters,

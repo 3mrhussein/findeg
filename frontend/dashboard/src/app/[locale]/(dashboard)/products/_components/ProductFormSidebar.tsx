@@ -3,7 +3,14 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  formatEgpDecimal,
+} from '@findeg/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { type Category, type Brand, type Tag } from '@findeg/backend/features/catalog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
@@ -70,7 +77,7 @@ export function ProductFormSidebar({
 
   return (
     <div className="space-y-6">
-      {/* STATUS — Radio style Active/Draft */}
+      {/* STATUS — Radio style Active/Inactive */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
@@ -102,11 +109,11 @@ export function ProductFormSidebar({
                       <div className="flex items-center gap-1.5">
                         <span className="text-green-500 text-xs">●</span>
                         <span className="text-sm font-medium text-gray-900 dark:text-slate-200">
-                          Active
+                          {t('active')}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                        Visible in the storefront
+                        {t('activeDesc')}
                       </p>
                     </div>
                   </label>
@@ -129,11 +136,11 @@ export function ProductFormSidebar({
                       <div className="flex items-center gap-1.5">
                         <span className="text-gray-400 dark:text-slate-600 text-xs">●</span>
                         <span className="text-sm font-medium text-gray-900 dark:text-slate-200">
-                          Draft
+                          {t('inactive')}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                        Hidden from storefront
+                        {t('inactiveDesc')}
                       </p>
                     </div>
                   </label>
@@ -219,21 +226,24 @@ export function ProductFormSidebar({
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Summary
+            {t('summary')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             {[
-              { label: 'Variants', value: String(variantCount) },
-              { label: 'Images', value: String(imageCount) },
+              { label: t('variants'), value: String(variantCount) },
+              { label: t('images'), value: String(imageCount) },
               {
-                label: 'Price',
-                value: defaultPrice > 0 ? `EGP ${defaultPrice.toFixed(2)}` : '—',
+                label: t('price'),
+                value:
+                  Number.isFinite(defaultPrice) && defaultPrice > 0
+                    ? `EGP ${formatEgpDecimal(defaultPrice.toFixed(2))}`
+                    : '—',
               },
               {
-                label: 'Last saved',
-                value: 'Not saved',
+                label: t('lastSaved'),
+                value: t('notSaved'),
               },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between">

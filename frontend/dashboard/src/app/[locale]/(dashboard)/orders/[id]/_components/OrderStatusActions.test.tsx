@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import messages from '../../../../../../../messages/en.json';
+import { render as rtlRender, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { NextIntlClientProvider } from 'next-intl';
 import type { Order } from '@findeg/orders';
 import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
 
@@ -9,6 +11,14 @@ vi.mock('@hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 
 import { OrderHeader } from './OrderHeader';
 import { OrderPaymentFulfillment } from './OrderPaymentFulfillment';
+
+function render(ui: React.ReactElement) {
+  return rtlRender(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
 
 function order(status: OrderStatus, paymentStatus: PaymentStatus = 'unpaid'): Order {
   return { id: 7, status, paymentStatus, createdAt: new Date('2026-10-05T08:00:00.000Z') } as Order;

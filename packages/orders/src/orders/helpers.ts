@@ -1,5 +1,6 @@
 import { createOrderReads } from './features/order-reads';
 import { createOrderStatistics } from './features/order-statistics';
+import { createOrderNotes } from './features/order-notes';
 import { createOrderStatusChanges } from './features/order-status-changes';
 import type { OrderDatabase, Orders, OrdersDependencies } from './types';
 
@@ -20,5 +21,6 @@ export function createOrders({
     ...createOrderReads(context),
     ...createOrderStatistics(context),
     ...createOrderStatusChanges(context),
+    ...createOrderNotes(context),
   };
 }

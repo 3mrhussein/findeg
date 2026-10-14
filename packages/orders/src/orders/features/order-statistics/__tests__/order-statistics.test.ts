@@ -71,3 +71,21 @@ describe('Order statistics', () => {
     ).rejects.toMatchObject({ name: 'ZodError' });
   });
 });
+
+describe('Order statistics live filter', () => {
+  it('counts only live Order statuses when liveOnly is requested', async () => {
+    const fake = fakeDatabase(
+      [{ totalOrders: 1, revenue: '100.00', todayOrders: 0, todayRevenue: '0.00' }],
+      [{ status: 'confirmed', count: 1 }],
+      [{ date: '2026-10-14', revenue: '100.00' }],
+      [],
+    );
+    const stats = await createOrders({ db: fake.db as never, now: () => instant }).getStats({
+      trendDays: 1,
+      liveOnly: true,
+    });
+    expect(stats.totalRevenue).toBe(10_000n);
+    expect(stats.revenueByPeriod).toEqual([{ date: '2026-10-14', revenue: 10_000n }]);
+    expect(fake.pendingReads()).toBe(0);
+  });
+});

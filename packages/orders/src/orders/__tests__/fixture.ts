@@ -2,6 +2,7 @@
  * A scripted stand-in for the injected Drizzle client. Each awaited read (`select`, `execute`)
  * consumes the next scripted answer, in order; each awaited write resolves without consuming one.
  * Every builder call is recorded so tests can assert what the Order code asked the database to do.
+ * A write that calls `.returning()` consumes the next answer as its returned rows.
  * Test-only helper: the file name is excluded from executable test discovery.
  */
 export interface RecordedCall {
@@ -39,6 +40,8 @@ function builder(answers: unknown[], calls: RecordedCall[], reads: boolean): unk
       }
       return (...args: unknown[]) => {
         calls.push({ method: String(property), args });
+        // A write that returns rows answers like a read: the next scripted answer is its result.
+        if (property === 'returning') return builder(answers, calls, true);
         return node;
       };
     },

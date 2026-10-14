@@ -8,12 +8,7 @@ import { ProductsFilterBar } from './ProductsFilterBar';
 import { ProductsTable } from './ProductsTable';
 import { ProductsPagination } from './ProductsPagination';
 import { BulkActionsBar } from './BulkActionsBar';
-import {
-  duplicateProductAction,
-  bulkActivateAction,
-  bulkDeactivateAction,
-  bulkDeleteAction,
-} from '../actions';
+import { bulkActivateAction, bulkDeactivateAction, bulkDeleteAction } from '../actions';
 import type {
   ProductListFilters,
   ProductListResult,
@@ -57,18 +52,6 @@ export function ProductsClient({ initialData, categories, brands }: ProductsClie
       shallow: false, // Force server-side data fetching on filter change
     },
   );
-
-  const handleDuplicate = (id: number) => {
-    startTransition(async () => {
-      toast({ title: t('Toasts.Duplicating') });
-      const result = await duplicateProductAction(id);
-      if (result.success) {
-        toast({ title: t('Toasts.DuplicateSuccess') });
-      } else {
-        toast({ title: t('Toasts.DuplicateError'), variant: 'destructive' });
-      }
-    });
-  };
 
   /**
    * Runs a bulk mutation and reports its real outcome. Products that failed stay selected
@@ -146,7 +129,6 @@ export function ProductsClient({ initialData, categories, brands }: ProductsClie
           total={initialData.total}
           selectedIds={selectedIds}
           onSelectChange={setSelectedIds}
-          onDuplicate={handleDuplicate}
           onDelete={handleDelete}
         />
       </div>
