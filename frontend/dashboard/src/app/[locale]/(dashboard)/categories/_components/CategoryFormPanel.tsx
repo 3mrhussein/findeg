@@ -317,7 +317,7 @@ export function CategoryFormPanel({
             <CollapsibleCategoryPicker
               categories={categories.filter((c) => c.id !== category?.id)}
               selectedId={parentId}
-              onSelect={(id) => setValue('parentId', id === 0 ? null : id)}
+              onSelect={(id: number) => setValue('parentId', id === 0 ? null : id)}
               placeholder={t('Form.ParentNone')}
             />
           </div>

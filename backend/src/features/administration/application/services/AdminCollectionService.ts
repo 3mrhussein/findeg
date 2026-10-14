@@ -12,6 +12,7 @@ import {
   deleteCollection,
   setCollectionTags,
   updateCollectionSortOrders,
+  checkCollectionSlugAvailable,
 } from '@findeg/db/queries';
 
 /**
@@ -117,5 +118,12 @@ export class AdminCollectionService implements IAdminCollectionService {
       action: 'reorder',
       newValues: { items },
     });
+  }
+
+  /**
+   * Checks if a slug is available.
+   */
+  async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
+    return checkCollectionSlugAvailable(slug, excludeId);
   }
 }

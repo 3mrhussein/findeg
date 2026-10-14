@@ -9,6 +9,8 @@
 import { revalidatePath, updateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { CategoryInput } from '@findeg/backend/features/catalog';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -19,6 +21,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function createCategoryAction(input: CategoryInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'create category');
     const { categories } = createAdministrationServices();
     const result = await categories.create(input);
 
@@ -42,12 +45,12 @@ export async function createCategoryAction(input: CategoryInput) {
  */
 export async function updateCategoryAction(id: number, input: CategoryInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'update category');
     const { categories } = createAdministrationServices();
     const result = await categories.update(id, input);
 
     // Invalidate category detail and lists
     updateTag('categories');
-    updateTag(`category-${id}`);
     revalidatePath('/categories');
     revalidatePath(`/categories/${id}`);
 
@@ -66,12 +69,12 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
  */
 export async function deleteCategoryAction(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'delete category');
     const { categories } = createAdministrationServices();
     await categories.delete(id);
 
     // Invalidate all category caches
     updateTag('categories');
-    updateTag(`category-${id}`);
     revalidatePath('/categories');
 
     return { success: true };
@@ -89,6 +92,7 @@ export async function deleteCategoryAction(id: number) {
  */
 export async function reorderCategoriesAction(items: { id: number; sortOrder: number }[]) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'reorder categories');
     const { categories } = createAdministrationServices();
     await categories.reorderCategories(items);
 
@@ -108,6 +112,7 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
  */
 export async function moveCategoryUpAction(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'move category');
     const { categories } = createAdministrationServices();
     await categories.moveCategoryUp(id);
     updateTag('categories');
@@ -119,6 +124,7 @@ export async function moveCategoryUpAction(id: number) {
 
 export async function moveCategoryDownAction(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE, 'move category');
     const { categories } = createAdministrationServices();
     await categories.moveCategoryDown(id);
     updateTag('categories');
@@ -133,6 +139,10 @@ export async function moveCategoryDownAction(id: number) {
  */
 export async function checkCategorySlugAvailableAction(slug: string, excludeId?: number) {
   try {
+    await requireStaffAction(
+      PERMISSION_CODES.ADMIN_CATEGORIES_READ,
+      'check category slug available',
+    );
     const { categories } = createAdministrationServices();
     const available = await categories.checkSlugAvailable(slug, excludeId);
     return { success: true, available };

@@ -5,7 +5,7 @@ import { LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
+import { getAvatarColorClass, getInitials } from '@lib/utils';
 import { useSidebar } from './SidebarContext';
 import { logoutAction as logout } from '@actions/auth-actions';
 
@@ -55,6 +55,7 @@ export function AdminSidebarUserClient({
           </div>
 
           <form action={logout}>
+            <input type="hidden" name="locale" value={_locale} />
             <button
               type="submit"
               className="w-full h-[32px] flex items-center justify-center gap-2 rounded-md text-[12px] text-gray-500 bg-transparent hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"

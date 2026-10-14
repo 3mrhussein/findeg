@@ -16,8 +16,12 @@ const setRequestLocale = vi.fn();
 vi.mock('next-intl/server', () => ({
   setRequestLocale: (locale: string) => setRequestLocale(locale),
 }));
+vi.mock('@lib/auth-guard', () => ({
+  requirePermission: vi.fn(),
+}));
 vi.mock('@data/orders/queries', () => ({ getOrderDetail: (id: number) => getDetail(id) }));
 vi.mock('@i18n/navigation', () => ({
+  redirect: vi.fn(),
   useRouter: () => ({ refresh: vi.fn() }),
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>

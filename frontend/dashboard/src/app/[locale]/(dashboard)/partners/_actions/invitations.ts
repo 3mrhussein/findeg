@@ -1,7 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@lib/auth-guard';
+import { revalidatePath, updateTag } from 'next/cache';
+import { requireStaffAction } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
 import {
   createPartnerMembershipServices,
@@ -17,18 +18,9 @@ export interface InvitationActionState {
   link?: string;
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  forbidden: 'You do not have permission to manage Business Partners.',
-  'invalid-input': 'Enter a valid email address and choose at least one role.',
-  'not-found': 'This Business Partner or invitation no longer exists.',
-  'partner-not-open':
-    'Invitations can only change while the Business Partner is onboarding or active.',
-  'invitation-not-pending': 'This invitation is no longer pending.',
-};
-
 const fail = (error: string): InvitationActionState => ({
   status: 'error',
-  message: ERROR_MESSAGES[error] ?? error,
+  message: error,
 });
 
 function linkFor(locale: string, token: string): string {
@@ -36,7 +28,10 @@ function linkFor(locale: string, token: string): string {
   return `${base}/${locale}/partner/invitations/${token}`;
 }
 
-const refresh = () => revalidatePath('/[locale]/partners/[id]', 'page');
+const refresh = () => {
+  revalidatePath('/[locale]/partners/[id]', 'page');
+  updateTag('partners');
+};
 
 export async function inviteAction(
   locale: Locale,
@@ -44,39 +39,63 @@ export async function inviteAction(
   _previous: InvitationActionState,
   formData: FormData,
 ): Promise<InvitationActionState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const invitations = createInvitationServices();
-  const result = await invitations.invite(actor, partnerId, {
-    email: String(formData.get('email') ?? ''),
-    roles: formData.getAll('roles').map(String) as PartnerRole[],
-  });
-  if (!result.success) return fail(result.error);
-  drainOutboxAfterResponse();
-  refresh();
-  return { status: 'done', link: linkFor(locale, result.data.token) };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.PARTNERS_MANAGE,
+      'invite partner member',
+    );
+    const actor = toStaffActor(session);
+    const invitations = createInvitationServices();
+    const result = await invitations.invite(actor, partnerId, {
+      email: String(formData.get('email') ?? ''),
+      roles: formData.getAll('roles').map(String) as PartnerRole[],
+    });
+    if (!result.success) return fail(result.error);
+    drainOutboxAfterResponse();
+    refresh();
+    return { status: 'done', link: linkFor(locale, result.data.token) };
+  } catch {
+    return fail('forbidden');
+  }
 }
 
 export async function resendInvitationAction(
   locale: Locale,
   invitationId: number,
 ): Promise<InvitationActionState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const invitations = createInvitationServices();
-  const result = await invitations.resendInvitation(actor, invitationId);
-  if (!result.success) return fail(result.error);
-  drainOutboxAfterResponse();
-  refresh();
-  return { status: 'done', link: linkFor(locale, result.data.token) };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.PARTNERS_MANAGE,
+      'resend partner invitation',
+    );
+    const actor = toStaffActor(session);
+    const invitations = createInvitationServices();
+    const result = await invitations.resendInvitation(actor, invitationId);
+    if (!result.success) return fail(result.error);
+    drainOutboxAfterResponse();
+    refresh();
+    return { status: 'done', link: linkFor(locale, result.data.token) };
+  } catch {
+    return fail('forbidden');
+  }
 }
 
 export async function revokeInvitationAction(
   locale: Locale,
   invitationId: number,
 ): Promise<InvitationActionState> {
-  const actor = toStaffActor(await requireAdmin(locale));
-  const { invitations } = createPartnerMembershipServices();
-  const result = await invitations.revokeInvitation(actor, invitationId);
-  if (!result.success) return fail(result.error);
-  refresh();
-  return { status: 'done' };
+  try {
+    const session = await requireStaffAction(
+      PERMISSION_CODES.PARTNERS_MANAGE,
+      'revoke partner invitation',
+    );
+    const actor = toStaffActor(session);
+    const { invitations } = createPartnerMembershipServices();
+    const result = await invitations.revokeInvitation(actor, invitationId);
+    if (!result.success) return fail(result.error);
+    refresh();
+    return { status: 'done' };
+  } catch {
+    return fail('forbidden');
+  }
 }

@@ -7,7 +7,7 @@ import { Button } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 import { StatusBadge } from '@components/shared/StatusBadge';
 import { cn } from '@lib/utils';
-import { Brand } from '@findeg/backend/features/catalog';
+import type { Brand } from '@findeg/backend/features/catalog';
 import Image from 'next/image';
 
 interface BrandCardProps {
@@ -148,6 +148,7 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
                 }}
                 className="h-8 w-8 rounded-md text-slate-400 bg-transparent hover:text-red-600 hover:bg-red-50 transition-colors"
                 aria-label="Delete brand"
+                data-testid={`delete-brand-${brand.id}`}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

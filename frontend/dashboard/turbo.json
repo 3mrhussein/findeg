@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "cache": false,
+      "env": ["$TURBO_EXTENDS$", "DATABASE_URL", "DB_SSL", "NEXT_PUBLIC_SITE_URL"]
+    }
+  }
+}

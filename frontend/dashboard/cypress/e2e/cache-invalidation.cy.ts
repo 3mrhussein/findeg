@@ -74,5 +74,48 @@ for (const locale of ['en', 'ar']) {
       cy.reload();
       cy.contains('tr', token).should('contain.text', updatedName);
     });
+
+    it('reflects tag create, update and delete immediately and after reload', () => {
+      const token = uniqueToken('cypress-tag');
+      const updatedToken = `${token}-edit`;
+
+      cy.visit(`/${locale}/catalog/tags`);
+      hydrated('button:has(svg.lucide-plus)');
+      cy.get('button:has(svg.lucide-plus)').first().click();
+
+      cy.get('input[placeholder="e.g. best-seller"]').type(token);
+      cy.get('input[placeholder="tag-slug"]').clear().type(token);
+      cy.get('form button[type="submit"]').click();
+
+      cy.contains('p', token, { timeout: 20000 }).should('be.visible');
+      cy.reload();
+      cy.contains('p', token).should('be.visible');
+
+      cy.contains('p', token)
+        .parents('div[class*="overflow-hidden"]')
+        .find('svg.lucide-edit')
+        .parents('button')
+        .first()
+        .click();
+      cy.get('input[placeholder="e.g. best-seller"]').clear().type(updatedToken);
+      cy.get('input[placeholder="tag-slug"]').clear().type(updatedToken);
+      cy.get('form button[type="submit"]').click();
+
+      cy.contains('p', updatedToken, { timeout: 20000 }).should('be.visible');
+      cy.contains('p', token).should('not.exist');
+      cy.reload();
+      cy.contains('p', updatedToken).should('be.visible');
+
+      cy.contains('p', updatedToken)
+        .parents('div[class*="overflow-hidden"]')
+        .find('svg.lucide-trash-2')
+        .parents('button')
+        .first()
+        .click();
+      cy.get('[role="alertdialog"] button.bg-destructive').click({ force: true });
+      cy.contains('p', updatedToken).should('not.exist');
+      cy.reload();
+      cy.contains('p', updatedToken).should('not.exist');
+    });
   });
 }

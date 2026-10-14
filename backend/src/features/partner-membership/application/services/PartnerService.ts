@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   getBusinessPartnerById,
+  getPartnerSchoolProfile,
   hasActivePartnerAdministrator,
   insertBusinessPartner,
   insertPartnerAccessHistory,
@@ -9,25 +10,34 @@ import {
   lockBusinessPartnerById,
   setBusinessPartnerStatus,
   updateBusinessPartner,
+  upsertPartnerSchoolProfile,
   type BusinessPartnerPatch,
   type BusinessPartnerRow,
   type PartnerDatabase,
+  type PartnerTransaction,
+  type PartnerSchoolProfileRow,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
 import {
+  ACADEMIC_SYSTEMS,
   allowedPartnerStatusChanges,
   changePartnerCode,
   changePartnerStatus,
+  GOVERNORATES,
   PARTNER_CODE_MAX_LENGTH,
   PARTNER_CODE_MIN_LENGTH,
   PARTNER_CODE_PATTERN,
+  SCHOOL_TYPES,
 } from '@findeg/domain';
-import type { ChangePartnerStatusError } from '../interfaces/IPartnerService';
 import type {
   BusinessPartner,
+  ChangePartnerStatusError,
   CreatePartnerInput,
   IPartnerService,
   PartnerResult,
+  ReadPartnerError,
+  SavePartnerSchoolProfileError,
+  SavePartnerSchoolProfileInput,
   StaffActor,
   UpdatePartnerInput,
 } from '../interfaces/IPartnerService';
@@ -41,8 +51,27 @@ const codeSchema = z
   .max(PARTNER_CODE_MAX_LENGTH);
 const nameSchema = z.string().trim().min(1).max(255);
 
-const createSchema = z.object({ code: codeSchema, nameEn: nameSchema, nameAr: nameSchema });
+const profileSchema = z.object({
+  governorate: z.enum(GOVERNORATES),
+  area: z.string().trim().min(1).max(255),
+  schoolType: z.enum(SCHOOL_TYPES),
+  academicSystem: z.enum(ACADEMIC_SYSTEMS),
+  logoUrl: z
+    .string()
+    .trim()
+    .max(2048)
+    .nullish()
+    .transform((v) => v || null),
+});
+
+const createSchema = z.object({
+  code: codeSchema,
+  nameEn: nameSchema,
+  nameAr: nameSchema,
+  schoolProfile: profileSchema.optional(),
+});
 const updateSchema = z.object({
+  schoolProfile: profileSchema.optional(),
   code: codeSchema.optional(),
   nameEn: nameSchema.optional(),
   nameAr: nameSchema.optional(),
@@ -85,14 +114,21 @@ export class PartnerService implements IPartnerService {
     try {
       const db = await this.getDb();
       const row = await db.transaction(async (tx) => {
-        const created = await insertBusinessPartner(tx, parsed.data);
+        const { schoolProfile, ...fields } = parsed.data;
+        const created = await insertBusinessPartner(tx, fields);
+        const savedProfile = schoolProfile
+          ? await upsertPartnerSchoolProfile(tx, {
+              businessPartnerId: created.id,
+              ...schoolProfile,
+            })
+          : undefined;
         await insertPartnerAccessHistory(tx, {
           businessPartnerId: created.id,
           actorUserId: actor.userId,
           actorKind: 'staff',
           action: 'partner.created',
           before: null,
-          after: snapshot(created),
+          after: { ...snapshot(created), ...(savedProfile ? { schoolProfile: savedProfile } : {}) },
         });
         return created;
       });
@@ -120,7 +156,6 @@ export class PartnerService implements IPartnerService {
             const next = parsed.data[field];
             if (next !== undefined && next !== current[field]) patch[field] = next;
           }
-          if (Object.keys(patch).length === 0) return ok(toPartner(current));
           if (patch.code !== undefined) {
             try {
               changePartnerCode(current, patch.code);
@@ -128,6 +163,10 @@ export class PartnerService implements IPartnerService {
               return partnerFailure(error);
             }
           }
+          if (parsed.data.schoolProfile) {
+            await this.saveSchoolProfile(tx, actor, partnerId, parsed.data.schoolProfile);
+          }
+          if (Object.keys(patch).length === 0) return ok(toPartner(current));
 
           const updated = await updateBusinessPartner(tx, partnerId, patch);
           const changed = Object.keys(patch) as (keyof BusinessPartnerPatch)[];
@@ -190,6 +229,65 @@ export class PartnerService implements IPartnerService {
     if (!canViewPartners(actor)) return fail('forbidden');
     const row = await getBusinessPartnerById(await this.getDb(), partnerId);
     return row ? ok(toPartner(row)) : fail('not-found');
+  }
+
+  async savePartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow, SavePartnerSchoolProfileError>> {
+    if (!canManagePartners(actor)) return fail('forbidden');
+    const parsed = profileSchema.safeParse(input);
+    if (!parsed.success) return fail('invalid-input');
+
+    const db = await this.getDb();
+    return await db.transaction(async (tx) => {
+      const partner = await lockBusinessPartnerById(tx, partnerId);
+      if (!partner) return fail('not-found');
+
+      const saved = await this.saveSchoolProfile(tx, actor, partnerId, parsed.data);
+      return ok(saved);
+    });
+  }
+
+  /** Call under the partner row lock; the profile and its history commit together. */
+  private async saveSchoolProfile(
+    tx: PartnerTransaction,
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ) {
+    const previous = await getPartnerSchoolProfile(tx, partnerId);
+    const next = { businessPartnerId: partnerId, ...input, logoUrl: input.logoUrl ?? null };
+    if (
+      previous &&
+      (['governorate', 'area', 'schoolType', 'academicSystem', 'logoUrl'] as const).every(
+        (field) => previous[field] === next[field],
+      )
+    )
+      return previous;
+    const saved = await upsertPartnerSchoolProfile(tx, next);
+    await insertPartnerAccessHistory(tx, {
+      businessPartnerId: partnerId,
+      actorUserId: actor.userId,
+      actorKind: 'staff',
+      action: 'partner.updated',
+      before: { schoolProfile: previous ?? null },
+      after: { schoolProfile: saved },
+    });
+    return saved;
+  }
+
+  async getPartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow | null, ReadPartnerError>> {
+    if (!canViewPartners(actor)) return fail('forbidden');
+    const db = await this.getDb();
+    const partner = await getBusinessPartnerById(db, partnerId);
+    if (!partner) return fail('not-found');
+    const profile = await getPartnerSchoolProfile(db, partnerId);
+    return ok(profile ?? null);
   }
 }
 

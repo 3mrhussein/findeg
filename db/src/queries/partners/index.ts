@@ -452,3 +452,38 @@ export async function getActiveMembershipRoles(
     );
   return row?.roles ?? null;
 }
+
+export type PartnerSchoolProfileRow = typeof schema.partnerSchoolProfiles.$inferSelect;
+export type UpsertPartnerSchoolProfileRow = typeof schema.partnerSchoolProfiles.$inferInsert;
+
+export async function getPartnerSchoolProfile(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+): Promise<PartnerSchoolProfileRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(schema.partnerSchoolProfiles)
+    .where(eq(schema.partnerSchoolProfiles.businessPartnerId, businessPartnerId));
+  return row;
+}
+
+export async function upsertPartnerSchoolProfile(
+  executor: PartnerTransaction,
+  values: UpsertPartnerSchoolProfileRow,
+): Promise<PartnerSchoolProfileRow> {
+  const [row] = await executor
+    .insert(schema.partnerSchoolProfiles)
+    .values(values)
+    .onConflictDoUpdate({
+      target: schema.partnerSchoolProfiles.businessPartnerId,
+      set: {
+        governorate: values.governorate,
+        area: values.area,
+        schoolType: values.schoolType,
+        academicSystem: values.academicSystem,
+        logoUrl: values.logoUrl,
+      },
+    })
+    .returning();
+  return row;
+}

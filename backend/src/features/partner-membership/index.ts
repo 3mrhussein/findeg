@@ -25,10 +25,13 @@ export type {
   PartnerActor,
   PartnerResult,
   ReadPartnerError,
+  SavePartnerSchoolProfileError,
+  SavePartnerSchoolProfileInput,
   StaffActor,
   UpdatePartnerError,
   UpdatePartnerInput,
 } from './application/interfaces/IPartnerService';
+export type { PartnerSchoolProfileRow } from '@findeg/db/queries/partners';
 export type {
   AcceptInvitationError,
   IMembershipService,

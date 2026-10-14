@@ -1,73 +1,65 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { type Table } from '@tanstack/react-table';
 import { type Order } from '@findeg/orders';
 import { Button } from '@findeg/ui';
-import { Check, Settings, Printer, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Check, Settings, Ban, X } from 'lucide-react';
+import { toast } from '@hooks/use-toast';
 import { useRouter } from '@i18n/navigation';
 import { bulkUpdateOrderStatusAction } from '@data/orders/actions';
 import type { OrderStatus } from '@findeg/domain/orders';
 
 interface OrderBulkActionBarProps {
   table: Table<Order>;
+  selectedIds: number[];
+  onClearSelection: () => void;
 }
 
-/**
- *
- */
-export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
-  const count = selectedRows.length;
+export function OrderBulkActionBar({ selectedIds, onClearSelection }: OrderBulkActionBarProps) {
+  const t = useTranslations('Administration.OrdersDetail');
+  const count = selectedIds.length;
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   if (count === 0) return null;
 
-  /**
-   *
-   */
-  const updateSelected = (status: OrderStatus, eligibleStatus: OrderStatus) => {
-    const ids = selectedRows
-      .filter((row) => row.original.status === eligibleStatus)
-      .map((row) => Number(row.original.id));
-    if (ids.length === 0) {
-      toast.error(`No selected Orders can be marked ${status}.`);
-      return;
-    }
+  const updateSelected = (status: OrderStatus) => {
+    if (selectedIds.length === 0) return;
 
     startTransition(async () => {
-      const result = await bulkUpdateOrderStatusAction(ids, status);
+      const result = await bulkUpdateOrderStatusAction(selectedIds, status);
       const updatedCount = 'updatedCount' in result ? (result.updatedCount ?? 0) : 0;
       if (updatedCount > 0) {
-        table.resetRowSelection();
+        onClearSelection();
         router.refresh();
       }
       if (!result.success) {
-        toast.error(
-          updatedCount > 0
-            ? `${updatedCount} updated; ${result.error}`
-            : result.error || `Failed to mark selected Orders ${status}.`,
-        );
+        toast({
+          title: t('UpdateFailed'),
+          description:
+            updatedCount > 0
+              ? t('BulkPartial', { count: updatedCount, error: result.error ?? '' })
+              : result.error || t('UpdateFailed'),
+          variant: 'destructive',
+        });
         return;
       }
-      toast.success(`${updatedCount} Order${updatedCount === 1 ? '' : 's'} marked ${status}.`);
+      toast({
+        title: t('OrdersUpdated'),
+        description: t('BulkUpdated', { count: updatedCount }),
+      });
     });
   };
 
-  const handleConfirmSelected = () => updateSelected('confirmed', 'pending');
+  const handleConfirmSelected = () => updateSelected('confirmed');
 
-  /**
-   *
-   */
-  const handleMarkProcessing = () => updateSelected('processing', 'confirmed');
+  const handleMarkProcessing = () => updateSelected('processing');
 
-  /**
-   *
-   */
-  const handlePrintSelected = () => {
-    // Printing logic
+  const handleCancelSelected = () => {
+    if (!window.confirm(t('ConfirmBulkCancel'))) return;
+    updateSelected('cancelled');
   };
 
   return (
@@ -76,7 +68,7 @@ export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
         <span className="bg-background text-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
           {count}
         </span>
-        <span className="text-sm font-medium">selected</span>
+        <span className="text-sm font-medium">{t('Selected')}</span>
       </div>
 
       <div className="h-5 w-px bg-background/20" />
@@ -87,30 +79,33 @@ export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
           size="sm"
           className="text-background hover:text-background hover:bg-background/20 h-8"
           disabled={isPending}
+          data-testid="bulk-confirm-button"
           onClick={handleConfirmSelected}
         >
           <Check className="mr-2 h-4 w-4" />
-          Confirm Selected
+          {t('ConfirmSelected')}
         </Button>
         <Button
           variant="ghost"
           size="sm"
           className="text-background hover:text-background hover:bg-background/20 h-8"
           disabled={isPending}
+          data-testid="bulk-process-button"
           onClick={handleMarkProcessing}
         >
           <Settings className="mr-2 h-4 w-4" />
-          Mark Processing
+          {t('MarkProcessing')}
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="text-background hover:text-background hover:bg-background/20 h-8"
+          className="text-background hover:text-background hover:bg-background/20 h-8 text-rose-300 hover:text-rose-200"
           disabled={isPending}
-          onClick={handlePrintSelected}
+          data-testid="bulk-cancel-button"
+          onClick={handleCancelSelected}
         >
-          <Printer className="mr-2 h-4 w-4" />
-          Print Packing Slips
+          <Ban className="mr-2 h-4 w-4" />
+          {t('CancelSelected')}
         </Button>
       </div>
 
@@ -120,7 +115,7 @@ export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
         variant="ghost"
         size="icon"
         className="text-background hover:text-background hover:bg-background/20 h-8 w-8 rounded-full"
-        onClick={() => table.toggleAllRowsSelected(false)}
+        onClick={onClearSelection}
       >
         <X className="h-4 w-4" />
       </Button>

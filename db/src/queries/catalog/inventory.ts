@@ -42,13 +42,15 @@ export interface StockMovementInput {
 export async function getBalance(
   variantId: number,
   warehouseId?: number,
+  tx?: DbTransaction,
 ): Promise<InventoryBalanceResult | null> {
+  const client = tx ?? db;
   const conditions = [eq(inventoryBalances.variantId, variantId)];
   if (warehouseId) {
     conditions.push(eq(inventoryBalances.warehouseId, warehouseId));
   }
 
-  const [result] = await db
+  const [result] = await client
     .select({
       variantId: inventoryBalances.variantId,
       warehouseId: inventoryBalances.warehouseId,
@@ -116,23 +118,30 @@ export async function adjustStock(
   variantId: number,
   warehouseId: number,
   movement: StockMovementInput,
+  tx?: DbTransaction,
 ): Promise<void> {
-  await db.transaction(async (tx) => {
-    // 1. Update/Upsert balance
+  return await withTransaction(tx, async (tx) => {
+    // Initialize without racing another first writer, then atomically apply the delta.
+    // A zero insert also permits negative deltas on an existing positive balance:
+    // PostgreSQL checks INSERT constraints before handling a uniqueness conflict.
     await tx
       .insert(inventoryBalances)
-      .values({
-        variantId,
-        warehouseId,
-        onHand: movement.quantity,
-        reserved: 0,
-      })
-      .onConflictDoUpdate({
+      .values({ variantId, warehouseId, onHand: 0, reserved: 0 })
+      .onConflictDoNothing({
         target: [inventoryBalances.variantId, inventoryBalances.warehouseId],
-        set: {
-          onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
-        },
       });
+    await tx
+      .update(inventoryBalances)
+      .set({
+        onHand: sql`${inventoryBalances.onHand} + ${movement.quantity}`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(inventoryBalances.variantId, variantId),
+          eq(inventoryBalances.warehouseId, warehouseId),
+        ),
+      );
 
     // 2. Record movement
     await tx.insert(stockMovements).values({

@@ -10,6 +10,7 @@ export type {
   OrderItem,
   OrderDetail,
   OrderActivityEntry,
+  OrderNote,
 } from './types';
 export * from './schemas';
 export {

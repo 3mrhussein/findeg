@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import messages from '../../../../../../../messages/en.json';
+import { NextIntlClientProvider } from 'next-intl';
+import { fireEvent, render as rtlRender, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Order } from '@findeg/orders';
 import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
@@ -97,3 +99,11 @@ describe('Order payment actions', () => {
     );
   });
 });
+
+function render(ui: React.ReactElement) {
+  return rtlRender(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}

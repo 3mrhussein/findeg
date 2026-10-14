@@ -88,6 +88,13 @@ describe('Orders statistics through the public PostgreSQL API', () => {
       },
       revenueByPeriod: [{ date: '2027-04-30', revenue: 72n }],
     });
+    expect(
+      await api.getStats({ from: '2027-04-30', to: '2027-04-30', liveOnly: true }),
+    ).toMatchObject({
+      totalRevenue: 52n,
+      todayRevenue: 52n,
+      revenueByPeriod: [{ date: '2027-04-30', revenue: 52n }],
+    });
     expect(await api.getStats({ from: '2027-04-29', to: '2027-04-29' })).toMatchObject({
       totalOrders: 1,
       totalRevenue: 1n,

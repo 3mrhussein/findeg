@@ -4,6 +4,9 @@ import { CategoriesContent } from './_components/CategoriesContent';
 import { CategoryListSkeleton } from '@components/skeletons';
 
 import { routing } from '@i18n/routing';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Generate static params for all supported locales
@@ -23,6 +26,7 @@ export async function generateStaticParams() {
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_CATEGORIES_READ });
 
   return (
     <div className="space-y-6">

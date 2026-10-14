@@ -4,8 +4,14 @@ import { IdSchema, TranslationMapSchema, SlugSchema } from '../../../core/domain
 export const CollectionInputSchema = z.object({
   slug: SlugSchema,
   localizedTitle: TranslationMapSchema,
-  localizedSubtitle: TranslationMapSchema.optional(),
-  heroImageUrl: z.string().optional(),
+  localizedSubtitle: z
+    .object({
+      en: z.string().optional(),
+      ar: z.string().optional(),
+    })
+    .optional()
+    .nullable(),
+  heroImageUrl: z.string().optional().nullable(),
   sortOrder: z.number().int().default(0),
   isActive: z.boolean().default(true),
   tagIds: z.array(IdSchema).default([]),

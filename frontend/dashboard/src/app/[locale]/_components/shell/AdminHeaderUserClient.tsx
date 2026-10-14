@@ -11,7 +11,7 @@ import {
 } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { useRouter } from '@i18n/navigation';
-import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
+import { getAvatarColorClass, getInitials } from '@lib/utils';
 import { logoutAction as logout } from '@actions/auth-actions';
 
 interface AdminHeaderUserClientProps {
@@ -73,6 +73,7 @@ export function AdminHeaderUserClient({
         </div>
         <DropdownMenuSeparator className="bg-gray-100 dark:bg-slate-800" />
         <form action={logout} className="py-1">
+          <input type="hidden" name="locale" value={_locale} />
           <DropdownMenuItem
             asChild
             className="text-[13px] text-red-600 font-medium cursor-pointer focus:bg-red-50 focus:text-red-700"

@@ -1,7 +1,8 @@
 import { and, count, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm';
-import { auditLog, orders, orderItems, users, products } from '@findeg/db/schema';
+import { auditLog, orders, orderItems, orderNotes, users, products } from '@findeg/db/schema';
 import {
   ORDER_STATUSES,
+  LIVE_ORDER_STATUSES,
   changeOrderStatus,
   changePaymentStatus,
   refundOrder,
@@ -16,12 +17,13 @@ import type { OrderStaffActor } from './OrderStaffActor';
 import { mapOrderRuleError, OrderNotFoundError } from './errors';
 import { ORDER_STATUS_KIND, orderStatusId } from './events';
 import { mapOrder } from './mapper';
-import { filtersSchema, orderId, positiveId, statsOptionsSchema } from './validation';
+import { filtersSchema, noteText, orderId, positiveId, statsOptionsSchema } from './validation';
 import type {
   Order,
   OrderActivityEntry,
   OrderDatabase,
   OrderFilters,
+  OrderNote,
   Orders,
   OrdersDependencies,
 } from './types';
@@ -207,12 +209,19 @@ export function createOrders({
       const order = await api.get(id);
       if (!order) return null;
       const db = await database();
-      const rows = await db
-        .select({ log: auditLog, firstName: users.firstName, lastName: users.lastName })
-        .from(auditLog)
-        .leftJoin(users, eq(auditLog.adminUserId, users.id))
-        .where(and(eq(auditLog.entityType, 'order'), eq(auditLog.entityId, String(order.id))))
-        .orderBy(desc(auditLog.createdAt), desc(auditLog.id));
+      const [rows, noteRows] = await Promise.all([
+        db
+          .select({ log: auditLog, firstName: users.firstName, lastName: users.lastName })
+          .from(auditLog)
+          .leftJoin(users, eq(auditLog.adminUserId, users.id))
+          .where(and(eq(auditLog.entityType, 'order'), eq(auditLog.entityId, String(order.id))))
+          .orderBy(desc(auditLog.createdAt), desc(auditLog.id)),
+        db
+          .select()
+          .from(orderNotes)
+          .where(eq(orderNotes.orderId, order.id))
+          .orderBy(desc(orderNotes.createdAt), desc(orderNotes.id)),
+      ]);
       const activity: OrderActivityEntry[] = rows.map(({ log, firstName, lastName }) => {
         const oldValues = (log.oldValues ?? {}) as Record<string, unknown>;
         const newValues = (log.newValues ?? {}) as Record<string, unknown>;
@@ -230,7 +239,15 @@ export function createOrders({
           createdAt: log.createdAt,
         };
       });
-      return { order, activity };
+      const notes: OrderNote[] = noteRows.map((n) => ({
+        id: n.id,
+        orderId: n.orderId,
+        authorId: n.authorId,
+        authorName: n.authorName,
+        note: n.note,
+        createdAt: n.createdAt,
+      }));
+      return { order, activity, notes };
     },
     async getStats(input = {}) {
       const options = statsOptionsSchema.parse(input);
@@ -249,14 +266,21 @@ export function createOrders({
       );
       const day = sql`(${orders.createdAt} at time zone 'UTC' at time zone 'Africa/Cairo')::date`;
       const today = sql`(${instant}::timestamptz at time zone 'Africa/Cairo')::date`;
+      const liveStatuses = inArray(orders.status, LIVE_ORDER_STATUSES);
+      const revenueFilter = options.liveOnly ? sql`filter (where ${liveStatuses})` : sql``;
+      const todayRevenueFilter = options.liveOnly
+        ? sql`filter (where ${day} = ${today} and ${liveStatuses})`
+        : sql`filter (where ${day} = ${today})`;
+      const trendLiveClause = options.liveOnly ? sql`and ${liveStatuses}` : sql``;
+
       return db.transaction(
         async (tx) => {
           const [totals] = await tx
             .select({
               totalOrders: count(),
-              revenue: sql<string>`coalesce(sum(${orders.totalAmount}), 0)::text`,
+              revenue: sql<string>`coalesce(sum(${orders.totalAmount}) ${revenueFilter}, 0)::text`,
               todayOrders: sql<number>`count(*) filter (where ${day} = ${today})::int`,
-              todayRevenue: sql<string>`coalesce(sum(${orders.totalAmount}) filter (where ${day} = ${today}), 0)::text`,
+              todayRevenue: sql<string>`coalesce(sum(${orders.totalAmount}) ${todayRevenueFilter}, 0)::text`,
             })
             .from(orders)
             .where(range);
@@ -276,6 +300,7 @@ export function createOrders({
           select dates.date::text as date, coalesce(sum(${orders.totalAmount}), 0)::text as revenue
           from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
             and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+            ${trendLiveClause}
           group by dates.date order by dates.date
         `);
           const top = await tx
@@ -288,7 +313,7 @@ export function createOrders({
             .from(orderItems)
             .innerJoin(orders, eq(orderItems.orderId, orders.id))
             .innerJoin(products, eq(orderItems.productId, products.id))
-            .where(range)
+            .where(options.liveOnly ? and(range, liveStatuses) : range)
             .groupBy(products.id, products.localizedName)
             .orderBy(desc(sql`sum(${orderItems.quantity})`), products.id)
             .limit(options.topProductsLimit);
@@ -348,6 +373,74 @@ export function createOrders({
         });
         return { changed: true, previousStatus: order.paymentStatus, status };
       });
+    },
+    async addNote(actor, id, note) {
+      assertCanWriteOrders(actor);
+      const key = orderId.parse(id);
+      const cleanNote = noteText.parse(note);
+      const db = await database();
+      const [order] = await db
+        .select({ id: orders.id })
+        .from(orders)
+        .where(eq(orders.id, key))
+        .limit(1);
+      if (!order) throw new OrderNotFoundError(key);
+
+      let authorName = actor.userName;
+      if (!authorName) {
+        const [user] = await db
+          .select({ firstName: users.firstName, lastName: users.lastName, email: users.email })
+          .from(users)
+          .where(eq(users.id, actor.userId))
+          .limit(1);
+        authorName = user
+          ? [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email
+          : 'Staff';
+      }
+
+      return db.transaction(async (tx) => {
+        const changedAt = now();
+        const [inserted] = await tx
+          .insert(orderNotes)
+          .values({
+            orderId: key,
+            authorId: actor.userId,
+            authorName: authorName || 'Staff',
+            note: cleanNote,
+            createdAt: changedAt,
+          })
+          .returning();
+
+        await tx.insert(auditLog).values({
+          adminUserId: actor.userId,
+          entityType: 'order',
+          entityId: String(key),
+          action: 'add_note',
+          oldValues: {},
+          newValues: { noteId: inserted.id, note: cleanNote },
+          createdAt: changedAt,
+        });
+
+        return {
+          id: inserted.id,
+          orderId: inserted.orderId,
+          authorId: inserted.authorId,
+          authorName: inserted.authorName,
+          note: inserted.note,
+          createdAt: inserted.createdAt,
+        };
+      });
+    },
+
+    async listNotes(id) {
+      const key = orderId.parse(id);
+      const db = await database();
+      const rows = await db
+        .select()
+        .from(orderNotes)
+        .where(eq(orderNotes.orderId, key))
+        .orderBy(desc(orderNotes.createdAt), desc(orderNotes.id));
+      return rows;
     },
   };
   return api;

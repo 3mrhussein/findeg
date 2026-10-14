@@ -3,6 +3,7 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
   type SortingState,
 } from '@tanstack/react-table';
@@ -63,7 +64,9 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
   const table = useReactTable({
     data,
     columns,
+    getRowId: (row) => String(row.id),
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -73,6 +76,10 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
     manualPagination: true,
     pageCount: totalPages,
   });
+
+  const selectedIds = Object.keys(rowSelection)
+    .filter((k) => (rowSelection as Record<string, boolean>)[k])
+    .map(Number);
 
   return (
     <div className="space-y-4">
@@ -154,7 +161,11 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
         isPending={isPending}
       />
 
-      <OrderBulkActionBar table={table} />
+      <OrderBulkActionBar
+        table={table}
+        selectedIds={selectedIds}
+        onClearSelection={() => setRowSelection({})}
+      />
     </div>
   );
 }
