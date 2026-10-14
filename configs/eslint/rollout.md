@@ -53,7 +53,7 @@ Non-function mutable variables receive no naming convention.
 
 | Scope | Complete mode today | Activation / remediation owner |
 | --- | --- | --- |
-| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog), #440 (Inventory, Orders) and #441 (Partners, School Lists) enforced; #442 migrates any remaining areas; #445 final activation |
+| Domain | Available, opt-in; whole library enforced (scope `src`) | #439 pilot (Common, Customers, Catalog), #440 (Inventory, Orders), #441 (Partners, School Lists) and #442 (Relations, root and types entries) enforced; #445 final activation |
 | Domain Errors | Available, opt-in | #445 measured remediation |
 | Money | Package absent from this checkout | Retirement stays with #415; nothing to activate here |
 | UI | Available, opt-in | #445 measured remediation |
@@ -92,6 +92,18 @@ temporary area aliases keep parallel consumer migration (#399, #443) decoupled f
 file moves. Business rules, Money, branded identities, injected time and randomness, and typed
 errors are unchanged.
 
+## Relations and root entries (#442)
+
+`src/relations/` follows the same vocabulary: `constants.ts` (`ENTITY_DOMAINS`, `RELATIONS`),
+`types.ts` (`Relation` and entity names), `index.ts`, and `__tests__/relations.test.ts`, which
+checks the map against the public domain types. The root runtime index is `@findeg/domain`; the
+root type entry is `@findeg/domain/types` (`src/types.ts`, a type-only re-export of the root
+index, so it has no runtime value). `src/__tests__/entries.test.ts` pins the root runtime names
+and checks that every area subpath is a subset of the root. Area subpaths remain until #443.
+
+Cycle checks: `scripts/architecture/domain-import-cycles.test.mjs` forbids runtime cycles.
+Type-only cycles (for example `types.ts` ↔ `constants.ts`) are erased and are not checked.
+
 ## Measurement
 
 `violations.json` records actual complete-config diagnostics by workspace/rule,
@@ -107,7 +119,7 @@ FINDEG_ESLINT_STANDARDS=1 pnpm --filter <workspace> exec eslint . --format json
 
 Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` is absent from this checkout, so it is not measured.
 
-- `packages/domain` (isomorphic): 158 files, 1 errors, 0 warnings (all library scopes `src/common`, `src/customers`, `src/catalog`, `src/inventory`, `src/orders`, `src/partners`, `src/school-lists` report 0; the one error is the `vitest.config.ts` parse failure)
+- `packages/domain` (isomorphic): 162 files, 0 errors, 0 warnings (the library scope `src` reports 0; `vitest.config.ts` is in the Domain TypeScript project)
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
 - `configs/env` (node): 14 files, 0 errors, 0 warnings

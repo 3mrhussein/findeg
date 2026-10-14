@@ -6,6 +6,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./types": "./src/types.ts",
     "./common": "./src/common/index.ts",
     "./customers": "./src/customers/index.ts",
     "./catalog": "./src/catalog/index.ts",
