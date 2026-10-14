@@ -1,12 +1,10 @@
 {
   "packages/domain": {
     "role": "isomorphic",
-    "files": 158,
-    "errors": 1,
+    "files": 162,
+    "errors": 0,
     "warnings": 0,
-    "byRule": {
-      "parse": 1
-    }
+    "byRule": {}
   },
   "packages/domain-errors": {
     "role": "isomorphic",
