@@ -6,7 +6,7 @@
  */
 
 import { type ID } from '@findeg/db/types';
-import type { Variant } from '../catalog-variant/index';
+import type { Variant } from '@findeg/catalog';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

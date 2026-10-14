@@ -16,7 +16,7 @@ import type {
   IAuditLogService,
   IProductImportService,
 } from '@findeg/catalog';
-import type { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
+import type { IAdminInventoryService } from '@findeg/inventory/types';
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import type { IAdminSchoolSupplyListService } from '@findeg/school-lists/types';
 
@@ -28,13 +28,13 @@ import {
   AdminProductService,
   AdminTagService,
   ProductImportService,
+  createAuditLogService,
 } from '@findeg/catalog';
 
 // Administration-owned services
-import { AdminInventoryService } from './AdminInventoryService';
 import { AdminDashboardService } from './AdminDashboardService';
-import { AuditLogService } from './AuditLogService';
 import { createAdminSchoolSupplyListService } from '@findeg/school-lists';
+import { createAdminInventoryService } from '@findeg/inventory';
 
 /**
  * Create administration services with all dependencies wired
@@ -58,7 +58,7 @@ import { createAdminSchoolSupplyListService } from '@findeg/school-lists';
  */
 export function createAdministrationServices(): AdministrationServices {
   // Create audit log service (used by many admin services)
-  const auditLogService = new AuditLogService();
+  const auditLogService = createAuditLogService();
 
   // Create admin product service (uses query primitives - no repositories needed)
   const adminProductService = new AdminProductService(auditLogService);
@@ -71,7 +71,7 @@ export function createAdministrationServices(): AdministrationServices {
     brands: new AdminBrandService(auditLogService),
     tags: new AdminTagService(auditLogService),
     collections: new AdminCollectionService(auditLogService),
-    inventory: new AdminInventoryService(auditLogService),
+    inventory: createAdminInventoryService(auditLogService),
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),

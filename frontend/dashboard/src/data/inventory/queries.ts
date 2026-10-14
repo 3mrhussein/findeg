@@ -8,7 +8,7 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdminInventoryService } from '@findeg/inventory';
 
 /**
  * Get all products with inventory info
@@ -23,7 +23,7 @@ export async function getInventoryWithProducts(options?: {
   cacheLife('hours');
   cacheTag('inventory');
 
-  const { inventory } = createAdministrationServices();
+  const inventory = createAdminInventoryService();
   const result = await inventory.getInventory(
     options?.includeZeroStock ?? false,
     options?.limit,
@@ -42,7 +42,7 @@ export async function getLowStockAlerts(threshold: number = 10) {
   cacheLife('minutes');
   cacheTag('inventory');
 
-  const { inventory } = createAdministrationServices();
+  const inventory = createAdminInventoryService();
   const lowStockProducts = await inventory.getLowStockAlerts(threshold);
 
   return lowStockProducts || [];

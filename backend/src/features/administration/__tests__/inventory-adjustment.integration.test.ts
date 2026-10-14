@@ -10,7 +10,7 @@ import {
 } from '@findeg/db/schema';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { adjustStock } from '@findeg/db/queries';
-import { AdminInventoryService } from '../application/services/AdminInventoryService';
+import { createAdminInventoryService } from '@findeg/inventory';
 import type { IAuditLogService } from '@findeg/catalog';
 
 describe('Admin inventory adjustment integration on real PostgreSQL', () => {
@@ -22,7 +22,7 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
     getEntityLogs: async () => [],
     getRecentActivity: async () => [],
   };
-  const service = new AdminInventoryService(mockAuditLog);
+  const service = createAdminInventoryService(mockAuditLog);
 
   beforeAll(() => {
     testDb = connectToTestDatabase();

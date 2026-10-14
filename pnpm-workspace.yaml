@@ -4,6 +4,7 @@ packages:
   - 'packages/orders'
   - 'packages/school-lists'
   - 'packages/catalog'
+  - 'packages/inventory'
   - 'packages/domain-errors'
   - 'packages/identity'
   - 'packages/domain'

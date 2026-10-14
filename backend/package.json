@@ -44,11 +44,13 @@
     "clean": " rm -rf node_modules dist .turbo"
   },
   "dependencies": {
+    "@findeg/catalog": "workspace:*",
     "@findeg/db": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
     "@findeg/identity": "workspace:*",
+    "@findeg/inventory": "workspace:*",
     "@findeg/orders": "workspace:*",
     "@findeg/school-lists": "workspace:*",
     "@react-email/components": "^1.0.12",
@@ -62,8 +64,7 @@
     "resend": "^4.0.2",
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
-    "zod": "^4.6.5",
-    "@findeg/catalog": "workspace:*"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

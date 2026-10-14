@@ -19,10 +19,12 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@findeg/backend": "workspace:*",
+    "@findeg/catalog": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
     "@findeg/identity": "workspace:*",
+    "@findeg/inventory": "workspace:*",
     "@findeg/orders": "workspace:*",
     "@findeg/school-lists": "workspace:*",
     "@findeg/ui": "workspace:*",
@@ -45,8 +47,7 @@
     "sonner": "^2.0.7",
     "swr": "^2.3.2",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.5",
-    "@findeg/catalog": "workspace:*"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

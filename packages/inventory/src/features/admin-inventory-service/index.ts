@@ -1,11 +1,10 @@
-import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
-import { IAuditLogService } from '@findeg/catalog';
-import { Product } from '@findeg/catalog';
-import { InventoryUpdate } from '@findeg/catalog';
+import type { IAuditLogService, Product } from '@findeg/catalog';
+import { createAuditLogService, createProductService } from '@findeg/catalog';
+import type { InventoryUpdate } from '../inventory-update';
+import type { IAdminInventoryService } from './types';
 import { adjustStock, getLowStock, productQueries, withTransaction } from '@findeg/db/queries';
 import { inventoryBalances, warehouses } from '@findeg/db/schema';
 import { and, eq } from 'drizzle-orm';
-import { createProductService } from '@findeg/catalog';
 
 /**
  * Admin Inventory Service
@@ -171,4 +170,11 @@ export class AdminInventoryService implements IAdminInventoryService {
 
     return products.filter((p): p is Product => p !== null);
   }
+}
+
+/** Admin inventory service factory. Audit entries use the catalog audit log unless one is injected. */
+export function createAdminInventoryService(
+  auditLogService: IAuditLogService = createAuditLogService(),
+): IAdminInventoryService {
+  return new AdminInventoryService(auditLogService);
 }
