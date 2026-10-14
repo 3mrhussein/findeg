@@ -7,14 +7,14 @@
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types.ts",
-    "./common": "./src/common/index.ts",
-    "./customers": "./src/customers/index.ts",
-    "./catalog": "./src/catalog/index.ts",
-    "./partners": "./src/partners/index.ts",
-    "./school-lists": "./src/school-lists/index.ts",
-    "./orders": "./src/orders/index.ts",
-    "./inventory": "./src/inventory/index.ts",
-    "./relations": "./src/relations/index.ts"
+    "./common": "./src/features/common/index.ts",
+    "./customers": "./src/features/customers/index.ts",
+    "./catalog": "./src/features/catalog/index.ts",
+    "./partners": "./src/features/partners/index.ts",
+    "./school-lists": "./src/features/school-lists/index.ts",
+    "./orders": "./src/features/orders/index.ts",
+    "./inventory": "./src/features/inventory/index.ts",
+    "./relations": "./src/features/relations/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

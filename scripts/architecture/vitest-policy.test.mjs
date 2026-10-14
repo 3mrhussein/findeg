@@ -188,23 +188,23 @@ test('non-test helper files under __tests__ are not executed as suites', () => {
 
 test('a pilot scope measures and places only its own subtree', () => {
   const scoped = {
-    'src/common/index.ts': implementation,
-    'src/common/__tests__/behavior.ts': executableTest,
+    'src/features/common/index.ts': implementation,
+    'src/features/common/__tests__/behavior.ts': executableTest,
   };
   // Untested and test-less implementation outside the pilot scope does not block the scope.
   const accepted = run(
     { ...scoped, 'src/lib/unused.ts': implementation },
     true,
     [],
-    ['src/common'],
+    ['src/features/common'],
   );
   assert.equal(accepted.status, 0, accepted.output);
   // Untested implementation inside the scope is measured and rejected per file.
   const rejected = run(
-    { ...scoped, 'src/common/unused.ts': implementation },
+    { ...scoped, 'src/features/common/unused.ts': implementation },
     true,
     [],
-    ['src/common'],
+    ['src/features/common'],
   );
   assert.notEqual(rejected.status, 0);
   assert.match(rejected.output, /src\/common\/unused\.ts|unused\.ts/);

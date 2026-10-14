@@ -13,7 +13,7 @@ export const testInclude = [
 // Non-test helpers under __tests__ (no test suite) are not executable tests.
 export const helperExclude = ['**/__tests__/**/{fixture,fixtures,helper,helpers}.*'];
 export const coverageInclude = ['**/*.{ts,tsx,js,jsx,mts,cts}'];
-// A pilot scope measures only its library subtrees (configs/library-scopes.mjs).
+// Library scopes measure the complete source tree, including nested features and root helpers.
 export function coverageIncludeFor(scope) {
   return scope
     ? scope.map((directory) => `${directory}/**/*.{ts,tsx,js,jsx,mts,cts}`)

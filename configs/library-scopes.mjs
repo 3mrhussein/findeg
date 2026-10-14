@@ -1,7 +1,5 @@
-// Library pilot scopes: source subtrees that already follow the recursive library convention
-// (configs/eslint/rules/library-layout.js) and are measured by shared Vitest per file. Each
-// workspace lists its areas here; a migration ticket appends its areas, and #445 removes the
-// per-area list once the whole workspace is enforced. Paths are relative to the workspace root.
+// Whole-library source scopes shared by ESLint layout, Vitest placement and coverage.
+// Paths are relative to each workspace root; bounded contexts live under src/features/.
 export const libraryScopes = {
   'packages/domain': ['src'],
   'packages/orders': ['src'],

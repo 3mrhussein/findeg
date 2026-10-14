@@ -71,7 +71,7 @@ function files(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(directory, entry.name);
     if (entry.isDirectory())
-      return ['__tests__', 'node_modules', 'generated'].includes(entry.name) ? [] : files(file);
+      return ['__tests__', 'node_modules'].includes(entry.name) ? [] : files(file);
     return /\.(ts|tsx|js|jsx|mts|cts)$/.test(file) &&
       !/(\.d\.ts|\.(test|spec)\.[^.]+|\/(constants|types)\.ts)$/.test(file)
       ? [file]

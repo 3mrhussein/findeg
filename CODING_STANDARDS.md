@@ -33,13 +33,16 @@ These structure rules apply recursively. UI libraries and apps do not inherit th
 
 - Source files: `index.ts`, `types.ts`, `constants.ts`, `helpers.ts`.
 - JSX files: `index.tsx`, `helpers.tsx`.
-- Directories: `helpers/`, `features/`, named features inside `features/`, and `__tests__/`.
+- Only these directories are allowed, recursively from `src/`: `helpers/`, `features/`,
+  named modules directly inside those containers, and `__tests__/`.
+  Bounded contexts are named modules under `src/features/`; no free-named directories sit directly under `src/`.
 - Use either a helper file or folder. Index files may contain implementation.
 - Modules export through their index; parent indexes re-export child public APIs.
 - Package exports expose only the root index and `types.ts`.
 - Implementation directories require executable tests in `__tests__/`.
 - Types/constants-only and re-export-only directories need no local tests.
-- Metadata, configuration entries, generated files, and test filenames are exempt.
+- Metadata, configuration entries, declaration files, and test filenames are exempt.
+  Test directories are exempt from recursive layout checks; library source has no generated-directory exemption.
 
 ## Vitest
 
