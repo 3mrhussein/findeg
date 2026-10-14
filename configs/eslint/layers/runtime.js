@@ -2,7 +2,6 @@
 // runtime; the globals it gets and the modules it may not import follow from that choice.
 import globals from 'globals';
 import { CODE, TESTS } from '../globs.js';
-import { local } from '../rules/index.js';
 import { severity } from '../standard.js';
 
 export const RUNTIMES = {
@@ -19,6 +18,18 @@ export const RUNTIMES = {
 /** @param {keyof typeof RUNTIMES} runtime */
 export function runtimeLayer(runtime) {
   const { globals: runtimeGlobals, forbid } = RUNTIMES[runtime];
+  // ESLint selectors cover forms no-restricted-imports does not visit.
+  const forbiddenSource =
+    runtime === 'isomorphic'
+      ? String.raw`/^(node:|next($|\u002F)|react($|\u002F))/`
+      : String.raw`/^next($|\u002F)/`;
+  const restrictedSyntax = [
+    `ImportExpression > Literal[value=${forbiddenSource}]`,
+    `ImportExpression > TemplateLiteral > TemplateElement[value.cooked=${forbiddenSource}]`,
+    `CallExpression[callee.name="require"] > Literal.arguments[value=${forbiddenSource}]`,
+    `CallExpression[callee.name="require"] > TemplateLiteral.arguments > TemplateElement[value.cooked=${forbiddenSource}]`,
+    `TSImportType Literal[value=${forbiddenSource}]`,
+  ].map((selector) => ({ selector, message: `Module is unavailable in the ${runtime} runtime.` }));
   return [
     { files: CODE, languageOptions: { globals: runtimeGlobals } },
     ...(forbid.length
@@ -26,12 +37,9 @@ export function runtimeLayer(runtime) {
           {
             files: CODE,
             ignores: TESTS,
-            plugins: { local },
             rules: {
-              'local/runtime-imports': [
-                severity('local/runtime-imports'),
-                { runtime, patterns: forbid },
-              ],
+              'no-restricted-imports': [severity('no-restricted-imports'), { patterns: forbid }],
+              'no-restricted-syntax': [severity('no-restricted-syntax'), ...restrictedSyntax],
             },
           },
         ]
