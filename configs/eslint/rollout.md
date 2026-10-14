@@ -159,3 +159,52 @@ The Node plugin (`eslint-plugin-n`) is declared in `configs/package.json` and re
 Fixtures in `scripts/architecture/ecosystem.test.mjs` use actual flat configs and
 `findeg-lint` exit status. Every preset family (JavaScript, TypeScript strict
 type-aware, React/Hooks/a11y, Next, Node, naming, Prettier) executes; none skip.
+
+## Domain derivation (#466; remediation and activation #467)
+
+The existing `local/no-domain-value-set-copies` guard retains its default #416
+array, union and SQL enforcement. `FINDEG_DOMAIN_DERIVATION=1` adds literal-key
+objects/maps, exhaustive per-value maps and business constants as **errors** through
+all canonical and compatibility profiles. Default lint remains green during this
+staged rollout. The switch is passed and hashed by Turbo; measurement cannot reuse
+a default-mode lint result. #467 fixes the recorded violations and makes the expanded
+option unconditional. No suppression or warning baseline is added.
+
+```sh
+# Existing lint seam; expected to fail until #467 remediates the measured violations.
+FINDEG_DOMAIN_DERIVATION=1 pnpm lint --concurrency=1 --continue
+# Machine-readable diagnostics for a single workspace:
+FINDEG_DOMAIN_DERIVATION=1 pnpm --filter @findeg/backend exec eslint . --format json
+```
+
+Value sets, literal types and constants are discovered from Domain's public export
+graph; context paths are not hard-coded. Consumers import `@findeg/domain` or
+`@findeg/domain/types`. Per-value labels, translations and colours supply literal
+objects checked with `satisfies Record<DomainType, Value>`. Nested records, namespace
+imports, renamed types, local aliases and tuple-derived types (`typeof LOCALES[number]`)
+are recognized. Missing/extra/duplicate
+keys, `Partial`, assertion-based maps and literal-key `Map` copies fail. Domain,
+tests/fixtures and historical migrations retain the original exemptions.
+
+Hard-coded strings such as the business time zone/currency and regular expressions
+are matched against public constants. Numeric constants are checked in matching
+camelCase/UPPER_SNAKE_CASE declarations or properties (including shippingFee), and
+stock comparisons use the exported threshold. Shipping money factories are checked
+in fee/shipping contexts. Unrelated numbers and prices remain legal: an arbitrary
+literal `5` or price of `50.00` alone cannot identify a business policy. All matched
+values come from Domain, including exported literal aliases.
+
+Both apps' routing uses `LOCALES` and `DEFAULT_LOCALE`. Their exhaustive message-loader
+maps import the real translation files. The architecture canary copies Domain's real
+type graph and app i18n files, resolves tuple declarations through the package root,
+and adds a Locale and a customer-facing StockLevel. Drizzle enums, zod schemas and
+chained layer types must grow automatically. Missing per-value maps fail in db,
+packages, backend and both apps; supplying those entries restores a clean type-check.
+The current Customer interface has no separate customer-kind value set to mutate.
+
+`violations.json` preserves #436's measurements and adds `domainDerivation` per
+workspace, owned by #467: file counts, error counts and exact file/line/message
+lists from the composed workspace configuration (`ESLint.lintFiles(['.'])`, with
+`FINDEG_DOMAIN_DERIVATION=1`). These are measurements of the #466 working tree based
+on `2349b31ff`, not suppressions. The architecture suite includes positive/negative
+fixtures, existing-CLI exit checks and actual Turbo hash separation.

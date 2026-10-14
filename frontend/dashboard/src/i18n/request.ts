@@ -1,6 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { routing } from './routing';
+import { messageLoaders } from './messages';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // Await the locale from the requestLocale promise provided by next-intl
@@ -10,7 +11,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const finalLocale = hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;
 
   // Load dashboard-specific messages
-  const messages = (await import(`../../messages/${finalLocale}.json`)).default;
+  const messages = await messageLoaders[finalLocale]();
 
   return {
     locale: finalLocale,
