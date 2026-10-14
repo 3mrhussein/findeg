@@ -7,7 +7,7 @@ import { truncateTables } from '../../../../db/seeds/helpers';
 import { connectToTestDatabase, type TestDatabase } from '..';
 
 const run = promisify(execFile);
-const root = resolve(import.meta.dirname, '../../../../..');
+const root = resolve(import.meta.dirname, '../../../..');
 const schemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
 
 describe('seeded database generated IDs', () => {
