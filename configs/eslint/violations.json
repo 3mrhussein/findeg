@@ -59,7 +59,7 @@
     "domainDerivation": {
       "owner": "#467",
       "mode": "FINDEG_DOMAIN_DERIVATION=1",
-      "files": 49,
+      "files": 47,
       "errors": 5,
       "byMessage": {
         "map": 1,
@@ -67,35 +67,35 @@
       },
       "violations": [
         {
-          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "file": "packages/orders/src/features/order-statistics/helpers.ts",
           "line": 51,
           "column": 34,
           "messageId": "map",
           "message": "Supply every OrderStatus value with satisfies Record<OrderStatus, …>; do not use Partial, assertions or literal-key copies."
         },
         {
-          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "file": "packages/orders/src/features/order-statistics/helpers.ts",
           "line": 80,
           "column": 23,
           "messageId": "constant",
           "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
         },
         {
-          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "file": "packages/orders/src/features/order-statistics/helpers.ts",
           "line": 81,
           "column": 23,
           "messageId": "constant",
           "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
         },
         {
-          "file": "packages/orders/src/orders/types.ts",
+          "file": "packages/orders/src/types.ts",
           "line": 111,
           "column": 13,
           "messageId": "constant",
           "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
         },
         {
-          "file": "packages/orders/src/orders/types.ts",
+          "file": "packages/orders/src/types.ts",
           "line": 112,
           "column": 13,
           "messageId": "constant",
@@ -145,11 +145,11 @@
     "domainDerivation": {
       "owner": "#467",
       "mode": "FINDEG_DOMAIN_DERIVATION=1",
-      "files": 334,
-      "errors": 26,
+      "files": 351,
+      "errors": 25,
       "byMessage": {
         "copy": 12,
-        "constant": 5,
+        "constant": 4,
         "map": 9
       },
       "violations": [
@@ -264,13 +264,6 @@
           "column": 21,
           "messageId": "map",
           "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
-        },
-        {
-          "file": "backend/src/features/core/domain/constants/messages.ts",
-          "line": 12,
-          "column": 13,
-          "messageId": "constant",
-          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
         },
         {
           "file": "backend/src/features/notifications/infrastructure/templates/OrderStatusUpdateEmail.tsx",
