@@ -7,6 +7,8 @@ export const libraryScopes = {
     'src/common',
     'src/customers',
     'src/catalog',
+    'src/inventory',
+    'src/orders',
     'src/partners',
     'src/school-lists',
   ],

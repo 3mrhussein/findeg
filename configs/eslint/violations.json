@@ -1,17 +1,10 @@
 {
   "packages/domain": {
     "role": "isomorphic",
-    "files": 115,
-    "errors": 39,
+    "files": 158,
+    "errors": 1,
     "warnings": 0,
     "byRule": {
-      "@typescript-eslint/no-non-null-assertion": 4,
-      "@typescript-eslint/no-unnecessary-condition": 1,
-      "@typescript-eslint/no-unnecessary-type-assertion": 2,
-      "@typescript-eslint/no-unsafe-return": 9,
-      "@typescript-eslint/no-useless-constructor": 3,
-      "@typescript-eslint/restrict-template-expressions": 18,
-      "findeg/naming": 1,
       "parse": 1
     }
   },
