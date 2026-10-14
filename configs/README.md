@@ -57,3 +57,10 @@ including re-exports and `satisfies` expressions. Consumer arrays, string unions
 `IN` lists must import the owner when they equal a set in any order or copy at least three
 of its members. Domain source, tests, test support, fixtures, Cypress specs and migrations are
 exempt. Missing or invalid domain source fails lint configuration loading.
+
+## Complete global baseline (#436)
+
+See [staged activation, preset composition and measurements](eslint/rollout.md).
+Set `FINDEG_ESLINT_STANDARDS=1` for the existing workspace lint command to extend
+the complete maintained ecosystem presets and global naming checks. Library
+structure policy remains separate. #445 owns full activation after remediation.

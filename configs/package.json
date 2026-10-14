@@ -7,7 +7,8 @@
     "./eslint/isomorphic": "./eslint/profiles/isomorphic.js",
     "./eslint/node": "./eslint/profiles/node.js",
     "./eslint/react-ui": "./eslint/profiles/react-ui.js",
-    "./eslint/next": "./eslint/profiles/next.js"
+    "./eslint/next": "./eslint/profiles/next.js",
+    "./eslint/standards": "./eslint/standards.js"
   },
   "dependencies": {
     "@eslint/js": "^9.10.0",
@@ -17,7 +18,12 @@
     "eslint-plugin-jsdoc": "^62.9.0",
     "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.13.0",
-    "typescript-eslint": "^8.71.0"
+    "typescript-eslint": "^8.71.0",
+    "eslint-config-next": "^16.3.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-n": "^17.0.0"
   },
   "bin": {
     "findeg-lint": "./bin/lint.mjs"

@@ -2,8 +2,9 @@
 
 Shared tooling now lives in `configs/` (#435), with compatibility delegates and Turbo
 cache/change-selection inputs. Existing lint and test behavior is preserved.
-Preset/naming activation (#436), coverage/test placement (#437), environment
-relocation (#438), and measured full activation/delegate removal (#445) remain pending.
+Complete preset/naming configuration (#436) is available through staged opt-in;
+see [activation and measured violations](configs/eslint/rollout.md). Coverage/test placement (#437),
+environment relocation (#438), and full activation/delegate removal (#445) remain pending.
 See [the delegate inventory](configs/compatibility.md). The rules below are the agreed targets.
 
 ## Global
