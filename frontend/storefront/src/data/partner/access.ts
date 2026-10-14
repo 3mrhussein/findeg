@@ -1,12 +1,12 @@
 import 'server-only';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices } from '@findeg/partners';
 import type {
   PartnerAction,
   PartnerContext,
   PartnerContextError,
   PartnerRole,
   RequirePartnerRoleError,
-} from '@findeg/backend/features/partner-membership';
+} from '@findeg/partners';
 
 type ContextResult =
   { success: true; data: PartnerContext } | { success: false; error: PartnerContextError };

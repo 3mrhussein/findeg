@@ -1,6 +1,6 @@
 'use server';
 
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices } from '@findeg/partners';
 import { deleteSession, getSession } from '@lib/session';
 import { redirect } from 'next/navigation';
 

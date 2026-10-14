@@ -1,7 +1,7 @@
 import { Button } from '@findeg/ui';
 import { getTranslations } from 'next-intl/server';
-import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
-import { canReadPartnerReports } from '@findeg/backend/features/partner-sales';
+import { PARTNER_ADMINISTRATOR } from '@findeg/partners';
+import { canReadPartnerReports } from '@findeg/partners';
 import { Link } from '@i18n/navigation';
 import {
   PartnerNotice,

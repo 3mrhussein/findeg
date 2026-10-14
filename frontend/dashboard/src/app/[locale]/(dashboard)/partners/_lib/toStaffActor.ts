@@ -1,5 +1,5 @@
 import type { SessionPayload } from '@findeg/backend/features/core';
-import type { StaffActor } from '@findeg/backend/features/partner-membership';
+import type { StaffActor } from '@findeg/partners';
 
 export function toStaffActor(session: SessionPayload): StaffActor {
   return {

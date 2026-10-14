@@ -1,9 +1,6 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
-import {
-  MIN_DISTINCT_ORDERS_PER_SALES_ROW,
-  PARTNER_REPORT_ROLES,
-} from '@findeg/backend/features/partner-sales';
+import { MIN_DISTINCT_ORDERS_PER_SALES_ROW, PARTNER_REPORT_ROLES } from '@findeg/partners';
 import { getPartnerReport } from '@data/partner/queries';
 import {
   PartnerNotice,

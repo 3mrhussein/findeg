@@ -4,10 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
-import {
-  createPartnerMembershipServices,
-  type PartnerRole,
-} from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices, type PartnerRole } from '@findeg/partners';
 import { createInvitationServices, drainOutboxAfterResponse } from '../_lib/invitationServices';
 import { toStaffActor } from '../_lib/toStaffActor';
 

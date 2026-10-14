@@ -238,7 +238,7 @@ export default defineConfig({
           const [{ db }, { users }, { createPartnerMembershipServices }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
-            import('@findeg/backend/features/partner-membership'),
+            import('@findeg/partners'),
           ]);
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db

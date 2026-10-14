@@ -1,9 +1,4 @@
-import type {
-  PartnerAction,
-  PartnerActor,
-  PartnerContext,
-  PartnerRole,
-} from '@findeg/backend/features/partner-membership';
+import type { PartnerAction, PartnerActor, PartnerContext, PartnerRole } from '@findeg/partners';
 import { getCachedPartnerContext, requirePartnerRole } from '@data/partner/queries';
 
 export interface PartnerAccess {

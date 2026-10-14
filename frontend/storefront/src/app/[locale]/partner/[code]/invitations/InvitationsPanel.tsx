@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import type { PartnerInvitation } from '@findeg/backend/features/partner-membership';
+import type { PartnerInvitation } from '@findeg/partners';
 import { Button, Input, Label } from '@findeg/ui';
 import type { ActionState } from '../_lib/action-state';
 import { PARTNER_ROLES } from '../_lib/roles';

@@ -1,4 +1,4 @@
-import type { PartnerRole } from '@findeg/backend/features/partner-membership';
+import type { PartnerRole } from '@findeg/partners';
 
 /** Typed by `PartnerRole`, so adding a role is a compile error until it has a label. */
 export const ROLE_LABELS: Record<PartnerRole, string> = {

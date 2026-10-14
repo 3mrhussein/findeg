@@ -8,8 +8,8 @@ import {
   type PartnerRole,
   type PartnerAction,
   type PartnerSession,
-} from '@findeg/backend/features/partner-membership';
-import { createPartnerSalesServices } from '@findeg/backend/features/partner-sales';
+} from '@findeg/partners';
+import { createPartnerSalesServices } from '@findeg/partners';
 import { getCachedSession } from '@data/auth/queries';
 
 /**

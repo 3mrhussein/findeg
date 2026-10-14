@@ -47,6 +47,9 @@ importers:
       '@findeg/orders':
         specifier: workspace:*
         version: link:../packages/orders
+      '@findeg/partners':
+        specifier: workspace:*
+        version: link:../packages/partners
       '@react-email/components':
         specifier: ^1.0.12
         version: 1.0.12(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -279,6 +282,9 @@ importers:
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
+      '@findeg/partners':
+        specifier: workspace:*
+        version: link:../../packages/partners
       '@findeg/ui':
         specifier: workspace:*
         version: link:../ui
@@ -436,6 +442,9 @@ importers:
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
+      '@findeg/partners':
+        specifier: workspace:*
+        version: link:../../packages/partners
       '@findeg/ui':
         specifier: workspace:*
         version: link:../ui
@@ -772,6 +781,46 @@ importers:
       drizzle-orm:
         specifier: ^0.45.3
         version: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@findeg/config':
+        specifier: workspace:*
+        version: link:../../configs
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.9.9
+      '@vitest/coverage-v8':
+        specifier: ^4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      eslint:
+        specifier: ^9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/partners:
+    dependencies:
+      '@findeg/db':
+        specifier: workspace:*
+        version: link:../../db
+      '@findeg/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@findeg/domain-errors':
+        specifier: workspace:*
+        version: link:../domain-errors
+      drizzle-orm:
+        specifier: ^0.45.3
+        version: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)
+      postgres:
+        specifier: ^3.4.5
+        version: 3.4.9
       zod:
         specifier: ^4.6.5
         version: 4.6.5

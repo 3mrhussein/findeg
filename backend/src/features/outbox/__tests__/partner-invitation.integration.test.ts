@@ -6,7 +6,7 @@ import {
   createPartnerMembershipServices,
   type PartnerServices,
   type StaffActor,
-} from '../../partner-membership';
+} from '@findeg/partners';
 import {
   createOutbox,
   enqueue,

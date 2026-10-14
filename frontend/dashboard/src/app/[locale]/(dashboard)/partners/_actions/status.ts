@@ -8,7 +8,7 @@ import {
   createPartnerMembershipServices,
   type BusinessPartner,
   type ChangePartnerStatusError,
-} from '@findeg/backend/features/partner-membership';
+} from '@findeg/partners';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export type StatusActionState = { status: 'idle' } | { status: 'error'; message: string };

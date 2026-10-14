@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
-import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
+import { PARTNER_ADMINISTRATOR } from '@findeg/partners';
 import { getPartnerMembers } from '@data/partner/queries';
 import {
   PartnerNotice,

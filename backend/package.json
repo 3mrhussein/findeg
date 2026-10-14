@@ -30,9 +30,9 @@
     "./features/notifications/contracts": "./src/features/notifications/contracts.ts",
     "./features/outbox": "./src/features/outbox/index.ts",
     "./features/outbox/*": null,
-    "./features/partner-membership": "./src/features/partner-membership/index.ts",
+    "./features/partner-membership": null,
     "./features/partner-membership/*": null,
-    "./features/partner-sales": "./src/features/partner-sales/index.ts",
+    "./features/partner-sales": null,
     "./features/partner-sales/*": null,
     "./features/order": null,
     "./features/order/*": null,
@@ -67,7 +67,7 @@
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
     "zod": "^4.6.5",
-    "@findeg/orders": "workspace:*"
+    "@findeg/partners": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

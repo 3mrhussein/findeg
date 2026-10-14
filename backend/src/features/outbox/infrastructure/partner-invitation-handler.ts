@@ -1,6 +1,6 @@
 import React from 'react';
 import env from '@findeg/env';
-import type { IInvitationService } from '../../partner-membership';
+import type { IInvitationService } from '@findeg/partners';
 import { DEFAULT_LOCALE } from '../../core';
 import { PartnerInvitationEmail } from '../../notifications';
 import type { OutboxHandler } from '../domain/types';
