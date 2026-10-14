@@ -53,7 +53,7 @@ Non-function mutable variables receive no naming convention.
 
 | Scope | Complete mode today | Activation / remediation owner |
 | --- | --- | --- |
-| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog) enforced; #440–442 migrate the remaining areas; #445 final activation |
+| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog) and #440 (Inventory, Orders) enforced; #441–442 migrate the remaining areas; #445 final activation |
 | Domain Errors | Available, opt-in | #445 measured remediation |
 | Money | Package absent from this checkout | Retirement stays with #415; nothing to activate here |
 | UI | Available, opt-in | #445 measured remediation |
@@ -76,6 +76,22 @@ Vitest uses the same list: pilot scopes measure 80% per file and require local
 executable `__tests__` only inside those scopes. `scripts/architecture/library-layout.test.mjs`
 exercises positive and negative fixtures and the real Domain pilot.
 
+## Inventory and Orders (#440)
+
+Inventory and Orders follow the library vocabulary: each area has `index`, `types`,
+`constants` and `helpers` files, and each feature under `features/` is a module of the same
+shape (`order-status`, `cart`, `quote`, `acceptance`, and so on). Every implementation
+directory has local executable tests in its `__tests__/`. Their scopes are listed in
+`configs/library-scopes.mjs`, so Vitest measures 80% per file for those subtrees.
+
+Preserved public behavior: `@findeg/domain`, `@findeg/domain/orders` and
+`@findeg/domain/inventory` export the same names with the same runtime kinds as before the
+restructure (checked against the pre-change export list). Internal filenames such as
+`order-status.ts` or `allocation.ts` are not public; consumers import the subpaths, so the
+temporary area aliases keep parallel consumer migration (#399, #443) decoupled from internal
+file moves. Business rules, Money, branded identities, injected time and randomness, and typed
+errors are unchanged.
+
 ## Measurement
 
 `violations.json` records actual complete-config diagnostics by workspace/rule,
@@ -91,7 +107,7 @@ FINDEG_ESLINT_STANDARDS=1 pnpm --filter <workspace> exec eslint . --format json
 
 Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` is absent from this checkout, so it is not measured.
 
-- `packages/domain` (isomorphic): 108 files, 72 errors, 0 warnings (pilot scopes `src/common`, `src/customers`, `src/catalog` report 0)
+- `packages/domain` (isomorphic): 151 files, 33 errors, 0 warnings (library scopes `src/common`, `src/customers`, `src/catalog`, `src/inventory`, `src/orders` report 0)
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
 - `configs/env` (node): 14 files, 0 errors, 0 warnings

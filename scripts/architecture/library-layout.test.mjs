@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { libraryScopes } from '../../configs/library-scopes.mjs';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
@@ -132,9 +133,9 @@ test('applies only to the configured scopes, so applications and UI keep their o
   assert.deepEqual(violations, []);
 });
 
-test('the Domain pilot scopes conform to the recursive library layout', async () => {
+test('the Domain library scopes conform to the recursive library layout', async () => {
   const domain = path.join(root, 'packages/domain');
-  const scopes = ['src/common', 'src/customers', 'src/catalog'];
+  const scopes = libraryScopes['packages/domain'];
   const eslint = new ESLint({ cwd: domain });
   const results = await eslint.lintFiles(scopes.map((scope) => `${scope}/**/*.ts`));
   const diagnostics = results.flatMap((result) =>
