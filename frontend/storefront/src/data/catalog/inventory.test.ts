@@ -10,9 +10,11 @@ vi.mock('@i18n/navigation', () => ({
     React.createElement('a', { href }, children),
 }));
 vi.mock('next/cache', () => ({ cacheTag: vi.fn(), cacheLife: vi.fn() }));
-vi.mock('@findeg/backend/features/core', () => ({ parse: (locale: string) => locale }));
-vi.mock('@findeg/backend/features/catalog', () => ({
+vi.mock('@findeg/inventory', () => ({
   createInventoryService: () => ({ getWarehouseBalances: services.balances }),
+}));
+vi.mock('@findeg/catalog', () => ({
+  parse: (locale: string) => locale,
   createProductService: () => ({
     getFilteredProducts: services.listing,
     getBySlug: services.product,

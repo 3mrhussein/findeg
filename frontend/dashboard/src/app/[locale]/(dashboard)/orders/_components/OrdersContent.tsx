@@ -3,8 +3,8 @@ import { getOrders, getOrderStats } from '@data/orders/queries';
 import {
   ORDER_STATUSES as ORDER_STATUS_OPTIONS,
   PAYMENT_STATUSES as PAYMENT_STATUS_OPTIONS,
-} from '@findeg/domain/orders';
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+} from '@findeg/domain';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 import { OrderTable } from '../OrderTable';
 
 interface OrdersContentProps {

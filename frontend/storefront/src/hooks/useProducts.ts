@@ -1,9 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  isNewProduct,
-  getProductDisplayPrice,
-  type Product,
-} from '@findeg/backend/features/catalog';
+import { isNewProduct, getProductDisplayPrice, type Product } from '@findeg/catalog';
 import type { SortOption } from '@lib/types';
 
 /**
@@ -17,7 +13,7 @@ export const useProducts = (initialProducts: Product[]) => {
   const [sortOption, setSortOption] = useState<SortOption>('featured');
 
   const sortedProducts = useMemo(() => {
-    let sortable = [...filteredProducts];
+    const sortable = [...filteredProducts];
     switch (sortOption) {
       case 'newest':
         sortable.sort((a, b) => (isNewProduct(b) ? 1 : -1) - (isNewProduct(a) ? 1 : -1));

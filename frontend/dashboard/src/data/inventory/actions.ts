@@ -1,12 +1,16 @@
+'use server';
+
+import { createAuditLogService } from '@findeg/backend/features/audit';
 /**
  * Inventory Actions (Dashboard Data Layer)
  *
  * Stock updates and inventory management.
  */
-'use server';
 
-import { revalidateTag, updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { updateTag } from 'next/cache';
+import { createAdminInventoryService } from '@findeg/inventory';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -14,7 +18,8 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function updateStock(input: { variantId: number; quantity: number }) {
   try {
-    const { inventory } = createAdministrationServices();
+    await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'update stock');
+    const inventory = createAdminInventoryService(createAuditLogService());
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
     // Invalidate inventory caches; the product list shows stock levels too.
@@ -35,13 +40,13 @@ export async function bulkUpdateStock(
   updates: { variantId: number; quantity: number; lowStockThreshold?: number }[],
 ) {
   try {
-    const { inventory } = createAdministrationServices();
-    // Assuming backend has a bulkUpdateStock or similar.
-    // If not, we could loop, but let's assume it exists as per frontend expectation.
+    await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'bulk update stock');
+    const inventory = createAdminInventoryService(createAuditLogService());
     await inventory.bulkUpdateStock(updates);
 
     // Invalidate inventory caches
-    revalidateTag('inventory', 'max');
+    updateTag('inventory');
+    updateTag('products');
 
     return { success: true };
   } catch (error: unknown) {

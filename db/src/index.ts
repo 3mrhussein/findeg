@@ -12,3 +12,6 @@ export * from './types';
 export * from './schema';
 
 export * from './mapping';
+
+export * from './queries/school-supply-lists';
+export * from './queries/school-directory';

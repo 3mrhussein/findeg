@@ -22,14 +22,14 @@ import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
-import { Tag } from '@findeg/backend/features/catalog';
-import { TagInputSchema, type TagInput } from '@findeg/backend/features/catalog/schemas';
-import { slugify } from '@findeg/backend/lib';
-import { cn } from '@lib/utils';
+import type { Tag } from '@findeg/catalog';
+import { TagInputSchema, type TagInput } from '@findeg/catalog';
+import { cn, slugify } from '@lib/utils';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';
 import { getTagDisplayName } from '@lib/tag-utils';
 import * as Icons from 'lucide-react';
+import { checkTagSlugAvailableAction } from '@data/tags/actions';
 
 interface TagFormPanelProps {
   tag: Tag | null;
@@ -156,11 +156,11 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
 
       setIsSlugChecking(true);
       try {
-        const res = await fetch(
-          `/api/v1/admin/tags/check-slug?slug=${debouncedValue}${tag ? `&excludeId=${tag.id}` : ''}`,
+        const res = await checkTagSlugAvailableAction(
+          debouncedValue,
+          tag?.id ? Number(tag.id) : undefined,
         );
-        const data = await res.json();
-        setIsSlugAvailable(data.available);
+        setIsSlugAvailable(res.available);
       } catch (error) {
         console.error('Slug check failed', error);
       } finally {

@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import {
   generateOrderReference as domainOrderReference,
   ORDER_REFERENCE_PATTERN,
@@ -22,6 +23,7 @@ import {
   varchar,
   jsonb,
   uniqueIndex,
+  index,
   check,
   boolean,
 } from 'drizzle-orm/pg-core';
@@ -71,7 +73,10 @@ export const orders = salesSchema.table(
     shippingCost: decimal('shipping_cost', { precision: 10, scale: 2 }).default('0'),
     /** Final amount: subtotal + shippingCost */
     totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
-    currency: varchar('currency', { length: 3 }).$type<CurrencyCode>().default('EGP').notNull(),
+    currency: varchar('currency', { length: 3 })
+      .$type<CurrencyCode>()
+      .default(DEFAULT_CURRENCY)
+      .notNull(),
 
     // Payment
     /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */
@@ -183,6 +188,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     references: [users.id],
   }),
   items: many(orderItems),
+  notes: many(orderNotes),
 }));
 
 /** Each order item references its parent order and product */
@@ -202,9 +208,42 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 }));
 
 /**
+ * Order Notes Table
+ *
+ * Append-only internal notes on orders, with author and time.
+ */
+export const orderNotes = salesSchema.table(
+  'order_notes',
+  {
+    id: serial('id').primaryKey(),
+    orderId: integer('order_id')
+      .notNull()
+      .references(() => orders.id, { onDelete: 'cascade' }),
+    authorId: integer('author_id').references(() => users.id, { onDelete: 'set null' }),
+    authorName: text('author_name').notNull(),
+    note: text('note').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [index('idx_order_notes_order_id').on(table.orderId)],
+);
+
+export const orderNotesRelations = relations(orderNotes, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderNotes.orderId],
+    references: [orders.id],
+  }),
+  author: one(users, {
+    fields: [orderNotes.authorId],
+    references: [users.id],
+  }),
+}));
+
+/**
  * Type Exports
  */
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type NewOrderItem = typeof orderItems.$inferInsert;
+export type OrderNote = typeof orderNotes.$inferSelect;
+export type NewOrderNote = typeof orderNotes.$inferInsert;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from '@findeg/backend/features/catalog';
+import type { Product } from '@findeg/catalog';
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { TableCell, TableRow } from '@findeg/ui';

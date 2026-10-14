@@ -1,6 +1,9 @@
 import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
 import { ProductForm } from '@/app/[locale]/(dashboard)/products/_components/ProductForm';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * /admin/products/new
@@ -8,6 +11,7 @@ import { parse } from '@findeg/backend/features/core';
  */
 export default async function NewProductPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_PRODUCTS_WRITE });
   const resolvedLocale = parse(locale);
 
   const [categories, brands, tags] = await Promise.all([

@@ -1,96 +1,31 @@
-/**
- * Cache Invalidation Strategy
- *
- * This file documents the cache tag usage across the dashboard data layer.
- * Used by Next.js Cache Components for precise cache invalidation on mutations.
- */
+# Cache Invalidation Strategy
 
-export const CACHE_TAGS = {
-  // Products
-  PRODUCTS: "products",
-  PRODUCT_DETAIL: (id: number) => `product-${id}`,
+This document describes normalized cache tag usage across the Dashboard data layer (`src/data/**`).
+Adheres to Next.js 16 `"use cache"` and `updateTag()` semantics.
 
-  // Orders
-  ORDERS: "orders",
-  ORDER_DETAIL: (id: number) => `order-${id}`,
+## Canonical Resource Cache Tags
 
-  // Categories
-  CATEGORIES: "categories",
-  CATEGORY_DETAIL: (id: number) => `category-${id}`,
+Each resource has exactly one normalized cache tag:
 
-  // Catalog Resources
-  BRANDS: "brands",
-  TAGS: "tags",
-  TAGS_GROUPED: "tags-grouped",
+| Resource | Cache Tag | Queries Layer | Mutations Layer |
+| :--- | :--- | :--- | :--- |
+| **Products** | `products` | `src/data/products/queries.ts` | `src/data/products/actions.ts` |
+| **Categories** | `categories` | `src/data/categories/queries.ts`, `src/data/resources/queries.ts` | `src/data/categories/actions.ts` |
+| **Brands** | `brands` | `src/data/resources/queries.ts` | `src/data/brands/actions.ts` |
+| **Collections** | `collections` | `src/data/resources/queries.ts` | `src/data/collections/actions.ts` |
+| **Tags** | `tags` | `src/data/resources/queries.ts` | `src/data/tags/actions.ts` |
+| **Inventory** | `inventory` | `src/data/inventory/queries.ts` | `src/data/inventory/actions.ts` |
+| **Orders** | `orders` | `src/data/orders/queries.ts` | `src/data/orders/actions.ts` |
+| **Partners** | `partners` | `src/data/partners/queries.ts` | `src/app/[locale]/(dashboard)/partners/_actions/**` |
+| **School Lists** | `school-lists` | `src/data/school-lists/queries.ts` | `src/app/[locale]/(dashboard)/school-lists/_actions/**` |
+| **Dashboard** | `dashboard` | `src/data/admin/queries.ts` | Orders & status mutations |
+| **Staff / Access** | `access` | `src/data/access/queries.ts` | `src/data/access/actions.ts` |
 
-  // Dashboard
-  DASHBOARD_STATS: "dashboard-stats",
-  RECENT_ORDERS: "recent-orders",
-  RECENT_PRODUCTS: "recent-products",
+## Rules
 
-  // Admin Metrics
-  ADMIN_HEALTH: "admin-health",
-  ADMIN_DISTRIBUTIONS: "admin-distributions",
-  ADMIN_ACTIVITY: "admin-activity",
-
-  // Inventory
-  INVENTORY: "inventory",
-  INVENTORY_ALERTS: "inventory-alerts",
-};
-
-/**
- * Cache Invalidation Pattern by Entity
- *
- * PRODUCTS:
- *   CREATE: updateTag("products")
- *   UPDATE: updateTag("products"), updateTag(`product-${id}`)
- *   DELETE: updateTag("products"), updateTag(`product-${id}`)
- *
- * ORDERS:
- *   UPDATE_STATUS: updateTag("orders"), updateTag(`order-${id}`)
- *   UPDATE_PAYMENT: updateTag("orders"), updateTag(`order-${id}`)
- *
- * CATEGORIES:
- *   CREATE: updateTag("categories")
- *   UPDATE: updateTag("categories"), updateTag(`category-${id}`)
- *   DELETE: updateTag("categories"), updateTag(`category-${id}`)
- *
- * CROSS-ENTITY IMPACTS:
- *   - Product deletion → Invalidate product-specific tags
- *   - Category update → Invalidate product queries (affected by category)
- *   - Tag/Brand changes → Invalidate product lists (filtered/displayed with these)
- */
-
-/**
- * Read-Your-Writes Semantics
- *
- * After any mutation action, the user should see the updated data immediately
- * without page reload. This is achieved via:
- *
- * 1. updateTag() to invalidate Next.js Cache Components
- * 2. revalidatePath() to regenerate pages if needed
- * 3. Immediate client-side state update (via form reset/redirect)
- *
- * Example Flow:
- *   1. User submits product form → createProduct() action
- *   2. Backend processes, returns success
- *   3. updateTag("products") invalidates cache
- *   4. getProducts() queries fresh data on next navigation
- *   5. Product list page refreshes with new product
- */
-
-/**
- * Supported Invalidation Strategies
- *
- * Single Tag Invalidation (Products, Orders):
- *   - Fast: Single cache invalidation
- *   - Use case: Simple list + detail (detail cached separately if needed)
- *
- * Entity-Specific Tags (Categories):
- *   - Precise: Invalidates both list and detail
- *   - Use case: Entities with hierarchies or complex relationships
- *
- * Multi-Tag Invalidation (Future):
- *   - Related caches: Product update → Invalidate product-variants tags too
- *   - Not currently used but documented for future expansion
- */
+1. **`import 'server-only'`**:
+   Every query file under `src/data/**/queries.ts` and `src/lib/session.ts` must begin with `import 'server-only';`.
+2. **`cacheTag('<resource>')`**:
+   Data queries declare their canonical tag using `cacheTag('<resource>')`.
+3. **`updateTag('<resource>')`**:
+   Server actions revalidate cache using `updateTag('<resource>')` from `'next/cache'` for immediate read-your-own-writes consistency.

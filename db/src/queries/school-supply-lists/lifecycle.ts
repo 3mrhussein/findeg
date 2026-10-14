@@ -1,4 +1,5 @@
-import { and, asc, eq, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
+import type { SupplyListStatus } from '@findeg/domain/types';
 import {
   businessPartners,
   partnerSchoolProfiles,
@@ -54,18 +55,100 @@ export async function listSupplyListsForPartner(
     );
 }
 
+export interface SchoolSupplyListIndexFilters {
+  businessPartnerId?: number;
+  academicYear?: string;
+  grade?: string;
+  status?: SupplyListStatus;
+}
+
+export interface SchoolSupplyListIndexRow {
+  id: number;
+  businessPartnerId: number;
+  businessPartnerNameEn: string;
+  businessPartnerNameAr: string;
+  businessPartnerCode: string;
+  businessPartnerStatus: string;
+  grade: string;
+  academicYear: string;
+  localizedTitle: { en?: string; ar?: string };
+  localizedDescription: { en?: string; ar?: string } | null;
+  status: SupplyListStatus;
+  publicCode: string | null;
+  itemCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export async function listSchoolSupplyLists(
+  executor: SchoolSupplyListExecutor,
+  filters: SchoolSupplyListIndexFilters = {},
+): Promise<SchoolSupplyListIndexRow[]> {
+  const conditions = [];
+  if (filters.businessPartnerId) {
+    conditions.push(eq(schoolSupplyLists.businessPartnerId, filters.businessPartnerId));
+  }
+  if (filters.academicYear) {
+    conditions.push(eq(schoolSupplyLists.academicYear, filters.academicYear));
+  }
+  if (filters.grade) {
+    conditions.push(eq(schoolSupplyLists.grade, filters.grade));
+  }
+  if (filters.status) {
+    conditions.push(eq(schoolSupplyLists.status, filters.status));
+  }
+
+  const rows = await executor
+    .select({
+      id: schoolSupplyLists.id,
+      businessPartnerId: schoolSupplyLists.businessPartnerId,
+      businessPartnerNameEn: businessPartners.nameEn,
+      businessPartnerNameAr: businessPartners.nameAr,
+      businessPartnerCode: businessPartners.code,
+      businessPartnerStatus: businessPartners.status,
+      grade: schoolSupplyLists.grade,
+      academicYear: schoolSupplyLists.academicYear,
+      localizedTitle: schoolSupplyLists.localizedTitle,
+      localizedDescription: schoolSupplyLists.localizedDescription,
+      status: schoolSupplyLists.status,
+      publicCode: schoolSupplyLists.publicCode,
+      itemCount: sql<number>`count(${schoolSupplyListItems.id})::int`,
+      createdAt: schoolSupplyLists.createdAt,
+      updatedAt: schoolSupplyLists.updatedAt,
+    })
+    .from(schoolSupplyLists)
+    .innerJoin(businessPartners, eq(businessPartners.id, schoolSupplyLists.businessPartnerId))
+    .leftJoin(schoolSupplyListItems, eq(schoolSupplyListItems.listId, schoolSupplyLists.id))
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .groupBy(
+      schoolSupplyLists.id,
+      businessPartners.id,
+      businessPartners.nameEn,
+      businessPartners.nameAr,
+      businessPartners.code,
+      businessPartners.status,
+    )
+    .orderBy(
+      desc(schoolSupplyLists.createdAt),
+      asc(schoolSupplyLists.academicYear),
+      asc(schoolSupplyLists.grade),
+    );
+
+  return rows as SchoolSupplyListIndexRow[];
+}
+
 export async function getSupplyList(executor: SchoolSupplyListExecutor, id: number) {
-  const [row] = await executor.select().from(schoolSupplyLists).where(eq(schoolSupplyLists.id, id));
-  return row;
+  const rows = await executor.select().from(schoolSupplyLists).where(eq(schoolSupplyLists.id, id));
+  return rows.at(0);
 }
 
 export async function lockSupplyList(tx: SchoolSupplyListTransaction, id: number) {
-  const [row] = await tx
+  const rows = await tx
     .select()
     .from(schoolSupplyLists)
     .where(eq(schoolSupplyLists.id, id))
     .for('update');
-  return row;
+  return rows.at(0);
 }
 
 export async function getSupplyListItems(executor: SchoolSupplyListExecutor, listId: number) {
@@ -80,7 +163,7 @@ export async function getPublishedSupplyListInSlot(
   tx: SchoolSupplyListTransaction,
   list: Pick<SchoolSupplyListRow, 'businessPartnerId' | 'academicYear' | 'grade'>,
 ) {
-  const [row] = await tx
+  const rows = await tx
     .select()
     .from(schoolSupplyLists)
     .where(
@@ -91,7 +174,7 @@ export async function getPublishedSupplyListInSlot(
         eq(schoolSupplyLists.status, 'published'),
       ),
     );
-  return row;
+  return rows.at(0);
 }
 
 export async function insertSupplyListDraft(
@@ -150,11 +233,11 @@ export async function deleteSupplyListItem(
   listId: number,
   id: number,
 ) {
-  const [row] = await tx
+  const rows = await tx
     .delete(schoolSupplyListItems)
     .where(and(eq(schoolSupplyListItems.id, id), eq(schoolSupplyListItems.listId, listId)))
     .returning();
-  return row;
+  return rows.at(0);
 }
 
 /** Lock catalog display/active facts until publication has committed. */
@@ -242,4 +325,21 @@ export function isSupplyListSlotTakenError(error: unknown): boolean {
     current = cause;
   }
   return false;
+}
+
+/** Minimal partner identity/status projection for Staff list filters and authoring. */
+export async function listSchoolListPartners(executor: SchoolSupplyListExecutor) {
+  return executor
+    .select({
+      id: businessPartners.id,
+      nameEn: businessPartners.nameEn,
+      nameAr: businessPartners.nameAr,
+      status: businessPartners.status,
+    })
+    .from(businessPartners)
+    .innerJoin(
+      partnerSchoolProfiles,
+      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),
+    )
+    .orderBy(asc(businessPartners.id));
 }

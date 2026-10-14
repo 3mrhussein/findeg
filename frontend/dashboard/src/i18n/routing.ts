@@ -1,4 +1,4 @@
-import { LOCALES } from '@findeg/domain';
+import { DEFAULT_LOCALE, LOCALES } from '@findeg/domain';
 import { defineRouting } from 'next-intl/routing';
 
 export const routing = defineRouting({
@@ -6,7 +6,7 @@ export const routing = defineRouting({
   locales: [...LOCALES],
 
   // Used when no locale matches
-  defaultLocale: 'en',
+  defaultLocale: DEFAULT_LOCALE,
 
   // Don't use a prefix for the default locale
   localePrefix: 'always',

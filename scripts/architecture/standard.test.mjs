@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-// Negative fixtures for the lint standard (packages/config): every rule must FAIL on a
+// Negative fixtures for the lint standard (configs): every rule must FAIL on a
 // violating file, so a verifier cannot go green by being silently switched off.
 
 const root = new URL('../../', import.meta.url);
@@ -71,23 +71,32 @@ test('L1: modules the runtime cannot provide are reported outside tests only', a
     'packages/domain/src/fixture.ts',
     "import 'node:fs'; import 'react'; import 'next/headers';",
   );
-  assert.equal(only(isomorphic, 'local/runtime-imports').length, 3);
+  assert.equal(only(isomorphic, 'no-restricted-imports').length, 3);
   const node = await lint('backend', 'backend/src/fixture.ts', "import 'next/server';");
-  assert.equal(only(node, 'local/runtime-imports').length, 1);
+  assert.equal(only(node, 'no-restricted-imports').length, 1);
   const inTest = await lint(
     'packages/domain',
     'packages/domain/src/fixture.test.ts',
     "import 'node:fs';",
   );
-  assert.deepEqual(only(inTest, 'local/runtime-imports'), []);
+  assert.deepEqual(only(inTest, 'no-restricted-imports'), []);
+});
+
+test('runtime restrictions cover dynamic, require and erased type imports', async () => {
+  for (const code of [
+    "export const load = () => import('next/headers');",
+    'export const load = () => import(`next/headers`);',
+    "export const value = require('next/headers');",
+    "export type Value = import('next/headers').Value;",
+  ]) {
+    const messages = await lint('backend', 'backend/src/fixture.ts', code);
+    assert.equal(only(messages, 'no-restricted-syntax').length, 1, code);
+  }
 });
 
 test('ratchet: new warnings and stale baselines both fail, an exact baseline passes', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-ratchet-'));
-  fs.symlinkSync(
-    path.join(rootPath, 'packages/config/node_modules'),
-    path.join(directory, 'node_modules'),
-  );
+  fs.symlinkSync(path.join(rootPath, 'configs/node_modules'), path.join(directory, 'node_modules'));
   fs.writeFileSync(path.join(directory, 'package.json'), '{"name":"@fixture/ratchet"}');
   fs.writeFileSync(
     path.join(directory, 'eslint.config.js'),
@@ -99,7 +108,7 @@ test('ratchet: new warnings and stale baselines both fail, an exact baseline pas
     fs.writeFileSync(ratchet, JSON.stringify(baseline));
     return spawnSync(
       process.execPath,
-      [path.join(rootPath, 'packages/config/bin/lint.mjs'), '.', ...args],
+      [path.join(rootPath, 'configs/bin/lint.mjs'), '.', ...args],
       { cwd: directory, encoding: 'utf8', env: { ...process.env, FINDEG_RATCHET_FILE: ratchet } },
     );
   };

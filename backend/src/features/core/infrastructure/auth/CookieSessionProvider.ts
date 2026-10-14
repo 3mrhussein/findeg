@@ -1,5 +1,5 @@
-import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
-import type { ISessionProvider } from '@findeg/backend/features/core/application/interfaces/ISessionProvider';
+import type { SessionPayload } from '@findeg/identity';
+import type { ISessionProvider } from '../../application/interfaces/ISessionProvider';
 import { type ICookieStore } from '../../application/services/CurrentSessionProvider';
 import { JwtSessionManager } from './JwtSessionManager';
 

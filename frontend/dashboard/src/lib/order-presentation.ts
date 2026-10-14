@@ -1,13 +1,13 @@
-import type { OrderStatusUpdate } from '@findeg/orders/schemas';
+import type { OrderStatusUpdate } from '@findeg/orders/types';
 import {
   ORDER_STATUS_TRANSITIONS,
   changePaymentStatus,
   type OrderStatus,
   type PaymentStatus,
   type OrderProgress,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 
-const orderLabels: Record<OrderStatus, string> = {
+const orderLabels = {
   pending: 'Pending',
   confirmed: 'Confirmed',
   processing: 'Processing',
@@ -15,12 +15,12 @@ const orderLabels: Record<OrderStatus, string> = {
   delivered: 'Delivered',
   cancelled: 'Cancelled',
   refunded: 'Refunded',
-};
-const paymentLabels: Record<PaymentStatus, string> = {
+} satisfies Record<OrderStatus, string>;
+const paymentLabels = {
   unpaid: 'Unpaid',
   paid: 'Paid',
   refunded: 'Refunded',
-};
+} satisfies Record<PaymentStatus, string>;
 export const getOrderStatusLabel = (status: OrderStatus) => orderLabels[status];
 export const getPaymentStatusLabel = (status: PaymentStatus) => paymentLabels[status];
 export const getAllowedOrderStatusTransitions = (status: OrderStatus) =>
@@ -34,13 +34,17 @@ export function getAllowedPaymentStatusTransitions(order: OrderProgress): Paymen
   }
 }
 
-/** Staff must explicitly confirm the parcel fact before a shipped cancellation. */
+/** Staff must explicitly confirm cancellation, and the parcel fact before a shipped cancellation. */
 export function confirmStatusUpdate(
   from: OrderStatus,
   status: OrderStatus,
+  messages: { parcelBack: string; cancel: string },
 ): OrderStatusUpdate | null {
-  if (from !== 'shipped' || status !== 'cancelled') return { status };
-  return window.confirm('Confirm that the parcel is back in the warehouse.')
-    ? { status, parcelBackInWarehouse: true }
-    : null;
+  if (status === 'cancelled') {
+    if (from === 'shipped') {
+      return window.confirm(messages.parcelBack) ? { status, parcelBackInWarehouse: true } : null;
+    }
+    return window.confirm(messages.cancel) ? { status } : null;
+  }
+  return { status };
 }

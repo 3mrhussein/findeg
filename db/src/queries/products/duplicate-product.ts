@@ -17,7 +17,7 @@ export async function duplicateProductWithVariants(id: number): Promise<{ newId:
     .where(eq(productVariants.productId, id));
 
   return db.transaction(async (tx) => {
-    const localizedName = product.localizedName as Record<Locale, string>;
+    const localizedName = product.localizedName;
 
     const [newSpu] = await tx
       .insert(products)
@@ -25,7 +25,7 @@ export async function duplicateProductWithVariants(id: number): Promise<{ newId:
         localizedName: {
           en: `${localizedName.en} (Copy)`,
           ar: `${localizedName.ar} (نسخة)`,
-        },
+        } satisfies Record<Locale, string | undefined>,
         localizedDescription: product.localizedDescription,
         localizedLongDescription: product.localizedLongDescription,
         slug: `${product.slug}-copy`,

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { PublicSupplyList } from '@findeg/backend/features/school';
+import type { PublicSupplyList } from '@findeg/school-lists';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string, values?: Record<string, unknown>) =>
@@ -25,6 +25,7 @@ const variant = {
 };
 
 const list = (over: Partial<PublicSupplyList> = {}): PublicSupplyList => ({
+  id: 72,
   publicCode: 'a'.repeat(32),
   status: 'published',
   grade: 'Grade 1',

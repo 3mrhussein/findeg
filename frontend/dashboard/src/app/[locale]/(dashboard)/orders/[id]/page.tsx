@@ -1,15 +1,20 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { getOrderDetail } from '@data/orders/queries';
 import { Button } from '@findeg/ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@i18n/navigation';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 import { OrderHeader } from './_components/OrderHeader';
 import { OrderTimeline } from './_components/OrderTimeline';
 import { OrderItemsTable } from './_components/OrderItemsTable';
 import { OrderTotals } from './_components/OrderTotals';
 import { OrderCustomerInfo } from './_components/OrderCustomerInfo';
 import { OrderPaymentFulfillment } from './_components/OrderPaymentFulfillment';
+import { OrderNotes } from './_components/OrderNotes';
 import { OrderActivityLog } from './_components/OrderActivityLog';
 
 /**
@@ -22,13 +27,14 @@ export default async function OrderDetailPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_ORDERS_READ });
 
   // Order ids are positive 32-bit integers; anything else cannot name an Order.
   if (!/^[1-9]\d{0,9}$/.test(id) || Number(id) > 2_147_483_647) notFound();
 
   const detail = await getOrderDetail(Number(id));
   if (!detail) notFound();
-  const { order, activity: logs } = detail;
+  const { order, activity: logs, notes } = detail;
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-6 pb-20">
@@ -47,7 +53,10 @@ export default async function OrderDetailPage({
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Left Column - 65% width on xl screens */}
         <div className="xl:col-span-2 space-y-6">
-          <OrderItemsTable items={order.items || []} currency={order.currency || 'EGP'} />
+          <OrderItemsTable
+            items={order.items || []}
+            currency={order.currency || DEFAULT_CURRENCY}
+          />
           <OrderTotals order={order} />
 
           <div className="mt-8 space-y-4">
@@ -60,6 +69,7 @@ export default async function OrderDetailPage({
         <div className="space-y-6 flex flex-col">
           <OrderPaymentFulfillment order={order} />
           <OrderCustomerInfo order={order} />
+          <OrderNotes orderId={Number(order.id)} notes={notes || []} />
         </div>
       </div>
     </div>

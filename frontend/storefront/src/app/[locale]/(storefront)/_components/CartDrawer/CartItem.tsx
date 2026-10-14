@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 
 import Image from 'next/image';
 import { Plus, Minus } from 'lucide-react';
@@ -18,7 +19,10 @@ interface CartItemProps {
   onRemove: () => void;
 }
 
-const egpFormatter = new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP' });
+const egpFormatter = new Intl.NumberFormat('en-EG', {
+  style: 'currency',
+  currency: DEFAULT_CURRENCY,
+});
 
 /**
  * Single cart item row — product image, name, variant, price, qty stepper, remove.

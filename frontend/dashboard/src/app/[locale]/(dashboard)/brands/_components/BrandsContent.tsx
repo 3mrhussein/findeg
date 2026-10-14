@@ -6,10 +6,10 @@ import {
   deleteBrandAction,
   toggleBrandStatusAction,
 } from '@data/brands/actions';
-import { BrandInput } from '@findeg/backend/features/catalog';
+import { BrandInput } from '@findeg/catalog';
 import { revalidatePath } from 'next/cache';
 import { getAllBrands } from '@data/resources/queries';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 
 interface BrandsContentProps {
   locale: string;
@@ -42,17 +42,6 @@ export async function BrandsContent({ locale }: BrandsContentProps) {
    */
   async function handleDelete(id: number) {
     'use server';
-    // TODO: Check product count using data layer query
-    const productCount = 0; // Stubbed
-
-    if (productCount > 0) {
-      return {
-        success: false,
-        error: 'DELETE_BLOCKED',
-        count: productCount,
-      };
-    }
-
     const result = await deleteBrandAction(id);
     if (result.success) {
       revalidatePath(`/${locale}/brands`);

@@ -1,7 +1,7 @@
 'use client';
 import { type Locale } from '@findeg/domain';
 
-import { Collection } from '@findeg/backend/features/catalog';
+import type { Collection } from '@findeg/catalog';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@findeg/ui';
@@ -106,7 +106,7 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
                 asChild
                 className="h-8 w-8 rounded-md text-slate-400 bg-transparent hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors"
               >
-                <Link href={`/${locale}/catalog/collections/${collection.id}`}>
+                <Link href={`/catalog/collections/${collection.id}`}>
                   <Pencil className="h-4 w-4" />
                 </Link>
               </Button>
@@ -140,7 +140,7 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
 
       {/* Interaction Layer - for clicking the card itself on mobile */}
       <Link
-        href={`/${locale}/catalog/collections/${collection.id}`}
+        href={`/catalog/collections/${collection.id}`}
         className="absolute inset-0 z-0 text-transparent outline-none ring-offset-2 focus:ring-2 focus:ring-indigo-500 rounded-2xl cursor-pointer"
         aria-label={`Edit ${title}`}
       >

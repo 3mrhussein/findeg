@@ -49,7 +49,7 @@ export const CI_WORKFLOW_DEFINITION_PATHS = [
 export const INTEGRATION_TEST_TRIGGER_PATHS = [
   'backend/',
   'db/',
-  'packages/env/',
+  'configs/env/',
   'pnpm-lock.yaml',
   'package.json',
   'turbo.json',

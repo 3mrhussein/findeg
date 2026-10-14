@@ -11,13 +11,13 @@ import { Textarea } from '@findeg/ui';
 import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { slugify } from '@findeg/backend/lib';
-import { Brand } from '@findeg/backend/features/catalog';
-import { BrandInputSchema, type BrandInput } from '@findeg/backend/features/catalog/schemas';
-import { cn } from '@lib/utils';
+import type { Brand } from '@findeg/catalog';
+import { BrandInputSchema, type BrandInput } from '@findeg/catalog';
+import { cn, slugify } from '@lib/utils';
 import Image from 'next/image';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';
+import { checkBrandSlugAvailableAction } from '@data/brands/actions';
 
 interface BrandFormPanelProps {
   brand: Brand | null;
@@ -125,11 +125,11 @@ export function BrandFormPanel({
 
       setIsSlugChecking(true);
       try {
-        const res = await fetch(
-          `/api/v1/admin/brands/check-slug?slug=${debouncedValue}${brand ? `&excludeId=${brand.id}` : ''}`,
+        const res = await checkBrandSlugAvailableAction(
+          debouncedValue,
+          brand?.id ? Number(brand.id) : undefined,
         );
-        const data = await res.json();
-        setIsSlugAvailable(data.available);
+        setIsSlugAvailable(res.available);
       } catch (error) {
         console.error('Slug check failed', error);
       } finally {

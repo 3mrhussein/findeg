@@ -1,7 +1,10 @@
 import { CategoryForm } from '../CategoryForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { getCategories } from '@data/categories/queries';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Create Category Page — Create a new category with translations
@@ -12,6 +15,9 @@ export default async function CreateCategoryPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  await requirePermission(locale as Locale, {
+    permission: PERMISSION_CODES.ADMIN_CATEGORIES_WRITE,
+  });
   const resolvedLocale = parse(locale);
 
   // Fetch all categories for parent selection dropdown

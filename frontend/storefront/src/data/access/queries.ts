@@ -9,7 +9,7 @@ import 'server-only';
  */
 
 import { cacheLife, cacheTag } from 'next/cache';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 
 /**
  * Get all system roles (Admin Portal level)

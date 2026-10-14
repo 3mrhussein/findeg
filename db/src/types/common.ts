@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { z } from 'zod';
 
 /**
@@ -12,7 +13,7 @@ import { z } from 'zod';
 export const TranslationMapSchema = z.object({
   en: z.string(),
   ar: z.string().optional(),
-});
+} satisfies Record<Locale, z.ZodType>);
 
 export type TranslationMap = z.infer<typeof TranslationMapSchema>;
 

@@ -1,8 +1,11 @@
 import { CategoryForm } from '../../CategoryForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { notFound } from 'next/navigation';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { getCategoryById, getCategories } from '@data/categories/queries';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Edit Category Page — Edit an existing category with translations
@@ -13,6 +16,9 @@ export default async function EditCategoryPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+  await requirePermission(locale as Locale, {
+    permission: PERMISSION_CODES.ADMIN_CATEGORIES_WRITE,
+  });
   const resolvedLocale = parse(locale);
   const categoryId = parseInt(id);
 
@@ -39,7 +45,7 @@ export default async function EditCategoryPage({
     icon: category.image, // mapping image to icon for now
     translations: (
       category as typeof category & {
-        translations?: import('@findeg/backend/features/catalog').CategoryInput['translations'];
+        translations?: import('@findeg/catalog').CategoryInput['translations'];
       }
     ).translations || [
       { language: 'en', name: category.name || '', description: category.description || '' },

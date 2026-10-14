@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createBrandService } from '@findeg/backend/features/catalog';
-import { parse } from '@findeg/backend/features/core';
+import { createBrandService } from '@findeg/catalog';
+import { parse } from '@findeg/catalog';
 
 export async function GET(request: Request) {
   try {

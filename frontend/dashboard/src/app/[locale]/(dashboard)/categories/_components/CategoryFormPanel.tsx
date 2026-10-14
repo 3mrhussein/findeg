@@ -17,6 +17,8 @@
 
 'use client';
 
+import type { Locale } from '@findeg/domain';
+
 import * as React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Input } from '@findeg/ui';
@@ -26,7 +28,7 @@ import { Button } from '@findeg/ui';
 import { Textarea } from '@findeg/ui';
 import { CollapsibleCategoryPicker } from '@/app/[locale]/_components/shared/CollapsibleCategoryPicker';
 import { Save, X, Check, AlertCircle, Loader2 } from 'lucide-react';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { useTranslations } from 'next-intl';
 import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 
@@ -73,11 +75,11 @@ export function CategoryFormPanel({
       localizedName: {
         en: category?.localizedContent?.name?.en || '',
         ar: category?.localizedContent?.name?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription: {
         en: category?.localizedContent?.description?.en || '',
         ar: category?.localizedContent?.description?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
       icon: category?.icon || '',
@@ -101,11 +103,11 @@ export function CategoryFormPanel({
       localizedName: {
         en: category?.localizedContent?.name?.en || '',
         ar: category?.localizedContent?.name?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription: {
         en: category?.localizedContent?.description?.en || '',
         ar: category?.localizedContent?.description?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
       icon: category?.icon || '',
@@ -317,7 +319,7 @@ export function CategoryFormPanel({
             <CollapsibleCategoryPicker
               categories={categories.filter((c) => c.id !== category?.id)}
               selectedId={parentId}
-              onSelect={(id) => setValue('parentId', id === 0 ? null : id)}
+              onSelect={(id: number) => setValue('parentId', id === 0 ? null : id)}
               placeholder={t('Form.ParentNone')}
             />
           </div>

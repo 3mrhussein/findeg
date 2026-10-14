@@ -1,6 +1,6 @@
 import { SchoolCard } from './_components/SchoolCard';
 import { searchSchools, getSchoolFilterOptions } from '@/data/school/queries';
-import type { SchoolSearchParams } from '@findeg/backend/features/school';
+import type { SchoolSearchParams } from '@findeg/school-lists';
 import type { Locale } from '@findeg/domain';
 import { Badge } from '@findeg/ui';
 import { Card, CardContent } from '@findeg/ui';

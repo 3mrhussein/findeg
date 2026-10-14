@@ -5,7 +5,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { adminSession } from '@findeg/backend/features/core';
+import { adminSession } from '@findeg/identity/types';
 import { retryOutbox } from '@findeg/backend/features/outbox';
 import { getSession } from '@lib/session';
 import { getErrorMessage } from '@lib/type-guards';

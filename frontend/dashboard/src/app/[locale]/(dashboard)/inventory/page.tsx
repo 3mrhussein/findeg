@@ -1,10 +1,15 @@
 import { getInventoryWithProducts, getLowStockAlerts } from '@data/inventory/queries';
 import { InventoryTable } from './_components/InventoryTable';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  *
  */
-export default async function InventoryPage() {
+export default async function InventoryPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_INVENTORY_READ });
   const { products } = await getInventoryWithProducts({
     includeZeroStock: false,
     limit: 100,

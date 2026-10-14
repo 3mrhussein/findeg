@@ -19,8 +19,8 @@ test('the public server factory imports and uses an injected DB without app conf
     import { createRequire } from 'node:module';
     import { createOrders, NotAuthorizedError } from '@findeg/orders';
     const require = createRequire(import.meta.url);
-    for (const entry of ['@findeg/orders', '@findeg/orders/schemas', '@findeg/orders/events']) require.resolve(entry);
-    for (const entry of ['@findeg/orders/mapper', '@findeg/orders/src/orders', '@findeg/backend/features/order', '@findeg/backend/features/order/schemas']) {
+    for (const entry of ['@findeg/orders', '@findeg/orders/types']) require.resolve(entry);
+    for (const entry of ['@findeg/orders/schemas', '@findeg/orders/events', '@findeg/orders/mapper', '@findeg/orders/src/orders', '@findeg/backend/features/order', '@findeg/backend/features/order/schemas']) {
       assert.throws(() => require.resolve(entry), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
     }
     const orders = createOrders();

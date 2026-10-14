@@ -19,9 +19,14 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@findeg/backend": "workspace:*",
+    "@findeg/catalog": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
+    "@findeg/env": "workspace:*",
+    "@findeg/identity": "workspace:*",
+    "@findeg/inventory": "workspace:*",
     "@findeg/orders": "workspace:*",
+    "@findeg/school-lists": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",
@@ -43,7 +48,8 @@
     "swr": "^2.3.2",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.5",
-    "@findeg/domain-errors": "workspace:*"
+    "@findeg/catalog": "workspace:*",
+    "@findeg/partners": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",
@@ -69,6 +75,7 @@
     "tailwindcss": "^4.2.2",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11"
   }
 }

@@ -1,6 +1,6 @@
 import { type Locale } from '@findeg/domain';
 import * as React from 'react';
-import type { OrderStatus } from '@findeg/domain/orders';
+import type { OrderStatus } from '@findeg/domain/types';
 import { Section, Text, Button, Heading } from '@react-email/components';
 import { EmailLayout } from './EmailLayout';
 
@@ -26,7 +26,7 @@ import env from '@findeg/env';
 
 const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
-const statusLabels: Record<Locale, Record<OrderStatus, string>> = {
+const statusLabels = {
   en: {
     pending: 'Pending',
     confirmed: 'Confirmed',
@@ -45,7 +45,7 @@ const statusLabels: Record<Locale, Record<OrderStatus, string>> = {
     cancelled: 'تم الإلغاء',
     refunded: 'تم رد المبلغ',
   },
-};
+} satisfies Record<Locale, Record<OrderStatus, string>>;
 
 /**
  *

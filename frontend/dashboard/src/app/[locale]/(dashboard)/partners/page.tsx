@@ -1,10 +1,10 @@
 import { Link } from '@i18n/navigation';
 import { Badge, Button } from '@findeg/ui';
 import type { Locale } from '@findeg/domain';
+import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
-import { toStaffActor } from './_lib/toStaffActor';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { listPartners } from '@data/partners/queries';
 
 export const metadata = {
   title: 'Business Partners - FindEg Admins',
@@ -12,27 +12,25 @@ export const metadata = {
 
 export default async function PartnersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Partners' });
   const session = await requirePermission(locale as Locale, {
     any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.PARTNER_REPORTS_VIEW],
   });
   const canManage = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
 
-  const { partners } = createPartnerMembershipServices();
-  const result = await partners.listPartners(toStaffActor(session));
+  const result = await listPartners(session);
   const rows = result.success ? result.data : [];
 
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Business Partners</h1>
-          <p className="text-muted-foreground mt-2">
-            Organizations FindEg has a commercial relationship with, such as Partner Schools.
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('Title')}</h1>
+          <p className="text-muted-foreground mt-2">{t('Subtitle')}</p>
         </div>
         {canManage && (
           <Button asChild>
-            <Link href="/partners/new">New Business Partner</Link>
+            <Link href="/partners/new">{t('New')}</Link>
           </Button>
         )}
       </div>
@@ -41,7 +39,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
         <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
           <thead className="bg-gray-50 dark:bg-slate-800/50">
             <tr>
-              {['Code', 'Name (English)', 'Name (Arabic)', 'Status', ''].map((heading, index) => (
+              {[t('Code'), t('NameEn'), t('NameAr'), t('Status'), ''].map((heading, index) => (
                 <th
                   key={index}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
@@ -64,11 +62,11 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link href={`/partners/${partner.id}`} className="text-sm underline mr-4">
-                    {canManage ? 'Open' : 'Sales'}
+                    {canManage ? t('Open') : t('Sales')}
                   </Link>
                   {canManage && (
                     <Link href={`/partners/${partner.id}/edit`} className="text-sm underline">
-                      Edit
+                      {t('Edit')}
                     </Link>
                   )}
                 </td>
@@ -77,7 +75,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
             {rows.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
-                  No Business Partners yet.
+                  {t('Empty')}
                 </td>
               </tr>
             )}

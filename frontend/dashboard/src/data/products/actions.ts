@@ -6,11 +6,13 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-} from '@findeg/backend/features/catalog';
+} from '@findeg/catalog';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**
@@ -20,6 +22,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function createProduct(input: CreateProductWithVariantsInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'create product');
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
 
@@ -41,6 +44,7 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
  */
 export async function updateProduct(id: number, input: UpdateProductWithVariantsInput) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'update product');
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
@@ -62,6 +66,7 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
  */
 export async function deleteProduct(id: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'delete product');
     const { products } = createAdministrationServices();
     await products.deleteProduct(id);
 
@@ -82,6 +87,7 @@ export async function deleteProduct(id: number) {
  */
 export async function importProducts(_csvFile: File) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'import products');
     createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
@@ -99,6 +105,7 @@ export async function importProducts(_csvFile: File) {
  */
 export async function setProductStatus(id: number, isActive: boolean) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'update product status');
     const { products } = createAdministrationServices();
     const existingProduct = await products.getById(id);
     if (!existingProduct) return { success: false, error: 'Product not found' };
@@ -126,6 +133,7 @@ export async function generateVariants(
   >[2] = {},
 ) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE, 'generate variants');
     const { products } = createAdministrationServices();
     await products.generateVariants(productId, dimensions, defaults);
     updateTag('products');
@@ -142,6 +150,7 @@ export async function generateVariants(
  */
 export async function checkSkuAvailable(sku: string, excludeVariantId?: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_READ, 'check sku available');
     const { products } = createAdministrationServices();
     const available = await products.checkSkuAvailable(sku, excludeVariantId);
     return { success: true, available };
@@ -152,6 +161,7 @@ export async function checkSkuAvailable(sku: string, excludeVariantId?: number) 
 
 export async function checkSlugAvailable(slug: string, excludeProductId?: number) {
   try {
+    await requireStaffAction(PERMISSION_CODES.ADMIN_PRODUCTS_READ, 'check slug available');
     const { products } = createAdministrationServices();
     const available = await products.checkSlugAvailable(slug, excludeProductId);
     return { success: true, available };

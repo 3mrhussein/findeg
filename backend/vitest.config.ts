@@ -1,10 +1,11 @@
-import { configDefaults, defineConfig } from 'vitest/config';
+import { nodeTest } from '../configs/vitest/defaults';
+import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node',
+    ...nodeTest,
     env: {
       DATABASE_URL: 'postgres://localhost/findeg_test',
       DB_USER: 'postgres',
@@ -15,20 +16,8 @@ export default defineConfig({
       NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
     },
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/index.ts', // index files are just re-exports
-      ],
-    },
-    include: ['src/**/*.{test,spec}.{js,ts}'],
     // Integration tests need Postgres; they run via vitest.integration.config.ts.
-    exclude: [...configDefaults.exclude, 'src/**/*.integration.test.ts'],
+    exclude: [...(nodeTest.exclude ?? []), 'src/**/*.integration.test.ts'],
   },
   resolve: {
     alias: {
@@ -36,12 +25,7 @@ export default defineConfig({
       '@features': resolve(import.meta.dirname, './src/features'),
       '@findeg/backend': resolve(import.meta.dirname, './src'),
       '@lib': resolve(import.meta.dirname, './src/lib'),
-      '@types/validation': resolve(
-        import.meta.dirname,
-        './src/features/core/domain/types/validation',
-      ),
-      '@types/domain': resolve(import.meta.dirname, './src/features/core/domain/types'),
-      '@findeg/env': resolve(import.meta.dirname, '../packages/env/src'),
+      '@findeg/env': resolve(import.meta.dirname, '../configs/env/src'),
     },
   },
 });

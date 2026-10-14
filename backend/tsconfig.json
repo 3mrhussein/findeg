@@ -7,9 +7,9 @@
       "@findeg/backend/*": ["./src/*"],
       "@findeg/db": ["../db/src"],
       "@findeg/db/*": ["../db/src/*"],
-      "@findeg/env": ["../packages/env/src"]
+      "@findeg/env": ["../configs/env/src"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "vitest*.config.ts", "../configs/vitest/postgres/global-setup.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,4 +1,4 @@
-import type { ListOfferInput } from '@findeg/backend/features/school';
+import type { ListOfferInput } from '@findeg/school-lists';
 
 export type OfferFormParse = { ok: true; offer: ListOfferInput } | { ok: false; message: string };
 
@@ -18,15 +18,15 @@ export function toUtcInputValue(date: Date | null): string {
 export function parseOfferForm(formData: FormData): OfferFormParse {
   const percent = String(formData.get('percent') ?? '').trim();
   if (!/^\d{1,3}(\.\d{1,2})?$/.test(percent) || Number(percent) > 100) {
-    return { ok: false, message: 'Enter a discount between 0 and 100 percent.' };
+    return { ok: false, message: 'discount' };
   }
   const startsAt = parseUtc(String(formData.get('startsAt') ?? '').trim());
-  if (!startsAt) return { ok: false, message: 'Enter a start date and time.' };
+  if (!startsAt) return { ok: false, message: 'start' };
   const endsRaw = String(formData.get('endsAt') ?? '').trim();
   const endsAt = endsRaw === '' ? null : parseUtc(endsRaw);
-  if (endsRaw !== '' && !endsAt) return { ok: false, message: 'Enter a valid end date and time.' };
+  if (endsRaw !== '' && !endsAt) return { ok: false, message: 'end' };
   if (endsAt && endsAt <= startsAt) {
-    return { ok: false, message: 'The end must be after the start.' };
+    return { ok: false, message: 'window' };
   }
   return { ok: true, offer: { basisPoints: Math.round(Number(percent) * 100), startsAt, endsAt } };
 }

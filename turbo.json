@@ -1,6 +1,18 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env", ".env.*", "tsconfig.base.json", "package.json"],
+  "globalDependencies": [
+    "configs/**",
+    "!configs/**/node_modules/**",
+    "packages/config/**",
+    "!packages/config/node_modules/**",
+    // The shared domain-copy guard reads these files outside the dependency graph.
+    "packages/domain/package.json",
+    "packages/domain/src/**",
+    ".env",
+    ".env.*",
+    "tsconfig.base.json",
+    "package.json"
+  ],
   "globalEnv": ["NODE_ENV", "CI"],
   "tasks": {
     // ----------------------------
@@ -56,7 +68,8 @@
     // edge still re-runs them when an upstream package changes.
     "test": {
       "dependsOn": ["transit"],
-      "outputs": []
+      "env": ["FINDEG_VITEST_MEASURE"],
+      "outputs": ["coverage/**"]
     },
     "test:unit": {
       "outputs": ["coverage/**"]

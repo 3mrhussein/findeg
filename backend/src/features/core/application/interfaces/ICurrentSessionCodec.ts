@@ -1,4 +1,4 @@
-import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
+import type { SessionPayload } from '@findeg/identity';
 
 /** Cryptographic and cookie-policy boundary required by Current Session. */
 export interface ICurrentSessionCodec {

@@ -26,8 +26,8 @@ async function lintAt(relativeFile, code) {
     .map((message) => message.messageId);
 }
 
-test('Orders consumers may use only the three public package entries', async () => {
-  for (const entry of ['@findeg/orders', '@findeg/orders/schemas', '@findeg/orders/events']) {
+test('Orders consumers may use only the public package entries', async () => {
+  for (const entry of ['@findeg/orders', '@findeg/orders/types']) {
     assert.deepEqual(await lintAt('frontend/storefront/src/boundary.ts', `import '${entry}';`), []);
   }
 });
@@ -35,6 +35,8 @@ test('Orders consumers may use only the three public package entries', async () 
 test('rejects deep aliases and relative filesystem bypasses, including dynamic and type imports', async () => {
   const fixture = 'frontend/storefront/src/boundary.ts';
   for (const code of [
+    "import '@findeg/orders/schemas';",
+    "import '@findeg/orders/events';",
     "import '@findeg/orders/src/application/factory';",
     "export { x } from '@findeg/orders/internal/thing';",
     "const module = import('@findeg/orders/src/index');",
@@ -45,7 +47,6 @@ test('rejects deep aliases and relative filesystem bypasses, including dynamic a
     "const module = require('@findeg/orders/src/index');",
     'const module = require(`@findeg/orders/src/index`);',
     "type Orders = import('../../../packages/orders/src/index').Orders;",
-    "import '../../../backend/src/features/order/application/factory';",
     "import '@findeg/backend/features/order/application/services/OrderService';",
   ]) {
     assert.notDeepEqual(await lintAt(fixture, code), [], code);
@@ -64,11 +65,11 @@ test('Orders has no Backend, app, or Next dependency, including type and dynamic
   }
 });
 
-test('Backend consumers cannot reach legacy Order internals after extraction', async () => {
+test('Backend consumers cannot bypass the extracted Orders public entry', async () => {
   assert.deepEqual(
     await lintAt(
       'backend/src/features/identity/application/service.ts',
-      "import '../../order/domain/entities/Order';",
+      "import '../../../../../packages/orders/src/features/orders/index';",
     ),
     ['relative'],
   );
@@ -86,9 +87,9 @@ test('removed Backend Order entries cannot bypass the public package', async () 
 
 test('workspace dependency graph has no runtime, type, or development cycles', async () => {
   const candidates = [
-    'packages/config',
-    'packages/env',
-    'packages/money',
+    'configs',
+    'configs/env',
+    'packages/domain',
     'packages/domain-errors',
     'packages/orders',
     'db',
@@ -151,7 +152,7 @@ test('if the extracted package exists, its export map and dependency direction a
     if (error.code === 'ENOENT') return; // Extraction is delivered by the dependent issues.
     throw error;
   }
-  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), ['.', './events', './schemas']);
+  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), ['.', './types']);
   const dependencies = [
     'dependencies',
     'devDependencies',

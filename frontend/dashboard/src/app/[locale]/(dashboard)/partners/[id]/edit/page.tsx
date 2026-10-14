@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import type { Locale } from '@findeg/domain';
 import { requirePermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { createPartnerMembershipServices } from '@findeg/partners';
 import { PartnerForm } from '../../_components/PartnerForm';
 import { toStaffActor } from '../../_lib/toStaffActor';
 
@@ -24,13 +24,19 @@ export default async function EditPartnerPage({
   const partnerId = Number(id);
 
   const { partners } = createPartnerMembershipServices();
-  const result = await partners.getPartner(toStaffActor(session), partnerId);
-  if (!result.success) notFound();
+  const [partnerResult, profileResult] = await Promise.all([
+    partners.getPartner(toStaffActor(session), partnerId),
+    partners.getPartnerSchoolProfile(toStaffActor(session), partnerId),
+  ]);
+  if (!partnerResult.success) notFound();
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Edit {result.data.nameEn}</h1>
-      <PartnerForm partner={result.data} />
+      <h1 className="text-3xl font-bold tracking-tight">Edit {partnerResult.data.nameEn}</h1>
+      <PartnerForm
+        partner={partnerResult.data}
+        profile={profileResult.success ? profileResult.data : null}
+      />
     </div>
   );
 }

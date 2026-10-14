@@ -3,7 +3,7 @@ import type { PartnerMembershipStatus } from '@findeg/domain';
 
 import { useState, useTransition } from 'react';
 import { Badge, Button } from '@findeg/ui';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@findeg/domain';
 import { updateMembershipAction, type MembershipActionState } from '../_actions/memberships';
 import { PARTNER_ROLES, type PartnerRoleValue } from '../_lib/partnerRoles';
@@ -26,6 +26,7 @@ interface MembersPanelProps {
 /** Members of one Business Partner, with change roles, suspend, reactivate and end. */
 export function MembersPanel({ canChange, members }: MembersPanelProps) {
   const locale = useLocale() as Locale;
+  const t = useTranslations('Partners');
   const [editing, setEditing] = useState<{ id: number; roles: PartnerRoleValue[] }>();
   const [rowState, setRowState] = useState<{ id: number; state: MembershipActionState }>();
   const [busy, startTransition] = useTransition();
@@ -44,11 +45,9 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">Members</h2>
+      <h2 className="text-xl font-semibold mb-2">{t('Members')}</h2>
       {!canChange && (
-        <p className="mb-2 text-sm text-muted-foreground">
-          Memberships can only change while the Business Partner is onboarding or active.
-        </p>
+        <p className="mb-2 text-sm text-muted-foreground">{t('MembersOnboardingActiveOnly')}</p>
       )}
       <ul className="divide-y rounded-lg border" data-testid="members">
         {members.map((member) => (
@@ -64,7 +63,15 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                   <Badge variant="outline">{member.status}</Badge>
                 </div>
               </div>
-              {canChange && (
+              {canChange && member.status === 'ended' && (
+                <span
+                  className="text-xs text-muted-foreground italic"
+                  data-testid="ended-membership-notice"
+                >
+                  {t('MembershipEndedNotice')}
+                </span>
+              )}
+              {canChange && member.status !== 'ended' && (
                 <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
@@ -72,7 +79,7 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                     disabled={busy}
                     onClick={() => setEditing({ id: member.id, roles: member.roles })}
                   >
-                    Change roles
+                    {t('ChangeRoles')}
                   </Button>
                   {member.status === 'active' ? (
                     <Button
@@ -81,7 +88,7 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                       disabled={busy}
                       onClick={() => run(member, { status: 'suspended' })}
                     >
-                      Suspend
+                      {t('Suspend')}
                     </Button>
                   ) : (
                     <Button
@@ -90,7 +97,7 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                       disabled={busy}
                       onClick={() => run(member, { status: 'active' })}
                     >
-                      Reactivate
+                      {t('Reactivate')}
                     </Button>
                   )}
                   <Button
@@ -103,7 +110,7 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                       }
                     }}
                   >
-                    End
+                    {t('End')}
                   </Button>
                 </div>
               )}
@@ -133,10 +140,10 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
                     disabled={busy}
                     onClick={() => run(member, { roles: editing.roles })}
                   >
-                    Save roles
+                    {t('SaveRoles')}
                   </Button>
                   <Button type="button" variant="outline" onClick={() => setEditing(undefined)}>
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </div>
               </div>
@@ -149,7 +156,7 @@ export function MembersPanel({ canChange, members }: MembersPanelProps) {
           </li>
         ))}
         {members.length === 0 && (
-          <li className="p-4 text-sm text-muted-foreground">No members yet.</li>
+          <li className="p-4 text-sm text-muted-foreground">{t('NoMembers')}</li>
         )}
       </ul>
     </div>

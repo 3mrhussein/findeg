@@ -7,7 +7,6 @@ import { SidebarProvider } from './SidebarContext';
 import { AdminSidebarUser } from './AdminSidebarUser';
 import { AdminSidebarNav } from './AdminSidebarNav';
 import { AdminHeaderUser } from './AdminHeaderUser';
-import { AdminHeaderNotifications } from './AdminHeaderNotifications';
 import { Skeleton } from '@findeg/ui';
 
 export interface AdminShellProps {
@@ -61,11 +60,6 @@ export function AdminShell({ children, locale = 'en' }: AdminShellProps) {
                 }
               >
                 <AdminHeaderUser locale={locale} />
-              </Suspense>
-            }
-            notificationSlot={
-              <Suspense fallback={<Skeleton className="h-[36px] w-[36px] rounded-md" />}>
-                <AdminHeaderNotifications locale={locale} />
               </Suspense>
             }
           />

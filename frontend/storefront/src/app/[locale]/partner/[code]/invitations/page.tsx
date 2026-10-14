@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
+import { PARTNER_ADMINISTRATOR } from '@findeg/partners';
 import { Link } from '@i18n/navigation';
 import { getPendingInvitations } from '@data/partner/queries';
 import { PartnerSuspense, requireWorkspaceAccess } from '../../_components/PartnerShell';

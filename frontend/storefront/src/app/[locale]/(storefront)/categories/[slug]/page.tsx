@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import type { Locale } from '@findeg/domain';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { getCategoryPageViewModel } from '@/data/categories/queries';
 import { PageShell } from '../../_components/PageShell';
 import { ProductListingLayout } from '../../_components/ProductListingLayout';

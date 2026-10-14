@@ -2,7 +2,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PublicSupplyList } from '@findeg/backend/features/school';
+import type { PublicSupplyList } from '@findeg/school-lists';
 
 const cart = vi.hoisted(() => ({
   clearCart: vi.fn(),
@@ -26,7 +26,7 @@ vi.mock('next-intl', () => ({
 vi.mock('@hooks/useCart', () => ({
   useCart: () => ({
     cartItems: cart.cartItems,
-    cartTotal: 10,
+    cartTotal: 1000n,
     clearCart: cart.clearCart,
   }),
 }));
@@ -78,6 +78,7 @@ const changedQuote = {
 };
 
 const supplyList: PublicSupplyList = {
+  id: 72,
   publicCode: 'a'.repeat(32),
   status: 'published',
   grade: 'Grade 1',
@@ -143,6 +144,32 @@ describe('CheckoutClient hydration and acceptance failures', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it('keeps exact decimal list totals beyond Number precision', () => {
+    const expensiveList = {
+      ...supplyList,
+      items: supplyList.items.map((item) => ({
+        ...item,
+        quantity: 3,
+        eligibleVariants: item.eligibleVariants.map((variant) => ({
+          ...variant,
+          price: '90071992547409.91',
+        })),
+      })),
+    };
+    render(
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{
+          source: 'list',
+          publicCode: expensiveList.publicCode,
+          list: expensiveList,
+        }}
+      />,
+    );
+    expect(screen.getByText('EGP 270215977642229.73')).toBeInTheDocument();
+    expect(screen.getByText('EGP 270215977642279.73')).toBeInTheDocument();
   });
 
   it('hydrates server-empty checkout when the Cart has already loaded before the page hydrates', async () => {

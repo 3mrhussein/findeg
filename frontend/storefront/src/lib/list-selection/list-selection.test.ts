@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
+import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/school-lists';
 import {
   chooseVariant,
   isDefaultSelection,
@@ -46,6 +46,7 @@ const item = (id: number, over: Partial<PublicSupplyListItem> = {}): PublicSuppl
 
 const list = (items: PublicSupplyListItem[], over: Partial<PublicSupplyList> = {}) =>
   ({
+    id: 72,
     publicCode: 'a'.repeat(32),
     status: 'published',
     items,
@@ -74,9 +75,17 @@ describe('list selection', () => {
   const l = list([item(1), item(2, { required: false, quantity: 2 })]);
 
   describe('seeding', () => {
+    it('preserves the real list identity through quantity and variant edits', () => {
+      const seeded = seedSelection(l);
+      expect(seeded.supplyListId).toBe(72);
+      expect(setQuantity(seeded, 1, 5).supplyListId).toBe(72);
+      expect(chooseVariant(seeded, 1, 11).supplyListId).toBe(72);
+    });
+
     it('seeds required items at default and prescribed quantity, optional items off', () => {
       expect(seedSelection(l)).toEqual({
         v: 1,
+        supplyListId: 72,
         lines: [
           { listItemId: 1, variantId: 10, quantity: 3 },
           { listItemId: 2, variantId: 20, quantity: 0 },
@@ -204,7 +213,10 @@ describe('list selection', () => {
       ]);
       saveSelection(
         exact.publicCode,
-        { v: 1, lines: [{ listItemId: 1, variantId: 999, quantity: 3 }] },
+        {
+          v: 1,
+          lines: [{ listItemId: 1, variantId: 999, quantity: 3 }],
+        },
         storage,
       );
       const { selection, flaggedItemIds } = loadSelection(exact, storage);
@@ -306,7 +318,7 @@ describe('list selection', () => {
 
 describe('listCompleteness', () => {
   const complete = (items: PublicSupplyListItem[], lines: SelectionLine[]) =>
-    listCompleteness(list(items), { v: 1, lines });
+    listCompleteness(list(items), { ...seedSelection(list(items)), lines });
 
   it('counts a required item at its default and prescribed quantity', () => {
     const result = complete([item(1)], [{ listItemId: 1, variantId: 10, quantity: 3 }]);

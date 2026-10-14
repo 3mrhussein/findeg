@@ -4,14 +4,13 @@ import { useTranslations } from 'next-intl';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Checkbox } from '@findeg/ui';
 import { ProductRow } from './ProductRow';
-import type { ProductListItem } from '@findeg/backend/features/administration';
+import type { ProductListItem } from '@findeg/catalog';
 
 interface ProductsTableProps {
   products: ProductListItem[];
   total: number;
   selectedIds: number[];
   onSelectChange: (ids: number[]) => void;
-  onDuplicate: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
@@ -19,7 +18,6 @@ export function ProductsTable({
   products,
   selectedIds,
   onSelectChange,
-  onDuplicate,
   onDelete,
 }: ProductsTableProps) {
   const t = useTranslations('Administration.Catalog.Products');
@@ -79,7 +77,6 @@ export function ProductsTable({
                 product={product}
                 isSelected={selectedIds.includes(product.id)}
                 onSelectChange={(checked) => handleSelectRow(product.id, checked)}
-                onDuplicate={onDuplicate}
                 onDelete={onDelete}
               />
             ))

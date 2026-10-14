@@ -100,6 +100,52 @@ describe('Admin dashboard catalog management', () => {
     cy.contains(renamed).should('not.exist');
   });
 
+  it('refuses deleting a brand in use with a message', () => {
+    cy.visit('/en/brands');
+    cy.contains('div.group', 'Faber-Castell').within(() => {
+      cy.contains(/products/i).should('be.visible');
+      clickWhenHydrated(cy.get('button[aria-label="Delete brand"]'));
+    });
+
+    cy.contains('Cannot delete "Faber-Castell"').should('be.visible');
+    cy.contains(/products assigned/i).should('be.visible');
+    cy.contains('Faber-Castell').should('be.visible');
+  });
+
+  it('creates, updates and deletes a collection with tags', () => {
+    const name = uniqueCatalogName('col');
+    const renamed = `${name.nameEn} Renamed`;
+
+    cy.visit('/en/catalog/collections/new');
+    cy.get('input[placeholder="e.g. Back to School"]').type(name.nameEn);
+    cy.get('input[placeholder="مثلاً: العودة للمدارس"]').type(name.nameAr);
+
+    clickWhenHydrated(cy.contains('button[role="tab"]', 'Tags Selection'));
+    cy.get('button[role="checkbox"]').first().click();
+
+    clickWhenHydrated(cy.contains('button', 'Create Collection'));
+
+    visitWhenServerRenders('/en/catalog/collections', name.nameEn);
+    cy.contains(name.nameEn).should('be.visible');
+
+    clickWhenHydrated(cy.contains('div.group', name.nameEn).find('a:has(svg.lucide-pencil)'));
+
+    cy.contains('h2', 'Edit Collection').should('be.visible');
+    cy.get('input[placeholder="e.g. Back to School"]').clear().type(renamed);
+    clickWhenHydrated(cy.contains('button', 'Save Changes'));
+
+    visitWhenServerRenders('/en/catalog/collections', renamed);
+    cy.contains(renamed).should('be.visible');
+
+    clickWhenHydrated(
+      cy.contains('div.group', renamed).find('button[aria-label="Delete collection"]'),
+    );
+    clickWhenHydrated(cy.contains('[role="dialog"] button', 'Delete'));
+
+    visitWhenServerRenders('/en/catalog/collections', renamed, { present: false });
+    cy.contains(renamed).should('not.exist');
+  });
+
   it('creates, filters, updates and deletes a product through the dashboard UI', () => {
     const name = uniqueCatalogName('product');
     const sku = uniqueSku();
@@ -146,6 +192,72 @@ describe('Admin dashboard catalog management', () => {
     clickWhenHydrated(cy.contains('div.fixed', '1 selected').contains('button', 'Delete'));
     visitWhenServerRenders(listPath, renamed, { present: false });
     cy.contains('tbody tr', renamed).should('not.exist');
+  });
+
+  it('creates and edits a product with attributes, compare-at, default variant, and bulk activates', () => {
+    const name = uniqueCatalogName('variant-test');
+    const sku = uniqueSku();
+    const listPath = `/en/products?search=${sku}`;
+
+    cy.visit('/en/products/new');
+    cy.get('input[placeholder="e.g. Classic Ballpoint Pen"]')
+      .filter(':visible')
+      .should(($el) => {
+        expect(Object.keys($el[0]).some((key) => key.startsWith('__reactProps$'))).to.equal(true);
+      });
+    cy.get('input[placeholder="e.g. Classic Ballpoint Pen"]').filter(':visible').type(name.nameEn);
+    cy.get('input[placeholder="مثال: قلم جاف كلاسيك"]').filter(':visible').type(name.nameAr);
+
+    // Variants Tab
+    cy.contains('button', 'Variants').click();
+    cy.contains('New Variant').click();
+    cy.get('input[placeholder="e.g. STA-PEN-BLUE"]').type(sku);
+
+    // Set prices: basePrice 50, strikePrice (compare-at) 75
+    cy.get('input[placeholder="0.00"]').eq(0).clear().type('50');
+    cy.get('input[placeholder="0.00"]').eq(1).clear().type('75');
+
+    // Add Attribute
+    cy.contains('button', 'Add Attribute').click();
+    cy.get('input[placeholder="Attribute Name"]').type('Color');
+    cy.get('input[placeholder="Value"]').type('Navy');
+
+    // Set inactive to test bulk activate later
+    cy.contains('label', 'Inactive').click();
+
+    clickWhenHydrated(cy.contains('button', 'Publish Product'));
+    cy.location('pathname').should('match', /\/en\/products\/\d+\/edit$/);
+
+    // Verify persisted edit view shows compare-at price and attribute
+    cy.contains('button', 'Variants').click();
+    cy.contains(sku).click();
+    cy.get('input[placeholder="0.00"]').eq(1).should('have.value', '75');
+    cy.get('input[placeholder="Attribute Name"]').should('have.value', 'Color');
+    cy.get('input[placeholder="Value"]').should('have.value', 'Navy');
+
+    // Verify product list shows formatted price EGP 50.00, SKU, and Inactive status
+    visitWhenServerRenders(`${listPath}&status=all`, name.nameEn);
+    cy.contains('tbody tr', name.nameEn).within(() => {
+      cy.contains('Inactive').should('be.visible');
+      cy.contains('EGP 50.00').should('be.visible');
+      cy.contains(sku).should('be.visible');
+    });
+
+    // Bulk activate
+    clickWhenHydrated(cy.contains('tbody tr', name.nameEn).find('button[role="checkbox"]'));
+    clickWhenHydrated(cy.contains('div.fixed', '1 selected').contains('button', 'Activate'));
+
+    // Verify status changed to Active
+    visitWhenServerRenders(listPath, name.nameEn);
+    cy.contains('tbody tr', name.nameEn).within(() => {
+      cy.contains('Active').should('be.visible');
+    });
+
+    // Cleanup: delete the product
+    clickWhenHydrated(cy.contains('tbody tr', name.nameEn).find('button[role="checkbox"]'));
+    clickWhenHydrated(cy.contains('div.fixed', '1 selected').contains('button', 'Delete'));
+    visitWhenServerRenders(listPath, name.nameEn, { present: false });
+    cy.contains('tbody tr', name.nameEn).should('not.exist');
   });
 });
 

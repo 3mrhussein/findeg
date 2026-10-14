@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { PartnerContext, PartnerRole } from '@findeg/backend/features/partner-membership';
-import { PARTNER_REPORT_ROLES } from '@findeg/backend/features/partner-sales';
+import type { PartnerContext, PartnerRole } from '@findeg/partners';
+import { PARTNER_REPORT_ROLES } from '@findeg/partners';
 import { decidePartnerPageAccess, partnerIndexDestination } from './access';
 
 const context = (

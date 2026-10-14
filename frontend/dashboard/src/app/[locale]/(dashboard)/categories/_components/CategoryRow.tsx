@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 
 import { useTranslations } from 'next-intl';
 
@@ -153,7 +153,7 @@ export function CategoryRow({
 
       {/* Status Badge */}
       <div className="shrink-0">
-        <StatusBadge status={category.isActive ? 'active' : 'draft'} />
+        <StatusBadge status={category.isActive ? 'active' : 'inactive'} />
       </div>
 
       {/* Product Count (Hidden if 0) */}

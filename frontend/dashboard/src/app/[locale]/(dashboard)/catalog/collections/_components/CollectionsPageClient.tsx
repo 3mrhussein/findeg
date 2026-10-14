@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Collection } from '@findeg/backend/features/catalog';
+import type { Collection } from '@findeg/catalog';
 import { CollectionGrid } from './CollectionGrid';
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Plus, Search, AlertTriangle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
-import { useLocale } from 'next-intl';
 import {
   Dialog,
   DialogContent,
@@ -30,7 +29,6 @@ interface CollectionsPageClientProps {
  */
 export function CollectionsPageClient({ collections }: CollectionsPageClientProps) {
   const t = useTranslations('Pages.Dashboard.Collections');
-  const locale = useLocale();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -53,7 +51,7 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
     if (!deleteConfirmId) return;
     const result = await deleteCollection(deleteConfirmId);
     if (result.success) {
-      toast({ title: 'Collection deleted' });
+      toast({ title: t('ToastDeleted') });
       router.refresh();
     } else {
       toast({ variant: 'destructive', title: 'Error', description: result.error });
@@ -75,7 +73,7 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
             asChild
             className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Link href={`/${locale}/catalog/collections/new`}>
+            <Link href="/catalog/collections/new">
               <Plus className="mr-2 h-4 w-4" /> {t('NewCollection')}
             </Link>
           </Button>
@@ -102,18 +100,15 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 mb-4">
               <AlertTriangle className="h-6 w-6 text-destructive" />
             </div>
-            <DialogTitle className="text-center text-xl">Are you absolutely sure?</DialogTitle>
-            <DialogDescription className="text-center">
-              This will permanently delete this collection. This action can affect the storefront
-              display and currently assigned products will lose this collection reference.
-            </DialogDescription>
+            <DialogTitle className="text-center text-xl">{t('DeleteConfirmTitle')}</DialogTitle>
+            <DialogDescription className="text-center">{t('DeleteConfirmDesc')}</DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button variant="outline" onClick={() => setDeleteConfirmId(null)} className="flex-1">
-              Cancel
+              {t('CancelAction')}
             </Button>
             <Button variant="destructive" onClick={handleDelete} className="flex-1">
-              Delete Collection
+              {t('DeleteAction')}
             </Button>
           </DialogFooter>
         </DialogContent>

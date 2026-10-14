@@ -1,0 +1,224 @@
+{
+  "configs": {
+    "role": "node",
+    "files": 44,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "configs/env": {
+    "role": "node",
+    "files": 14,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/catalog": {
+    "role": "node",
+    "files": 169,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/domain": {
+    "role": "isomorphic",
+    "files": 162,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/domain-errors": {
+    "role": "isomorphic",
+    "files": 12,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/identity": {
+    "role": "node",
+    "files": 40,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/inventory": {
+    "role": "node",
+    "files": 18,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/orders": {
+    "role": "node",
+    "files": 97,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "packages/partners": {
+    "role": "node",
+    "files": 44,
+    "errors": 1,
+    "warnings": 0,
+    "byRule": {
+      "@typescript-eslint/no-unnecessary-type-parameters": 1
+    }
+  },
+  "packages/school-lists": {
+    "role": "node",
+    "files": 30,
+    "errors": 0,
+    "warnings": 0,
+    "byRule": {}
+  },
+  "backend": {
+    "role": "node",
+    "files": 101,
+    "errors": 251,
+    "warnings": 0,
+    "byRule": {
+      "n/no-unpublished-import": 45,
+      "@typescript-eslint/no-unnecessary-type-assertion": 9,
+      "@typescript-eslint/no-useless-constructor": 1,
+      "@typescript-eslint/require-await": 20,
+      "@typescript-eslint/no-unnecessary-condition": 6,
+      "n/no-unsupported-features/node-builtins": 20,
+      "@typescript-eslint/restrict-template-expressions": 77,
+      "@typescript-eslint/unbound-method": 1,
+      "@typescript-eslint/no-deprecated": 4,
+      "@typescript-eslint/no-unnecessary-type-arguments": 5,
+      "findeg/naming": 26,
+      "@typescript-eslint/no-non-null-assertion": 9,
+      "@typescript-eslint/no-useless-default-assignment": 18,
+      "@typescript-eslint/no-confusing-void-expression": 2,
+      "@typescript-eslint/no-unsafe-assignment": 4,
+      "@typescript-eslint/use-unknown-in-catch-callback-variable": 1,
+      "@typescript-eslint/no-unsafe-return": 1,
+      "@typescript-eslint/no-unnecessary-type-conversion": 2
+    }
+  },
+  "db": {
+    "role": "node",
+    "files": 139,
+    "errors": 264,
+    "warnings": 0,
+    "byRule": {
+      "parse": 19,
+      "@typescript-eslint/no-non-null-assertion": 7,
+      "@typescript-eslint/no-unnecessary-type-assertion": 52,
+      "@typescript-eslint/no-unnecessary-condition": 83,
+      "@typescript-eslint/restrict-template-expressions": 21,
+      "@typescript-eslint/no-unnecessary-template-expression": 1,
+      "@typescript-eslint/no-unnecessary-type-conversion": 31,
+      "findeg/naming": 41,
+      "@typescript-eslint/no-confusing-void-expression": 1,
+      "@typescript-eslint/no-duplicate-type-constituents": 3,
+      "@typescript-eslint/no-base-to-string": 1,
+      "@typescript-eslint/no-meaningless-void-operator": 1,
+      "@typescript-eslint/no-deprecated": 3
+    }
+  },
+  "frontend/ui": {
+    "role": "browser",
+    "files": 57,
+    "errors": 146,
+    "warnings": 0,
+    "byRule": {
+      "findeg/naming": 73,
+      "@typescript-eslint/restrict-template-expressions": 7,
+      "react-hooks/set-state-in-effect": 3,
+      "@typescript-eslint/no-confusing-void-expression": 13,
+      "@typescript-eslint/no-non-null-assertion": 3,
+      "@typescript-eslint/no-unnecessary-type-assertion": 3,
+      "@typescript-eslint/no-unused-vars": 1,
+      "@typescript-eslint/no-unnecessary-condition": 5,
+      "@typescript-eslint/no-deprecated": 35,
+      "@typescript-eslint/no-unnecessary-template-expression": 1,
+      "@typescript-eslint/no-unnecessary-type-conversion": 1,
+      "parse": 1
+    }
+  },
+  "frontend/dashboard": {
+    "role": "next",
+    "files": 286,
+    "errors": 1006,
+    "warnings": 10,
+    "byRule": {
+      "@typescript-eslint/no-unnecessary-condition": 123,
+      "@typescript-eslint/no-confusing-void-expression": 164,
+      "@typescript-eslint/restrict-template-expressions": 150,
+      "@typescript-eslint/no-non-null-assertion": 28,
+      "@typescript-eslint/no-unsafe-member-access": 16,
+      "@typescript-eslint/unbound-method": 1,
+      "@typescript-eslint/no-unsafe-argument": 4,
+      "@typescript-eslint/no-unnecessary-type-arguments": 6,
+      "parse": 4,
+      "n/no-unsupported-features/node-builtins": 2,
+      "import/no-anonymous-default-export": 1,
+      "@typescript-eslint/no-unnecessary-type-assertion": 24,
+      "@typescript-eslint/no-unsafe-assignment": 14,
+      "findeg/naming": 120,
+      "react/jsx-no-literals": 178,
+      "jsx-a11y/label-has-associated-control": 5,
+      "react-hooks/incompatible-library": 6,
+      "@typescript-eslint/no-unnecessary-type-conversion": 22,
+      "@typescript-eslint/no-floating-promises": 15,
+      "@typescript-eslint/no-misused-promises": 33,
+      "@typescript-eslint/require-await": 7,
+      "@typescript-eslint/no-deprecated": 18,
+      "@typescript-eslint/no-unsafe-return": 2,
+      "@typescript-eslint/no-base-to-string": 32,
+      "react-hooks/purity": 1,
+      "@typescript-eslint/use-unknown-in-catch-callback-variable": 1,
+      "@next/next/no-img-element": 1,
+      "react-hooks/exhaustive-deps": 2,
+      "jsx-a11y/click-events-have-key-events": 7,
+      "jsx-a11y/no-static-element-interactions": 7,
+      "@typescript-eslint/no-unsafe-call": 3,
+      "react-hooks/set-state-in-effect": 5,
+      "@typescript-eslint/no-dynamic-delete": 1,
+      "@typescript-eslint/prefer-reduce-type-parameter": 4,
+      "@typescript-eslint/no-duplicate-type-constituents": 8,
+      "@typescript-eslint/no-useless-constructor": 1
+    }
+  },
+  "frontend/storefront": {
+    "role": "next",
+    "files": 275,
+    "errors": 761,
+    "warnings": 3,
+    "byRule": {
+      "@typescript-eslint/restrict-template-expressions": 117,
+      "@typescript-eslint/no-unsafe-member-access": 42,
+      "@typescript-eslint/no-unnecessary-condition": 84,
+      "@typescript-eslint/no-non-null-assertion": 31,
+      "@typescript-eslint/unbound-method": 2,
+      "@typescript-eslint/no-unsafe-return": 4,
+      "@typescript-eslint/no-unnecessary-type-arguments": 4,
+      "parse": 4,
+      "findeg/naming": 123,
+      "@typescript-eslint/no-unnecessary-type-assertion": 43,
+      "@typescript-eslint/no-deprecated": 34,
+      "@typescript-eslint/no-misused-promises": 6,
+      "@typescript-eslint/require-await": 21,
+      "@typescript-eslint/no-confusing-void-expression": 156,
+      "@typescript-eslint/no-unsafe-assignment": 16,
+      "react-hooks/set-state-in-effect": 8,
+      "@typescript-eslint/no-unnecessary-boolean-literal-compare": 2,
+      "@typescript-eslint/no-unnecessary-type-conversion": 4,
+      "@typescript-eslint/no-unsafe-argument": 5,
+      "@typescript-eslint/no-floating-promises": 4,
+      "@typescript-eslint/no-duplicate-type-constituents": 7,
+      "@typescript-eslint/no-base-to-string": 3,
+      "n/no-unsupported-features/node-builtins": 33,
+      "@typescript-eslint/use-unknown-in-catch-callback-variable": 3,
+      "jsx-a11y/html-has-lang": 1,
+      "@next/next/google-font-display": 1,
+      "@next/next/no-page-custom-font": 1,
+      "@next/next/no-location-assign-relative-destination": 1,
+      "jsx-a11y/no-autofocus": 1,
+      "n/no-unsupported-features/es-builtins": 1,
+      "@typescript-eslint/no-dynamic-delete": 2
+    }
+  }
+}

@@ -19,6 +19,7 @@ export {
   deleteCollection,
   setCollectionTags,
   updateCollectionSortOrders,
+  checkCollectionSlugAvailable,
 } from './admin-collections';
 
 // Product operations (general queries used by StoreFront and Admin)

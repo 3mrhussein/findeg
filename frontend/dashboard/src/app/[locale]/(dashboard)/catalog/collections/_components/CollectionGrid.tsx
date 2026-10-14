@@ -16,7 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Collection } from '@findeg/backend/features/catalog';
+import type { Collection } from '@findeg/catalog';
 import { CollectionCard } from './CollectionCard';
 import { reorderCollectionsAction as reorderCollections } from '@data/collections/actions';
 

@@ -8,8 +8,8 @@
 
 import { updateTag } from 'next/cache';
 import { createOrders } from '@findeg/orders';
-import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders/schemas';
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 import { getErrorMessage } from '@lib/type-guards';
 import { requireOrderWriteActor } from '@lib/order-write-access';
 
@@ -21,6 +21,9 @@ import { requireOrderWriteActor } from '@lib/order-write-access';
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
     const actor = await requireOrderWriteActor();
+    if (input.status === 'shipped' && !input.trackingNumber?.trim()) {
+      return { success: false, error: 'Shipping requires a tracking number.' };
+    }
     const orders = createOrders();
     // A rejected transition can reveal state changed by another writer.
     // Expire stale reads even when the authorized command fails.
@@ -52,14 +55,21 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
     }
     const update = OrderStatusUpdateSchema.parse({ status });
     const orders = createOrders();
+    const orderRecords = await Promise.all(ids.map((id) => orders.get(id)));
+    const refMap = new Map(
+      orderRecords.map((o, idx) => [ids[idx], o?.orderReference ?? `#${ids[idx]}`]),
+    );
+
     const settled = await Promise.allSettled(
       ids.map((id) => orders.changeStatus(actor, id, update)),
     );
-    const failures = settled.flatMap((result, index) =>
-      result.status === 'rejected'
-        ? [{ orderId: ids[index], error: getErrorMessage(result.reason) }]
-        : [],
-    );
+    const failures = settled.flatMap((result, index) => {
+      const id = ids[index];
+      const ref = refMap.get(id) ?? `#${id}`;
+      return result.status === 'rejected'
+        ? [{ orderId: id, orderReference: ref, error: getErrorMessage(result.reason) }]
+        : [];
+    });
 
     updateTag('orders');
     updateTag('dashboard');
@@ -69,7 +79,7 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
       failures,
       error:
         failures.length > 0
-          ? failures.map(({ orderId, error }) => `Order #${orderId}: ${error}`).join('; ')
+          ? failures.map(({ orderReference, error }) => `${orderReference}: ${error}`).join('; ')
           : undefined,
     };
   } catch (error: unknown) {
@@ -112,6 +122,26 @@ export async function refundOrderAction(id: number) {
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error('[refundOrderAction]', error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+/**
+ * Append an internal note to an Order.
+ *
+ * Invalidates: Order detail
+ */
+export async function addOrderNoteAction(orderId: number, note: string) {
+  try {
+    const actor = await requireOrderWriteActor();
+    const orders = createOrders();
+    const result = await orders.addNote(actor, orderId, note).finally(() => {
+      updateTag('orders');
+    });
+
+    return { success: true, data: result };
+  } catch (error: unknown) {
+    console.error('[addOrderNoteAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

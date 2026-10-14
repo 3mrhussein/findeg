@@ -1,16 +1,21 @@
+import type { OrderStatus, Locale } from '@findeg/domain';
 import React from 'react';
-import { OrderStatusSchema } from '@findeg/orders/schemas';
+import { OrderStatusSchema } from '@findeg/orders';
 import { orderQueries } from '@findeg/db/queries';
-import { DEFAULT_LOCALE } from '../../core';
+import { DEFAULT_LOCALE } from '@findeg/catalog';
 import { OrderStatusUpdateEmail } from '../../notifications';
 import { isNotifiedOrderStatus, type OutboxHandler } from '../domain/types';
 import type { EmailProvider } from './EmailProvider';
 
 const SUBJECTS = {
-  shipped: { en: 'has shipped', ar: 'تم شحنه' },
-  delivered: { en: 'was delivered', ar: 'تم توصيله' },
-  cancelled: { en: 'was cancelled', ar: 'تم إلغاؤه' },
-} as const;
+  shipped: { en: 'has shipped', ar: 'تم شحنه' } satisfies Record<Locale, string | undefined>,
+  delivered: { en: 'was delivered', ar: 'تم توصيله' } satisfies Record<Locale, string | undefined>,
+  cancelled: { en: 'was cancelled', ar: 'تم إلغاؤه' } satisfies Record<Locale, string | undefined>,
+  pending: null,
+  confirmed: null,
+  processing: null,
+  refunded: null,
+} satisfies Record<OrderStatus, Record<Locale, string> | null>;
 
 /** Renders the status email at send time; the payload carries only `{ orderId, status }`. */
 export function createOrderStatusHandler(emailProvider: EmailProvider): OutboxHandler {

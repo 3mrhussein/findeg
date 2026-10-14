@@ -1,8 +1,13 @@
 ---
-status: proposed
+status: superseded
 ---
 
+> Superseded by [ADR-0020](0020-domain-single-source-and-bounded-context-packages.md).
+
 # Enforce a barrel seam for `@findeg/backend` features
+
+> Amended by [ADR-0020](0020-domain-single-source-and-bounded-context-packages.md): the accepted target is bounded-context application packages with root/types exports, derived from Domain, and Backend infrastructure/composition. The historical feature/schema entry contracts below remain transitional until coordinated consumer migration. The client-safe barrel splitting and custom client-boundary checks described below are superseded; Next.js owns the server/client boundary.
+
 
 `backend/package.json` exports `"./features/*": "./src/features/*"`, so every path under `backend/src/features/**` — domain entities, application services, repository interfaces, DTOs — is importable at any depth. `frontend/dashboard` and `frontend/storefront` both import at inconsistent depths (feature root, `domain`, and leaf files), sometimes for the same feature in different files, coupling two independent Next.js apps to backend internal layout. A survey of 208 existing import sites found none actually depend on class identity or behavior (every "entity" import resolves to a Zod-inferred `type`, and service imports are types or factory functions) — so we can close this seam without changing runtime behavior.
 

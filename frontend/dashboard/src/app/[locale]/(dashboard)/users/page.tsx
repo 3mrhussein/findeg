@@ -1,5 +1,5 @@
 import { requirePermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { AdminUsersList } from './_components/AdminUsersList';
 import type { Locale } from '@findeg/domain';
 import { getAdminUsers, getSystemRoles } from '@data/access/queries';

@@ -1,8 +1,9 @@
 import React from 'react';
 import { guestAccessQueries } from '@findeg/db/queries';
-import { DEFAULT_LOCALE } from '../../core';
+import { DEFAULT_LOCALE } from '@findeg/catalog';
 import { GuestAccessCodeEmail } from '../../notifications';
-import { hashCode, mintCode } from '../../guest-access';
+import { hashCode, mintCode } from '@findeg/orders';
+import { requireGuestAccessSecret } from './guest-access-secret';
 import type { OutboxHandler } from '../domain/types';
 import type { EmailProvider } from './EmailProvider';
 
@@ -19,7 +20,10 @@ export function createGuestAccessHandler(emailProvider: EmailProvider): OutboxHa
     if (!request.guestEmail) throw new Error(`Order ${request.orderReference} has no guest email`);
 
     const code = mintCode();
-    await guestAccessQueries.addCodeHash(request.id, hashCode(request.id, code));
+    await guestAccessQueries.addCodeHash(
+      request.id,
+      hashCode(request.id, code, requireGuestAccessSecret()),
+    );
 
     const locale = DEFAULT_LOCALE;
     await emailProvider.send({

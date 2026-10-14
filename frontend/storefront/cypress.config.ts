@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, type Locale } from '@findeg/domain';
 import path from 'node:path';
 import { defineConfig } from 'cypress';
 
@@ -39,7 +40,10 @@ export default defineConfig({
               .insert(schema.brands)
               .values({
                 slug: `cypress-plp-${key}-${suffix}`,
-                localizedName: { en: `PLP ${key} ${suffix}`, ar: `PLP ${key} ${suffix}` },
+                localizedName: {
+                  en: `PLP ${key} ${suffix}`,
+                  ar: `PLP ${key} ${suffix}`,
+                } satisfies Record<Locale, string | undefined>,
               })
               .returning();
             return row;
@@ -49,7 +53,10 @@ export default defineConfig({
               .insert(schema.categories)
               .values({
                 slug: `cypress-plp-${key}-${suffix}`,
-                localizedName: { en: `PLP ${key} ${suffix}`, ar: `PLP ${key} ${suffix}` },
+                localizedName: {
+                  en: `PLP ${key} ${suffix}`,
+                  ar: `PLP ${key} ${suffix}`,
+                } satisfies Record<Locale, string | undefined>,
               })
               .returning();
             return row;
@@ -65,9 +72,12 @@ export default defineConfig({
               .insert(schema.products)
               .values({
                 slug: `cypress-plp-${input.name.toLowerCase()}-${suffix}`,
-                localizedName: { en: input.name, ar: input.name },
-                localizedDescription: { en: '' },
-                localizedLongDescription: { en: '' },
+                localizedName: { en: input.name, ar: input.name } satisfies Record<
+                  Locale,
+                  string | undefined
+                >,
+                localizedDescription: { en: '', ar: '' } satisfies Record<Locale, string>,
+                localizedLongDescription: { en: '', ar: '' } satisfies Record<Locale, string>,
                 categoryId: input.categoryId,
                 brandId: input.brandId,
                 isActive: input.isActive ?? true,
@@ -117,7 +127,7 @@ export default defineConfig({
           const [{ db }, schema, { createSchoolSupplyListService }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
-            import('@findeg/backend/features/school'),
+            import('@findeg/school-lists'),
           ]);
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db
@@ -163,9 +173,12 @@ export default defineConfig({
             .insert(schema.products)
             .values({
               slug: `cypress-list-product-${suffix}`,
-              localizedName: { en: 'Cypress pen', ar: 'قلم' },
-              localizedDescription: { en: '' },
-              localizedLongDescription: { en: '' },
+              localizedName: { en: 'Cypress pen', ar: 'قلم' } satisfies Record<
+                Locale,
+                string | undefined
+              >,
+              localizedDescription: { en: '', ar: '' } satisfies Record<Locale, string>,
+              localizedLongDescription: { en: '', ar: '' } satisfies Record<Locale, string>,
               categoryId: category.id,
             })
             .returning();
@@ -196,7 +209,10 @@ export default defineConfig({
                 businessPartnerId: partner.id,
                 grade,
                 academicYear: '2026/2027',
-                localizedTitle: { en: `Cypress ${grade} supplies`, ar: 'قائمة' },
+                localizedTitle: { en: `Cypress ${grade} supplies`, ar: 'قائمة' } satisfies Record<
+                  Locale,
+                  string | undefined
+                >,
               }),
             ) as { id: number };
             must(
@@ -205,7 +221,10 @@ export default defineConfig({
                 exactItem: false,
                 specification: { categoryId: category.id, attributes: {} },
                 quantity: 2,
-                localizedLabel: { en: 'Cypress pen item', ar: 'قلم' },
+                localizedLabel: { en: 'Cypress pen item', ar: 'قلم' } satisfies Record<
+                  Locale,
+                  string | undefined
+                >,
               }),
             );
             must(
@@ -215,7 +234,10 @@ export default defineConfig({
                 specification: { categoryId: category.id, attributes: {} },
                 required: false,
                 quantity: 1,
-                localizedLabel: { en: 'Cypress optional item', ar: 'اختياري' },
+                localizedLabel: { en: 'Cypress optional item', ar: 'اختياري' } satisfies Record<
+                  Locale,
+                  string | undefined
+                >,
               }),
             );
             const published = must(await service.publish(staff, list.id)) as {
@@ -238,7 +260,7 @@ export default defineConfig({
           const [{ db }, { users }, { createPartnerMembershipServices }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
-            import('@findeg/backend/features/partner-membership'),
+            import('@findeg/partners'),
           ]);
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db
@@ -274,7 +296,7 @@ export default defineConfig({
     },
   },
   env: {
-    LOCALE: 'en',
+    LOCALE: DEFAULT_LOCALE,
     ADMIN_EMAIL: 'admin@findeg.com',
     ADMIN_PASSWORD: 'admin',
   },

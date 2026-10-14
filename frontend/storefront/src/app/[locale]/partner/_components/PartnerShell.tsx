@@ -1,11 +1,7 @@
 import { Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
 import { notFound } from 'next/navigation';
-import type {
-  PartnerAction,
-  PartnerContext,
-  PartnerRole,
-} from '@findeg/backend/features/partner-membership';
+import type { PartnerAction, PartnerContext, PartnerRole } from '@findeg/partners';
 import { getCachedPartnerContext } from '@data/partner/queries';
 import { decidePartnerPageAccess } from '@data/partner/access';
 

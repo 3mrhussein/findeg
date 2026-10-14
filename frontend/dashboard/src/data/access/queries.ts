@@ -8,14 +8,14 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 
 /**
  * Get all available system roles with their permissions
  */
 export async function getSystemRoles() {
   cacheLife('hours');
-  cacheTag('access', 'roles');
+  cacheTag('access');
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.listRoles();
@@ -26,7 +26,7 @@ export async function getSystemRoles() {
  */
 export async function getPermissionCodes() {
   cacheLife('weeks');
-  cacheTag('access', 'permissions');
+  cacheTag('access');
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.listPermissions();
@@ -37,7 +37,7 @@ export async function getPermissionCodes() {
  */
 export async function getAdminUsers() {
   cacheLife('minutes');
-  cacheTag('access', 'users');
+  cacheTag('access');
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.listAdmins();
@@ -48,7 +48,7 @@ export async function getAdminUsers() {
  */
 export async function getRoleById(roleId: number) {
   cacheLife('hours');
-  cacheTag('access', 'roles', `role-${roleId}`);
+  cacheTag('access');
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.getRole(roleId);
@@ -59,7 +59,7 @@ export async function getRoleById(roleId: number) {
  */
 export async function getAdminById(userId: number) {
   cacheLife('minutes');
-  cacheTag('access', 'users', `user-${userId}`);
+  cacheTag('access');
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.getAdmin(userId);

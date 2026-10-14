@@ -1,4 +1,5 @@
-import { adminSession, type SessionPayload } from '@findeg/backend/features/core';
+import { type SessionPayload } from '@findeg/identity';
+import { adminSession } from '@findeg/identity/types';
 import { assertCanWriteOrders, type OrderStaffActor } from '@findeg/orders';
 import { getSession } from '@lib/session';
 

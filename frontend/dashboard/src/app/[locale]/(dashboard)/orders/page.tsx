@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { OrdersContent } from './_components/OrdersContent';
 import { routing } from '@i18n/routing';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 
 /**
  * Generate static params for all supported locales
@@ -30,6 +33,7 @@ export default async function OrdersPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_ORDERS_READ });
   const query = await searchParams;
 
   const filters = {

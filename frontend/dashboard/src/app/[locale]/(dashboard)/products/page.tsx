@@ -1,8 +1,11 @@
 import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { ProductListSkeleton } from '@components/skeletons';
-import type { ProductListFilters } from '@findeg/backend/features/administration';
+import type { ProductListFilters } from '@findeg/catalog';
 import { ProductsContent } from './_components/ProductsContent';
+import { PERMISSION_CODES } from '@findeg/identity/types';
+import { requirePermission } from '@lib/auth-guard';
+import type { Locale } from '@findeg/domain';
 import { routing } from '@i18n/routing';
 
 /**
@@ -21,6 +24,7 @@ export default async function ProductsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  await requirePermission(locale as Locale, { permission: PERMISSION_CODES.ADMIN_PRODUCTS_READ });
   const query = await searchParams;
 
   // Parse filters from URL
@@ -33,13 +37,13 @@ export default async function ProductsPage({
     status: query.status === 'active' || query.status === 'inactive' ? query.status : undefined,
     completeness:
       typeof query.completeness === 'string'
-        ? (query.completeness as import('@findeg/backend/features/administration').ProductListFilters['completeness'])
+        ? (query.completeness as import('@findeg/catalog').ProductListFilters['completeness'])
         : undefined,
     page: query.page ? Number(query.page) : 1,
     pageSize: query.pageSize ? Number(query.pageSize) : 20,
     sortBy:
       typeof query.sortBy === 'string'
-        ? (query.sortBy as import('@findeg/backend/features/administration').ProductListFilters['sortBy'])
+        ? (query.sortBy as import('@findeg/catalog').ProductListFilters['sortBy'])
         : 'updatedAt',
     sortDir: query.sortDir === 'asc' ? 'asc' : 'desc',
   };

@@ -1,3 +1,4 @@
+import type { OrderStatus } from '@findeg/domain';
 import { getOrderStats, getRecentOrders } from '@data/orders/queries';
 import { DashboardOrdersWidget } from './DashboardOrdersWidget';
 /**
@@ -11,12 +12,13 @@ import { DashboardOrdersWidget } from './DashboardOrdersWidget';
 
 import { getTranslations } from 'next-intl/server';
 import { type Locale } from '@findeg/domain';
+import { getOptionalSession } from '@lib/auth-guard';
 import {
   getCatalogHealthStats,
   getCategoryProductDistribution,
+  getExhaustedOutboxHealth,
   getRecentActivity,
 } from '@data/admin/queries';
-import { countExhaustedOutbox, listExhaustedOutbox } from '@findeg/backend/features/outbox';
 import {
   KpiCard,
   OutboxHealthWidget,
@@ -35,10 +37,13 @@ interface DashboardWidgetProps {
  * Renders immediately with ~50ms of queries (simple counts)
  */
 export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
-  const t = await getTranslations({
-    locale: locale as Locale,
-    namespace: 'Administration.Dashboard',
-  });
+  const [t, session] = await Promise.all([
+    getTranslations({
+      locale: locale as Locale,
+      namespace: 'Administration.Dashboard',
+    }),
+    getOptionalSession(),
+  ]);
 
   // Quick queries only - single round-trip
   const catalogStats = await getCatalogHealthStats();
@@ -54,7 +59,7 @@ export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
     day: 'numeric',
   });
 
-  const firstName = 'Admin';
+  const firstName = session?.user?.firstName || 'Staff';
 
   return (
     <>
@@ -134,14 +139,13 @@ export async function MediumDashboardSection({ locale: _locale }: DashboardWidge
  */
 export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
   // Heavy queries - parallel loading
-  const [categoryDist, recentActivity, exhaustedOutbox, exhaustedCount] = await Promise.all([
+  const [categoryDist, recentActivity, { exhaustedOutbox, exhaustedCount }] = await Promise.all([
     getCategoryProductDistribution(),
     getRecentActivity({
       limit: 8,
       entityTypes: ['product', 'category', 'brand', 'tag'],
     }),
-    listExhaustedOutbox(),
-    countExhaustedOutbox(),
+    getExhaustedOutboxHealth(),
   ]);
 
   return (
@@ -174,7 +178,7 @@ export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
 /** Independent home Orders reads share the same invalidated data layer as Orders workflows. */
 export async function OrdersDashboardSection({ locale }: DashboardWidgetProps) {
   const [stats, recentOrders, t] = await Promise.all([
-    getOrderStats(),
+    getOrderStats({ liveOnly: true }),
     getRecentOrders(),
     getTranslations({ locale }),
   ]);
@@ -201,7 +205,7 @@ export async function OrdersDashboardSection({ locale }: DashboardWidgetProps) {
           delivered: t('Administration.Shared.StatusBadge.Delivered'),
           cancelled: t('Administration.Shared.StatusBadge.Cancelled'),
           refunded: t('Administration.Shared.StatusBadge.Refunded'),
-        },
+        } satisfies Record<OrderStatus, string>,
       }}
     />
   );

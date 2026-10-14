@@ -8,8 +8,8 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createCategoryService, createTagService } from '@findeg/backend/features/catalog';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createCategoryService, createTagService } from '@findeg/catalog';
+import { createAdministrationServices } from '@/lib/administration';
 import type { Locale } from '@findeg/domain';
 
 /**
@@ -18,7 +18,7 @@ import type { Locale } from '@findeg/domain';
  * Cache: Tagged with 'categories-admin', revalidated on category mutations
  */
 export async function getAllCategories(locale: Locale = 'en') {
-  cacheTag('categories-admin', `categories-admin-${locale}`);
+  cacheTag('categories');
   cacheLife('hours');
 
   const categories = createCategoryService();
@@ -31,7 +31,7 @@ export async function getAllCategories(locale: Locale = 'en') {
  * Cache: Tagged with 'brands-admin', revalidated on brand mutations
  */
 export async function getAllBrands(activeOnly: boolean = false, locale: Locale = 'en') {
-  cacheTag('brands-admin', `brands-admin-${locale}`);
+  cacheTag('brands');
   cacheLife('hours');
 
   const { brands } = createAdministrationServices();
@@ -49,8 +49,8 @@ export async function getAllBrands(activeOnly: boolean = false, locale: Locale =
  *
  * Cache: Tagged with 'tags-admin', revalidated on tag mutations
  */
-export async function getAllTags(locale: Locale = 'en') {
-  cacheTag('tags-admin', `tags-admin-${locale}`);
+export async function getAllTags(_locale: Locale = 'en') {
+  cacheTag('tags');
   cacheLife('hours');
 
   const tags = createTagService();
@@ -63,9 +63,9 @@ export async function getAllTags(locale: Locale = 'en') {
  * Cache: Tagged with 'tags-admin', revalidated on tag mutations
  */
 export async function getAllTagsGrouped(
-  locale: Locale = 'en',
-): Promise<Record<string, import('@findeg/backend/features/catalog').Tag[]>> {
-  cacheTag('tags-admin', `tags-admin-${locale}`);
+  _locale: Locale = 'en',
+): Promise<Record<string, import('@findeg/catalog').Tag[]>> {
+  cacheTag('tags');
   cacheLife('hours');
 
   const tags = createTagService();

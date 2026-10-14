@@ -1,5 +1,6 @@
+import { BUSINESS_TIME_ZONE } from '@findeg/domain';
 import { formatEgp } from '@findeg/ui';
-import { sumSalesFigures, type PartnerReportView } from '@findeg/backend/features/partner-sales';
+import { sumSalesFigures, type PartnerReportView } from '@findeg/partners';
 
 export interface SalesFigureProps {
   readonly quantity: number;
@@ -31,14 +32,14 @@ export function toPartnerReportProps(
   locale: string,
 ): PartnerReportProps {
   const dateTime = new Intl.DateTimeFormat(locale, {
-    timeZone: 'Africa/Cairo',
+    timeZone: BUSINESS_TIME_ZONE,
     dateStyle: 'medium',
     timeStyle: 'short',
   });
   const monthName = new Intl.DateTimeFormat(locale, {
     month: 'long',
     year: 'numeric',
-    timeZone: 'UTC',
+    timeZone: BUSINESS_TIME_ZONE,
   });
   const monthLabel = (key: string) => monthName.format(new Date(`${key}-01T00:00:00Z`));
   const rows = [...report.sales, ...(report.otherItems ? [report.otherItems] : [])];

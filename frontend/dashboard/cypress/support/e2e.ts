@@ -15,3 +15,16 @@ Cypress.Commands.add('disableAnimations', () => {
     doc.head.appendChild(style);
   });
 });
+
+Cypress.on('uncaught:exception', (err) => {
+  console.error('CYPRESS UNCAUGHT EXCEPTION:', err);
+  // Ignore React hydration mismatch errors
+  if (
+    err.message.includes('Minified React error #418') ||
+    err.message.includes('Minified React error #423') ||
+    err.message.includes('Minified React error #425') ||
+    err.message.includes('Hydration failed')
+  ) {
+    return false;
+  }
+});

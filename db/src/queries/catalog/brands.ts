@@ -65,12 +65,12 @@ export async function getAll(): Promise<BrandWithProductCount[]> {
 
 export async function getById(id: number): Promise<BrandRow | null> {
   const result = await db.select().from(brands).where(eq(brands.id, id));
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 export async function getBySlug(slug: string): Promise<BrandRow | null> {
   const result = await db.select().from(brands).where(eq(brands.slug, slug));
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 export async function create(data: BrandCreateInput): Promise<BrandRow> {

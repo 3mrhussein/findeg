@@ -1,6 +1,6 @@
 import type { Locale } from '@findeg/domain';
 import { requirePermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { PartnerForm } from '../_components/PartnerForm';
 
 export const metadata = {

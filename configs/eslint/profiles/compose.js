@@ -1,0 +1,37 @@
+import { scopedLibraryLayout } from '../library.js';
+import globals from 'globals';
+import { standards, isCompleteScope } from '../standards.js';
+import { hygiene } from '../layers/hygiene.js';
+import { runtimeLayer } from '../layers/runtime.js';
+import { boundaries } from '../layers/boundaries.js';
+import { surface } from '../layers/surface.js';
+import { integrity } from '../layers/integrity.js';
+
+/**
+ * A profile is the standard applied to one kind of package: every layer, with the runtime
+ * chosen by the package's role. A new stack adds a runtime entry and a profile file; it never
+ * copies rules.
+ * @param {keyof typeof import('../layers/runtime.js').RUNTIMES} runtime
+ * @param {{ extra?: object[] }} [options]
+ */
+export async function compose(runtime, { extra = [] } = {}) {
+  return [
+    ...(await standards(runtime, { complete: isCompleteScope() })),
+    ...hygiene,
+    ...runtimeLayer(runtime),
+    ...boundaries,
+    ...surface,
+    ...integrity,
+    ...scopedLibraryLayout,
+    ...extra,
+  ];
+}
+
+// Cypress isn't one of the `globals` package's presets; `cy`/`Cypress` come from the runner
+// itself, `expect` from its bundled chai, and describe/it/before(Each) from its bundled mocha.
+export const cypressGlobals = {
+  files: ['cypress/**/*.{js,ts}', 'cypress.config.ts'],
+  languageOptions: {
+    globals: { ...globals.mocha, ...globals.chai, cy: 'readonly', Cypress: 'readonly' },
+  },
+};

@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import type { Metadata } from 'next';
 import type { Locale } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
@@ -84,7 +85,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     brand: vm.brand ? { '@type': 'Brand', name: vm.brand.name } : undefined,
     offers: {
       '@type': 'Offer',
-      priceCurrency: 'EGP',
+      priceCurrency: DEFAULT_CURRENCY,
       price: String(vm.selectedVariant?.basePrice || 0),
       availability: vm.stockSnapshot.inStock
         ? 'https://schema.org/InStock'

@@ -1,4 +1,2 @@
-import { compose } from './compose.js';
-
-// Server-side packages and services (backend, db, env, orders).
-export const node = compose('node');
+// Temporary compatibility delegate; removal is owned by #445.
+export * from '../../../../configs/eslint/profiles/node.js';

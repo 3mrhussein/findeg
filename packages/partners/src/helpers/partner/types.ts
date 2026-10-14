@@ -1,0 +1,114 @@
+import type {
+  AcademicSystem,
+  BusinessPartnerStatus as PartnerStatus,
+  Governorate,
+  SchoolType,
+} from '@findeg/domain';
+import type { PartnerSchoolProfileRow } from '@findeg/db/queries/partners';
+
+/**
+ * A Staff session acting on Business Partners. A `SessionPayload` satisfies this
+ * shape, so dashboard code can pass its session straight in.
+ */
+export interface StaffActor {
+  kind: 'staff';
+  userId: number;
+  permissionCodes?: readonly string[];
+  activeRoleIds?: readonly string[];
+}
+
+/**
+ * A signed-in member acting inside their own Partner Workspace. Services do not
+ * trust the claim: they confirm in the database, under the Business Partner
+ * lock, that the user holds the membership the operation needs.
+ */
+export interface PartnerActor {
+  kind: 'partner';
+  userId: number;
+}
+
+export interface BusinessPartner {
+  id: number;
+  code: string;
+  nameEn: string;
+  nameAr: string;
+  status: PartnerStatus;
+  authorizationVersion: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreatePartnerInput {
+  schoolProfile?: SavePartnerSchoolProfileInput;
+  code: string;
+  nameEn: string;
+  nameAr: string;
+}
+
+/** Omitted fields are left unchanged. `code` may only change while onboarding. */
+export interface UpdatePartnerInput {
+  schoolProfile?: SavePartnerSchoolProfileInput;
+  code?: string;
+  nameEn?: string;
+  nameAr?: string;
+}
+
+/** Typed outcome: business failures are returned, never thrown. */
+export type PartnerResult<T, E extends string> =
+  { success: true; data: T } | { success: false; error: E };
+
+export type CreatePartnerError = 'forbidden' | 'invalid-input' | 'code-taken';
+export type UpdatePartnerError =
+  'forbidden' | 'invalid-input' | 'not-found' | 'code-locked' | 'code-taken';
+export type ReadPartnerError = 'forbidden' | 'not-found';
+
+export type ChangePartnerStatusError =
+  'forbidden' | 'not-found' | 'invalid-transition' | 'last-administrator';
+
+export interface SavePartnerSchoolProfileInput {
+  governorate: Governorate;
+  area: string;
+  schoolType: SchoolType;
+  academicSystem: AcademicSystem;
+  logoUrl?: string | null;
+}
+
+export type SavePartnerSchoolProfileError = 'forbidden' | 'invalid-input' | 'not-found';
+
+export interface IPartnerService {
+  /** The statuses a Business Partner may move to from `status` (empty once `closed`). */
+  allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[];
+  createPartner(
+    actor: StaffActor,
+    input: CreatePartnerInput,
+  ): Promise<PartnerResult<BusinessPartner, CreatePartnerError>>;
+  updatePartner(
+    actor: StaffActor,
+    partnerId: number,
+    input: UpdatePartnerInput,
+  ): Promise<PartnerResult<BusinessPartner, UpdatePartnerError>>;
+  /**
+   * Moves a partner to `status` (onboarding→active, active→suspended,
+   * suspended→active, any non-closed→closed). Moving to `active` needs an active
+   * Partner Administrator, else `last-administrator`.
+   */
+  changePartnerStatus(
+    actor: StaffActor,
+    partnerId: number,
+    status: PartnerStatus,
+  ): Promise<PartnerResult<BusinessPartner, ChangePartnerStatusError>>;
+  listPartners(actor: StaffActor): Promise<PartnerResult<BusinessPartner[], 'forbidden'>>;
+  getPartner(
+    actor: StaffActor,
+    partnerId: number,
+  ): Promise<PartnerResult<BusinessPartner, ReadPartnerError>>;
+  savePartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow, SavePartnerSchoolProfileError>>;
+  getPartnerSchoolProfile(
+    actor: StaffActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerSchoolProfileRow | null, ReadPartnerError>>;
+}

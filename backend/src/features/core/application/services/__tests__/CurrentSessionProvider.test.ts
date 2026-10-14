@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
+import type { SessionPayload } from '@findeg/identity';
 import {
   CurrentSessionProvider,
   type CurrentSessionIdentity,

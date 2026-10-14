@@ -127,8 +127,8 @@ describe('Customer storefront journeys', () => {
     cy.get('button[type="submit"]').click();
     cy.wait('@quote').its('response.statusCode').should('eq', 200);
     cy.wait('@accept').then(({ request, response }) => {
-      expect(request.headers['idempotency-key']).to.be.a('string').and.not.empty;
-      expect(request.body.confirmation).to.be.a('string').and.not.empty;
+      expect(request.headers['idempotency-key']).to.be.a('string').and.to.have.length.greaterThan(0);
+      expect(request.body.confirmation).to.be.a('string').and.to.have.length.greaterThan(0);
       expect(request.body.lines[0].variantId).to.be.a('number');
       expect(response?.statusCode).to.eq(201);
     });
