@@ -56,7 +56,7 @@ test('legacy TypeScript entry resolves environment paths from the relocated base
         extends: path.join(root, 'tsconfig.base.json'),
         compilerOptions: {
           types: ['node'],
-          typeRoots: [path.join(root, 'packages/env/node_modules/@types')],
+          typeRoots: [path.join(root, 'configs/env/node_modules/@types')],
         },
         include: ['index.ts'],
       }),

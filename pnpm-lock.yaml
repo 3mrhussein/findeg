@@ -43,7 +43,7 @@ importers:
         version: link:../packages/domain-errors
       '@findeg/env':
         specifier: workspace:*
-        version: link:../packages/env
+        version: link:../configs/env
       '@findeg/orders':
         specifier: workspace:*
         version: link:../packages/orders
@@ -170,6 +170,31 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
+  configs/env:
+    dependencies:
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@findeg/config':
+        specifier: workspace:*
+        version: link:..
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.9.9
+      '@vitest/coverage-v8':
+        specifier: ^4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      eslint:
+        specifier: ^9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
   db:
     dependencies:
       '@findeg/domain':
@@ -177,7 +202,7 @@ importers:
         version: link:../packages/domain
       '@findeg/env':
         specifier: workspace:*
-        version: link:../packages/env
+        version: link:../configs/env
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -404,7 +429,7 @@ importers:
         version: link:../../packages/domain-errors
       '@findeg/env':
         specifier: workspace:*
-        version: link:../../packages/env
+        version: link:../../configs/env
       '@findeg/orders':
         specifier: workspace:*
         version: link:../../packages/orders
@@ -710,31 +735,6 @@ importers:
         version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/domain-errors:
-    devDependencies:
-      '@findeg/config':
-        specifier: workspace:*
-        version: link:../../configs
-      '@types/node':
-        specifier: ^25.6.0
-        version: 25.9.9
-      '@vitest/coverage-v8':
-        specifier: ^4.1.11
-        version: 4.1.11(vitest@4.1.11)
-      eslint:
-        specifier: ^9.39.5
-        version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
-      typescript:
-        specifier: ^5.7.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.1.11
-        version: 4.1.11(@types/node@25.9.9)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
-
-  packages/env:
-    dependencies:
-      zod:
-        specifier: ^4.6.5
-        version: 4.6.5
     devDependencies:
       '@findeg/config':
         specifier: workspace:*

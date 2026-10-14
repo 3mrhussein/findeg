@@ -81,7 +81,7 @@ Measured with the complete configuration (`standards(role, { root: workspace })`
 - `packages/domain` (isomorphic): 88 files, 86 errors, 0 warnings
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
-- `packages/env` (node): 7 files, 7 errors, 0 warnings
+- `configs/env` (node): 14 files, 0 errors, 0 warnings
 - `packages/orders` (node): 14 files, 15 errors, 0 warnings
 - `backend` (node): 331 files, 975 errors, 0 warnings
 - `db` (node): 138 files, 297 errors, 0 warnings

@@ -5,8 +5,8 @@ loadEnv();
 
 const webSchema = z.object({
   ...baseSchema,
-  NEXT_PUBLIC_APP_URL: z.string().url(),
-  NEXT_PUBLIC_SITE_URL: z.string().url(),
+  NEXT_PUBLIC_APP_URL: z.url(),
+  NEXT_PUBLIC_SITE_URL: z.url(),
 });
 
 export const env = validateEnv(webSchema);

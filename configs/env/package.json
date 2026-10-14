@@ -1,12 +1,16 @@
 {
   "name": "@findeg/env",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./backend": "./src/backend.ts",
     "./database": "./src/database.ts",
     "./web": "./src/web.ts"
+  },
+  "engines": {
+    "node": "^20.12.0 || >=21.7.0"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

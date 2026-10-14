@@ -3,8 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { configDefaults } from 'vitest/config';
 import { placementReporter } from './placement.mjs';
 
-// #445 activates measured workspaces here; all consumers use this one policy.
-export const activeWorkspaces = ['packages/domain-errors'];
+// #445 activates the remaining measured workspaces here; all consumers use this one policy.
+export const activeWorkspaces = ['packages/domain-errors', 'configs/env'];
 export const testInclude = [
   '**/*.{test,spec}.?(c|m)[jt]s?(x)',
   '**/__tests__/**/*.?(c|m)[jt]s?(x)',

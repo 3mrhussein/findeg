@@ -111,7 +111,7 @@ graph TD
 | **@findeg/db**                                           | `db`                      | Drizzle tables, migrations and seeds ([docs](db/docs/SETUP.md)).                              | `pnpm db:setup`, `pnpm db:studio`      |
 | [**@findeg/orders**](packages/orders/README.md)         | `packages/orders`         | Order reads and Staff lifecycle commands.                                                     | N/A                                    |
 | **@findeg/domain-errors**                                | `packages/domain-errors`  | Shared domain error classes.                                                                  | N/A                                    |
-| **@findeg/env**                                          | `packages/env`            | Validated environment variables.                                                              | N/A                                    |
+| **@findeg/env**                                          | `configs/env`             | Validated environment variables.                                                              | N/A                                    |
 | **@findeg/domain**                                       | `packages/domain`         | Business domain: pure values, value objects and rules, depending only on zod ([ADR-0018](docs/adr/0018-domain-package-is-the-pure-rich-business-domain.md)). | N/A                                    |
 | [**@findeg/config**](packages/config/README.md)         | `packages/config`         | Shared lint profiles.                                                                         | N/A                                    |
 
