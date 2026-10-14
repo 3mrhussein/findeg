@@ -31,72 +31,47 @@ Orchestrators defining _use cases_.
 
 ### 3. Infrastructure Layer (`src/features/*/infrastructure`)
 
-<<<<<<< HEAD
-
-````typescript
-import type { ServiceResult } from '@backend/features/core';
-=======
 The dirty boundaries talking to the outside world.
->>>>>>> 006-docs-restructure
 
 - **Persistence**: Drizzle ORM schemas mapped perfectly to database tables.
 - **Repositories**: Implementing Application interfaces wrapping Drizzle logic.
 - **Adapters**: Connecting to external systems (Resend for emails, AWS S3 for media).
 
-<<<<<<< HEAD
-```typescript
-// App-layer Server Action (handles framework integration)
-'use server';
-import { createProduct } from '@backend/features/catalog';
-import { revalidatePath, revalidateTag } from 'next/cache';
-=======
 ---
->>>>>>> 006-docs-restructure
 
 ## 🗄️ Database Management & Schema
 
 The `@findeg/backend` owns the entire truth of the data.
 
 **Database ER Diagram & Deep Schema Docs**:
-👉 [Read the detailed SCHEMA.md & Global ER Diagram](docs/database/SCHEMA.md)
+👉 [Read the detailed SCHEMA.md & Global ER Diagram](../db/docs/SCHEMA.md)
 
-<<<<<<< HEAD
+Services throw `AppError` subclasses (`NotFoundError`, `ForbiddenError`, `UnauthorizedError`) from `@findeg/backend`. App-layer code translates them into framework behaviour.
+
 ```typescript
-import {
-  NotAuthenticatedError,
-  NotAuthorizedError,
-  ResourceNotFoundError,
-  ValidationError,
-  ConflictError,
-  BusinessRuleViolationError
-} from '@backend/features/core';
+// Backend service throws an operational error
+import { NotFoundError } from '@findeg/backend';
 
-// Backend service throws domain error
-export async function getMyAccountData(userId: number | null) {
-  if (!userId) {
-    throw new NotAuthenticatedError('Session required');
-  }
-
-  const user = await db.user.getById(userId);
+export async function requireUser<T>(userId: number, findUser: (id: number) => Promise<T | null>): Promise<T> {
+  const user = await findUser(userId);
   if (!user) {
-    throw new ResourceNotFoundError('User account not found');
+    throw new NotFoundError('User account not found');
   }
-
   return user;
 }
-````
+```
 
 ```typescript
 // App-layer catches and translates errors
 'use server';
-import { getMyAccountData } from '@backend/features/identity';
+import { getMyAccountData, UnauthorizedError } from '@findeg/backend';
 import { redirect } from 'next/navigation';
 
 export async function getAccountPage(userId: number) {
   try {
     return await getMyAccountData(userId);
   } catch (error) {
-    if (error instanceof NotAuthenticatedError) {
+    if (error instanceof UnauthorizedError) {
       redirect('/login'); // Framework integration happens here
     }
     throw error;
@@ -106,31 +81,12 @@ export async function getAccountPage(userId: number) {
 
 ### Dependency Injection
 
-Backend services depend on interfaces, not framework APIs:
+Backend services depend on interfaces, not framework APIs. `ICookieStore` is the abstraction and `createCookieSessionProvider` is the factory:
 
 ```typescript
-// Backend interface (abstraction)
-export interface ICookieStore {
-  get(name: string): { value: string } | undefined;
-  set(name: string, value: string, options?: any): void;
-  delete(name: string): void;
-}
-
-// Backend service uses interface
-export class CookieSessionProvider {
-  constructor(private cookieStore: ICookieStore) {}
-
-  async getSession(): Promise<SessionPayload | null> {
-    const cookie = this.cookieStore.get('session');
-    // ...
-  }
-}
-```
-
-```typescript
-// App-layer provides Next.js implementation
+// App layer provides the Next.js implementation
 import { cookies } from 'next/headers';
-import { CookieSessionProvider, ICookieStore } from '@backend/features/core';
+import { createCookieSessionProvider, type ICookieStore } from '@findeg/backend';
 
 async function nextCookiesToStore(): Promise<ICookieStore> {
   const cookieStore = await cookies();
@@ -141,51 +97,54 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   };
 }
 
-// Inject Next.js implementation
-const store = await nextCookiesToStore();
-const provider = new CookieSessionProvider(store);
+// Inject the Next.js implementation
+const sessionProvider = createCookieSessionProvider(await nextCookiesToStore());
+const session = await sessionProvider.getSession();
 ```
 
 ### Testing in Pure Node.js
 
-All backend tests run in Vitest without Next.js runtime:
+All backend tests run in Vitest without the Next.js runtime:
 
-````bash
-# Backend tests (pure Node.js, ~13 seconds)
-pnpm --filter @backend test
-=======
+```bash
+pnpm --filter @findeg/backend test
+```
+
 ### Development Workflow
 
 ```bash
 # Generate SQL migration file based on any schema changes
-pnpm db:generate
->>>>>>> 006-docs-restructure
+pnpm --filter @findeg/db db:generate
 
 # Push changes directly for fast local iteration
-pnpm db:push
+pnpm --filter @findeg/db db:push
 
 # Spin up local introspection UI
 pnpm db:studio
-````
+```
 
 ---
 
 ## 📦 Feature Inventory
 
-The backend is composed of 10 rigidly bounded context modules:
+The backend is composed of 13 bounded context modules under `src/features`, plus the Orders package:
 
-| Feature Module                                              | Business Purpose                                       | Key Domain Entities                       |
-| ----------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------- |
-| [**Catalog**](src/features/catalog/README.md)               | Central PIM handling all discoverability.              | `Product`, `Category`, `Variant`, `Brand` |
-| [**Cart**](src/features/cart/README.md)                     | Ephemeral shopping session state.                      | `CartHeader`, `CartItem`                  |
-| [**Orders**](../packages/orders/README.md)                   | Workspace Order reads and lifecycle; Checkout owns Acceptance.       | `Order`, `OrderItem`, `Transaction`       |
-| [**Identity**](src/features/identity/README.md)             | Hardened auth, RBAC permissions, token vending.        | `User`, `Role`, `PasswordCredentials`     |
-| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics.           | `AuditLog`, `DashboardMetric`             |
-| [**School**](src/features/school/README.md)                 | B2B2C School Supply Lists (secure gateways).           | `SchoolSupplyList`, `PartnerSchool`       |
-| [**Review**](src/features/review/README.md)                 | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote`                   |
-| [**Media**](src/features/media/README.md)                   | Media delivery, S3 uploads, image compression.         | `MediaAsset`, `FileLink`                  |
-| [**Core**](src/features/core/README.md)                     | System-wide building blocks.                           | `ServiceResult`, `Pagination`             |
-| [**Notifications**](src/features/notifications/README.md)   | Broadcasts, transactional emails, Bell-alerts.         | `Notification`, `EmailTemplate`           |
+| Feature Module | Business Purpose | Key Domain Entities |
+| --- | --- | --- |
+| [**Catalog**](src/features/catalog/README.md) | Central PIM handling all discoverability. | `Product`, `Category`, `Variant`, `Brand` |
+| [**Checkout**](src/features/checkout/index.ts) | Checkout validation and order acceptance. | `CheckoutService` |
+| [**Orders**](../packages/orders/README.md) | Workspace Order reads and lifecycle; Checkout owns Acceptance. | `Order`, `OrderItem`, `Transaction` |
+| [**Guest Access**](src/features/guest-access/README.md) | Lets a guest reach one Order without an account (ADR-0008). | `GuestAccessService` |
+| [**Identity**](src/features/identity/README.md) | Hardened auth, RBAC permissions, token vending. | `User`, `Role`, `PasswordCredentials` |
+| [**Partner Membership**](src/features/partner-membership/README.md) | Business Partners and who may work in their Partner Workspace. | `PartnerMembershipServices` |
+| [**Partner Sales**](src/features/partner-sales/README.md) | Reads over Attributed Orders from Business Partners' School Supply Lists. | `SalesFigures` |
+| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics. | `AuditLog`, `DashboardMetric` |
+| [**School**](src/features/school/README.md) | B2B2C School Supply Lists (secure gateways). | `SchoolSupplyList`, `PartnerSchool` |
+| [**Review**](src/features/review/README.md) | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote` |
+| [**Media**](src/features/media/README.md) | Media delivery, S3 uploads, image compression. | `MediaAsset`, `FileLink` |
+| [**Outbox**](src/features/outbox/README.md) | Transactional outbox: messages written in-transaction, delivered at least once. | `OutboxService`, `OutgoingEmail` |
+| [**Core**](src/features/core/README.md) | System-wide building blocks. | `ServiceResult` |
+| [**Notifications**](src/features/notifications/README.md) | Broadcasts, transactional emails, Bell-alerts. | `Notification`, `EmailTemplate` |
 
 ---
 
@@ -194,15 +153,16 @@ The backend is composed of 10 rigidly bounded context modules:
 To maintain extreme purity in `@findeg/backend`:
 
 - **NO FRAMEWORK LEAKS**: Do NOT import Next.js specific functions (`cookies()`, `headers()`, `redirect()`).
-- **NO THROWING EXCEPTIONS**: Services employ the **Railway Oriented Programming** pattern via the custom `ServiceResult` utility.
+- **TYPED ERRORS**: Services throw `AppError` subclasses (`NotFoundError`, `ForbiddenError`, `UnauthorizedError`) for failures, and the app layer translates them. Successful results may carry cache metadata through the `ServiceResult` type.
 
 ### Example Integration Contract
 
 ```typescript
 // Good
-export async function getProduct(slug: string): Promise<ServiceResult<Product, CatalogError>> {
-  if (!product) return Err(new ProductNotFoundError(slug));
-  return Ok(product);
+export async function getProduct(slug: string): Promise<ServiceResult<Product>> {
+  const product = await ...; // load by slug
+  if (!product) throw new NotFoundError(`Product ${slug} not found`);
+  return { success: true, data: product, cacheTags: ['catalog'] };
 }
 ```
 
@@ -219,47 +179,30 @@ pnpm db:run && pnpm test:integration   # from the repo root; fresh migrated DB p
 Helpers live in `src/testing/postgres`. See [Running integration tests](../README.md#running-integration-tests) for details.
 
 ```bash
-<<<<<<< HEAD
-pnpm --filter @backend install
-=======
-# Run all unit logic tests locally
-pnpm test
+# Install workspace dependencies (from the repo root)
+pnpm install
 
-# Run tests watching for TDD integration
-pnpm test:watch
+# Run all unit logic tests locally
+pnpm --filter @findeg/backend test
 
 # Enforce no-emit TypeScript structural checks (crucial for CI)
-pnpm type-check
->>>>>>> 006-docs-restructure
+pnpm --filter @findeg/backend type-check
 ```
 
 ---
 
-<<<<<<< HEAD
-
-```bash
-# Build TypeScript
-pnpm --filter @backend build
-
-# Watch mode
-pnpm --filter @backend dev
-
-# Run tests
-pnpm --filter @backend test
-
-# Type check
-tsc --noEmit -p packages/backend
-```
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` and configure:
+The env schema lives in `configs/env/src/backend.ts` (`@findeg/env/backend`). Copy `backend/.env.example` into the repo-root `.env` and configure:
 
 ```bash
 # Required
+DATABASE_URL=postgresql://user:password@localhost:5432/findeg
+
+# Auth (at least 32 characters each)
 JWT_SECRET=your-super-secret-jwt-access-token-key-min-32-chars
 JWT_REFRESH_SECRET=your-super-secret-jwt-refresh-token-key-min-32-chars
-DATABASE_URL=postgresql://user:password@localhost:5432/findeg
 
 # Optional
 RESEND_API_KEY=re_your_resend_api_key
@@ -273,83 +216,37 @@ openssl rand -base64 32
 
 ## Usage
 
-### In Dashboard App
-
 ```typescript
-// Server Actions
-import { JWTService, IUserRepository } from '@backend';
-import { CreateUserSchema } from '@backend/types';
-
-export async function createUser(formData: FormData) {
-  'use server';
-
-  const data = CreateUserSchema.parse(Object.fromEntries(formData));
-  const userRepo = getUserRepository();
-  const user = await userRepo.create(data);
-
-  return { success: true, user };
-}
-```
-
-### In Storefront App
-
-```typescript
-// Server Component
-import { formatCurrency, formatDate } from '@backend/lib';
-import { IProductRepository } from '@backend';
-
-export default async function ProductPage({ params }: Props) {
-  const productRepo = getProductRepository();
-  const product = await productRepo.findBySlug(params.slug);
-
-  return (
-    <div>
-      <h1>{product.nameEn}</h1>
-      <p>{formatCurrency(product.price, 'en', 'EGP')}</p>
-      <time>{formatDate(product.createdAt, 'en')}</time>
-    </div>
-  );
-}
+// Root barrel: services, JWTService, errors, lib helpers
+import { JWTService, getMyAccountData, formatCurrency } from '@findeg/backend';
 ```
 
 ## Public API
 
-### Repository Contracts
-
-```typescript
-import {
-  IUserRepository,
-  IProductRepository,
-  ICategoryRepository,
-  IOrderRepository,
-} from '@backend/features/core';
-```
-
 ### Authentication
 
 ```typescript
-import { JWTService, TokenPair, JWTPayload } from '@backend/features/identity';
+import { JWTService } from '@findeg/backend';
 
 const jwtService = new JWTService(accessSecret, refreshSecret);
-const tokens = jwtService.generateTokens(userId, email, roles);
+const tokens = jwtService.generateTokens('42', email, roles);
 const payload = jwtService.verifyToken(tokens.accessToken, 'access');
 ```
 
 ### Validation
 
 ```typescript
-import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from '@backend/types';
-
+// CreateUserSchema lives in backend/src/types (workspace-internal, see Package Exports)
 const result = CreateUserSchema.safeParse(data);
 if (!result.success) {
-  throw new ValidationError('Invalid input', result.error.flatten().fieldErrors);
+  return { errors: result.error.flatten().fieldErrors };
 }
 ```
 
 ### Error Handling
 
 ```typescript
-import { AppError, UnauthorizedError, NotFoundError, ValidationError } from '@backend/lib';
+import { ForbiddenError, NotFoundError } from '@findeg/backend';
 
 if (!user) {
   throw new NotFoundError('User not found');
@@ -363,40 +260,32 @@ if (!hasPermission) {
 ### i18n Utilities
 
 ```typescript
-import { formatCurrency, formatDate, formatRelativeTime } from '@backend/lib';
+import { formatCurrency, formatDate, formatRelativeTime } from '@findeg/backend';
 
-formatCurrency(99.99, 'en', 'EGP'); // "EGP 99.99"
-formatCurrency(99.99, 'ar', 'EGP'); // "٩٩٫٩٩ ج.م"
+formatCurrency(99.99, 'en', 'EGP');
+formatCurrency(99.99, 'ar', 'EGP');
 
-formatDate(new Date(), 'en'); // "March 15, 2024"
-formatRelativeTime(pastDate, 'en'); // "2 days ago"
+formatDate(new Date(), 'en');
+formatRelativeTime(pastDate, 'en'); // e.g. "2 days ago"
 ```
 
 ## Package Exports
 
-```json
-{
-  "exports": {
-    ".": "./dist/index.js",
-    "./features/core": "./dist/features/core/index.js",
-    "./features/identity": "./dist/features/identity/index.js",
-    "./lib": "./dist/lib/index.js",
-    "./types": "./dist/types/index.js"
-  }
-}
-```
+`backend/package.json` maps subpaths to `src/` (there is no `dist/` build):
+
+- `.` maps to `src/index.ts`, the root barrel that also re-exports the lib helpers.
+- `./features/<name>` maps to `src/features/<name>/index.ts` for each feature barrel.
+- `./features/core/logger`, `./features/core/schemas` and the `schemas` entries of checkout, catalog and guest-access are also exported.
+- `./lib` and `./types` have no exports entry. Import lib helpers from the root barrel `@findeg/backend`. The validation schemas in `src/types` are reachable only from inside the backend workspace via tsconfig paths.
 
 ## Testing
 
 ```bash
 # Run all tests
-pnpm --filter @backend test
+pnpm --filter @findeg/backend test
 
 # Run with coverage
-pnpm --filter @backend test --coverage
-
-# Watch mode
-pnpm --filter @backend test --watch
+pnpm --filter @findeg/backend test --coverage
 ```
 
 Test coverage goals:
@@ -410,8 +299,7 @@ Test coverage goals:
 All exports are fully typed with TypeScript. Import types:
 
 ```typescript
-import type { User, Product, Order } from '@backend';
-import type { CreateUserInput, UpdateProductInput } from '@backend/types';
+import type { User } from '@findeg/backend';
 ```
 
 ## Contributing
@@ -425,8 +313,5 @@ import type { CreateUserInput, UpdateProductInput } from '@backend/types';
 ## License
 
 Private - FindEg E-commerce Platform
-=======
 
 &copy; 2026 FindEg.com. All rights reserved.
-
-> > > > > > > 006-docs-restructure
