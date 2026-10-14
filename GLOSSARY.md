@@ -265,5 +265,5 @@ The public import surface and dependency direction of a workspace package. Consu
 _Avoid_: Deep import, internal API
 
 **Domain Package**:
-`@findeg/domain`: the one place FindEg's business values, entities, relations and rules are declared, pure and free of application concerns. Every other layer maps to it; none redeclares what it holds.
+`@findeg/domain`: the one place FindEg's business values, entities, relations and rules are declared, pure and free of application concerns. Every other layer maps to it; none redeclares what it holds. See [ADR-0020](docs/adr/0020-domain-single-source-and-bounded-context-packages.md).
 _Avoid_: Business Domain Schema, shared types, enums file, constants

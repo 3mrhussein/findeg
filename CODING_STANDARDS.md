@@ -7,7 +7,8 @@ see [activation and measured violations](configs/eslint/rollout.md). Shared cove
 placement (#437) is implemented with staged activation; see
 [the Vitest policy](configs/vitest/README.md). Environment relocation (#438) and measured
 full activation/delegate removal (#445) remain pending.
-See [the delegate inventory](configs/compatibility.md). The rules below are the agreed targets.
+See [the delegate inventory](configs/compatibility.md). The rules below are the agreed targets. Domain ownership and application topology are recorded in
+[ADR-0020](docs/adr/0020-domain-single-source-and-bounded-context-packages.md).
 
 ## Global
 
