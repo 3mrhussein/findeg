@@ -51,6 +51,7 @@
     // LINT
     // ----------------------------
     "lint": {
+      "env": ["FINDEG_ESLINT_STANDARDS"],
       "dependsOn": ["transit"],
       "inputs": [
         "$TURBO_DEFAULT$",
