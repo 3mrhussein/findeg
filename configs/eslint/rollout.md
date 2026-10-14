@@ -53,7 +53,7 @@ Non-function mutable variables receive no naming convention.
 
 | Scope | Complete mode today | Activation / remediation owner |
 | --- | --- | --- |
-| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog) enforced; #440–442 migrate the remaining areas; #445 final activation |
+| Domain | Available, opt-in; pilot scopes enforced | #439 pilot (Common, Customers, Catalog) and #441 (Partners, School Lists) enforced; #440 and #442 migrate the remaining areas; #445 final activation |
 | Domain Errors | Available, opt-in | #445 measured remediation |
 | Money | Package absent from this checkout | Retirement stays with #415; nothing to activate here |
 | UI | Available, opt-in | #445 measured remediation |
@@ -91,7 +91,7 @@ FINDEG_ESLINT_STANDARDS=1 pnpm --filter <workspace> exec eslint . --format json
 
 Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` is absent from this checkout, so it is not measured.
 
-- `packages/domain` (isomorphic): 108 files, 72 errors, 0 warnings (pilot scopes `src/common`, `src/customers`, `src/catalog` report 0)
+- `packages/domain` (isomorphic): 115 files, 39 errors, 0 warnings (pilot scopes `src/common`, `src/customers`, `src/catalog`, `src/partners`, `src/school-lists` report 0)
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
 - `packages/money` (isomorphic): No files matching '.' were found.
 - `configs/env` (node): 14 files, 0 errors, 0 warnings

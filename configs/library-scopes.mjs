@@ -3,5 +3,11 @@
 // workspace lists its areas here; a migration ticket appends its areas, and #445 removes the
 // per-area list once the whole workspace is enforced. Paths are relative to the workspace root.
 export const libraryScopes = {
-  'packages/domain': ['src/common', 'src/customers', 'src/catalog'],
+  'packages/domain': [
+    'src/common',
+    'src/customers',
+    'src/catalog',
+    'src/partners',
+    'src/school-lists',
+  ],
 };
