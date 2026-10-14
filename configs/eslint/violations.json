@@ -4,7 +4,15 @@
     "files": 162,
     "errors": 0,
     "warnings": 0,
-    "byRule": {}
+    "byRule": {},
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 162,
+      "errors": 0,
+      "byMessage": {},
+      "violations": []
+    }
   },
   "packages/domain-errors": {
     "role": "isomorphic",
@@ -13,6 +21,14 @@
     "warnings": 0,
     "byRule": {
       "parse": 1
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 8,
+      "errors": 0,
+      "byMessage": {},
+      "violations": []
     }
   },
   "packages/money": {
@@ -24,14 +40,69 @@
     "files": 14,
     "errors": 0,
     "warnings": 0,
-    "byRule": {}
+    "byRule": {},
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 14,
+      "errors": 0,
+      "byMessage": {},
+      "violations": []
+    }
   },
   "packages/orders": {
     "role": "node",
     "files": 46,
     "errors": 0,
     "warnings": 0,
-    "byRule": {}
+    "byRule": {},
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 49,
+      "errors": 5,
+      "byMessage": {
+        "map": 1,
+        "constant": 4
+      },
+      "violations": [
+        {
+          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "line": 51,
+          "column": 34,
+          "messageId": "map",
+          "message": "Supply every OrderStatus value with satisfies Record<OrderStatus, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "line": 80,
+          "column": 23,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "packages/orders/src/orders/features/order-statistics/helpers.ts",
+          "line": 81,
+          "column": 23,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "packages/orders/src/orders/types.ts",
+          "line": 111,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "packages/orders/src/orders/types.ts",
+          "line": 112,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        }
+      ]
+    }
   },
   "backend": {
     "role": "node",
@@ -70,6 +141,201 @@
       "n/no-unsupported-features/es-builtins": 1,
       "n/no-unsupported-features/node-builtins": 18,
       "parse": 2
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 334,
+      "errors": 26,
+      "byMessage": {
+        "copy": 12,
+        "constant": 5,
+        "map": 9
+      },
+      "violations": [
+        {
+          "file": "backend/src/features/administration/application/dtos/CollectionInput.ts",
+          "line": 8,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/dtos/DashboardStats.ts",
+          "line": 7,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "backend/src/features/administration/application/dtos/DashboardStats.ts",
+          "line": 8,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/AdminBrandService.ts",
+          "line": 96,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/AdminBrandService.ts",
+          "line": 97,
+          "column": 29,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/AdminBrandService.ts",
+          "line": 130,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/AdminBrandService.ts",
+          "line": 131,
+          "column": 29,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/AdminDashboardService.ts",
+          "line": 56,
+          "column": 19,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/helpers/admin-product.helpers.ts",
+          "line": 95,
+          "column": 50,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/administration/application/services/helpers/admin-product.helpers.ts",
+          "line": 143,
+          "column": 20,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/catalog/application/dtos/CollectionInput.ts",
+          "line": 8,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/catalog/application/services/ProductService.ts",
+          "line": 68,
+          "column": 70,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/catalog/application/services/ProductService.ts",
+          "line": 126,
+          "column": 63,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/catalog/application/services/ProductService.ts",
+          "line": 168,
+          "column": 64,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/catalog/application/services/ProductService.ts",
+          "line": 211,
+          "column": 63,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/catalog/domain/entities/Product.ts",
+          "line": 112,
+          "column": 21,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/core/domain/constants/messages.ts",
+          "line": 12,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "backend/src/features/notifications/infrastructure/templates/OrderStatusUpdateEmail.tsx",
+          "line": 29,
+          "column": 67,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/notifications/infrastructure/templates/OrderStatusUpdateEmail.tsx",
+          "line": 30,
+          "column": 7,
+          "messageId": "map",
+          "message": "Supply every OrderStatus value with satisfies Record<OrderStatus, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/notifications/infrastructure/templates/OrderStatusUpdateEmail.tsx",
+          "line": 39,
+          "column": 7,
+          "messageId": "map",
+          "message": "Supply every OrderStatus value with satisfies Record<OrderStatus, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/features/outbox/infrastructure/order-status-handler.ts",
+          "line": 9,
+          "column": 18,
+          "messageId": "copy",
+          "message": "Use ORDER_STATUSES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/outbox/infrastructure/order-status-handler.ts",
+          "line": 10,
+          "column": 12,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/outbox/infrastructure/order-status-handler.ts",
+          "line": 11,
+          "column": 14,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/outbox/infrastructure/order-status-handler.ts",
+          "line": 12,
+          "column": 14,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "backend/src/features/school/domain/errors.ts",
+          "line": 7,
+          "column": 72,
+          "messageId": "map",
+          "message": "Supply every SupplyListErrorCode value with satisfies Record<SupplyListErrorCode, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "backend/src/lib/formatters.ts",
+          "line": 18,
+          "column": 22,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        }
+      ]
     }
   },
   "db": {
@@ -92,6 +358,103 @@
       "@typescript-eslint/restrict-template-expressions": 20,
       "findeg/naming": 69,
       "parse": 19
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 139,
+      "errors": 12,
+      "byMessage": {
+        "copy": 8,
+        "map": 2,
+        "constant": 2
+      },
+      "violations": [
+        {
+          "file": "db/src/mapping/index.ts",
+          "line": 46,
+          "column": 11,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/queries/inventory/stock-reservations.ts",
+          "line": 47,
+          "column": 25,
+          "messageId": "copy",
+          "message": "Use ReservationSettlement from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/queries/inventory/stock-reservations.ts",
+          "line": 166,
+          "column": 19,
+          "messageId": "copy",
+          "message": "Use ReservationSettlement from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/queries/inventory/stock-reservations.ts",
+          "line": 211,
+          "column": 48,
+          "messageId": "copy",
+          "message": "Use ReservationSettlement from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/queries/products/duplicate-product.ts",
+          "line": 20,
+          "column": 27,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "db/src/queries/products/duplicate-product.ts",
+          "line": 25,
+          "column": 24,
+          "messageId": "map",
+          "message": "Supply every Locale value with satisfies Record<Locale, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "db/src/queries/products/insert-product-variant-in-tx.ts",
+          "line": 55,
+          "column": 49,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/queries/sales/orders.ts",
+          "line": 375,
+          "column": 47,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "db/src/schema/inventory/inventory.ts",
+          "line": 131,
+          "column": 12,
+          "messageId": "copy",
+          "message": "Use ReservationSettlement from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/schema/sales/orders.ts",
+          "line": 75,
+          "column": 80,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "db/src/types/common.ts",
+          "line": 12,
+          "column": 46,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "db/src/types/school-supply-lists.ts",
+          "line": 12,
+          "column": 11,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        }
+      ]
     }
   },
   "frontend/ui": {
@@ -112,6 +475,31 @@
       "findeg/naming": 74,
       "parse": 1,
       "react-hooks/set-state-in-effect": 3
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 57,
+      "errors": 2,
+      "byMessage": {
+        "constant": 2
+      },
+      "violations": [
+        {
+          "file": "frontend/ui/src/shared/Price.tsx",
+          "line": 18,
+          "column": 21,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/ui/src/shared/Price.tsx",
+          "line": 25,
+          "column": 23,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        }
+      ]
     }
   },
   "frontend/dashboard": {
@@ -159,6 +547,390 @@
       "react-hooks/incompatible-library": 8,
       "react-hooks/rules-of-hooks": 1,
       "react-hooks/set-state-in-effect": 1
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 283,
+      "errors": 53,
+      "byMessage": {
+        "constant": 9,
+        "copy": 42,
+        "map": 2
+      },
+      "violations": [
+        {
+          "file": "frontend/dashboard/cypress/support/tasks/order-fixtures.ts",
+          "line": 7,
+          "column": 19,
+          "messageId": "constant",
+          "message": "Derive CROCKFORD_BASE32_ALPHABET from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/cypress/support/tasks/partner-fixtures.ts",
+          "line": 202,
+          "column": 24,
+          "messageId": "constant",
+          "message": "Derive CROCKFORD_BASE32_ALPHABET from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/cypress/support/tasks/partner-fixtures.ts",
+          "line": 219,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/cypress/support/tasks/partner-fixtures.ts",
+          "line": 316,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/cypress/support/tasks/partner-fixtures.ts",
+          "line": 352,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/cypress.config.ts",
+          "line": 32,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/_components/DashboardWidgets.tsx",
+          "line": 199,
+          "column": 19,
+          "messageId": "copy",
+          "message": "Use ORDER_STATUSES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionForm.tsx",
+          "line": 56,
+          "column": 53,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoriesContent.tsx",
+          "line": 36,
+          "column": 35,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryDrawer.tsx",
+          "line": 92,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryDrawer.tsx",
+          "line": 96,
+          "column": 29,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryDrawer.tsx",
+          "line": 121,
+          "column": 24,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryDrawer.tsx",
+          "line": 125,
+          "column": 31,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryFormPanel.tsx",
+          "line": 73,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryFormPanel.tsx",
+          "line": 77,
+          "column": 29,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryFormPanel.tsx",
+          "line": 101,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/categories/_components/CategoryFormPanel.tsx",
+          "line": 105,
+          "column": 29,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/orders/OrderTable/OrderTableColumns.tsx",
+          "line": 186,
+          "column": 51,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/orders/[id]/_components/OrderTotals.tsx",
+          "line": 15,
+          "column": 38,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/orders/[id]/page.tsx",
+          "line": 55,
+          "column": 82,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 52,
+          "column": 64,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 53,
+          "column": 78,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 54,
+          "column": 86,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 62,
+          "column": 22,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 77,
+          "column": 49,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 91,
+          "column": 26,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 92,
+          "column": 33,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 93,
+          "column": 37,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 94,
+          "column": 26,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 98,
+          "column": 31,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 124,
+          "column": 31,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/index.tsx",
+          "line": 135,
+          "column": 31,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/VariantsTab.tsx",
+          "line": 230,
+          "column": 25,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/VariantsTab.tsx",
+          "line": 248,
+          "column": 23,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 56,
+          "column": 23,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 62,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 106,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 113,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 171,
+          "column": 23,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 177,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 248,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/(dashboard)/school-lists/_actions/lists.ts",
+          "line": 255,
+          "column": 13,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/login/page.tsx",
+          "line": 8,
+          "column": 21,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/app/[locale]/login/page.tsx",
+          "line": 8,
+          "column": 39,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 35,
+          "column": 48,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 56,
+          "column": 67,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 57,
+          "column": 71,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 58,
+          "column": 60,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 65,
+          "column": 65,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/interfaces.ts",
+          "line": 66,
+          "column": 71,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/dashboard/src/lib/errors.ts",
+          "line": 52,
+          "column": 49,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/dashboard/src/lib/order-presentation.ts",
+          "line": 10,
+          "column": 50,
+          "messageId": "map",
+          "message": "Supply every OrderStatus value with satisfies Record<OrderStatus, …>; do not use Partial, assertions or literal-key copies."
+        },
+        {
+          "file": "frontend/dashboard/src/lib/order-presentation.ts",
+          "line": 19,
+          "column": 54,
+          "messageId": "map",
+          "message": "Supply every PaymentStatus value with satisfies Record<PaymentStatus, …>; do not use Partial, assertions or literal-key copies."
+        }
+      ]
     }
   },
   "frontend/storefront": {
@@ -202,6 +974,193 @@
       "parse": 5,
       "prefer-const": 1,
       "react-hooks/set-state-in-effect": 8
+    },
+    "domainDerivation": {
+      "owner": "#467",
+      "mode": "FINDEG_DOMAIN_DERIVATION=1",
+      "files": 275,
+      "errors": 25,
+      "byMessage": {
+        "copy": 8,
+        "constant": 17
+      },
+      "violations": [
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 42,
+          "column": 32,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 52,
+          "column": 32,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 68,
+          "column": 32,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 166,
+          "column": 30,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 199,
+          "column": 33,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 208,
+          "column": 33,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 218,
+          "column": 33,
+          "messageId": "copy",
+          "message": "Use LOCALES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/cypress.config.ts",
+          "line": 277,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(auth)/login/page.tsx",
+          "line": 16,
+          "column": 21,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(auth)/login/page.tsx",
+          "line": 16,
+          "column": 39,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/(user)/my-account/orders/page.tsx",
+          "line": 65,
+          "column": 44,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/(user)/my-account/page.tsx",
+          "line": 117,
+          "column": 77,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/_components/CartDrawer/CartItem.tsx",
+          "line": 21,
+          "column": 84,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/_components/CartDrawer/CartSummary.tsx",
+          "line": 9,
+          "column": 84,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/checkout/CheckoutClient/CheckoutClient.tsx",
+          "line": 167,
+          "column": 15,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/shop/products/[slug]/_components/ProductDetailClient.tsx",
+          "line": 119,
+          "column": 15,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/shop/products/[slug]/_components/ProductDetailClient.tsx",
+          "line": 127,
+          "column": 17,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/(storefront)/shop/products/[slug]/page.tsx",
+          "line": 87,
+          "column": 22,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/layout.tsx",
+          "line": 24,
+          "column": 13,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_LOCALE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/partner/[code]/_lib/roles.ts",
+          "line": 4,
+          "column": 57,
+          "messageId": "copy",
+          "message": "Use PARTNER_ROLES from @findeg/domain instead of copying its domain values."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/partner/[code]/invitations/InvitationsPanel.tsx",
+          "line": 123,
+          "column": 37,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/partner/[code]/reports/_lib/partnerReport.ts",
+          "line": 34,
+          "column": 15,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/app/[locale]/partner/[code]/reports/_lib/partnerReport.ts",
+          "line": 41,
+          "column": 15,
+          "messageId": "constant",
+          "message": "Derive BUSINESS_TIME_ZONE from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/data/catalog/queries.ts",
+          "line": 515,
+          "column": 17,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        },
+        {
+          "file": "frontend/storefront/src/lib/cart/cart-storage.ts",
+          "line": 199,
+          "column": 17,
+          "messageId": "constant",
+          "message": "Derive DEFAULT_CURRENCY from @findeg/domain instead of hard-coding a business constant."
+        }
+      ]
     }
   },
   "configs": {
