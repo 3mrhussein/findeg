@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import type { Db } from '../../connection';
 import {
   attributes as attributeTable,
@@ -52,7 +53,8 @@ export async function insertProductVariantInTx(
           ?.sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))
           .map((a) => a.value.toLowerCase())
           .join('-') || 'default',
-      localizedLabel: variant.localizedLabel ?? { en: '', ar: '' },
+      localizedLabel:
+        variant.localizedLabel ?? ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
       sortOrder: displayOrder,
       isDefault: variant.isDefault || false,
       mediaSet: variant.mediaSet,

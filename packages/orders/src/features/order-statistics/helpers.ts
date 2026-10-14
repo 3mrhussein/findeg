@@ -1,6 +1,7 @@
+import { DEFAULT_CURRENCY, BUSINESS_TIME_ZONE } from '@findeg/domain';
 import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { orders, orderItems, products } from '@findeg/db/schema';
-import { LIVE_ORDER_STATUSES, ORDER_STATUSES } from '@findeg/domain';
+import { LIVE_ORDER_STATUSES, type OrderStatus } from '@findeg/domain';
 import { moneyFromDecimal } from '@findeg/domain';
 import { statsOptionsSchema } from '../validation';
 import type { OrderContext, Orders } from '../../types';
@@ -17,14 +18,14 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
       const to = options.to ? sql`${options.to}::date` : sql`null::date`;
       const range = and(
         options.from
-          ? sql`${orders.createdAt} >= ((${from}::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')`
+          ? sql`${orders.createdAt} >= ((${from}::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')`
           : undefined,
         options.to
-          ? sql`${orders.createdAt} < (((${to} + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')`
+          ? sql`${orders.createdAt} < (((${to} + 1)::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')`
           : undefined,
       );
-      const day = sql`(${orders.createdAt} at time zone 'UTC' at time zone 'Africa/Cairo')::date`;
-      const today = sql`(${instant}::timestamptz at time zone 'Africa/Cairo')::date`;
+      const day = sql`(${orders.createdAt} at time zone 'UTC' at time zone ${BUSINESS_TIME_ZONE})::date`;
+      const today = sql`(${instant}::timestamptz at time zone ${BUSINESS_TIME_ZONE})::date`;
       // liveOnly counts only live Orders (LIVE_ORDER_STATUSES) in revenue, the trend and top products.
       const liveStatuses = inArray(orders.status, LIVE_ORDER_STATUSES);
       const revenueFilter = options.liveOnly ? sql`filter (where ${liveStatuses})` : sql``;
@@ -48,17 +49,23 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .from(orders)
             .where(range)
             .groupBy(orders.status);
-          const ordersByStatus = Object.fromEntries(
-            ORDER_STATUSES.map((status) => [status, 0]),
-          ) as Record<(typeof ORDER_STATUSES)[number], number>;
+          const ordersByStatus = {
+            pending: 0,
+            confirmed: 0,
+            processing: 0,
+            shipped: 0,
+            delivered: 0,
+            cancelled: 0,
+            refunded: 0,
+          } satisfies Record<OrderStatus, number>;
           for (const row of statuses) ordersByStatus[row.status] = row.count;
           const trend = await tx.execute<{ date: string; revenue: string }>(sql`
           with dates as (
             select generate_series(greatest(${today} - (${options.trendDays}::int - 1), ${from})::timestamp, least(${today}, ${to})::timestamp, interval '1 day')::date as date
           )
           select dates.date::text as date, coalesce(sum(${orders.totalAmount}), 0)::text as revenue
-          from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
-            and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone 'Africa/Cairo') at time zone 'UTC')
+          from dates left join ${orders} on ${orders.createdAt} >= ((dates.date::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')
+            and ${orders.createdAt} < (((dates.date + 1)::timestamp at time zone ${BUSINESS_TIME_ZONE}) at time zone 'UTC')
             ${trendLiveClause}
           group by dates.date order by dates.date
         `);
@@ -77,8 +84,8 @@ export function createOrderStatistics({ database, now }: OrderContext): Pick<Ord
             .orderBy(desc(sql`sum(${orderItems.quantity})`), products.id)
             .limit(options.topProductsLimit);
           return {
-            currency: 'EGP' as const,
-            timezone: 'Africa/Cairo' as const,
+            currency: DEFAULT_CURRENCY,
+            timezone: BUSINESS_TIME_ZONE,
             totalOrders: totals.totalOrders,
             totalRevenue: moneyFromDecimal(totals.revenue),
             todayOrders: totals.todayOrders,

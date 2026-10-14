@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
@@ -114,7 +115,7 @@ export default async function Page({ params, searchParams }: Props) {
                       {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}
                     </div>
                     <div className="mt-1 text-sm">
-                      {t('Pages.MyAccount.OrderTotal')}: {order.currency || 'EGP'}{' '}
+                      {t('Pages.MyAccount.OrderTotal')}: {order.currency || DEFAULT_CURRENCY}{' '}
                       {formatEgp(order.totalAmount)}
                     </div>
                   </Link>

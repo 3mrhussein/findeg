@@ -90,7 +90,7 @@ test('workspace dependency graph has no runtime, type, or development cycles', a
   const candidates = [
     'configs',
     'configs/env',
-    'packages/money',
+    'packages/domain',
     'packages/domain-errors',
     'packages/orders',
     'db',

@@ -8,4 +8,4 @@ import * as constants from './constants';
 export type ReservationState = (typeof constants.RESERVATION_STATES)[number];
 
 /** How a held reservation is settled: `consume` lowers on hand and reserved, `release` only reserved. */
-export type ReservationSettlement = 'consume' | 'release';
+export type ReservationSettlement = (typeof constants.RESERVATION_SETTLEMENTS)[number];

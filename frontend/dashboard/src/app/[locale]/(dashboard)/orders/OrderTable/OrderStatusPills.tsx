@@ -1,4 +1,5 @@
 'use client';
+import { ORDER_STATUSES, type OrderStatus } from '@findeg/domain';
 
 import { useTransition } from 'react';
 import { Badge } from '@findeg/ui';
@@ -12,14 +13,21 @@ interface OrderStatusPillsProps {
   total: number;
 }
 
-const STATUSES: { value: string; label: string }[] = [
+const statusLabels = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
+} satisfies Record<OrderStatus, string>;
+const STATUSES = [
   { value: 'all', label: 'All' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'processing', label: 'Processing' },
-  { value: 'shipped', label: 'Shipped' },
-  { value: 'delivered', label: 'Delivered' },
-  { value: 'cancelled', label: 'Cancelled' },
+  ...ORDER_STATUSES.filter((status) => status !== 'refunded').map((value) => ({
+    value,
+    label: statusLabels[value],
+  })),
 ];
 
 /**

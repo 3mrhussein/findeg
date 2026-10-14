@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { getOrderDetail } from '@data/orders/queries';
@@ -52,7 +53,10 @@ export default async function OrderDetailPage({
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Left Column - 65% width on xl screens */}
         <div className="xl:col-span-2 space-y-6">
-          <OrderItemsTable items={order.items || []} currency={order.currency || 'EGP'} />
+          <OrderItemsTable
+            items={order.items || []}
+            currency={order.currency || DEFAULT_CURRENCY}
+          />
           <OrderTotals order={order} />
 
           <div className="mt-8 space-y-4">

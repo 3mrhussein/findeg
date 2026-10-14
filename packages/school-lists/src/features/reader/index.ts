@@ -130,6 +130,7 @@ export class SchoolSupplyListReader implements ISchoolSupplyListReader {
         return {
           success: true,
           data: {
+            id: list.id,
             publicCode,
             status: list.status === 'archived' ? 'archived' : 'published',
             grade: list.grade,

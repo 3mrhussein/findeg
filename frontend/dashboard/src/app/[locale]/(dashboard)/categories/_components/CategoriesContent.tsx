@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { getCategories } from '@data/categories/queries';
 import { parse } from '@findeg/backend/features/core';
@@ -33,7 +34,9 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
     'use server';
 
     const input = {
-      name: data.localizedName || { en: 'Untitled', ar: '' },
+      name:
+        data.localizedName ||
+        ({ en: 'Untitled', ar: '' } satisfies Record<Locale, string | undefined>),
       slug:
         data.slug ||
         (data.localizedName?.en ?? 'untitled')

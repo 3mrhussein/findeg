@@ -1,5 +1,6 @@
 'use server';
 
+import type { Locale } from '@findeg/domain';
 import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/identity/types';
@@ -56,13 +57,13 @@ export async function createDraftAction(
       localizedTitle: {
         en: titleEn || undefined,
         ar: titleAr || undefined,
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription:
         descriptionEn || descriptionAr
-          ? {
+          ? ({
               en: descriptionEn || undefined,
               ar: descriptionAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : null,
     });
 
@@ -103,17 +104,17 @@ export async function updateDraftAction(
       academicYear: academicYear || undefined,
       localizedTitle:
         titleEn || titleAr
-          ? {
+          ? ({
               en: titleEn || undefined,
               ar: titleAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : undefined,
       localizedDescription:
         descriptionEn || descriptionAr
-          ? {
+          ? ({
               en: descriptionEn || undefined,
               ar: descriptionAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : null,
     });
 
@@ -154,7 +155,7 @@ export async function addItemAction(
     const categoryIdRaw = formData.get('categoryId');
     const categoryId = categoryIdRaw ? Number(categoryIdRaw) : null;
     const attributesRaw = formData.get('attributes');
-    let attributes: Record<string, string> = {};
+    let attributes = {} satisfies Record<string, string>;
     if (attributesRaw && typeof attributesRaw === 'string') {
       try {
         attributes = JSON.parse(attributesRaw);
@@ -171,13 +172,13 @@ export async function addItemAction(
       localizedLabel: {
         en: labelEn || undefined,
         ar: labelAr || undefined,
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedNote:
         noteEn || noteAr
-          ? {
+          ? ({
               en: noteEn || undefined,
               ar: noteAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : null,
       quantity,
       required,
@@ -233,7 +234,7 @@ export async function updateItemAction(
     const categoryIdRaw = formData.get('categoryId');
     const categoryId = categoryIdRaw ? Number(categoryIdRaw) : null;
     const attributesRaw = formData.get('attributes');
-    let attributes: Record<string, string> = {};
+    let attributes = {} satisfies Record<string, string>;
     if (attributesRaw && typeof attributesRaw === 'string') {
       try {
         attributes = JSON.parse(attributesRaw);
@@ -245,17 +246,17 @@ export async function updateItemAction(
     const patch: Partial<SupplyListItemInput> = {
       localizedLabel:
         labelEn || labelAr
-          ? {
+          ? ({
               en: labelEn || undefined,
               ar: labelAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : undefined,
       localizedNote:
         noteEn || noteAr
-          ? {
+          ? ({
               en: noteEn || undefined,
               ar: noteAr || undefined,
-            }
+            } satisfies Record<Locale, string | undefined>)
           : null,
       quantity,
       required,

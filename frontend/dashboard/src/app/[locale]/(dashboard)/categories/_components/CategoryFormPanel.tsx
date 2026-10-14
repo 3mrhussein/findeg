@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 /**
  * CategoryFormPanel — Inline form panel for creating/editing categories
  *
@@ -15,7 +16,7 @@
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-'use client';
+('use client');
 
 import * as React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -73,11 +74,11 @@ export function CategoryFormPanel({
       localizedName: {
         en: category?.localizedContent?.name?.en || '',
         ar: category?.localizedContent?.name?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription: {
         en: category?.localizedContent?.description?.en || '',
         ar: category?.localizedContent?.description?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
       icon: category?.icon || '',
@@ -101,11 +102,11 @@ export function CategoryFormPanel({
       localizedName: {
         en: category?.localizedContent?.name?.en || '',
         ar: category?.localizedContent?.name?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription: {
         en: category?.localizedContent?.description?.en || '',
         ar: category?.localizedContent?.description?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
       icon: category?.icon || '',

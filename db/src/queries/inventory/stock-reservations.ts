@@ -1,3 +1,7 @@
+import { availableStock, freeUnits, RESERVATION_SETTLEMENTS } from '@findeg/domain';
+import { mapStockBalance, domainId } from '../../mapping';
+
+import { type ReservationSettlement } from '@findeg/domain';
 /**
  * Stock Reservation primitives (ADR-0005)
  *
@@ -44,7 +48,7 @@ export class InsufficientStockError extends Error {
 export class StockReservationStateError extends Error {
   constructor(
     readonly orderId: number,
-    readonly attempted: 'consume' | 'release',
+    readonly attempted: ReservationSettlement,
   ) {
     super(`Order ${orderId} reservation was already settled; cannot ${attempted} it`);
     this.name = 'StockReservationStateError';
@@ -87,10 +91,18 @@ export async function reserveOrderStock(
     const shortfalls: StockShortfall[] = [];
     for (const { variantId, quantity } of wanted) {
       let remaining = quantity;
-      let available = 0;
-      for (const balance of balances.filter((b) => b.variantId === variantId)) {
-        const free = Math.max(balance.onHand - balance.reserved, 0);
-        available += free;
+      const variantBalances = balances.filter((balance) => balance.variantId === variantId);
+      const available = availableStock(
+        domainId<'ProductVariant'>(variantId),
+        variantBalances.map(mapStockBalance),
+        variantBalances.map((balance) => ({
+          id: domainId<'Warehouse'>(balance.warehouseId),
+          name: '',
+          status: 'active',
+        })),
+      );
+      for (const balance of variantBalances) {
+        const free = freeUnits(balance);
         const take = Math.min(free, remaining);
         if (take > 0) {
           reservedLines.push({ variantId, warehouseId: balance.warehouseId, quantity: take });
@@ -163,7 +175,7 @@ export async function persistOrderStock(
   );
 }
 
-type Settlement = 'consume' | 'release';
+type Settlement = ReservationSettlement;
 
 /**
  * Settles every reserved line of an order's reservation. Returns false when this
@@ -208,7 +220,7 @@ async function settleOrderStock(
         and(
           eq(stockMovements.referenceType, 'order'),
           eq(stockMovements.referenceId, String(orderId)),
-          inArray(stockMovements.movementType, ['consume', 'release']),
+          inArray(stockMovements.movementType, RESERVATION_SETTLEMENTS),
         ),
       );
     if (settled.some((s) => s.movementType === settlement)) return false;

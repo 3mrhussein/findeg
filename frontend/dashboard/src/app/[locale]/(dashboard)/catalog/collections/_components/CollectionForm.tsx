@@ -1,5 +1,6 @@
 'use client';
 
+import type { Locale } from '@findeg/domain';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -53,7 +54,9 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
     resolver: zodResolver(CollectionInputSchema) as Resolver<CollectionInput>,
     defaultValues: {
       slug: collection?.slug || '',
-      localizedTitle: collection?.localizedTitle || { en: '', ar: '' },
+      localizedTitle:
+        collection?.localizedTitle ||
+        ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
       localizedSubtitle: collection?.localizedSubtitle ?? undefined,
       heroImageUrl: collection?.heroImageUrl || '',
       sortOrder: collection?.sortOrder || 0,

@@ -72,6 +72,7 @@ const ROOT_RUNTIME_EXPORTS = [
   'PartnerInvitationError',
   'PartnerMembershipError',
   'RELATIONS',
+  'RESERVATION_SETTLEMENTS',
   'RESERVATION_STATES',
   'RESERVED_PARTNER_ROLES',
   'ReconfirmationRequiredError',

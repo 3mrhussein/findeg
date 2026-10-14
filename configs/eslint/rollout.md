@@ -150,11 +150,10 @@ The existing command for a fully composed measurement is:
 FINDEG_ESLINT_STANDARDS=1 pnpm --filter <workspace> exec eslint . --format json
 ```
 
-Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` is absent from this checkout, so it is not measured.
+Measured with the complete configuration (`standards(role, { root: workspace })`, ESLint `lintFiles(['.'])`). Counts are per workspace; rule-level breakdowns live in `violations.json`. `packages/money` was removed by #443 phase 1 and is no longer measured.
 
 - `packages/domain` (isomorphic): 162 files, 0 errors, 0 warnings (the library scope `src` reports 0; `vitest.config.ts` is in the Domain TypeScript project)
 - `packages/domain-errors` (isomorphic): 7 files, 1 errors, 0 warnings
-- `packages/money` (isomorphic): No files matching '.' were found.
 - `configs/env` (node): 14 files, 0 errors, 0 warnings
 - `packages/orders` (node): 46 files, 0 errors, 0 warnings (library scope `src`; #443 phase 1)
 - `backend` (node): 331 files, 975 errors, 0 warnings
@@ -170,21 +169,19 @@ Fixtures in `scripts/architecture/ecosystem.test.mjs` use actual flat configs an
 `findeg-lint` exit status. Every preset family (JavaScript, TypeScript strict
 type-aware, React/Hooks/a11y, Next, Node, naming, Prettier) executes; none skip.
 
-## Domain derivation (#466; remediation and activation #467)
+## Domain derivation (#466; activated by #467)
 
-The existing `local/no-domain-value-set-copies` guard retains its default #416
-array, union and SQL enforcement. `FINDEG_DOMAIN_DERIVATION=1` adds literal-key
-objects/maps, exhaustive per-value maps and business constants as **errors** through
-all canonical and compatibility profiles. Default lint remains green during this
-staged rollout. The switch is passed and hashed by Turbo; measurement cannot reuse
-a default-mode lint result. #467 fixes the recorded violations and makes the expanded
-option unconditional. No suppression or warning baseline is added.
+The `local/no-domain-value-set-copies` guard is active in every default lint run
+(`configs/eslint/layers/boundaries.js` passes `deriveNeverRedefine: true`). Besides
+its #416 array, union and SQL checks, it rejects literal-key objects/maps, non-exhaustive
+or asserted per-value maps and hard-coded business constants as **errors**. The
+`FINDEG_DOMAIN_DERIVATION` staging switch is removed, so there is no measurement mode
+to opt into and no Turbo hash split. No suppression or warning baseline exists.
 
 ```sh
-# Existing lint seam; expected to fail until #467 remediates the measured violations.
-FINDEG_DOMAIN_DERIVATION=1 pnpm lint --concurrency=1 --continue
+pnpm lint --concurrency=1 --continue
 # Machine-readable diagnostics for a single workspace:
-FINDEG_DOMAIN_DERIVATION=1 pnpm --filter @findeg/backend exec eslint . --format json
+pnpm --filter @findeg/backend exec eslint . --format json
 ```
 
 Value sets, literal types and constants are discovered from Domain's public export
@@ -216,5 +213,6 @@ The current Customer interface has no separate customer-kind value set to mutate
 workspace, owned by #467: file counts, error counts and exact file/line/message
 lists from the composed workspace configuration (`ESLint.lintFiles(['.'])`, with
 `FINDEG_DOMAIN_DERIVATION=1`). These are measurements of the #466 working tree based
-on `2349b31ff`, not suppressions. The architecture suite includes positive/negative
+on `2349b31ff`, not suppressions. #467 remediated the recorded violations: the
+`domainDerivation` lists for backend, dashboard and storefront are empty. The architecture suite includes positive/negative
 fixtures, existing-CLI exit checks and actual Turbo hash separation.

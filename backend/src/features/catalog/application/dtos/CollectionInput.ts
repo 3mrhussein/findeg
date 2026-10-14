@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { z } from 'zod';
 import { IdSchema, TranslationMapSchema, SlugSchema } from '../../../core/domain/types/common';
 
@@ -8,7 +9,7 @@ export const CollectionInputSchema = z.object({
     .object({
       en: z.string().optional(),
       ar: z.string().optional(),
-    })
+    } satisfies Record<Locale, z.ZodType>)
     .optional()
     .nullable(),
   heroImageUrl: z.string().optional().nullable(),

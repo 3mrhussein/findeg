@@ -1,3 +1,5 @@
+import { RESERVATION_SETTLEMENTS } from '@findeg/domain';
+import { inList } from '../sql-values';
 /**
  * Inventory Database Schema
  *
@@ -128,7 +130,7 @@ export const stockMovements = inventorySchema.table(
     uniqueIndex('uq_stock_movements_order_settlement')
       .on(table.referenceId, table.movementType, table.variantId, table.warehouseId)
       .where(
-        sql`${table.referenceType} = 'order' AND ${table.movementType} IN ('consume', 'release')`,
+        sql`${table.referenceType} = 'order' AND ${table.movementType} IN (${inList(RESERVATION_SETTLEMENTS)})`,
       ),
   ],
 );

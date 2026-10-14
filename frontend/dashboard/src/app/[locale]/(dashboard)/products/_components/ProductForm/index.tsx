@@ -1,5 +1,6 @@
 'use client';
 
+import type { Locale } from '@findeg/domain';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,17 +50,24 @@ export function ProductForm({
     ) as import('react-hook-form').Resolver<ProductFormValues>,
     defaultValues: initialData
       ? {
-          localizedName: initialData.localizedContent?.name || { en: '', ar: '' },
-          localizedDescription: initialData.localizedContent?.description || { en: '', ar: '' },
-          localizedLongDescription: initialData.localizedContent?.longDescription || {
-            en: '',
-            ar: '',
-          },
-          localizedSlug: (
-            initialData.localizedContent as typeof initialData.localizedContent & {
-              slug?: { en: string; ar?: string };
-            }
-          )?.slug || { en: '', ar: '' },
+          localizedName:
+            initialData.localizedContent?.name ||
+            ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
+          localizedDescription:
+            initialData.localizedContent?.description ||
+            ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
+          localizedLongDescription:
+            initialData.localizedContent?.longDescription ||
+            ({
+              en: '',
+              ar: '',
+            } satisfies Record<Locale, string | undefined>),
+          localizedSlug:
+            (
+              initialData.localizedContent as typeof initialData.localizedContent & {
+                slug?: { en: string; ar?: string };
+              }
+            )?.slug || ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
           categoryId: initialData.categoryId,
           brandId: initialData.brandId,
           tagIds: initialData.tags?.map((t) => t.id) || [],
@@ -74,7 +82,8 @@ export function ProductForm({
             isActive: v.isActive,
             isDefault: v.isDefault,
             sortOrder: v.sortOrder,
-            localizedLabel: v.localizedLabel || { en: '', ar: '' },
+            localizedLabel:
+              v.localizedLabel || ({ en: '', ar: '' } satisfies Record<Locale, string | undefined>),
             images: (v.images || []).map((img) => ({
               url: img.url,
               alt: img.alt || '',
@@ -88,14 +97,17 @@ export function ProductForm({
         }
       : {
           isActive: true,
-          localizedName: { en: '', ar: '' },
-          localizedDescription: { en: '', ar: '' },
-          localizedLongDescription: { en: '', ar: '' },
-          localizedSlug: { en: '', ar: '' },
+          localizedName: { en: '', ar: '' } satisfies Record<Locale, string | undefined>,
+          localizedDescription: { en: '', ar: '' } satisfies Record<Locale, string | undefined>,
+          localizedLongDescription: { en: '', ar: '' } satisfies Record<Locale, string | undefined>,
+          localizedSlug: { en: '', ar: '' } satisfies Record<Locale, string | undefined>,
           variants: [
             {
               sku: '',
-              localizedLabel: { en: 'Standard', ar: 'قياسي' },
+              localizedLabel: { en: 'Standard', ar: 'قياسي' } satisfies Record<
+                Locale,
+                string | undefined
+              >,
               basePrice: 0,
               costPrice: 0,
               strikePrice: null,
@@ -124,7 +136,7 @@ export function ProductForm({
               localizedLabel: {
                 en: variant.localizedLabel.en,
                 ar: variant.localizedLabel.ar || '',
-              },
+              } satisfies Record<Locale, string | undefined>,
             })),
           })
         : await createProduct({
@@ -135,7 +147,7 @@ export function ProductForm({
               localizedLabel: {
                 en: variant.localizedLabel.en,
                 ar: variant.localizedLabel.ar || '',
-              },
+              } satisfies Record<Locale, string | undefined>,
             })),
           });
 

@@ -1,8 +1,14 @@
-export const PARTNER_ROLES = [
-  { value: 'partner-administrator', label: 'Partner Administrator' },
-  { value: 'list-manager', label: 'List manager' },
-  { value: 'collection-staff', label: 'Collection staff' },
-  { value: 'report-viewer', label: 'Report viewer' },
-] as const;
+import { PARTNER_ROLES as domainPartnerRoles, type PartnerRole } from '@findeg/domain';
 
-export type PartnerRoleValue = (typeof PARTNER_ROLES)[number]['value'];
+const roleLabels = {
+  'partner-administrator': 'Partner Administrator',
+  'list-manager': 'List manager',
+  'collection-staff': 'Collection staff',
+  'report-viewer': 'Report viewer',
+} satisfies Record<PartnerRole, string>;
+
+export const PARTNER_ROLES = domainPartnerRoles.map((value) => ({
+  value,
+  label: roleLabels[value],
+}));
+export type PartnerRoleValue = PartnerRole;

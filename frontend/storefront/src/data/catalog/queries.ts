@@ -1,4 +1,5 @@
-'use cache';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
+('use cache');
 
 import 'server-only';
 /**
@@ -512,7 +513,7 @@ export async function getProductPricing(payload: { productId: number; variantId:
     success: true,
     data: {
       unitPrice: variant.basePrice,
-      currency: 'EGP',
+      currency: DEFAULT_CURRENCY,
     },
   };
 }

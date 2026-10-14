@@ -1,3 +1,4 @@
+import type { Locale } from '@findeg/domain';
 import { z } from 'zod';
 import {
   SUPPLY_LIST_ITEM_QUANTITY_MIN,
@@ -9,7 +10,10 @@ import {
 /** Shared, transport-neutral input contracts for lifecycle services and persistence. */
 export const SupplyListIdSchema = z.number().int().positive();
 const translationSchema = z
-  .object({ en: z.string().optional(), ar: z.string().optional() })
+  .object({ en: z.string().optional(), ar: z.string().optional() } satisfies Record<
+    Locale,
+    z.ZodType
+  >)
   .strict();
 const labelSchema = translationSchema.refine((value) =>
   Boolean(value.en?.trim() || value.ar?.trim()),

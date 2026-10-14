@@ -25,6 +25,7 @@ const variant = {
 };
 
 const list = (over: Partial<PublicSupplyList> = {}): PublicSupplyList => ({
+  id: 72,
   publicCode: 'a'.repeat(32),
   status: 'published',
   grade: 'Grade 1',

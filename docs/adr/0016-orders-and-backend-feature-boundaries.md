@@ -45,4 +45,4 @@ Decided in [#402](https://github.com/3mrhussein/findeg/issues/402), alongside AD
 - **`@findeg/domain` replaces `@findeg/money` in the Orders graph.** The domain owns Money and the pure Order rules: the transition tables, Order Acceptance, the joint Refund, the Stock Reservation effects and the Order Reference. Orders keeps the commands, persistence, Outbox enqueue, Staff access checks, input validation, idempotency and the Confirmation digest.
 - **Orders holds input schemas only, now exported from `@findeg/orders`.** Status options, transition helpers and display labels no longer live there: the values and transitions come from the domain, and labels belong to the UI.
 - **Same-status calls stay complete no-ops** for Order and payment status. The domain functions report `changed: false`, and Orders then writes, enqueues and audits nothing.
-- The switch-over itself is #399; until it lands, `@findeg/money` is still the live edge.
+- The #399 switch-over has landed; Orders derives Money and rules from `@findeg/domain`.

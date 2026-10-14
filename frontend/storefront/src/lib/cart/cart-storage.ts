@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import {
   addToCart as domainAddToCart,
   cart as domainCart,
@@ -196,7 +197,7 @@ export function toClientCartItems(cart: StoredCart, metaMap: MetadataMap = {}): 
       imageUrl: meta.imageUrl,
       unitPrice: meta.unitPrice ?? 0,
       sku: meta.sku,
-      currency: 'EGP',
+      currency: DEFAULT_CURRENCY,
     };
   });
 }
