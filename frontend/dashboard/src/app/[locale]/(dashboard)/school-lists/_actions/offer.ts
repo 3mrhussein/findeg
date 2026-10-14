@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath, updateTag } from 'next/cache';
+import { NotAuthorizedError } from '@findeg/domain-errors';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { Locale } from '@findeg/domain';
@@ -43,7 +44,8 @@ export async function saveOfferAction(
     if (!result.success) return fail(result.error);
     refresh();
     return { status: 'saved' };
-  } catch {
+  } catch (error) {
+    if (!(error instanceof NotAuthorizedError)) throw error;
     return fail('forbidden');
   }
 }
@@ -64,7 +66,8 @@ export async function clearOfferAction(
     if (!result.success) return fail(result.error);
     refresh();
     return { status: 'cleared' };
-  } catch {
+  } catch (error) {
+    if (!(error instanceof NotAuthorizedError)) throw error;
     return fail('forbidden');
   }
 }

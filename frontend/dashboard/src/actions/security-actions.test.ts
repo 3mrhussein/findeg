@@ -502,6 +502,70 @@ describe('Server Action Security Integration Tests', () => {
       expect(res.status).toBe('idle');
       expect(partnerMembershipService.changePartnerStatus).toHaveBeenCalled();
     });
+
+    it('returns invalid-input if school profile details lack area', async () => {
+      getSession.mockResolvedValue(staffSession([PERMISSION_CODES.PARTNERS_MANAGE]));
+      const fd = new FormData();
+      fd.set('code', 'school-1');
+      fd.set('nameEn', 'School');
+      fd.set('nameAr', 'مدرسة');
+      fd.set('logoUrl', 'https://example.com/logo.png');
+
+      const res = await savePartnerAction('en', null, { status: 'idle' }, fd);
+      expect(res).toEqual({ status: 'error', message: 'invalid-input' });
+      expect(partnerMembershipService.createPartner).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('unexpected partner/offer failures', () => {
+    const scenarios = [
+      {
+        name: 'partner save',
+        permission: PERMISSION_CODES.PARTNERS_MANAGE,
+        service: partnerMembershipService.createPartner,
+        run: () => savePartnerAction('en', null, { status: 'idle' }, new FormData()),
+      },
+      {
+        name: 'offer save',
+        permission: PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+        service: schoolSupplyListService.setOffer,
+        run: () => {
+          const data = new FormData();
+          data.set('percent', '10');
+          data.set('startsAt', '2026-10-15T10:00');
+          return saveOfferAction('en', 1, { status: 'idle' }, data);
+        },
+      },
+      {
+        name: 'offer clear',
+        permission: PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE,
+        service: schoolSupplyListService.clearOffer,
+        run: () => clearOfferAction('en', 1, { status: 'idle' }),
+      },
+    ];
+    it.each(scenarios)(
+      '$name propagates unexpected service failures',
+      async ({ permission, service, run }) => {
+        getSession.mockResolvedValue(staffSession([permission]));
+        const failure = new Error('database unavailable');
+        service.mockRejectedValueOnce(failure);
+        await expect(run()).rejects.toBe(failure);
+        expect(updateTag).not.toHaveBeenCalled();
+      },
+    );
+    it.each(scenarios)(
+      '$name propagates refresh failure after the write succeeds',
+      async ({ permission, service, run }) => {
+        getSession.mockResolvedValue(staffSession([permission]));
+        service.mockResolvedValueOnce({ success: true, data: { id: 1 } });
+        const failure = new Error('cache refresh failed');
+        revalidatePath.mockImplementationOnce(() => {
+          throw failure;
+        });
+        await expect(run()).rejects.toBe(failure);
+        expect(service).toHaveBeenCalledTimes(1);
+      },
+    );
   });
 
   describe('School Supply List actions', () => {

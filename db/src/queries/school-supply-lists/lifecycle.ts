@@ -337,5 +337,9 @@ export async function listSchoolListPartners(executor: SchoolSupplyListExecutor)
       status: businessPartners.status,
     })
     .from(businessPartners)
+    .innerJoin(
+      partnerSchoolProfiles,
+      eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),
+    )
     .orderBy(asc(businessPartners.id));
 }

@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath, updateTag } from 'next/cache';
+import { NotAuthorizedError } from '@findeg/domain-errors';
 import { requireStaffAction } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { AcademicSystem, Governorate, Locale, SchoolType } from '@findeg/domain';
@@ -32,16 +33,19 @@ export async function savePartnerAction(
     const area = String(formData.get('area') ?? '').trim();
     const logoUrl = String(formData.get('logoUrl') ?? '').trim();
     // Default selects alone do not request a profile; names-only edits remain valid.
-    const schoolProfile =
-      area || logoUrl
-        ? {
-            governorate: String(formData.get('governorate') ?? '') as Governorate,
-            area,
-            schoolType: String(formData.get('schoolType') ?? '') as SchoolType,
-            academicSystem: String(formData.get('academicSystem') ?? '') as AcademicSystem,
-            logoUrl: logoUrl || null,
-          }
-        : undefined;
+    const wantsProfile = Boolean(area || logoUrl);
+    if (wantsProfile && !area) {
+      return { status: 'error', message: 'invalid-input' };
+    }
+    const schoolProfile = wantsProfile
+      ? {
+          governorate: String(formData.get('governorate') ?? '') as Governorate,
+          area,
+          schoolType: String(formData.get('schoolType') ?? '') as SchoolType,
+          academicSystem: String(formData.get('academicSystem') ?? '') as AcademicSystem,
+          logoUrl: logoUrl || null,
+        }
+      : undefined;
     const input = { ...fields, schoolProfile };
     const result =
       partnerId === null
@@ -55,7 +59,8 @@ export async function savePartnerAction(
     revalidatePath('/[locale]/partners/[id]', 'page');
     updateTag('partners');
     return { status: 'saved' };
-  } catch {
+  } catch (error) {
+    if (!(error instanceof NotAuthorizedError)) throw error;
     return { status: 'error', message: 'forbidden' };
   }
 }

@@ -14,6 +14,7 @@ import {
   type BusinessPartnerPatch,
   type BusinessPartnerRow,
   type PartnerDatabase,
+  type PartnerTransaction,
   type PartnerSchoolProfileRow,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerStatus as PartnerStatus } from '@findeg/domain';
@@ -115,16 +116,19 @@ export class PartnerService implements IPartnerService {
       const row = await db.transaction(async (tx) => {
         const { schoolProfile, ...fields } = parsed.data;
         const created = await insertBusinessPartner(tx, fields);
-        if (schoolProfile) {
-          await upsertPartnerSchoolProfile(tx, { businessPartnerId: created.id, ...schoolProfile });
-        }
+        const savedProfile = schoolProfile
+          ? await upsertPartnerSchoolProfile(tx, {
+              businessPartnerId: created.id,
+              ...schoolProfile,
+            })
+          : undefined;
         await insertPartnerAccessHistory(tx, {
           businessPartnerId: created.id,
           actorUserId: actor.userId,
           actorKind: 'staff',
           action: 'partner.created',
           before: null,
-          after: snapshot(created),
+          after: { ...snapshot(created), ...(savedProfile ? { schoolProfile: savedProfile } : {}) },
         });
         return created;
       });
@@ -160,10 +164,7 @@ export class PartnerService implements IPartnerService {
             }
           }
           if (parsed.data.schoolProfile) {
-            await upsertPartnerSchoolProfile(tx, {
-              businessPartnerId: partnerId,
-              ...parsed.data.schoolProfile,
-            });
+            await this.saveSchoolProfile(tx, actor, partnerId, parsed.data.schoolProfile);
           }
           if (Object.keys(patch).length === 0) return ok(toPartner(current));
 
@@ -244,17 +245,37 @@ export class PartnerService implements IPartnerService {
       const partner = await lockBusinessPartnerById(tx, partnerId);
       if (!partner) return fail('not-found');
 
-      const saved = await upsertPartnerSchoolProfile(tx, {
-        businessPartnerId: partnerId,
-        governorate: parsed.data.governorate,
-        area: parsed.data.area,
-        schoolType: parsed.data.schoolType,
-        academicSystem: parsed.data.academicSystem,
-        logoUrl: parsed.data.logoUrl ?? null,
-      });
-
+      const saved = await this.saveSchoolProfile(tx, actor, partnerId, parsed.data);
       return ok(saved);
     });
+  }
+
+  /** Call under the partner row lock; the profile and its history commit together. */
+  private async saveSchoolProfile(
+    tx: PartnerTransaction,
+    actor: StaffActor,
+    partnerId: number,
+    input: SavePartnerSchoolProfileInput,
+  ) {
+    const previous = await getPartnerSchoolProfile(tx, partnerId);
+    const next = { businessPartnerId: partnerId, ...input, logoUrl: input.logoUrl ?? null };
+    if (
+      previous &&
+      (['governorate', 'area', 'schoolType', 'academicSystem', 'logoUrl'] as const).every(
+        (field) => previous[field] === next[field],
+      )
+    )
+      return previous;
+    const saved = await upsertPartnerSchoolProfile(tx, next);
+    await insertPartnerAccessHistory(tx, {
+      businessPartnerId: partnerId,
+      actorUserId: actor.userId,
+      actorKind: 'staff',
+      action: 'partner.updated',
+      before: { schoolProfile: previous ?? null },
+      after: { schoolProfile: saved },
+    });
+    return saved;
   }
 
   async getPartnerSchoolProfile(

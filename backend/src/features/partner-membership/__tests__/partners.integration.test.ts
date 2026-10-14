@@ -1,5 +1,6 @@
+import { listSchoolListPartners } from '@findeg/db/queries/school-supply-lists';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { partnerAccessHistory, users } from '@findeg/db/schema';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { createPartnerMembershipServices, type PartnerServices, type StaffActor } from '..';
@@ -388,6 +389,99 @@ describe('Business Partners (Staff operations)', () => {
       });
 
       expect(result).toEqual({ success: false, error: 'not-found' });
+    });
+  });
+
+  describe('school-profile history and draft partner options', () => {
+    const profile = {
+      governorate: 'Cairo' as const,
+      area: 'Maadi',
+      schoolType: 'Private' as const,
+      academicSystem: 'National' as const,
+    };
+    it('audits standalone and profile-only updates, and leaves no-op history unchanged', async () => {
+      const partner = await create('audited-profile-school');
+      const first = await services.partners.savePartnerSchoolProfile(staff, partner.id, profile);
+      expect(first.success).toBe(true);
+      const history = await historyFor(partner.id);
+      expect(history).toHaveLength(2);
+      expect(history[1]).toMatchObject({
+        action: 'partner.updated',
+        actorUserId: staff.userId,
+        before: { schoolProfile: null },
+        after: { schoolProfile: { ...profile, logoUrl: null } },
+      });
+      const result = await services.partners.updatePartner(staff, partner.id, {
+        schoolProfile: { ...profile, area: 'Zamalek' },
+      });
+      expect(result.success).toBe(true);
+      const changed = await historyFor(partner.id);
+      expect(changed).toHaveLength(3);
+      expect(changed[2]).toMatchObject({
+        before: { schoolProfile: { area: 'Maadi' } },
+        after: { schoolProfile: { area: 'Zamalek' } },
+      });
+      await services.partners.savePartnerSchoolProfile(staff, partner.id, {
+        ...profile,
+        area: 'Zamalek',
+      });
+      expect(await historyFor(partner.id)).toHaveLength(3);
+    });
+    it('rolls back profile writes in both paths when the history insert fails', async () => {
+      const partner = await create('profile-audit-rollback');
+      await testDb.db
+        .execute(sql`create function public.reject_profile_history() returns trigger language plpgsql as $$
+        begin raise exception 'injected profile history failure'; end; $$`);
+      await testDb.db
+        .execute(sql`create trigger reject_profile_history before insert on ${partnerAccessHistory}
+        for each row when (NEW.action = 'partner.updated') execute function public.reject_profile_history()`);
+      try {
+        await expect(
+          services.partners.savePartnerSchoolProfile(staff, partner.id, profile),
+        ).rejects.toThrow();
+        await expect(
+          services.partners.updatePartner(staff, partner.id, {
+            nameEn: 'Changed',
+            schoolProfile: profile,
+          }),
+        ).rejects.toThrow();
+        expect(await services.partners.getPartnerSchoolProfile(staff, partner.id)).toEqual({
+          success: true,
+          data: null,
+        });
+        expect(await services.partners.getPartner(staff, partner.id)).toMatchObject({
+          success: true,
+          data: { nameEn: 'Nile School' },
+        });
+        expect(await historyFor(partner.id)).toHaveLength(1);
+      } finally {
+        await testDb.db.execute(
+          sql`drop trigger reject_profile_history on ${partnerAccessHistory}`,
+        );
+        await testDb.db.execute(sql`drop function public.reject_profile_history()`);
+      }
+    });
+    it('records an initial profile in the partner creation history and only offers Partner Schools', async () => {
+      const withoutProfile = await create('not-a-partner-school');
+      const created = await services.partners.createPartner(staff, {
+        code: 'draft-school-option',
+        nameEn: 'School',
+        nameAr: 'مدرسة',
+        schoolProfile: profile,
+      });
+      if (!created.success) throw new Error(created.error);
+      expect((await historyFor(created.data.id))[0]).toMatchObject({
+        after: { schoolProfile: { ...profile, logoUrl: null } },
+      });
+      const options = await listSchoolListPartners(testDb.db);
+      expect(options.some((p) => p.id === withoutProfile.id)).toBe(false);
+      expect(options.find((p) => p.id === created.data.id)).toEqual({
+        id: created.data.id,
+        nameEn: 'School',
+        nameAr: 'مدرسة',
+        status: 'onboarding',
+      });
+      expect(options.map((p) => p.id)).toEqual(options.map((p) => p.id).sort((a, b) => a - b));
     });
   });
 
