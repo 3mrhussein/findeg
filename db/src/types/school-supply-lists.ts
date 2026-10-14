@@ -4,7 +4,7 @@ import {
   SUPPLY_LIST_ITEM_QUANTITY_MAX,
   LIST_OFFER_MIN_BASIS_POINTS,
   LIST_OFFER_MAX_BASIS_POINTS,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 /** Shared, transport-neutral input contracts for lifecycle services and persistence. */
 export const SupplyListIdSchema = z.number().int().positive();

@@ -8,8 +8,8 @@
  */
 
 import { z } from 'zod';
-import { discountPercentage } from '@findeg/domain/catalog';
-import { freeUnits, stockLevel } from '@findeg/domain/inventory';
+import { discountPercentage } from '@findeg/domain';
+import { freeUnits, stockLevel } from '@findeg/domain';
 import { moneyFromDecimal, type Money } from '@findeg/domain';
 import { IdSchema, TranslationMapSchema, type Locale } from '../../../core/domain/types/common';
 import { pick, ResponsiveMediaSetSchema } from '../../../core/domain/value-objects';

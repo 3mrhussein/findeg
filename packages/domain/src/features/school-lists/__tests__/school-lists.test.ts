@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError, type ActiveStatus } from '@findeg/domain/common';
-import type { CategoryId, VariantId } from '@findeg/domain/catalog';
-import { BUSINESS_PARTNER_STATUSES, type BusinessPartnerStatus } from '@findeg/domain/partners';
+import { DomainError, type ActiveStatus } from '@findeg/domain';
+import type { CategoryId, VariantId } from '@findeg/domain/types';
+import { BUSINESS_PARTNER_STATUSES, type BusinessPartnerStatus } from '@findeg/domain';
 import {
   STAFF_LIST_AUTHORING_ACTIONS,
   assertStaffListAuthoring,
@@ -15,7 +15,7 @@ import {
   type ItemSpecification,
   type SupplyListId,
   type SupplyListItemId,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 const variantId = (n: number) => n as VariantId;
 const categoryId = (n: number) => n as CategoryId;

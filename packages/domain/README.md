@@ -6,8 +6,8 @@ Relations. Each context retains its nested `features/` modules and local `__test
 The recursive source vocabulary is index/types/constants/helpers files, `features/`
 and `helpers/` containers, named modules inside those containers, and `__tests__/`.
 
-Consumers use `@findeg/domain` or `@findeg/domain/types`. Existing bounded-context
-subpaths remain available until #443 phase 2 and point at the context indexes.
+Consumers use `@findeg/domain` or `@findeg/domain/types`. These are the only
+public entries; bounded-context, helper and source subpaths do not resolve.
 Root runtime export names are pinned by `src/__tests__/entries.test.ts`.
 
 Run `pnpm lint`, `pnpm type-check` and `pnpm test` in this workspace. Shared Vitest

@@ -1,5 +1,5 @@
 import React from 'react';
-import { OrderStatusSchema } from '@findeg/orders/schemas';
+import { OrderStatusSchema } from '@findeg/orders';
 import { orderQueries } from '@findeg/db/queries';
 import { DEFAULT_LOCALE } from '../../core';
 import { OrderStatusUpdateEmail } from '../../notifications';

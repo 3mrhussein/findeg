@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
+import { DomainError } from '@findeg/domain';
 import {
   ORDER_STATUSES,
   changeOrderStatus,
   type OrderStatus,
   type PaymentStatus,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

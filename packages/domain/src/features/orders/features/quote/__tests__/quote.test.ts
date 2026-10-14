@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { sku, type VariantId } from '@findeg/domain/catalog';
-import { DomainError, moneyFromDecimal, moneyToDecimal } from '@findeg/domain/common';
+import { sku, type VariantId } from '@findeg/domain';
+import { DomainError, moneyFromDecimal, moneyToDecimal } from '@findeg/domain';
 import {
   FLAT_SHIPPING_FEE,
   priceQuote,
   type Quote,
   type QuoteLineRequest,
   type QuoteSource,
-} from '@findeg/domain/orders';
-import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
+} from '@findeg/domain';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

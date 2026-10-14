@@ -17,7 +17,7 @@ import {
   listOffers,
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../index';
-import { ORDER_REFERENCE_PATTERN } from '@findeg/domain/orders';
+import { ORDER_REFERENCE_PATTERN } from '@findeg/domain';
 import { computeOrderFingerprint } from '../domain/fingerprint';
 import { checkoutIdempotencyQueries, orderQueries } from '@findeg/db/queries';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';

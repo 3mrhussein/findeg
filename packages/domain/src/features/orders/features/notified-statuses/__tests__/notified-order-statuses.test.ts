@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  NOTIFIED_ORDER_STATUSES,
-  ORDER_STATUSES,
-  isNotifiedOrderStatus,
-} from '@findeg/domain/orders';
+import { NOTIFIED_ORDER_STATUSES, ORDER_STATUSES, isNotifiedOrderStatus } from '@findeg/domain';
 
 // Ported from @findeg/orders' events entry (CO-16). There is no refund email.
 describe('notified Order statuses', () => {

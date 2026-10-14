@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
+import { DomainError } from '@findeg/domain';
 import {
   LIST_OFFER_MAX_BASIS_POINTS,
   LIST_OFFER_MIN_BASIS_POINTS,
@@ -10,7 +10,7 @@ import {
   type ListOffer,
   type ListOfferId,
   type SupplyListId,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

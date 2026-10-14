@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import { moneyToDecimal } from '@findeg/domain/common';
-import type { ConfirmationTerms } from '@findeg/domain/orders';
+import { moneyToDecimal } from '@findeg/domain';
+import type { ConfirmationTerms } from '@findeg/domain/types';
 
 /** Checkout owns digest policy; Domain supplies canonical terms and decides reconfirmation. */
 export function computeConfirmation(terms: ConfirmationTerms): string {

@@ -2,7 +2,7 @@ import {
   isEligibleVariant,
   type CandidateVariant,
   type EligibilityItem as DomainEligibilityItem,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 import { domainId } from '@findeg/db';
 
 export interface ItemSpecification {

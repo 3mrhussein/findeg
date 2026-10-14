@@ -15,7 +15,7 @@ import { VariantSchema, type Variant, VariantEntity } from './Variant';
 import { pick } from '../../../core/domain/value-objects';
 import { ID, IdSchema, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
 import { Locale } from '@findeg/domain';
-import { defaultVariant, isNewArrival } from '@findeg/domain/catalog';
+import { defaultVariant, isNewArrival } from '@findeg/domain';
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
   description: TranslationMapSchema,

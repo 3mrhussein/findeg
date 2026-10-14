@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError, money, moneyFromDecimal, moneyToDecimal } from '@findeg/domain/common';
-import { priceListOfferLine } from '@findeg/domain/orders';
+import { DomainError, money, moneyFromDecimal, moneyToDecimal } from '@findeg/domain';
+import { priceListOfferLine } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

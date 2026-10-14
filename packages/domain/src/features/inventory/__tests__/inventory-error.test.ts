@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
-import { InventoryError } from '@findeg/domain/inventory';
+import { DomainError } from '@findeg/domain';
+import { InventoryError } from '@findeg/domain';
 
 describe('InventoryError', () => {
   it('is a DomainError that carries its rule code and message', () => {

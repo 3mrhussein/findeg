@@ -1,7 +1,4 @@
-import {
-  SupplyListError as DomainSupplyListError,
-  type SupplyListErrorCode,
-} from '@findeg/domain/school-lists';
+import { SupplyListError as DomainSupplyListError, type SupplyListErrorCode } from '@findeg/domain';
 import type { SupplyListError } from '../application/interfaces/ISchoolSupplyListService';
 
 const applicationCodes: Record<SupplyListErrorCode, SupplyListError> = {

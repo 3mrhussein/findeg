@@ -27,12 +27,7 @@ async function lintAt(relativeFile, code) {
 }
 
 test('Orders consumers may use only the public package entries', async () => {
-  for (const entry of [
-    '@findeg/orders',
-    '@findeg/orders/types',
-    '@findeg/orders/schemas',
-    '@findeg/orders/events',
-  ]) {
+  for (const entry of ['@findeg/orders', '@findeg/orders/types']) {
     assert.deepEqual(await lintAt('frontend/storefront/src/boundary.ts', `import '${entry}';`), []);
   }
 });
@@ -40,6 +35,8 @@ test('Orders consumers may use only the public package entries', async () => {
 test('rejects deep aliases and relative filesystem bypasses, including dynamic and type imports', async () => {
   const fixture = 'frontend/storefront/src/boundary.ts';
   for (const code of [
+    "import '@findeg/orders/schemas';",
+    "import '@findeg/orders/events';",
     "import '@findeg/orders/src/application/factory';",
     "export { x } from '@findeg/orders/internal/thing';",
     "const module = import('@findeg/orders/src/index');",
@@ -156,12 +153,7 @@ test('if the extracted package exists, its export map and dependency direction a
     if (error.code === 'ENOENT') return; // Extraction is delivered by the dependent issues.
     throw error;
   }
-  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), [
-    '.',
-    './events',
-    './schemas',
-    './types',
-  ]);
+  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), ['.', './types']);
   const dependencies = [
     'dependencies',
     'devDependencies',

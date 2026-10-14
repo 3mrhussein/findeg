@@ -7,7 +7,7 @@ import {
   changePaymentStatus,
   isNotifiedOrderStatus,
   refundOrder,
-} from '@findeg/domain/orders';
+} from '@findeg/domain';
 import { ORDER_STATUS_KIND, orderStatusId } from '../order-events';
 import { mapOrderRuleError, OrderNotFoundError } from '../order-errors';
 import { assertCanWriteOrders, type OrderStaffActor } from '../write-permission';

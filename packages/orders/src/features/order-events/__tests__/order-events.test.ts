@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isNotifiedOrderStatus } from '@findeg/domain/orders';
+import { isNotifiedOrderStatus } from '@findeg/domain';
 import { ORDER_STATUS_KIND, orderStatusId } from '../index';
 
 describe('Order status message protocol', () => {

@@ -1,6 +1,6 @@
 import { type Locale } from '@findeg/domain';
 import * as React from 'react';
-import type { OrderStatus } from '@findeg/domain/orders';
+import type { OrderStatus } from '@findeg/domain/types';
 import { Section, Text, Button, Heading } from '@react-email/components';
 import { EmailLayout } from './EmailLayout';
 

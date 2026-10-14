@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LINE_QUANTITY_MAX, LINE_QUANTITY_MIN, isLineQuantity } from '@findeg/domain/common';
+import { LINE_QUANTITY_MAX, LINE_QUANTITY_MIN, isLineQuantity } from '@findeg/domain';
 
 // One rule for cart lines, list items, Quote and Order lines and stock allocation input.
 describe('line quantity', () => {

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { ShippingAddress } from '../schemas';
-import { cart } from '@findeg/domain/orders';
-import type { VariantId } from '@findeg/domain/catalog';
+import { cart } from '@findeg/domain';
+import type { VariantId } from '@findeg/domain/types';
 
 export interface OrderFingerprintInput {
   source?: 'cart' | 'list';

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError, type ActiveStatus } from '@findeg/domain/common';
-import type { CategoryId, VariantId } from '@findeg/domain/catalog';
-import type { StockBalance, Warehouse, WarehouseId } from '@findeg/domain/inventory';
+import { DomainError, type ActiveStatus } from '@findeg/domain';
+import type { CategoryId, VariantId } from '@findeg/domain/types';
+import type { StockBalance, Warehouse, WarehouseId } from '@findeg/domain/types';
 import {
   BUSINESS_PARTNER_STATUSES,
   type BusinessPartnerId,
   type BusinessPartnerStatus,
-} from '@findeg/domain/partners';
+} from '@findeg/domain';
 import {
   SUPPLY_LIST_STATUSES,
   archiveSupplyList,
@@ -23,7 +23,7 @@ import {
   type SupplyListId,
   type SupplyListItemId,
   type SupplyListStatus,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 const variantId = (n: number) => n as VariantId;
 const listId = (n: number) => n as SupplyListId;

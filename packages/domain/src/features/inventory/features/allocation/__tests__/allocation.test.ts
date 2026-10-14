@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError } from '@findeg/domain/common';
-import type { VariantId } from '@findeg/domain/catalog';
+import { DomainError } from '@findeg/domain';
+import type { VariantId } from '@findeg/domain/types';
 
 import {
   InsufficientStockError,
   allocateStock,
   type Warehouse,
   type WarehouseId,
-} from '@findeg/domain/inventory';
+} from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {

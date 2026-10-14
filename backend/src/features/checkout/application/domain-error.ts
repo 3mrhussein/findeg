@@ -1,6 +1,6 @@
-import { DomainError } from '@findeg/domain/common';
-import { InsufficientStockError } from '@findeg/domain/inventory';
-import { ReconfirmationRequiredError } from '@findeg/domain/orders';
+import { DomainError } from '@findeg/domain';
+import { InsufficientStockError } from '@findeg/domain';
+import { ReconfirmationRequiredError } from '@findeg/domain';
 import type { CheckoutAcceptFailure } from './interfaces/ICheckoutService';
 import { toCheckoutQuote } from './quote-mapping';
 

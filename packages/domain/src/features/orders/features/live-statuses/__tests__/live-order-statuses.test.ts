@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LIVE_ORDER_STATUSES, ORDER_STATUSES, isLiveOrderStatus } from '@findeg/domain/orders';
+import { LIVE_ORDER_STATUSES, ORDER_STATUSES, isLiveOrderStatus } from '@findeg/domain';
 
 // Ported from partner-sales' REPORTED_ORDER_STATUSES and reviews' purchasable statuses.
 describe('live Order statuses', () => {

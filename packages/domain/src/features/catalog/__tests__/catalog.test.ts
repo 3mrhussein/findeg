@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { DomainError, moneyFromDecimal, type ActiveStatus } from '../../common';
-import * as catalog from '@findeg/domain/catalog';
+import * as catalog from '@findeg/domain';
 import {
   defaultVariant,
   discountPercentage,
@@ -21,7 +21,7 @@ import {
   type Tag,
   type TagId,
   type VariantId,
-} from '@findeg/domain/catalog';
+} from '@findeg/domain';
 
 const variantId = (n: number) => n as VariantId;
 

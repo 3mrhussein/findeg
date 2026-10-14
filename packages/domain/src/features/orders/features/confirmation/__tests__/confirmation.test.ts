@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { sku, type VariantId } from '@findeg/domain/catalog';
-import { DomainError, moneyFromDecimal } from '@findeg/domain/common';
+import { sku, type VariantId } from '@findeg/domain';
+import { DomainError, moneyFromDecimal } from '@findeg/domain';
 import {
   ReconfirmationRequiredError,
   confirmQuote,
@@ -10,8 +10,8 @@ import {
   type Quote,
   type QuoteLineRequest,
   type QuoteSource,
-} from '@findeg/domain/orders';
-import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain/school-lists';
+} from '@findeg/domain';
+import { publicCode, type SupplyListId, type SupplyListItemId } from '@findeg/domain';
 
 const egp = moneyFromDecimal;
 const PUBLIC_CODE = 'abc'.padEnd(32, '0');

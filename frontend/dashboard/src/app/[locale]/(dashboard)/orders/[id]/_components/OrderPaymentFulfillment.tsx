@@ -22,7 +22,7 @@ import {
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 
 interface OrderPaymentFulfillmentProps {
   order: import('@findeg/orders').Order;

@@ -5,8 +5,6 @@ import { join, relative } from 'node:path';
 const serverPackage =
   /\/node_modules\/(?:postgres|drizzle-orm|bcryptjs|jsonwebtoken|nodemailer|sharp)(?:\/|$)/;
 const serverSource = /\/(?:db\/src\/(?!types\/)|backend\/src\/features\/[^/]+\/infrastructure\/)/;
-const ordersServer =
-  /\/packages\/orders\/src\/(?:index|orders|mapper|validation|errors|OrderStaffActor|orderWritePermission)(?:\.|\/)/;
 const environmentSource = /\/configs\/env\/src\//;
 const nodeModule = /(?:^|\/)node:[a-z_]+(?:\/|$)/;
 
@@ -70,7 +68,6 @@ export async function verifyClientBundle(buildDirectory, { frameworkPolyfill } =
       (source) =>
         serverPackage.test(source) ||
         serverSource.test(source) ||
-        ordersServer.test(source) ||
         environmentSource.test(source) ||
         nodeModule.test(source),
     );

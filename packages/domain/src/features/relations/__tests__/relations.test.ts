@@ -23,7 +23,7 @@ import type {
   Tag,
   Warehouse,
 } from '@findeg/domain';
-import { ENTITY_DOMAINS, RELATIONS, type EntityName } from '@findeg/domain/relations';
+import { ENTITY_DOMAINS, RELATIONS, type EntityName } from '@findeg/domain';
 
 const entities = Object.keys(ENTITY_DOMAINS) as EntityName[];
 

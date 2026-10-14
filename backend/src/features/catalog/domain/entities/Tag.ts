@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { TAG_SCOPES } from '@findeg/domain/catalog';
+import { TAG_SCOPES } from '@findeg/domain';
 import { IdSchema } from '../../../core/domain/types/common';
 
 /**

@@ -16,7 +16,7 @@ import type {
   PublicSupplyListVariant,
 } from '../interfaces/ISchoolSupplyListReader';
 
-import { PUBLIC_CODE_PATTERN, listOfferBasisPointsAt } from '@findeg/domain/school-lists';
+import { PUBLIC_CODE_PATTERN, listOfferBasisPointsAt } from '@findeg/domain';
 
 function differingAttributes(
   candidate: Record<string, string>,

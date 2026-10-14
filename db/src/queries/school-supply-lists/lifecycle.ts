@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
-import type { SupplyListStatus } from '@findeg/domain/school-lists';
+import type { SupplyListStatus } from '@findeg/domain/types';
 import {
   businessPartners,
   partnerSchoolProfiles,

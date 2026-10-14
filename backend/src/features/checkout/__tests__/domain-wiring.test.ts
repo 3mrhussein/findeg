@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import { moneyFromDecimal, moneyToDecimal } from '@findeg/domain/common';
-import { sku, type VariantId } from '@findeg/domain/catalog';
+import { moneyFromDecimal, moneyToDecimal } from '@findeg/domain';
+import { sku, type VariantId } from '@findeg/domain';
 import {
   confirmQuote,
   confirmationTerms,
   priceQuote,
   ReconfirmationRequiredError,
-} from '@findeg/domain/orders';
-import { InsufficientStockError } from '@findeg/domain/inventory';
+} from '@findeg/domain';
+import { InsufficientStockError } from '@findeg/domain';
 import { toCheckoutQuote } from '../application/quote-mapping';
 import { mapDomainError } from '../application/domain-error';
 import { computeConfirmation } from '../domain/confirmation';

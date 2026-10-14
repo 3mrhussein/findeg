@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { ORDER_STATUSES, PAYMENT_STATUSES } from '@findeg/domain';
+
 /**
  * Backend Domain Type Facade
  *
@@ -20,7 +23,10 @@ export { TranslationMapSchema, type TranslationMap } from '../value-objects/Loca
 export type Price = number;
 
 // ─── Sales Enums ─────────────────────────────────────────────────────────────
-export { OrderStatusSchema, PaymentStatusSchema } from '@findeg/orders/schemas';
+// Derive the facade schemas from Domain without importing the Orders server factory.
+const orderStatusSchema = z.enum(ORDER_STATUSES);
+const paymentStatusSchema = z.enum(PAYMENT_STATUSES);
+export { orderStatusSchema as OrderStatusSchema, paymentStatusSchema as PaymentStatusSchema };
 export type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain';
 
 // ─── Identity ────────────────────────────────────────────────────────────────

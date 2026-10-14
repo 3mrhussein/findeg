@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { money } from '@findeg/domain/common';
-import type { CategoryId, VariantId } from '@findeg/domain/catalog';
-import { priceListOfferLine } from '@findeg/domain/orders';
+import { money } from '@findeg/domain';
+import type { CategoryId, VariantId } from '@findeg/domain/types';
+import { priceListOfferLine } from '@findeg/domain';
 import {
   checkoutBlockingItemIds,
   chooseSelectionVariant,
@@ -21,7 +21,7 @@ import {
   type SelectionLine,
   type SupplyListId,
   type SupplyListItemId,
-} from '@findeg/domain/school-lists';
+} from '@findeg/domain';
 
 // Ported from the Storefront's `list-selection` tests. Browser persistence (storage keys,
 // parsing, the Cart-drawer index) stays in the Storefront; these are the business rules.

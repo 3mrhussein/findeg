@@ -1,5 +1,5 @@
-import { moneyToDecimal } from '@findeg/domain/common';
-import { confirmationTerms, type Quote } from '@findeg/domain/orders';
+import { moneyToDecimal } from '@findeg/domain';
+import { confirmationTerms, type Quote } from '@findeg/domain';
 import { computeConfirmation } from '../domain/confirmation';
 import type { CheckoutQuote } from '../schemas';
 

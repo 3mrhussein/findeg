@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 
 export interface OrderStatusTransitionResult {
   changed: boolean;

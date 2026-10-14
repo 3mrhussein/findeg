@@ -33,7 +33,7 @@ test('storefront lint rejects backend infrastructure and direct database imports
 test('server factories, client schemas and erased client types remain allowed', async () => {
   for (const code of [
     "import { createStorefrontServices } from '@findeg/backend/features/catalog';",
-    "'use client'; import { ShippingAddressSchema } from '@findeg/orders/schemas';",
+    "'use client'; import { ShippingAddressSchema } from '@findeg/orders';",
     "'use client'; import { hasPermission, PERMISSION_CODES } from '@findeg/backend/features/core/schemas';",
     "'use client'; import type { ShippingAddressSchema } from '@findeg/orders';",
     "'use client'; import { type ShippingAddressSchema } from '@findeg/orders';",

@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DomainError, type RandomBytes } from '@findeg/domain/common';
-import {
-  ORDER_REFERENCE_PATTERN,
-  generateOrderReference,
-  orderReference,
-} from '@findeg/domain/orders';
+import { DomainError, type RandomBytes } from '@findeg/domain';
+import { ORDER_REFERENCE_PATTERN, generateOrderReference, orderReference } from '@findeg/domain';
 
 function codeOf(run: () => unknown): string | undefined {
   try {
