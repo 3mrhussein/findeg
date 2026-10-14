@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module';
 import { describe, expect, it, vi } from 'vitest';
-import { OrderStatusUpdateSchema } from '@findeg/orders/schemas';
+import { OrderStatusUpdateSchema as orderStatusUpdateSchema } from '@findeg/orders/schemas';
 import { orderStatusId } from '@findeg/orders/events';
 import { isNotifiedOrderStatus } from '@findeg/domain/orders';
 
@@ -10,7 +10,12 @@ vi.mock('@findeg/db/connection', () => {
 const require = createRequire(import.meta.url);
 describe('public package resolution', () => {
   it('resolves all public entries and rejects internal paths', () => {
-    for (const entry of ['@findeg/orders', '@findeg/orders/schemas', '@findeg/orders/events']) {
+    for (const entry of [
+      '@findeg/orders',
+      '@findeg/orders/types',
+      '@findeg/orders/schemas',
+      '@findeg/orders/events',
+    ]) {
       expect(require.resolve(entry)).toContain('/packages/orders/src/');
     }
     expect(() => require.resolve('@findeg/orders/mapper')).toThrow(/not defined by "exports"/);
@@ -19,7 +24,7 @@ describe('public package resolution', () => {
     );
   });
   it('pure schemas validate without application configuration', () => {
-    expect(OrderStatusUpdateSchema.parse({ status: 'shipped', trackingNumber: 'ABC' })).toEqual({
+    expect(orderStatusUpdateSchema.parse({ status: 'shipped', trackingNumber: 'ABC' })).toEqual({
       status: 'shipped',
       trackingNumber: 'ABC',
     });

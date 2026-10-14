@@ -1,6 +1,6 @@
 import { PERMISSION_CODES, systemAdmin } from '@findeg/db/types';
 import { NotAuthorizedError } from '@findeg/domain-errors';
-import type { OrderStaffActor } from './OrderStaffActor';
+import type { OrderStaffActor } from './types';
 
 /**
  * Staff may change an Order's status or payment only with order-write access

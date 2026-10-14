@@ -2,13 +2,14 @@ import {
   OrderError,
   ORDER_STATUS_TRANSITIONS,
   PAYMENT_STATUS_TRANSITIONS,
+  type OrderProgress,
   type OrderStatus,
   type PaymentStatus,
-  type OrderProgress,
 } from '@findeg/domain/orders';
+
 export class OrderNotFoundError extends Error {
   constructor(readonly orderId: number) {
-    super(`Order #${orderId} not found`);
+    super(`Order #${String(orderId)} not found`);
     this.name = 'OrderNotFoundError';
   }
 }
@@ -26,12 +27,6 @@ export class InvalidOrderStatusTransitionError extends Error {
   }
 }
 
-export interface OrderStatusTransitionResult {
-  changed: boolean;
-  previousStatus: OrderStatus;
-  status: OrderStatus;
-}
-
 export class InvalidPaymentStatusTransitionError extends Error {
   constructor(
     readonly from: PaymentStatus,
@@ -46,12 +41,6 @@ export class InvalidPaymentStatusTransitionError extends Error {
     );
     this.name = 'InvalidPaymentStatusTransitionError';
   }
-}
-
-export interface PaymentStatusTransitionResult {
-  changed: boolean;
-  previousStatus: PaymentStatus;
-  status: PaymentStatus;
 }
 
 /** Preserve the feature's application errors while the Domain owns the rules. */

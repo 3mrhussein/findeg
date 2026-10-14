@@ -26,8 +26,13 @@ async function lintAt(relativeFile, code) {
     .map((message) => message.messageId);
 }
 
-test('Orders consumers may use only the three public package entries', async () => {
-  for (const entry of ['@findeg/orders', '@findeg/orders/schemas', '@findeg/orders/events']) {
+test('Orders consumers may use only the public package entries', async () => {
+  for (const entry of [
+    '@findeg/orders',
+    '@findeg/orders/types',
+    '@findeg/orders/schemas',
+    '@findeg/orders/events',
+  ]) {
     assert.deepEqual(await lintAt('frontend/storefront/src/boundary.ts', `import '${entry}';`), []);
   }
 });
@@ -151,7 +156,12 @@ test('if the extracted package exists, its export map and dependency direction a
     if (error.code === 'ENOENT') return; // Extraction is delivered by the dependent issues.
     throw error;
   }
-  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), ['.', './events', './schemas']);
+  assert.deepEqual(Object.keys(manifest.exports ?? {}).sort(), [
+    '.',
+    './events',
+    './schemas',
+    './types',
+  ]);
   const dependencies = [
     'dependencies',
     'devDependencies',

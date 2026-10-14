@@ -1,9 +1,11 @@
 import { z } from 'zod';
-import { OrderStatusSchema, PaymentStatusSchema } from './schemas';
+import { orderStatusSchema, paymentStatusSchema } from '../input-schemas/helpers';
+import { MAX_ORDER_PAGE_SIZE } from './constants';
+
 export const positiveId = z.number().int().positive().max(2_147_483_647);
-/** Largest page an Order list returns. */
-export const MAX_ORDER_PAGE_SIZE = 100;
+
 export const pageSize = z.number().int().positive().max(MAX_ORDER_PAGE_SIZE);
+
 export const orderId = z.union([
   positiveId,
   z
@@ -12,10 +14,11 @@ export const orderId = z.union([
     .transform(Number)
     .pipe(positiveId),
 ]);
+
 export const filtersSchema = z
   .object({
-    status: OrderStatusSchema.optional(),
-    paymentStatus: PaymentStatusSchema.optional(),
+    status: orderStatusSchema.optional(),
+    paymentStatus: paymentStatusSchema.optional(),
     userId: positiveId.optional(),
     startDate: z.date().optional(),
     endDate: z.date().optional(),
@@ -36,6 +39,7 @@ const calendarDate = z
       value >= '0001-01-01'
     );
   }, 'Invalid calendar date');
+
 export const statsOptionsSchema = z
   .object({
     from: calendarDate.optional(),
