@@ -1,4 +1,4 @@
-import { drawRandomBytes, type RandomBytes } from '../common/random';
+import { drawRandomBytes, type RandomBytes } from '../common/features/random';
 import { SupplyListError } from './supply-list-error';
 
 declare const brand: unique symbol;

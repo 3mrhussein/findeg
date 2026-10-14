@@ -4,10 +4,3 @@
  */
 export const LINE_QUANTITY_MIN = 1;
 export const LINE_QUANTITY_MAX = 999;
-
-/** Whether `quantity` is a line quantity: a whole number from 1 to 999. */
-export function isLineQuantity(quantity: number): boolean {
-  return (
-    Number.isInteger(quantity) && quantity >= LINE_QUANTITY_MIN && quantity <= LINE_QUANTITY_MAX
-  );
-}

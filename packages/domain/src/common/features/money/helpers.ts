@@ -1,23 +1,8 @@
-import { DomainError } from './domain-error';
-
-declare const egp: unique symbol;
-
-/**
- * An amount of Egyptian pounds with exactly two decimals (`xx.xx`), never negative. It is held
- * as a `bigint` count of hundredths of a pound (piasters), so no calculation drifts or yields a
- * third decimal. Make one with `money` or `moneyFromDecimal`; plain `bigint` maths loses the
- * brand on purpose, so every result goes back through the checks here.
- */
-export type Money = bigint & { readonly [egp]: 'EGP' };
-
-export type MoneyErrorCode = 'INVALID_MONEY_AMOUNT' | 'NEGATIVE_MONEY' | 'INVALID_QUANTITY';
+import { DomainError } from '../domain-error';
+import type { Money, MoneyErrorCode } from './types';
 
 /** An amount that is not valid Money. */
-export class MoneyError extends DomainError<MoneyErrorCode> {
-  constructor(code: MoneyErrorCode, message: string) {
-    super(code, message);
-  }
-}
+export class MoneyError extends DomainError<MoneyErrorCode> {}
 
 const HUNDREDTHS_PER_POUND = 100n;
 
@@ -30,7 +15,10 @@ export function money(hundredths: bigint): Money {
     throw new TypeError(`Expected hundredths as a bigint, received ${typeof hundredths}`);
   }
   if (hundredths < 0n) {
-    throw new MoneyError('NEGATIVE_MONEY', `Money cannot be negative: ${hundredths} hundredths`);
+    throw new MoneyError(
+      'NEGATIVE_MONEY',
+      `Money cannot be negative: ${hundredths.toString()} hundredths`,
+    );
   }
   return hundredths as Money;
 }
@@ -55,7 +43,7 @@ export function moneyFromDecimal(decimal: string): Money {
   if (sign) {
     throw new MoneyError('NEGATIVE_MONEY', `Money cannot be negative: ${JSON.stringify(decimal)}`);
   }
-  return money(BigInt(pounds!) * HUNDREDTHS_PER_POUND + BigInt(fraction.padEnd(2, '0')));
+  return money(BigInt(pounds) * HUNDREDTHS_PER_POUND + BigInt(fraction.padEnd(2, '0')));
 }
 
 /** The exact `xx.xx` string the database stores, e.g. 3750 hundredths -> "37.50". */
@@ -63,7 +51,7 @@ export function moneyToDecimal(amount: Money): string {
   const hundredths = money(amount);
   const pounds = hundredths / HUNDREDTHS_PER_POUND;
   const fraction = (hundredths % HUNDREDTHS_PER_POUND).toString().padStart(2, '0');
-  return `${pounds}.${fraction}`;
+  return `${pounds.toString()}.${fraction}`;
 }
 
 /** Zero pounds. */
@@ -83,7 +71,7 @@ export function multiplyMoney(amount: Money, quantity: number): Money {
   if (!Number.isSafeInteger(quantity) || quantity < 0) {
     throw new MoneyError(
       'INVALID_QUANTITY',
-      `Expected a whole, non-negative quantity, received ${quantity}`,
+      `Expected a whole, non-negative quantity, received ${quantity.toString()}`,
     );
   }
   return money(amount * BigInt(quantity));

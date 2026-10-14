@@ -9,7 +9,7 @@ import os from 'node:os';
 const root = path.resolve(import.meta.dirname, '../..');
 const require = createRequire(path.join(root, 'backend/package.json'));
 const binary = path.join(path.dirname(require.resolve('vitest/package.json')), 'vitest.mjs');
-function run(files, library = true, extra = []) {
+function run(files, library = true, extra = [], scope = undefined) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-policy-'));
   try {
     fs.symlinkSync(path.join(root, 'backend/node_modules'), path.join(directory, 'node_modules'));
@@ -20,7 +20,7 @@ function run(files, library = true, extra = []) {
     fs.writeFileSync(
       path.join(directory, 'vitest.config.ts'),
       `import { sharedTest } from ${JSON.stringify(path.join(root, 'configs/vitest/policy.mjs'))};
-export default { test: { ...sharedTest({ root: ${JSON.stringify(directory)}, enabled: true, library: ${library} }), maxWorkers: 1 } };`,
+export default { test: { ...sharedTest({ root: ${JSON.stringify(directory)}, enabled: true, library: ${library}, scope: ${JSON.stringify(scope)} }), maxWorkers: 1 } };`,
     );
     const result = spawnSync(process.execPath, [binary, 'run', ...extra], {
       cwd: directory,
@@ -184,4 +184,28 @@ test('non-test helper files under __tests__ are not executed as suites', () => {
   });
   assert.equal(result.status, 0, result.output);
   assert.doesNotMatch(result.output, /No test suite found/);
+});
+
+test('a pilot scope measures and places only its own subtree', () => {
+  const scoped = {
+    'src/common/index.ts': implementation,
+    'src/common/__tests__/behavior.ts': executableTest,
+  };
+  // Untested and test-less implementation outside the pilot scope does not block the scope.
+  const accepted = run(
+    { ...scoped, 'src/lib/unused.ts': implementation },
+    true,
+    [],
+    ['src/common'],
+  );
+  assert.equal(accepted.status, 0, accepted.output);
+  // Untested implementation inside the scope is measured and rejected per file.
+  const rejected = run(
+    { ...scoped, 'src/common/unused.ts': implementation },
+    true,
+    [],
+    ['src/common'],
+  );
+  assert.notEqual(rejected.status, 0);
+  assert.match(rejected.output, /src\/common\/unused\.ts|unused\.ts/);
 });

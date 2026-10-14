@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { DomainError, moneyFromDecimal, type ActiveStatus } from '@findeg/domain/common';
+import { DomainError, moneyFromDecimal, type ActiveStatus } from '../../common';
 import * as catalog from '@findeg/domain/catalog';
 import {
   defaultVariant,
@@ -29,8 +29,8 @@ function codeOf(run: () => unknown): string | undefined {
   try {
     run();
     return undefined;
-  } catch (error) {
-    if (error instanceof DomainError) return error.code;
+  } catch (error: unknown) {
+    if (error instanceof DomainError) return error.code as string;
     throw error;
   }
 }
@@ -81,7 +81,7 @@ describe('catalogue entities', () => {
 
   it('exports no input schemas', () => {
     const schemas = Object.entries(catalog).filter(
-      ([, value]) => typeof value === 'object' && value !== null && 'safeParse' in value,
+      ([, value]) => typeof value === 'object' && 'safeParse' in value,
     );
     expect(schemas.map(([name]) => name)).toEqual([]);
   });
@@ -119,7 +119,8 @@ describe('Default Variant', () => {
   });
 
   it('does not exist for a product with no variants', () => {
-    expect(defaultVariant([])).toBeUndefined();
+    const noVariants: { isDefault: boolean }[] = [];
+    expect(defaultVariant(noVariants)).toBeUndefined();
   });
 
   it('change: an inactive flagged variant is still the default (the product page skipped it)', () => {

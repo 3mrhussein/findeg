@@ -1,8 +1,8 @@
 import path from 'node:path';
-import { coverageInclude, coverageExclude, thresholds } from './policy.mjs';
+import { coverageIncludeFor, coverageExclude, thresholds } from './policy.mjs';
 
 export default function setup(project) {
-  const { enabled } = project.config.provide.findegPolicy;
+  const { enabled, scope } = project.config.provide.findegPolicy;
   if (enabled) {
     // Vitest appends discovery, setup and its own virtual/config exclusions.
     const runnerExclusions = new Set([
@@ -18,7 +18,7 @@ export default function setup(project) {
     if (
       !coverage.enabled ||
       !coverage.thresholds.perFile ||
-      JSON.stringify(coverage.include) !== JSON.stringify(coverageInclude) ||
+      JSON.stringify(coverage.include) !== JSON.stringify(coverageIncludeFor(scope)) ||
       JSON.stringify(coverage.exclude.slice(0, coverageExclude.length)) !==
         JSON.stringify(coverageExclude) ||
       coverage.exclude

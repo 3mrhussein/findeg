@@ -17,8 +17,8 @@ function codeOf(run: () => unknown): string | undefined {
   try {
     run();
     return undefined;
-  } catch (error) {
-    if (error instanceof DomainError) return error.code;
+  } catch (error: unknown) {
+    if (error instanceof DomainError) return error.code as string;
     throw error;
   }
 }

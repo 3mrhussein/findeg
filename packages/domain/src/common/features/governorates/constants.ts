@@ -28,4 +28,3 @@ export const GOVERNORATES = [
   'North Sinai',
   'Sohag',
 ] as const;
-export type Governorate = (typeof GOVERNORATES)[number];
