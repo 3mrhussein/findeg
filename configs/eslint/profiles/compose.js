@@ -1,3 +1,4 @@
+import { scopedLibraryLayout } from '../library.js';
 import globals from 'globals';
 import { hygiene } from '../layers/hygiene.js';
 import { runtimeLayer } from '../layers/runtime.js';
@@ -20,6 +21,7 @@ export function compose(runtime, { client = false, extra = [] } = {}) {
     ...surface,
     ...(client ? clientSurface : []),
     ...integrity,
+    ...scopedLibraryLayout,
     ...extra,
   ];
 }

@@ -1,6 +1,8 @@
 ---
-status: proposed
+status: superseded
 ---
+
+> Superseded by [ADR-0020](0020-domain-single-source-and-bounded-context-packages.md).
 
 # Enforce a barrel seam for `@findeg/backend` features
 

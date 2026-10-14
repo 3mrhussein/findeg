@@ -3,10 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { importSourceVisitors } from './import-sources.js';
 
 const repoRoot = path.resolve(fileURLToPath(new URL('../../..', import.meta.url)));
-const ordersRoots = [
-  path.join(repoRoot, 'packages/orders/src'),
-  path.join(repoRoot, 'backend/src/features/order'),
-];
+const ordersRoots = [path.join(repoRoot, 'packages/orders/src')];
 const inside = (file, root) => file === root || file.startsWith(`${root}${path.sep}`);
 
 export const ordersBoundaryRule = {

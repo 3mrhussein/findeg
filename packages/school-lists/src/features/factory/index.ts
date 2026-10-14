@@ -1,3 +1,4 @@
+import { connectionProvider } from './helpers';
 import { AdminSchoolSupplyListService } from '../administration';
 import type { IAdminSchoolSupplyListService } from '../../types';
 import {
@@ -24,9 +25,7 @@ export function createSchoolSupplyListService({
   db,
   clock = () => new Date(),
 }: SchoolSupplyListDependencies = {}): ISchoolSupplyListService {
-  const getDb = db
-    ? async () => db
-    : async () => (await import('@findeg/db/connection')).db as SchoolSupplyListDatabase;
+  const getDb = connectionProvider(db);
   return new SchoolSupplyListService(getDb, clock);
 }
 
@@ -34,9 +33,7 @@ export function createSchoolSupplyListService({
 export function createSchoolSupplyListReader({
   db,
 }: Pick<SchoolSupplyListDependencies, 'db'> = {}): ISchoolSupplyListReader {
-  const getDb = db
-    ? async () => db
-    : async () => (await import('@findeg/db/connection')).db as SchoolSupplyListDatabase;
+  const getDb = connectionProvider(db);
   return new SchoolSupplyListReader(getDb);
 }
 
@@ -44,18 +41,14 @@ export function createSchoolSupplyListReader({
 export function createSchoolDirectory({
   db,
 }: Pick<SchoolSupplyListDependencies, 'db'> = {}): ISchoolDirectory {
-  const getDb = db
-    ? async () => db
-    : async () => (await import('@findeg/db/connection')).db as SchoolSupplyListDatabase;
+  const getDb = connectionProvider(db);
   return new SchoolDirectory(getDb);
 }
 
 export function createAdminSchoolSupplyListService(
   dependencies: SchoolSupplyListDependencies = {},
 ): IAdminSchoolSupplyListService {
-  const getDb = dependencies.db
-    ? async () => dependencies.db!
-    : async () => (await import('@findeg/db/connection')).db;
+  const getDb = connectionProvider(dependencies.db);
   return new AdminSchoolSupplyListService(
     createSchoolSupplyListService(dependencies),
     async (categoryId) => listAttributeValuesForCategory(await getDb(), categoryId),
