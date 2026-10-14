@@ -1,21 +1,26 @@
-// Complete global standards, activated by each migration owner independently of layout.
+// Ecosystem baseline; complete scopes are activated independently of library layout.
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 import { naming } from './rules/naming.js';
+import { completeScopes } from './activation.mjs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { CODE, TYPESCRIPT } from './globs.js';
+
+const findegPlugin = { rules: { naming } };
 
 /**
  * @param {'isomorphic' | 'node' | 'browser' | 'next'} role
- * @param {{root?: string}} options
+ * @param {{root?: string, complete?: boolean}} [options]
  */
-export async function standards(role, { root = process.cwd() } = {}) {
+export async function standards(role, { root = process.cwd(), complete = true } = {}) {
   if (!['isomorphic', 'node', 'browser', 'next'].includes(role)) {
     throw new Error(`Unknown standards role: ${role}`);
   }
   const ecosystem = [];
-  if (role === 'browser') {
+  if (complete && role === 'browser') {
     const [{ default: react }, { default: hooks }, { default: a11y }] = await Promise.all([
       import('eslint-plugin-react'),
       import('eslint-plugin-react-hooks'),
@@ -28,7 +33,7 @@ export async function standards(role, { root = process.cwd() } = {}) {
       a11y.flatConfigs.recommended,
     );
   }
-  if (role === 'next') {
+  if (complete && role === 'next') {
     const { default: next } = await import('eslint-config-next/core-web-vitals');
     ecosystem.push(...next);
     // Next's accessibility rules are a subset; extend the maintained full baseline
@@ -36,7 +41,7 @@ export async function standards(role, { root = process.cwd() } = {}) {
     const a11y = next.find((config) => config.plugins?.['jsx-a11y']).plugins['jsx-a11y'];
     ecosystem.push({ ...a11y.flatConfigs.recommended, plugins: { 'jsx-a11y': a11y } });
   }
-  if (role === 'node' || role === 'next') {
+  if (complete && (role === 'node' || role === 'next')) {
     const { default: node } = await import('eslint-plugin-n');
     ecosystem.push({
       ...node.configs['flat/recommended-module'],
@@ -58,15 +63,19 @@ export async function standards(role, { root = process.cwd() } = {}) {
     ...ecosystem.map((config) =>
       config.ignores && !config.rules ? config : { ...config, files: config.files ?? CODE },
     ),
-    ...tseslint.configs.strictTypeChecked.map((config) => ({ ...config, files: TYPESCRIPT })),
+    ...(complete ? tseslint.configs.strictTypeChecked : tseslint.configs.recommended).map(
+      (config) => ({ ...config, files: TYPESCRIPT }),
+    ),
     {
       files: TYPESCRIPT,
-      languageOptions: { parserOptions: { projectService: true, tsconfigRootDir: root } },
+      languageOptions: {
+        parserOptions: complete ? { projectService: true, tsconfigRootDir: root } : {},
+      },
     },
     {
       files: CODE,
-      plugins: { findeg: { rules: { naming } } },
-      rules: { 'findeg/naming': 'error' },
+      plugins: { findeg: findegPlugin },
+      rules: complete ? { 'findeg/naming': 'error' } : {},
       languageOptions: {
         globals: {
           ...globals.es2022,
@@ -102,6 +111,30 @@ export async function standards(role, { root = process.cwd() } = {}) {
           },
         ]
       : []),
+    {
+      files: TYPESCRIPT,
+      // Unused underscore parameters document required callback/port signatures.
+      rules: { '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
+    },
+    {
+      files: ['cypress/**/*.ts'],
+      // Ambient namespace merging is how Cypress extends its global command interface.
+      rules: { '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }] },
+    },
+    ...(role === 'node'
+      ? [
+          {
+            files: ['bin/*.mjs'],
+            // CLI exit statuses are the public contract of these executable entry points.
+            rules: { 'n/no-process-exit': 'off' },
+          },
+        ]
+      : []),
     prettier,
   ];
+}
+
+export function isCompleteScope(root = process.cwd()) {
+  const repository = fileURLToPath(new URL('../../', import.meta.url));
+  return completeScopes.includes(path.relative(repository, root).split(path.sep).join('/'));
 }

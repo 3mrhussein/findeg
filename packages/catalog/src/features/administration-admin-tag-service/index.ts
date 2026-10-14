@@ -37,17 +37,13 @@ export class AdminTagService implements IAdminTagService {
    */
   async getAllTagsGrouped(): Promise<Record<string, Tag[]>> {
     const allTags = await getAllTags();
-    return allTags.reduce(
-      (acc, tag) => {
-        const group = tag.group;
-        if (!acc[group]) {
-          acc[group] = [];
-        }
-        acc[group].push(tag as Tag);
-        return acc;
-      },
-      {} as Record<string, Tag[]>,
-    );
+    return allTags.reduce<Record<string, Tag[]>>((acc, tag) => {
+      const group = tag.group;
+      const entries = Object.prototype.hasOwnProperty.call(acc, group) ? acc[group] : [];
+      entries.push(tag as Tag);
+      acc[group] = entries;
+      return acc;
+    }, {});
   }
 
   /**
@@ -76,7 +72,7 @@ export class AdminTagService implements IAdminTagService {
       entityType: 'tag',
       entityId: String(tag.id),
       action: 'create',
-      newValues: tag as unknown as Record<string, unknown>,
+      newValues: tag,
     });
 
     return tag as Tag;
@@ -94,8 +90,8 @@ export class AdminTagService implements IAdminTagService {
       entityType: 'tag',
       entityId: String(id),
       action: 'update',
-      oldValues: oldTag as unknown as Record<string, unknown>,
-      newValues: tag as unknown as Record<string, unknown>,
+      oldValues: oldTag,
+      newValues: tag,
     });
 
     return tag as Tag;
@@ -113,7 +109,7 @@ export class AdminTagService implements IAdminTagService {
       entityType: 'tag',
       entityId: String(id),
       action: 'delete',
-      oldValues: oldTag as unknown as Record<string, unknown>,
+      oldValues: oldTag,
     });
   }
 

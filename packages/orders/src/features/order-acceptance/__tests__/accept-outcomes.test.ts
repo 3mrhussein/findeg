@@ -7,17 +7,17 @@ import {
 } from '../../checkout-errors/index';
 
 const storage = vi.hoisted(() => ({
-  transaction: vi.fn(),
-  find: vi.fn(),
-  claim: vi.fn(),
-  create: vi.fn(),
-  record: vi.fn(),
+  transaction: vi.fn<(action: (tx: unknown) => Promise<unknown>) => Promise<unknown>>(),
+  find: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  claim: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  create: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  record: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
   conflictOnce: { value: false },
   scopeConflict: { value: false },
-  catalog: vi.fn(),
-  lock: vi.fn(),
-  persist: vi.fn(),
-  enqueue: vi.fn(),
+  catalog: vi.fn<() => unknown[]>(),
+  lock: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  persist: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  enqueue: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
 }));
 
 const catalogSelect = () => ({
@@ -38,7 +38,7 @@ const catalogSelect = () => ({
 
 vi.mock('@findeg/db/connection', () => ({
   db: {
-    transaction: (...args: unknown[]) => storage.transaction(...args),
+    transaction: (action: (tx: unknown) => Promise<unknown>) => storage.transaction(action),
     select: catalogSelect,
   },
 }));
@@ -151,11 +151,11 @@ describe('acceptance outcomes', () => {
     storage.conflictOnce.value = true;
     storage.create
       .mockRejectedValueOnce(new Error('duplicate reference'))
-      .mockImplementation((data) =>
+      .mockImplementation((data: unknown) =>
         Promise.resolve({
           order: {
             id: 2,
-            ...data,
+            ...(data as Record<string, unknown>),
             orderReference: 'FE-NEW',
             status: 'pending',
             paymentStatus: 'unpaid',

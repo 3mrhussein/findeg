@@ -42,7 +42,7 @@ describe('AdminUserService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     service = new AdminUserService();
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue(snapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue(snapshot);
   });
 
   it('lists admins from their ids and maps roles and overrides', async () => {
@@ -77,7 +77,7 @@ describe('AdminUserService', () => {
       users: [],
       roles: [],
       permissionOverrides: [],
-    } as never);
+    });
 
     expect(await service.getAdmin(99)).toBeNull();
   });
@@ -109,7 +109,7 @@ describe('AdminUserService', () => {
       users: [],
       roles: [],
       permissionOverrides: [],
-    } as never);
+    });
 
     await expect(
       service.createAdmin({
@@ -123,7 +123,7 @@ describe('AdminUserService', () => {
   });
 
   it('updates an admin and returns the refreshed record', async () => {
-    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined as never);
+    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined);
 
     const admin = await service.updateAdmin(5, { firstName: 'Sana' });
 
@@ -132,12 +132,12 @@ describe('AdminUserService', () => {
   });
 
   it('throws when an updated admin disappears', async () => {
-    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined as never);
+    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined);
     vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue({
       users: [],
       roles: [],
       permissionOverrides: [],
-    } as never);
+    });
 
     await expect(service.updateAdmin(5, { isActive: false })).rejects.toThrow(
       'Admin user not found after update',
@@ -145,8 +145,8 @@ describe('AdminUserService', () => {
   });
 
   it('deactivates an admin and replaces permission overrides', async () => {
-    vi.mocked(deactivateAdminUserRaw).mockResolvedValue(undefined as never);
-    vi.mocked(setAdminPermissionOverridesRaw).mockResolvedValue(undefined as never);
+    vi.mocked(deactivateAdminUserRaw).mockResolvedValue(undefined);
+    vi.mocked(setAdminPermissionOverridesRaw).mockResolvedValue(undefined);
 
     await service.deactivateAdmin(5);
     await service.setPermissionOverrides(5, [{ permissionId: 2, action: 'revoke' }], 1);

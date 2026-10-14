@@ -15,7 +15,7 @@ import { CheckoutService } from '../helpers';
 
 const line = (variantId: number, unitPrice: string, quantity = 1) => ({
   variantId: variantId as VariantId,
-  sku: sku(`SKU-${variantId}`),
+  sku: sku(`SKU-${String(variantId)}`),
   productName: 'Pen',
   unitPrice: moneyFromDecimal(unitPrice),
   quantity,

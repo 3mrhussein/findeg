@@ -53,9 +53,9 @@ describe('Partner access check', () => {
     membershipStatus: PartnerMembershipStatus,
   ) {
     sequence += 1;
-    const email = `access-member-${sequence}@findeg.test`;
+    const email = `access-member-${String(sequence)}@findeg.test`;
     const partnerResult = await services.partners.createPartner(staff, {
-      code: `access-partner-${sequence}`,
+      code: `access-partner-${String(sequence)}`,
       nameEn: 'Access School',
       nameAr: 'مدرسة الوصول',
     });
@@ -133,7 +133,7 @@ describe('Partner access check', () => {
       const { partner } = await member(['list-manager'], 'active', 'active');
       const [stranger] = await testDb.db
         .insert(users)
-        .values({ email: `stranger-${sequence}@findeg.test` })
+        .values({ email: `stranger-${String(sequence)}@findeg.test` })
         .returning();
 
       expect(await services.memberships.resolvePartnerContext(null, partner.code)).toEqual({

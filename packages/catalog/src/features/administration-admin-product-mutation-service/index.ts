@@ -68,7 +68,7 @@ export class AdminProductMutationService {
       entityId: String(productId),
       action: 'create',
       adminUserId,
-      newValues: { ...input } as Record<string, unknown>,
+      newValues: { ...input },
     });
 
     return { productId };
@@ -86,7 +86,7 @@ export class AdminProductMutationService {
     assertCatalogueWriteRules(priceRowsOf(input));
     await ensureCategoryExists(input.categoryId);
 
-    await updateProductWithVariantsInDb(id as number, input).catch(rethrowCatalogueWriteError);
+    await updateProductWithVariantsInDb(id, input).catch(rethrowCatalogueWriteError);
 
     await this.dependencies.auditLogService?.logAction({
       entityType: 'product',
@@ -156,7 +156,7 @@ export class AdminProductMutationService {
   async deleteProduct(id: ID, adminUserId?: number): Promise<void> {
     await getExistingProductOrThrow(id);
 
-    await bulkDeleteProducts([id as number]);
+    await bulkDeleteProducts([id]);
 
     await this.dependencies.auditLogService?.logAction({
       entityType: 'product',

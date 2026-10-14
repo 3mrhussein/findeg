@@ -6,34 +6,44 @@
 
 import { z } from 'zod';
 import { ATTRIBUTE_DATA_TYPES } from '@findeg/domain';
-import { IdSchema, TranslationMapSchema } from '@findeg/db/types';
+import {
+  IdSchema as idSchema,
+  TranslationMapSchema as translationMapSchema,
+} from '@findeg/db/types';
 
-export const AttributeDataTypeSchema = z.enum(ATTRIBUTE_DATA_TYPES);
-export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
+const attributeDataTypeSchema = z.enum(ATTRIBUTE_DATA_TYPES);
+export type AttributeDataType = z.infer<typeof attributeDataTypeSchema>;
 
-export const AttributeSchema = z.object({
-  id: IdSchema,
+const attributeSchema = z.object({
+  id: idSchema,
   key: z.string(),
-  dataType: AttributeDataTypeSchema,
+  dataType: attributeDataTypeSchema,
   unit: z.string().optional(),
-  localizedLabel: TranslationMapSchema,
+  localizedLabel: translationMapSchema,
   enumValues: z.array(z.string()).optional(),
   isFilterable: z.boolean(),
   sortOrder: z.number(),
 });
 
-export type Attribute = z.infer<typeof AttributeSchema>;
+export type Attribute = z.infer<typeof attributeSchema>;
 
 /**
  * Represents a concrete attribute value assigned to a product.
  */
-export const ProductAttributeValueSchema = z.object({
-  attributeId: IdSchema,
+const productAttributeValueSchema = z.object({
+  attributeId: idSchema,
   key: z.string(), // key from definition for convenience
   valueText: z.string().optional(),
 });
 
-export type ProductAttributeValue = z.infer<typeof ProductAttributeValueSchema>;
+export type ProductAttributeValue = z.infer<typeof productAttributeValueSchema>;
 
-export const CreateAttributeSchema = AttributeSchema.omit({ id: true });
-export type CreateAttribute = z.infer<typeof CreateAttributeSchema>;
+const createAttributeSchema = attributeSchema.omit({ id: true });
+export type CreateAttribute = z.infer<typeof createAttributeSchema>;
+
+export {
+  attributeDataTypeSchema as AttributeDataTypeSchema,
+  attributeSchema as AttributeSchema,
+  productAttributeValueSchema as ProductAttributeValueSchema,
+  createAttributeSchema as CreateAttributeSchema,
+};

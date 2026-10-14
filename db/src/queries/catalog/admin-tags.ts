@@ -37,12 +37,12 @@ export async function getAllTags() {
  * Get tag by ID
  */
 export async function getTagById(id: ID) {
-  const [row] = await db
+  const rows = await db
     .select()
     .from(tags)
     .where(eq(tags.id, id as number))
     .limit(1);
-  return row || null;
+  return rows.at(0) ?? null;
 }
 
 /**

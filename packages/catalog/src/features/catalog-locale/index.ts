@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale } from '@findeg/domain';
 
-const LocaleSchema = z.enum(SUPPORTED_LOCALES);
+const localeSchema = z.enum(SUPPORTED_LOCALES);
 
-export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale };
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE, localeSchema as LocaleSchema, type Locale };
 
 /**
  * Checks if a value is a supported domain locale.
@@ -35,9 +35,12 @@ export function parse(value?: string | null): Locale {
 
 // ─── Translation Structures ──────────────────────────────────────────
 
-import { TranslationMapSchema, type TranslationMap } from '@findeg/db/types';
+import {
+  TranslationMapSchema as translationMapSchema,
+  type TranslationMap,
+} from '@findeg/db/types';
 
-export { TranslationMapSchema, type TranslationMap };
+export { translationMapSchema as TranslationMapSchema, type TranslationMap };
 
 /**
  * Normalizes partial translation data into a strict TranslationMap.
@@ -51,7 +54,7 @@ export { TranslationMapSchema, type TranslationMap };
  * const name = asTranslationMap({ en: "Product" }); // { en: "Product", ar: "" }
  */
 export function asTranslationMap(
-  value: Partial<TranslationMap>,
+  value: Partial<TranslationMap> | null | undefined,
   fallback: string = '',
 ): TranslationMap {
   const result = {} as TranslationMap;

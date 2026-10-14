@@ -69,10 +69,9 @@ export class ValidationErrors extends DomainError {
   getErrorsByField(): Map<string, string[]> {
     const map = new Map<string, string[]>();
     for (const error of this.errors) {
-      if (!map.has(error.field)) {
-        map.set(error.field, []);
-      }
-      map.get(error.field)!.push(error.message);
+      const messages = map.get(error.field) ?? [];
+      messages.push(error.message);
+      map.set(error.field, messages);
     }
     return map;
   }

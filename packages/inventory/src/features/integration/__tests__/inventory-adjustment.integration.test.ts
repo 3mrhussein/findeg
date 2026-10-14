@@ -20,10 +20,10 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
   let testDb: TestDatabase;
   let sequence = 0;
   const mockAuditLog: IAuditLogService = {
-    logAction: async () => {},
-    getLogs: async () => ({ data: [], total: 0 }),
-    getEntityLogs: async () => [],
-    getRecentActivity: async () => [],
+    logAction: () => Promise.resolve(),
+    getLogs: () => Promise.resolve({ data: [], total: 0 }),
+    getEntityLogs: () => Promise.resolve([]),
+    getRecentActivity: () => Promise.resolve([]),
   };
   const service = createAdminInventoryService(mockAuditLog);
 
@@ -39,12 +39,12 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
     sequence += 1;
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `inv-cat-${sequence}-${Date.now()}` })
+      .values({ slug: `inv-cat-${String(sequence)}-${String(Date.now())}` })
       .returning();
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `inv-prod-${sequence}-${Date.now()}`,
+        slug: `inv-prod-${String(sequence)}-${String(Date.now())}`,
         localizedName: { en: 'Notebook', ar: 'دفتر' },
         localizedDescription: { en: '', ar: '' },
         localizedLongDescription: { en: '', ar: '' },
@@ -56,7 +56,7 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `SKU-INV-${sequence}-${Date.now()}`,
+        sku: `SKU-INV-${String(sequence)}-${String(Date.now())}`,
         basePrice: '25.00',
       })
       .returning();
@@ -68,8 +68,8 @@ describe('Admin inventory adjustment integration on real PostgreSQL', () => {
     const [row] = await testDb.db
       .insert(warehouses)
       .values({
-        code: `WH-ACTIVE-${sequence}-${Date.now()}`,
-        name: `Warehouse ${sequence}`,
+        code: `WH-ACTIVE-${String(sequence)}-${String(Date.now())}`,
+        name: `Warehouse ${String(sequence)}`,
         isActive: true,
       })
       .returning();

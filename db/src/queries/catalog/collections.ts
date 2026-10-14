@@ -33,7 +33,7 @@ export async function getAllCollections(options?: {
  */
 export async function getCollectionById(id: number): Promise<CollectionRow | null> {
   const results = await db.select().from(collections).where(eq(collections.id, id)).limit(1);
-  return results[0] || null;
+  return results.at(0) ?? null;
 }
 
 /**
@@ -41,7 +41,7 @@ export async function getCollectionById(id: number): Promise<CollectionRow | nul
  */
 export async function getCollectionBySlug(slug: string): Promise<CollectionRow | null> {
   const results = await db.select().from(collections).where(eq(collections.slug, slug)).limit(1);
-  return results[0] || null;
+  return results.at(0) ?? null;
 }
 
 /**

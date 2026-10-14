@@ -228,7 +228,7 @@ export const partnerFixtureTasks = {
       `;
 
       // Get or create product and variant
-      let [variant] = await sql<{ id: number; productId: number }[]>`
+      const [variant] = await sql<{ id: number; productId: number }[]>`
         select id, product_id as "productId" from catalog.product_variants limit 1
       `;
 

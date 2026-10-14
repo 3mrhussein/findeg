@@ -34,7 +34,7 @@ describe('AdminRoleService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     service = new AdminRoleService();
-    vi.mocked(getAdminRolesSnapshotRaw).mockResolvedValue(snapshot as never);
+    vi.mocked(getAdminRolesSnapshotRaw).mockResolvedValue(snapshot);
   });
 
   it('lists roles with permissions and user counts', async () => {
@@ -56,7 +56,7 @@ describe('AdminRoleService', () => {
       roles: [{ id: 2, code: 'empty', name: 'Empty' }],
       permissions: [],
       userCounts: [],
-    } as never);
+    });
     expect(await service.getRole(2)).toEqual({
       id: 2,
       code: 'empty',
@@ -69,7 +69,7 @@ describe('AdminRoleService', () => {
       roles: [],
       permissions: [],
       userCounts: [],
-    } as never);
+    });
     expect(await service.getRole(99)).toBeNull();
   });
 
@@ -88,13 +88,13 @@ describe('AdminRoleService', () => {
       roles: [],
       permissions: [],
       userCounts: [],
-    } as never);
+    });
 
     await expect(service.createRole('x', 'X', [])).rejects.toThrow('Failed to fetch created role');
   });
 
   it('replaces role permissions and returns the updated role', async () => {
-    vi.mocked(updateRolePermissionsRaw).mockResolvedValue(undefined as never);
+    vi.mocked(updateRolePermissionsRaw).mockResolvedValue(undefined);
 
     const role = await service.updateRolePermissions(1, [7]);
 
@@ -103,12 +103,12 @@ describe('AdminRoleService', () => {
   });
 
   it('throws when an updated role disappears', async () => {
-    vi.mocked(updateRolePermissionsRaw).mockResolvedValue(undefined as never);
+    vi.mocked(updateRolePermissionsRaw).mockResolvedValue(undefined);
     vi.mocked(getAdminRolesSnapshotRaw).mockResolvedValue({
       roles: [],
       permissions: [],
       userCounts: [],
-    } as never);
+    });
 
     await expect(service.updateRolePermissions(1, [])).rejects.toThrow(
       'Role not found after update',
@@ -124,7 +124,7 @@ describe('AdminRoleService', () => {
 
   it('deletes an unassigned role and lists the permission catalogue', async () => {
     vi.mocked(getRoleUserCountRaw).mockResolvedValue(0);
-    vi.mocked(deleteRoleRaw).mockResolvedValue(undefined as never);
+    vi.mocked(deleteRoleRaw).mockResolvedValue(undefined);
     vi.mocked(listPermissionItemsRaw).mockResolvedValue([
       { id: 7, code: 'catalog.write', name: 'Write' },
     ] as never);

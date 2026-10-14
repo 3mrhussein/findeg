@@ -48,13 +48,13 @@ const profile = {
   logoUrl: null,
 };
 
-const service = () => new PartnerService(async () => executor as never);
+const service = () => new PartnerService(() => Promise.resolve().then(() => executor as never));
 const q = vi.mocked(partnerQueries);
 
 beforeEach(() => {
   vi.resetAllMocks();
   q.isPartnerCodeTakenError.mockReturnValue(false);
-  q.insertPartnerAccessHistory.mockResolvedValue(undefined as never);
+  q.insertPartnerAccessHistory.mockResolvedValue(undefined);
 });
 
 describe('authorization', () => {
@@ -103,7 +103,7 @@ describe('createPartner', () => {
 
   it('creates the partner and its audit row in one transaction, with an optional school profile', async () => {
     q.insertBusinessPartner.mockResolvedValue(partnerRow as never);
-    q.upsertPartnerSchoolProfile.mockResolvedValue(profile as never);
+    q.upsertPartnerSchoolProfile.mockResolvedValue(profile);
     const result = await service().createPartner(staff, {
       code: 'sch-100',
       nameEn: 'Nile School',
@@ -118,7 +118,7 @@ describe('createPartner', () => {
     });
     expect(result).toEqual({
       success: true,
-      data: expect.objectContaining({ id: 5, code: 'sch-100' }),
+      data: expect.objectContaining({ id: 5, code: 'sch-100' }) as unknown,
     });
     expect(q.insertPartnerAccessHistory).toHaveBeenCalledWith(
       executor,
@@ -172,7 +172,7 @@ describe('updatePartner', () => {
     const result = await service().updatePartner(staff, 5, { nameEn: 'Nile School' });
     expect(result).toEqual({
       success: true,
-      data: expect.objectContaining({ nameEn: 'Nile School' }),
+      data: expect.objectContaining({ nameEn: 'Nile School' }) as unknown,
     });
     expect(q.updateBusinessPartner).not.toHaveBeenCalled();
   });
@@ -195,7 +195,7 @@ describe('updatePartner', () => {
   it('saves the school profile alongside the update', async () => {
     q.lockBusinessPartnerById.mockResolvedValue(partnerRow as never);
     q.getPartnerSchoolProfile.mockResolvedValue(undefined);
-    q.upsertPartnerSchoolProfile.mockResolvedValue(profile as never);
+    q.upsertPartnerSchoolProfile.mockResolvedValue(profile);
     q.updateBusinessPartner.mockResolvedValue({ ...partnerRow, nameAr: 'النيل' } as never);
     const result = await service().updatePartner(staff, 5, {
       nameAr: 'النيل',
@@ -256,7 +256,7 @@ describe('changePartnerStatus', () => {
   it('refuses an invalid transition with its application error', async () => {
     q.lockBusinessPartnerById.mockResolvedValue(partnerRow as never);
     q.hasActivePartnerAdministrator.mockResolvedValue(true);
-    const result = await service().changePartnerStatus(staff, 5, 'onboarding' as never);
+    const result = await service().changePartnerStatus(staff, 5, 'onboarding');
     expect(result.success).toBe(false);
   });
 });
@@ -281,9 +281,7 @@ describe('reads', () => {
       .mockResolvedValueOnce(partnerRow as never)
       .mockResolvedValueOnce(partnerRow as never)
       .mockResolvedValueOnce(undefined);
-    q.getPartnerSchoolProfile
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(profile as never);
+    q.getPartnerSchoolProfile.mockResolvedValueOnce(undefined).mockResolvedValueOnce(profile);
     expect(await service().getPartnerSchoolProfile(viewer, 5)).toEqual({
       success: true,
       data: null,
@@ -318,7 +316,7 @@ describe('savePartnerSchoolProfile', () => {
   it('saves a new profile and audits it', async () => {
     q.lockBusinessPartnerById.mockResolvedValue(partnerRow as never);
     q.getPartnerSchoolProfile.mockResolvedValue(undefined);
-    q.upsertPartnerSchoolProfile.mockResolvedValue(profile as never);
+    q.upsertPartnerSchoolProfile.mockResolvedValue(profile);
     const result = await service().savePartnerSchoolProfile(staff, 5, {
       governorate: 'Cairo',
       area: 'Maadi',
@@ -335,7 +333,7 @@ describe('savePartnerSchoolProfile', () => {
 
   it('returns the existing profile without writing when nothing changed', async () => {
     q.lockBusinessPartnerById.mockResolvedValue(partnerRow as never);
-    q.getPartnerSchoolProfile.mockResolvedValue(profile as never);
+    q.getPartnerSchoolProfile.mockResolvedValue(profile);
     const result = await service().savePartnerSchoolProfile(staff, 5, {
       governorate: 'Cairo',
       area: 'Maadi',

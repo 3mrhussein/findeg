@@ -7,7 +7,7 @@ import type {
 import type { CreateVariantInput } from '../catalog-variant-input/index';
 import type { VariantDimension } from '../catalog-variant-dimension/index';
 import { VariantKey } from '../catalog-variant-key/index';
-import { Sku } from '../catalog-sku/index';
+import { Sku as sku } from '../catalog-sku/index';
 import { generateVariantMatrix } from '../catalog-variant-dimension/index';
 import { translationMapBy } from '../catalog-locale/index';
 
@@ -44,7 +44,15 @@ export function mapAdminProductListResult(result: ProductListQueryResult): Produ
   };
 }
 
-export function mapAdminProductEditData(data: ProductEditRaw): ProductEditData {
+type ProductEditAttribute = ProductEditRaw['variants'][number]['attributes'][number];
+type ProductEditVariant = Omit<ProductEditRaw['variants'][number], 'attributes'> & {
+  attributes: Array<
+    Omit<ProductEditAttribute, 'definition'> & { definition?: ProductEditAttribute['definition'] }
+  >;
+};
+type ProductEditInput = Omit<ProductEditRaw, 'variants'> & { variants: ProductEditVariant[] };
+
+export function mapAdminProductEditData(data: ProductEditInput): ProductEditData {
   return {
     ...data,
     rating: Number(data.rating),
@@ -85,7 +93,7 @@ export function buildGeneratedProductVariants(
       attributes.map(({ attributeKey, value }) => ({ key: attributeKey, value })),
     ).toString();
 
-    const suggestedSku = Sku.suggestVariantSku(
+    const suggestedSku = sku.suggestVariantSku(
       defaults.sku ?? 'SKU',
       attributes.map(({ value }) => value),
     );

@@ -34,7 +34,10 @@ import {
 } from '../checkout-errors/helpers';
 import { calculateListQuote } from '../list-checkout-quote/helpers';
 import type { ListAttribution } from '../list-checkout-quote/types';
-import { CheckoutOrderSchema, CheckoutValidateSchema } from '../checkout-input/helpers';
+import {
+  CheckoutOrderSchema as checkoutOrderSchema,
+  CheckoutValidateSchema as checkoutValidateSchema,
+} from '../checkout-input/helpers';
 import type {
   CheckoutLine,
   CheckoutOrderContext,
@@ -94,7 +97,7 @@ export class CheckoutService implements ICheckoutService {
   }
 
   async validate(input: CheckoutValidateInput): Promise<CheckoutValidateResult> {
-    const parsed = CheckoutValidateSchema.safeParse(input);
+    const parsed = checkoutValidateSchema.safeParse(input);
     if (!parsed.success) {
       return {
         success: false,
@@ -176,7 +179,7 @@ export class CheckoutService implements ICheckoutService {
 
   /** Validates the request and derives the idempotency scope and fingerprint. */
   private prepareAccept(
-    input: CheckoutOrderInput,
+    input: unknown,
     context?: CheckoutOrderContext,
   ): { ok: true; request: AcceptRequest } | { ok: false; failure: CheckoutAcceptFailure } {
     const reject = (code: CheckoutAcceptFailure['error']['code'], message: string) => ({
@@ -184,13 +187,14 @@ export class CheckoutService implements ICheckoutService {
       failure: rejected(400, code, message),
     });
 
-    if (!input || typeof input !== 'object') {
+    if (typeof input !== 'object' || input === null) {
       return reject('validation-error', 'Invalid checkout order input');
     }
 
     // Check payment method before parsing to return specific error if not COD
     try {
-      acceptedPaymentMethod(input.paymentMethod);
+      const paymentMethod = 'paymentMethod' in input ? input.paymentMethod : undefined;
+      acceptedPaymentMethod(typeof paymentMethod === 'string' ? paymentMethod : '');
     } catch (err) {
       const failure = mapDomainError(err);
       if (failure) return { ok: false, failure };
@@ -198,7 +202,7 @@ export class CheckoutService implements ICheckoutService {
     }
 
     // Signed-in orders ignore guestEmail entirely, so drop it before it can fail validation
-    const parsed = CheckoutOrderSchema.safeParse(
+    const parsed = checkoutOrderSchema.safeParse(
       context?.userId ? { ...input, guestEmail: undefined } : input,
     );
     if (!parsed.success) {
@@ -209,7 +213,7 @@ export class CheckoutService implements ICheckoutService {
     }
 
     const userId = context?.userId;
-    const guestEmail = parsed.data.guestEmail?.trim()?.toLowerCase();
+    const guestEmail = parsed.data.guestEmail?.trim().toLowerCase();
 
     if (!userId && !guestEmail) {
       return reject(
@@ -224,7 +228,13 @@ export class CheckoutService implements ICheckoutService {
         ...parsed.data.address,
         governorate: parsed.data.address.governorate ?? parsed.data.address.city,
       });
-      if (!userId) guestBuyer(guestEmail!);
+      if (!userId)
+        guestBuyer(
+          guestEmail ??
+            (() => {
+              throw new Error('Expected a value');
+            })(),
+        );
       if (parsed.data.source === 'cart')
         cart(
           parsed.data.lines.map((line) => ({ ...line, variantId: line.variantId as VariantId })),
@@ -356,14 +366,14 @@ export class CheckoutService implements ICheckoutService {
     let calculation;
     if (source === 'list') {
       const listCalculation = await calculateListQuote(
-        { publicCode, lines: lines as ListCheckoutLine[] },
+        { publicCode, lines: lines },
         tx,
         this.clock(),
       );
       calculation = listCalculation;
       attribution = listCalculation.attribution;
     } else {
-      calculation = await this.calculateQuote(lines as CheckoutLine[], tx);
+      calculation = await this.calculateQuote(lines, tx);
     }
     const { quote: freshQuote, variantMap } = calculation;
 
@@ -376,7 +386,12 @@ export class CheckoutService implements ICheckoutService {
       reference: generateOrderReference(randomBytes),
       buyer: userId
         ? { kind: 'customer', customerId: domainId<'Customer'>(userId) }
-        : guestBuyer(guestEmail!),
+        : guestBuyer(
+            guestEmail ??
+              (() => {
+                throw new Error('Expected a value');
+              })(),
+          ),
       contactPhone: egyptianMobile(address.phone),
       shippingAddress: shippingAddress({
         ...address,
@@ -423,7 +438,7 @@ export class CheckoutService implements ICheckoutService {
             const meta = variantMap.get(line.variantId);
             if (!meta || !meta.productId || !meta.sku) {
               throw new Error(
-                `Catalog metadata missing or incomplete for variant ${line.variantId}`,
+                `Catalog metadata missing or incomplete for variant ${String(line.variantId)}`,
               );
             }
             return {
@@ -440,7 +455,7 @@ export class CheckoutService implements ICheckoutService {
               productNameSnapshot: line.productName,
               productSkuSnapshot: line.sku,
               variantSkuSnapshot: line.sku,
-              variantSnapshot: (meta.localizedLabel as Record<string, unknown>) ?? {},
+              variantSnapshot: (meta.localizedLabel as Record<string, unknown> | null) ?? {},
               schoolSupplyListItemId: line.supplyListItemId ?? undefined,
               isSubstitute: line.isSubstitute ?? undefined,
             };
@@ -601,7 +616,11 @@ export class CheckoutService implements ICheckoutService {
     const quote = priceQuote(
       { kind: 'cart' },
       merged.lines.map((line) => {
-        const variant = variantMap.get(line.variantId)!;
+        const variant =
+          variantMap.get(line.variantId) ??
+          (() => {
+            throw new Error('Expected a value');
+          })();
         const name = variant.productName as Record<string, string>;
         return {
           ...line,

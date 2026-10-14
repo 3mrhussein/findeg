@@ -29,7 +29,7 @@ describe('CurrentSessionIdentityResolver', () => {
     vi.mocked(userQueries.getAuthorizationContext).mockResolvedValue({
       activeRoleIds: ['catalog_manager'],
       permissionCodes: ['catalog.write'],
-    } as never);
+    });
 
     const identity = await resolver.resolve(4);
 

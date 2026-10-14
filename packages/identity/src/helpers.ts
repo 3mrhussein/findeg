@@ -33,18 +33,18 @@ export function createIdentityServices(): IdentityServices {
 
 /** Authenticates with (email, password) or ({ email, password }). */
 export async function login(
-  email: string | { email: string; password?: string },
-  password?: string,
+  ...credentials:
+    [email: string, password: string] | [credentials: { email: string; password: string }]
 ) {
   const { auth } = createIdentityServices();
-  if (typeof email === 'object' && !password) {
-    return auth.login(email.email, email.password!);
+  if (credentials.length === 1) {
+    return auth.login(credentials[0].email, credentials[0].password);
   }
-  return auth.login(email as string, password!);
+  return auth.login(credentials[0], credentials[1]);
 }
 
-export async function logout() {
-  return { success: true };
+export function logout() {
+  return Promise.resolve({ success: true });
 }
 
 export async function updateMyProfile(userId: number, input: UpdateAdminInput) {

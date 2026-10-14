@@ -14,11 +14,6 @@ import { reviewQueries, hasPurchasedProduct } from '@findeg/db/queries';
  */
 export class ReviewService implements IReviewService {
   /**
-   * Creates a review service instance.
-   */
-  constructor() {}
-
-  /**
    * Returns paginated product reviews with aggregate summary.
    */
   async getProductReviews(
@@ -29,13 +24,13 @@ export class ReviewService implements IReviewService {
     const limit = Math.min(Math.max(query.limit || 10, 1), 50);
 
     const [result, summary] = await Promise.all([
-      reviewQueries.getByProductIdPaginated(productId as number, {
+      reviewQueries.getByProductIdPaginated(productId, {
         page,
         limit,
         rating: query.rating,
         verifiedOnly: query.verified,
       }),
-      reviewQueries.getSummaryByProductId(productId as number),
+      reviewQueries.getSummaryByProductId(productId),
     ]);
 
     return {
@@ -65,7 +60,7 @@ export class ReviewService implements IReviewService {
 
     const [hasPurchased, alreadyReviewed] = await Promise.all([
       hasPurchasedProduct(userId, productId),
-      reviewQueries.hasUserReviewed(productId as number, userId as number),
+      reviewQueries.hasUserReviewed(productId, userId),
     ]);
 
     return {
@@ -80,7 +75,7 @@ export class ReviewService implements IReviewService {
    * Creates a verified product review and refreshes product aggregates.
    */
   async createReview(input: CreateReviewInput): Promise<Review> {
-    const rating = Number(input.rating);
+    const rating = input.rating;
     if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
       throw new Error('REVIEW_INVALID_RATING');
     }
@@ -94,8 +89,8 @@ export class ReviewService implements IReviewService {
     }
 
     const created = await reviewQueries.create({
-      productId: input.productId as number,
-      userId: input.userId as number,
+      productId: input.productId,
+      userId: input.userId,
       rating: input.rating,
       comment: input.comment?.trim() || undefined,
       isVerifiedPurchase: true,
@@ -115,7 +110,7 @@ export class ReviewService implements IReviewService {
     if (!voterKey.trim()) {
       throw new Error('REVIEW_INVALID_VOTER');
     }
-    return reviewQueries.markHelpful(reviewId as number, voterKey.trim());
+    return reviewQueries.markHelpful(reviewId, voterKey.trim());
   }
 
   /**

@@ -29,7 +29,7 @@ export interface CategoryInput {
 
 export async function getById(id: number): Promise<CategoryRow | null> {
   const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 export async function getAll(): Promise<CategoryRow[]> {
@@ -38,12 +38,12 @@ export async function getAll(): Promise<CategoryRow[]> {
 
 export async function getBySlug(slug: string): Promise<CategoryRow | null> {
   const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 export async function getByPath(path: string): Promise<CategoryRow | null> {
   const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 // ─── Tree Operations ─────────────────────────────────────────────────────────

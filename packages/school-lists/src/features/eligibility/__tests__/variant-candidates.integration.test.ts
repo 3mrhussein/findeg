@@ -22,7 +22,7 @@ describe('School Supply List catalog queries', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(categories)
-      .values({ slug: `sl-category-${sequence}` })
+      .values({ slug: `sl-category-${String(sequence)}` })
       .returning();
     return row.id;
   }
@@ -32,7 +32,7 @@ describe('School Supply List catalog queries', () => {
     const [row] = await testDb.db
       .insert(attributes)
       .values({
-        key: `sl-${label}-${sequence}`,
+        key: `sl-${label}-${String(sequence)}`,
         dataType: 'text',
         localizedLabel: { en: label },
         enumValues,
@@ -50,8 +50,8 @@ describe('School Supply List catalog queries', () => {
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `sl-product-${sequence}`,
-        localizedName: { en: `Product ${sequence}` },
+        slug: `sl-product-${String(sequence)}`,
+        localizedName: { en: `Product ${String(sequence)}` },
         localizedDescription: { en: 'Description' },
         localizedLongDescription: { en: 'Description' },
         categoryId,
@@ -62,8 +62,8 @@ describe('School Supply List catalog queries', () => {
       .insert(productVariants)
       .values({
         productId: product.id,
-        sku: `SL-SKU-${sequence}`,
-        variantKey: `v-${sequence}`,
+        sku: `SL-SKU-${String(sequence)}`,
+        variantKey: `v-${String(sequence)}`,
         basePrice: '10.00',
         isActive: options.variantActive ?? true,
       })

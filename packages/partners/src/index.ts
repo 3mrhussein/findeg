@@ -32,7 +32,7 @@ export function createPartnerMembershipServices(
   // `@findeg/db/connection` opens the pool and validates env on import, so it is
   // only loaded on first use when no database is injected.
   const getDb = db
-    ? async () => db
+    ? () => Promise.resolve(db)
     : async () => (await import('@findeg/db/connection')).db as PartnerDatabase;
   return {
     partners: new PartnerService(getDb),

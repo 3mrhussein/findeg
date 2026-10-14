@@ -1,4 +1,4 @@
-import { z, ZodError, ZodObject } from 'zod';
+import { z, ZodError as zodError, ZodObject as zodObject } from 'zod';
 import type { ZodRawShape } from 'zod';
 import { loadEnvFile } from 'node:process';
 import { join } from 'node:path';
@@ -30,11 +30,11 @@ export function loadEnv() {
 /**
  * Common validation logic
  */
-export function validateEnv<T extends ZodRawShape>(schema: ZodObject<T>) {
+export function validateEnv<T extends ZodRawShape>(schema: zodObject<T>) {
   try {
     return schema.parse(process.env);
   } catch (error) {
-    if (error instanceof ZodError && isServer) {
+    if (error instanceof zodError && isServer) {
       const message =
         '❌ Invalid environment variables:\n' +
         error.issues.map((i) => ` - ${i.path.join('.')}: ${i.message}`).join('\n');
@@ -42,7 +42,7 @@ export function validateEnv<T extends ZodRawShape>(schema: ZodObject<T>) {
       throw new Error(message);
     }
 
-    return process.env as unknown as ReturnType<ZodObject<T>['parse']>;
+    return process.env as unknown as ReturnType<zodObject<T>['parse']>;
   }
 }
 

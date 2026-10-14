@@ -27,10 +27,10 @@ describe('AdminProductService facade', () => {
   it('delegates reads to the read service', async () => {
     const list = vi
       .spyOn(AdminProductReadService.prototype, 'getProductsList')
-      .mockResolvedValue({ products: [], total: 0, page: 1, pageSize: 20 } as never);
+      .mockResolvedValue({ products: [], total: 0, page: 1, pageSize: 20 });
     vi.spyOn(AdminProductReadService.prototype, 'count').mockResolvedValue(3);
     vi.spyOn(AdminProductReadService.prototype, 'getProductForEdit').mockResolvedValue(null);
-    expect(await service.getProductsList({ page: 1 } as never)).toMatchObject({ total: 0 });
+    expect(await service.getProductsList({ page: 1 })).toMatchObject({ total: 0 });
     expect(list).toHaveBeenCalledWith({ page: 1 });
     expect(await service.count()).toBe(3);
     expect(await service.getProductForEdit(1)).toBeNull();
@@ -48,7 +48,7 @@ describe('AdminProductService facade', () => {
       vi.spyOn(mutation, 'deleteProduct').mockResolvedValue(undefined),
     ];
     expect(await service.createProduct({} as never, 1)).toEqual({ productId: 1 });
-    await service.updateProduct(1, {} as never);
+    await service.updateProduct(1, {});
     expect(await service.duplicateProduct(1)).toEqual({ newId: 2 });
     await service.bulkActivate([1]);
     await service.bulkDeactivate([1]);

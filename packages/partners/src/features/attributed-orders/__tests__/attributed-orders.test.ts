@@ -16,7 +16,7 @@ const executor = { transaction: (run: (tx: unknown) => unknown) => run(executor)
 const totals = { orderCount: 1, chargedPiasters: 5000n, quantity: 2 };
 
 function service() {
-  return new AttributedOrderService(async () => executor as never);
+  return new AttributedOrderService(() => Promise.resolve().then(() => executor as never));
 }
 
 beforeEach(() => {

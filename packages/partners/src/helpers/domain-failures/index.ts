@@ -40,10 +40,18 @@ const APPLICATION_ERRORS = {
  * Turns a thrown partner domain error into the typed failure a service returns. The caller
  * narrows `E` to the errors its operation can produce. Any other error is rethrown.
  */
-export function partnerFailure<E extends string>(error: unknown): { success: false; error: E } {
-  if (error instanceof DomainError && Object.hasOwn(APPLICATION_ERRORS, error.code)) {
+export function partnerFailure<E extends string>(
+  error: unknown,
+  accepts: (code: string) => code is E,
+): { success: false; error: E } {
+  if (
+    error instanceof DomainError &&
+    typeof error.code === 'string' &&
+    Object.prototype.hasOwnProperty.call(APPLICATION_ERRORS, error.code)
+  ) {
     const code = error.code as PartnerDomainErrorCode;
-    return { success: false, error: APPLICATION_ERRORS[code] as E };
+    const mapped = APPLICATION_ERRORS[code];
+    if (accepts(mapped)) return { success: false, error: mapped };
   }
   throw error;
 }

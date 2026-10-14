@@ -81,8 +81,12 @@ export const naming = {
       const type = typeOf(node);
       return Boolean(type?.getProperty('Provider') && type.getProperty('Consumer'));
     }
+    function classValue(node) {
+      const symbol = typeOf(node)?.getSymbol();
+      return Boolean(typeOf(node)?.getConstructSignatures().length && symbol && symbol.flags & 32);
+    }
     function value(node, constant) {
-      if (typeOf(node)?.getConstructSignatures().length) check(node, 'type');
+      if (classValue(node)) check(node, 'type');
       else if (isContext(node)) {
         if (constant) check(node, 'constant');
       } else if (callable(node)) check(node, component(node) ? 'component' : 'function');
@@ -128,10 +132,16 @@ export const naming = {
       },
       ImportDeclaration(node) {
         for (const specifier of node.specifiers) {
+          let symbol = checker?.getSymbolAtLocation(
+            services.esTreeNodeToTSNodeMap.get(specifier.local),
+          );
+          if (symbol && symbol.flags & 2097152) symbol = checker.getAliasedSymbol(symbol);
+          // Type-only imports may reference values via typeof; classify the exported symbol.
+          const typeOnly = node.importKind === 'type' || specifier.importKind === 'type';
           if (
-            node.importKind === 'type' ||
-            specifier.importKind === 'type' ||
-            typeOf(specifier.local)?.getConstructSignatures().length
+            (typeOnly && symbol && symbol.flags & (32 | 64 | 128 | 256 | 524288)) ||
+            (symbol && !(symbol.flags & 111551)) ||
+            classValue(specifier.local)
           )
             check(specifier.local, 'type');
           else value(specifier.local, true);

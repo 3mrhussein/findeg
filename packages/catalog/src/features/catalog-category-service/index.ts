@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { categoryQueries } from '@findeg/db/queries';
 import { ID, Slug } from '@findeg/db/types';
 import type { ICategoryService } from '../catalog-i-category-service/types';
@@ -11,7 +12,10 @@ export class CategoryService implements ICategoryService {
    * Map database row to domain entity with i18n support
    */
   private mapToDomain(
-    dbCategory: categoryQueries.CategoryRow,
+    dbCategory: Omit<categoryQueries.CategoryRow, 'localizedName' | 'localizedDescription'> & {
+      localizedName: unknown;
+      localizedDescription: unknown;
+    },
     language: Locale = DEFAULT_LOCALE,
     children?: Category[],
     productCount?: number,
@@ -21,7 +25,9 @@ export class CategoryService implements ICategoryService {
 
     try {
       if (typeof dbCategory.localizedName === 'string') {
-        localizedNameDraft = JSON.parse(dbCategory.localizedName);
+        localizedNameDraft = z
+          .record(z.string(), z.string())
+          .parse(JSON.parse(dbCategory.localizedName));
       } else if (dbCategory.localizedName && typeof dbCategory.localizedName === 'object') {
         localizedNameDraft = dbCategory.localizedName as Record<string, string>;
       }
@@ -31,7 +37,9 @@ export class CategoryService implements ICategoryService {
 
     try {
       if (typeof dbCategory.localizedDescription === 'string') {
-        localizedDescriptionDraft = JSON.parse(dbCategory.localizedDescription);
+        localizedDescriptionDraft = z
+          .record(z.string(), z.string())
+          .parse(JSON.parse(dbCategory.localizedDescription));
       } else if (
         dbCategory.localizedDescription &&
         typeof dbCategory.localizedDescription === 'object'
@@ -44,9 +52,9 @@ export class CategoryService implements ICategoryService {
 
     const localizedContent = {
       name: asTranslationMap(localizedNameDraft, ''),
-      slug: dbCategory.slug as Slug,
+      slug: dbCategory.slug,
       description:
-        localizedDescriptionDraft && Object.keys(localizedDescriptionDraft).length > 0
+        Object.keys(localizedDescriptionDraft).length > 0
           ? asTranslationMap(localizedDescriptionDraft, '')
           : undefined,
     };
@@ -100,7 +108,7 @@ export class CategoryService implements ICategoryService {
      */
     const buildTree = (parentId: number | null = null): Category[] => {
       return allCategories
-        .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
+        .filter((c) => (c.parentId ?? null) === parentId)
         .map((c) => {
           const children = buildTree(c.id);
 
@@ -153,7 +161,7 @@ export class CategoryService implements ICategoryService {
   }
 
   async reorder(items: { id: ID; sortOrder: number }[]): Promise<void> {
-    return categoryQueries.reorder(items as { id: number; sortOrder: number }[]);
+    return categoryQueries.reorder(items);
   }
 
   async count(): Promise<number> {

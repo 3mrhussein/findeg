@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:integration": "vitest --run --config vitest/vitest.integration.config.ts"
+    "test:integration": "vitest --run --config vitest/vitest.integration.config.ts",
+    "lint": "node bin/lint.mjs .",
+    "type-check": "tsc --noEmit",
+    "test": "vitest --run --config vitest/vitest.config.ts --passWithNoTests",
+    "clean": "rm -rf dist .turbo"
   },
   "exports": {
     "./eslint/isomorphic": "./eslint/profiles/isomorphic.js",
@@ -20,8 +24,6 @@
     "@eslint/json": "^2.1.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^62.9.0",
-    "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.13.0",
     "typescript-eslint": "^8.71.0",
     "eslint-config-next": "^16.3.8",
@@ -40,5 +42,8 @@
     "drizzle-orm": "^0.45.3",
     "postgres": "^3.4.5",
     "@types/node": "^25.6.0"
+  },
+  "engines": {
+    "node": "^20.12.0 || >=21.7.0"
   }
 }

@@ -1,4 +1,4 @@
-import { ID, Slug } from '@findeg/db/types';
+import { ID } from '@findeg/db/types';
 import { IAdminBrandService } from '../administration-i-admin-brand-service/types';
 import { Brand } from '../catalog-brand/index';
 import { BrandInput } from '../catalog-brand-input/index';
@@ -40,7 +40,7 @@ export class AdminBrandService implements IAdminBrandService {
 
     return {
       id: dbBrand.id,
-      slug: dbBrand.slug as Slug,
+      slug: dbBrand.slug,
       localizedName,
       localizedDescription,
       name: pick(localizedName, language),
@@ -80,7 +80,7 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns The brand if it exists.
    */
   async getById(id: ID): Promise<Brand | null> {
-    const brand = await getBrandById(id as number);
+    const brand = await getBrandById(id);
     return brand ? this.mapToDomain(brand) : null;
   }
 
@@ -92,7 +92,7 @@ export class AdminBrandService implements IAdminBrandService {
    */
   async create(input: BrandInput): Promise<Brand> {
     const brand = await createBrand({
-      slug: input.slug as Slug,
+      slug: input.slug,
       logoUrl: input.logoUrl,
       localizedName: translationMapBy((locale) => (locale === 'en' ? input.nameEn : input.nameAr)),
       localizedDescription: translationMapBy((locale) =>
@@ -106,7 +106,7 @@ export class AdminBrandService implements IAdminBrandService {
         entityId: String(brand.id),
         action: 'create',
         adminUserId: undefined,
-        newValues: input as unknown as Record<string, unknown>,
+        newValues: input,
       });
     }
 
@@ -121,13 +121,13 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns The updated brand.
    */
   async update(id: ID, input: BrandInput): Promise<Brand> {
-    const existing = await getBrandById(id as number);
+    const existing = await getBrandById(id);
     if (!existing) {
-      throw new Error(`Brand with ID ${id} not found`);
+      throw new Error(`Brand with ID ${String(id)} not found`);
     }
 
-    const brand = await updateBrand(id as number, {
-      slug: input.slug as Slug,
+    const brand = await updateBrand(id, {
+      slug: input.slug,
       logoUrl: input.logoUrl,
       isActive: input.isActive,
       localizedName: translationMapBy((locale) => (locale === 'en' ? input.nameEn : input.nameAr)),
@@ -142,8 +142,8 @@ export class AdminBrandService implements IAdminBrandService {
         entityId: String(id),
         action: 'update',
         adminUserId: undefined,
-        oldValues: existing as unknown as Record<string, unknown>,
-        newValues: input as unknown as Record<string, unknown>,
+        oldValues: existing,
+        newValues: input,
       });
     }
 
@@ -156,17 +156,17 @@ export class AdminBrandService implements IAdminBrandService {
    * @param id - Brand unique ID.
    */
   async delete(id: ID): Promise<void> {
-    const existing = await getBrandById(id as number);
+    const existing = await getBrandById(id);
     if (!existing) {
-      throw new Error(`Brand with ID ${id} not found`);
+      throw new Error(`Brand with ID ${String(id)} not found`);
     }
 
-    const productCount = await countProductsByBrandId(id as number);
+    const productCount = await countProductsByBrandId(id);
     if (productCount > 0) {
-      throw new Error(`Cannot delete brand with ${productCount} associated product(s)`);
+      throw new Error(`Cannot delete brand with ${String(productCount)} associated product(s)`);
     }
 
-    await deleteBrand(id as number);
+    await deleteBrand(id);
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -174,7 +174,7 @@ export class AdminBrandService implements IAdminBrandService {
         entityId: String(id),
         action: 'delete',
         adminUserId: undefined,
-        oldValues: existing as unknown as Record<string, unknown>,
+        oldValues: existing,
       });
     }
   }
@@ -183,7 +183,7 @@ export class AdminBrandService implements IAdminBrandService {
    * Checks if a slug is available.
    */
   async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
-    const existing = await getBrandBySlug(slug as Slug);
+    const existing = await getBrandBySlug(slug);
     if (!existing) return true;
     return existing.id === excludeId;
   }
@@ -196,18 +196,18 @@ export class AdminBrandService implements IAdminBrandService {
     if (!brand) throw new Error('Brand not found');
     return this.update(id, {
       slug: brand.slug,
-      nameEn: brand.localizedName?.en || brand.name,
-      nameAr: brand.localizedName?.ar || brand.name,
+      nameEn: brand.localizedName.en || brand.name || '',
+      nameAr: brand.localizedName.ar || brand.name || '',
       descriptionEn: brand.localizedDescription?.en || '',
       descriptionAr: brand.localizedDescription?.ar || '',
       isActive: !brand.isActive,
-    } as unknown as BrandInput);
+    });
   }
 
   /**
    * Gets product count.
    */
   async getBrandProductCount(id: ID): Promise<number> {
-    return countProductsByBrandId(id as number);
+    return countProductsByBrandId(id);
   }
 }

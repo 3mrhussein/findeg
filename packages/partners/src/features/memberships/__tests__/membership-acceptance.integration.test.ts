@@ -51,9 +51,9 @@ describe('Partner Invitation acceptance', () => {
     requestedEmail?: string,
   ) {
     sequence += 1;
-    const email = requestedEmail ?? `invitee-${sequence}@findeg.test`;
+    const email = requestedEmail ?? `invitee-${String(sequence)}@findeg.test`;
     const partnerResult = await services.partners.createPartner(staff, {
-      code: `acceptance-partner-${sequence}`,
+      code: `acceptance-partner-${String(sequence)}`,
       nameEn: 'Acceptance School',
       nameAr: 'مدرسة القبول',
     });

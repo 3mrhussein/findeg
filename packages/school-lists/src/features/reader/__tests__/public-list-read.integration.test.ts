@@ -44,7 +44,11 @@ describe('public School Supply List read on real Postgres', () => {
     sequence += 1;
     const [partner] = await testDb.db
       .insert(businessPartners)
-      .values({ code: `read-school-${sequence}`, nameEn: 'Nile School', nameAr: 'مدرسة النيل' })
+      .values({
+        code: `read-school-${String(sequence)}`,
+        nameEn: 'Nile School',
+        nameAr: 'مدرسة النيل',
+      })
       .returning();
     await testDb.db.insert(partnerSchoolProfiles).values({
       businessPartnerId: partner.id,
@@ -58,7 +62,7 @@ describe('public School Supply List read on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(categories)
-      .values({ slug: `read-category-${sequence}` })
+      .values({ slug: `read-category-${String(sequence)}` })
       .returning();
     return row.id;
   }
@@ -67,7 +71,11 @@ describe('public School Supply List read on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(attributes)
-      .values({ key: `read-${label}-${sequence}`, dataType: 'text', localizedLabel: { en: label } })
+      .values({
+        key: `read-${label}-${String(sequence)}`,
+        dataType: 'text',
+        localizedLabel: { en: label },
+      })
       .returning();
     return row;
   }
@@ -76,7 +84,7 @@ describe('public School Supply List read on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(warehouses)
-      .values({ code: `read-wh-${sequence}`, name: 'WH', isActive })
+      .values({ code: `read-wh-${String(sequence)}`, name: 'WH', isActive })
       .returning();
     return row.id;
   }
@@ -95,15 +103,15 @@ describe('public School Supply List read on real Postgres', () => {
     if (options.brand) {
       const [brand] = await testDb.db
         .insert(brands)
-        .values({ slug: `read-brand-${sequence}`, localizedName: { en: options.brand } })
+        .values({ slug: `read-brand-${String(sequence)}`, localizedName: { en: options.brand } })
         .returning();
       brandId = brand.id;
     }
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `read-product-${sequence}`,
-        localizedName: { en: `Pen ${sequence}`, ar: `قلم ${sequence}` },
+        slug: `read-product-${String(sequence)}`,
+        localizedName: { en: `Pen ${String(sequence)}`, ar: `قلم ${String(sequence)}` },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
         categoryId,
@@ -115,7 +123,7 @@ describe('public School Supply List read on real Postgres', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `READ-${sequence}`,
+        sku: `READ-${String(sequence)}`,
         basePrice: options.price ?? '10.00',
         isActive: options.active ?? true,
       })
@@ -154,7 +162,12 @@ describe('public School Supply List read on real Postgres', () => {
   }
 
   async function read(code: string | null) {
-    const result = await reader.getByPublicCode(code!);
+    const result = await reader.getByPublicCode(
+      code ??
+        (() => {
+          throw new Error('Expected a value');
+        })(),
+    );
     if (!result.success) throw new Error(result.error);
     return result.data;
   }
@@ -229,9 +242,14 @@ describe('public School Supply List read on real Postgres', () => {
       inStock: true,
       differingAttributes: { [color.key]: 'red' },
     });
-    expect(pen.eligibleVariants.find((v) => v.variantId === def.id)!.differingAttributes).toEqual(
-      {},
-    );
+    expect(
+      (
+        pen.eligibleVariants.find((v) => v.variantId === def.id) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).differingAttributes,
+    ).toEqual({});
     expect(ruler).toMatchObject({ exactItem: true, required: false, specification: null });
     expect(ruler.eligibleVariants.map((v) => v.variantId)).toEqual([exact.id]);
   });
@@ -275,10 +293,38 @@ describe('public School Supply List read on real Postgres', () => {
     const byId = new Map(
       (await read(list.publicCode)).items[0].eligibleVariants.map((v) => [v.variantId, v]),
     );
-    expect(byId.get(inStock.id)!.inStock).toBe(true);
-    expect(byId.get(fullyReserved.id)!.inStock).toBe(false);
-    expect(byId.get(closedOnly.id)!.inStock).toBe(false);
-    expect(byId.get(untracked.id)!.inStock).toBe(false);
+    expect(
+      (
+        byId.get(inStock.id) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).inStock,
+    ).toBe(true);
+    expect(
+      (
+        byId.get(fullyReserved.id) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).inStock,
+    ).toBe(false);
+    expect(
+      (
+        byId.get(closedOnly.id) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).inStock,
+    ).toBe(false);
+    expect(
+      (
+        byId.get(untracked.id) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).inStock,
+    ).toBe(false);
   });
 
   it('sums availability across warehouses to reach one unit', async () => {
@@ -347,7 +393,9 @@ describe('public School Supply List read on real Postgres', () => {
       expect(await read(list.publicCode)).toMatchObject({
         status: 'published',
         items: [
-          expect.objectContaining({ defaultVariant: expect.objectContaining({ variantId: v.id }) }),
+          expect.objectContaining({
+            defaultVariant: expect.objectContaining({ variantId: v.id }) as unknown,
+          }),
         ],
       });
     },

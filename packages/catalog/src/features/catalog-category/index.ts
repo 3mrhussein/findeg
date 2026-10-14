@@ -1,31 +1,36 @@
 import { z } from 'zod';
-import { IdSchema, SlugSchema, type ID, type Slug } from '@findeg/db/types';
+import {
+  IdSchema as idSchema,
+  SlugSchema as slugSchema,
+  type ID,
+  type Slug,
+} from '@findeg/db/types';
 import type { Locale } from '@findeg/domain';
-import { TranslationMapSchema, pick } from '../../helpers/index';
+import { TranslationMapSchema as translationMapSchema, pick } from '../../helpers/index';
 
-export const CategoryLocalizedContentSchema = z.object({
-  name: TranslationMapSchema,
-  description: TranslationMapSchema.optional(),
+const categoryLocalizedContentSchema = z.object({
+  name: translationMapSchema,
+  description: translationMapSchema.optional(),
 });
-export type CategoryLocalizedContent = z.infer<typeof CategoryLocalizedContentSchema>;
+export type CategoryLocalizedContent = z.infer<typeof categoryLocalizedContentSchema>;
 
-export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
+const categorySchema: z.ZodType<Category> = z.lazy(() =>
   z.object({
-    id: IdSchema,
-    slug: SlugSchema,
+    id: idSchema,
+    slug: slugSchema,
     name: z.string(),
     description: z.string().optional(),
     locale: z.string().optional(), // Locale
-    localizedContent: CategoryLocalizedContentSchema.optional(),
+    localizedContent: categoryLocalizedContentSchema.optional(),
     image: z.string().optional(),
     imageUrl: z.string().optional(),
     icon: z.string().optional(),
-    parentId: IdSchema.optional(),
+    parentId: idSchema.optional(),
     path: z.string().optional(),
     depth: z.number().optional(),
     sortOrder: z.number().optional(),
     isActive: z.boolean().optional(),
-    children: z.array(CategorySchema).optional(),
+    children: z.array(categorySchema).optional(),
     productCount: z.number().optional(),
   }),
 );
@@ -49,23 +54,23 @@ export type Category = {
   productCount?: number;
 };
 
-export const CreateCategorySchema = z.object({
-  slug: SlugSchema,
+const createCategorySchema = z.object({
+  slug: slugSchema,
   name: z.string(),
   description: z.string().optional(),
-  localizedContent: CategoryLocalizedContentSchema.optional(),
+  localizedContent: categoryLocalizedContentSchema.optional(),
   image: z.string().optional(),
   icon: z.string().optional(),
-  parentId: IdSchema.optional(),
+  parentId: idSchema.optional(),
   sortOrder: z.number().optional(),
   isActive: z.boolean().optional(),
 });
-export type CreateCategory = z.infer<typeof CreateCategorySchema>;
+export type CreateCategory = z.infer<typeof createCategorySchema>;
 
-export const UpdateCategorySchema = CreateCategorySchema.partial().extend({
-  id: IdSchema,
+const updateCategorySchema = createCategorySchema.partial().extend({
+  id: idSchema,
 });
-export type UpdateCategory = z.infer<typeof UpdateCategorySchema>;
+export type UpdateCategory = z.infer<typeof updateCategorySchema>;
 
 export class CategoryEntity {
   constructor(private category: Category) {}
@@ -84,3 +89,10 @@ export class CategoryEntity {
     );
   }
 }
+
+export {
+  categoryLocalizedContentSchema as CategoryLocalizedContentSchema,
+  categorySchema as CategorySchema,
+  createCategorySchema as CreateCategorySchema,
+  updateCategorySchema as UpdateCategorySchema,
+};

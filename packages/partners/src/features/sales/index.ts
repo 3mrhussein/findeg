@@ -18,7 +18,7 @@ export function createPartnerSalesServices(
   dependencies: PartnerSalesDependencies = {},
 ): PartnerSalesServices {
   const getDb = dependencies.db
-    ? async () => dependencies.db as PartnerSalesDatabase
+    ? () => Promise.resolve(dependencies.db as PartnerSalesDatabase)
     : async () => (await import('@findeg/db/connection')).db as PartnerSalesDatabase;
   return {
     attributedOrders: new AttributedOrderService(getDb),

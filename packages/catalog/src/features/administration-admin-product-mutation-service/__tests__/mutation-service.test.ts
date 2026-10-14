@@ -72,7 +72,7 @@ describe('AdminProductMutationService', () => {
 
   it('fails an update for a missing product before writing', async () => {
     queries.getProductById.mockResolvedValueOnce(undefined);
-    await expect(service.updateProduct(4, {} as never)).rejects.toThrow('Product 4 not found');
+    await expect(service.updateProduct(4, {})).rejects.toThrow('Product 4 not found');
     expect(queries.updateProductWithVariantsInDb).not.toHaveBeenCalled();
   });
 

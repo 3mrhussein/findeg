@@ -28,7 +28,7 @@ const staleAfterMs = 6 * 60 * 60 * 1000;
  */
 export default async function setup({ provide }: TestProject) {
   const serverUrl = resolveServerUrl();
-  const database = `${testDatabasePrefix}${Date.now()}_${randomBytes(4).toString('hex')}`;
+  const database = `${testDatabasePrefix}${String(Date.now())}_${randomBytes(4).toString('hex')}`;
   const databaseUrl = withDatabase(serverUrl, database);
 
   const admin = postgres(serverUrl, { ...connectionOptions, max: 1 });

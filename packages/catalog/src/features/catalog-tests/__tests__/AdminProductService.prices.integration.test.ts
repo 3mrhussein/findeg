@@ -39,7 +39,15 @@ describe('AdminProductService partial price writes on PostgreSQL', () => {
       ],
     });
     const read = await service.getProductForEdit(created.productId);
-    return { productId: created.productId, variantId: read!.variants[0].id! };
+    return {
+      productId: created.productId,
+      variantId: (
+        read ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).variants[0].id,
+    };
   }
 
   it.each([40, 45])(
@@ -49,7 +57,14 @@ describe('AdminProductService partial price writes on PostgreSQL', () => {
       await expect(
         service.updateProduct(productId, { variants: [{ id: variantId, strikePrice }] }),
       ).rejects.toBeInstanceOf(ValidationError);
-      expect((await service.getProductForEdit(productId))!.variants[0]).toMatchObject({
+      expect(
+        (
+          (await service.getProductForEdit(productId)) ??
+          (() => {
+            throw new Error('Expected a value');
+          })()
+        ).variants[0],
+      ).toMatchObject({
         basePrice: 45,
         strikePrice: 60,
       });
@@ -68,7 +83,14 @@ describe('AdminProductService partial price writes on PostgreSQL', () => {
     async (strikePrice) => {
       const { productId, variantId } = await product();
       await service.updateProduct(productId, { variants: [{ id: variantId, strikePrice }] });
-      expect((await service.getProductForEdit(productId))!.variants[0]).toMatchObject({
+      expect(
+        (
+          (await service.getProductForEdit(productId)) ??
+          (() => {
+            throw new Error('Expected a value');
+          })()
+        ).variants[0],
+      ).toMatchObject({
         basePrice: 45,
         strikePrice,
       });
@@ -84,7 +106,12 @@ describe('AdminProductService partial price writes on PostgreSQL', () => {
     expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
     const rejection = results.find((result) => result.status === 'rejected');
     expect(rejection?.status === 'rejected' && rejection.reason).toBeInstanceOf(ValidationError);
-    const row = (await service.getProductForEdit(productId))!.variants[0];
+    const row = (
+      (await service.getProductForEdit(productId)) ??
+      (() => {
+        throw new Error('Expected a value');
+      })()
+    ).variants[0];
     expect([
       [55, 60],
       [45, 50],
@@ -100,7 +127,14 @@ describe('AdminProductService partial price writes on PostgreSQL', () => {
         ],
       }),
     ).rejects.toBeInstanceOf(ValidationError);
-    expect((await service.getProductForEdit(productId))!.variants[0]).toMatchObject({
+    expect(
+      (
+        (await service.getProductForEdit(productId)) ??
+        (() => {
+          throw new Error('Expected a value');
+        })()
+      ).variants[0],
+    ).toMatchObject({
       basePrice: 45,
       strikePrice: 60,
     });

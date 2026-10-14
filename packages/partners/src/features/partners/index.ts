@@ -160,7 +160,11 @@ export class PartnerService implements IPartnerService {
             try {
               changePartnerCode(current, patch.code);
             } catch (error) {
-              return partnerFailure(error);
+              return partnerFailure(
+                error,
+                (code): code is 'code-locked' | 'invalid-input' =>
+                  code === 'code-locked' || code === 'invalid-input',
+              );
             }
           }
           if (parsed.data.schoolProfile) {
@@ -203,7 +207,10 @@ export class PartnerService implements IPartnerService {
             activePartnerAdministrators: administrators,
           });
         } catch (error) {
-          return partnerFailure(error);
+          return partnerFailure(
+            error,
+            (code): code is 'invalid-transition' => code === 'invalid-transition',
+          );
         }
 
         const updated = await setBusinessPartnerStatus(tx, partnerId, next.status);

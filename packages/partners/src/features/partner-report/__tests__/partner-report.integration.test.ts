@@ -16,7 +16,7 @@ const NOW = new Date('2026-05-15T10:00:00.000Z');
 const IN_MAY = '2026-05-05T10:00:00Z';
 
 const serialize = (value: unknown) =>
-  JSON.stringify(value, (_, v) => (typeof v === 'bigint' ? v.toString() : v));
+  JSON.stringify(value, (_, v: unknown) => (typeof v === 'bigint' ? v.toString() : v));
 
 describe('Partner Reports sales view', () => {
   let testDb: TestDatabase;
@@ -126,9 +126,15 @@ describe('Partner Reports sales view', () => {
       if (!staffView.success) throw new Error(staffView.error);
       const total = (rows: readonly { chargedPiasters: bigint }[]) =>
         rows.reduce((sum, row) => sum + row.chargedPiasters, 0n);
-      expect(total(view.sales) + view.otherItems!.chargedPiasters).toBe(
-        total(staffView.data.sales),
-      );
+      expect(
+        total(view.sales) +
+          (
+            view.otherItems ??
+            (() => {
+              throw new Error('Expected a value');
+            })()
+          ).chargedPiasters,
+      ).toBe(total(staffView.data.sales));
     });
 
     it('counts distinct Orders, not lines or units', async () => {

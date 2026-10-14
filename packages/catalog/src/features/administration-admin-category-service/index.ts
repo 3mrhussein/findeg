@@ -46,11 +46,9 @@ export class AdminCategoryService implements IAdminCategoryService {
   async create(input: CategoryInput): Promise<Category> {
     const category = await createCategory({
       slug: input.slug,
-      localizedName: Object.fromEntries(
-        (input.translations || []).map((t) => [t.language, t.name]),
-      ),
+      localizedName: Object.fromEntries(input.translations.map((t) => [t.language, t.name])),
       localizedDescription: Object.fromEntries(
-        (input.translations || [])
+        input.translations
           .filter((t) => !!t.description)
           .map((t) => [t.language, t.description as string]),
       ),
@@ -66,7 +64,7 @@ export class AdminCategoryService implements IAdminCategoryService {
         entityId: String(category.id),
         action: 'create',
         adminUserId: undefined,
-        newValues: input as unknown as Record<string, unknown>,
+        newValues: input,
       });
     }
 
@@ -81,19 +79,19 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns The updated category entity.
    * @throws Error if the category is not found.
    */
-  async update(id: ID, input: CategoryInput): Promise<Category> {
+  async update(id: ID, input: Partial<CategoryInput>): Promise<Category> {
     const existing = await getCategoryById(id);
     if (!existing) {
-      throw new Error(`Category with ID ${id} not found`);
+      throw new Error(`Category with ID ${String(id)} not found`);
     }
 
     const updated = await updateCategory(id, {
       slug: input.slug,
       localizedName: Object.fromEntries(
-        (input.translations || []).map((t) => [t.language, t.name]),
+        (input.translations ?? []).map((t) => [t.language, t.name]),
       ),
       localizedDescription: Object.fromEntries(
-        (input.translations || [])
+        (input.translations ?? [])
           .filter((t) => !!t.description)
           .map((t) => [t.language, t.description as string]),
       ),
@@ -109,8 +107,8 @@ export class AdminCategoryService implements IAdminCategoryService {
         entityId: String(id),
         action: 'update',
         adminUserId: undefined,
-        oldValues: existing as unknown as Record<string, unknown>,
-        newValues: input as unknown as Record<string, unknown>,
+        oldValues: existing,
+        newValues: input,
       });
     }
 
@@ -126,7 +124,7 @@ export class AdminCategoryService implements IAdminCategoryService {
   async delete(id: ID): Promise<void> {
     const existing = await getCategoryById(id);
     if (!existing) {
-      throw new Error(`Category with ID ${id} not found`);
+      throw new Error(`Category with ID ${String(id)} not found`);
     }
 
     await deleteCategory(id);
@@ -137,7 +135,7 @@ export class AdminCategoryService implements IAdminCategoryService {
         entityId: String(id),
         action: 'delete',
         adminUserId: undefined,
-        oldValues: existing as unknown as Record<string, unknown>,
+        oldValues: existing,
       });
     }
   }
@@ -183,7 +181,7 @@ export class AdminCategoryService implements IAdminCategoryService {
      */
     const buildTree = (parentId: number | null = null): CategoryTreeRow[] => {
       return allCategories
-        .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
+        .filter((c) => (c.parentId ?? null) === parentId)
         .map((c) => {
           const children = buildTree(c.id);
           const childrenProductCount = children.reduce(

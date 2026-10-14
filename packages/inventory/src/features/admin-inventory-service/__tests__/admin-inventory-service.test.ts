@@ -75,10 +75,10 @@ describe('AdminInventoryService', () => {
     fixtures.db.balanceRows = [];
     fixtures.db.inserts = [];
     fixtures.db.getVariantsByIds.mockResolvedValue([{ id: 7 }]);
-    fixtures.db.withTransaction.mockImplementation(
-      async (_c: unknown, fn: (tx: unknown) => unknown) => fn(scriptedTx()),
+    fixtures.db.withTransaction.mockImplementation((_c: unknown, fn: (tx: unknown) => unknown) =>
+      Promise.resolve().then(() => fn(scriptedTx())),
     );
-    service = createAdminInventoryService(fixtures.auditLog as never);
+    service = createAdminInventoryService(fixtures.auditLog);
   });
 
   describe('getInventory', () => {
@@ -103,8 +103,8 @@ describe('AdminInventoryService', () => {
         { variant: { productId: 2 } },
         { variant: { productId: 3 } },
       ]);
-      fixtures.productService.getById.mockImplementation(async (id: number) =>
-        id === 2 ? null : { id },
+      fixtures.productService.getById.mockImplementation((id: number) =>
+        Promise.resolve().then(() => (id === 2 ? null : { id })),
       );
       const result = await service.getInventory(true, 2, 0);
       expect(fixtures.productService.getById).toHaveBeenCalledTimes(2);
@@ -125,7 +125,7 @@ describe('AdminInventoryService', () => {
   describe('updateStock', () => {
     it('rejects an unknown variant before opening a transaction', async () => {
       fixtures.db.getVariantsByIds.mockResolvedValue([]);
-      await expect(service.updateStock({ variantId: 99, quantity: 3 } as never)).rejects.toThrow(
+      await expect(service.updateStock({ variantId: 99, quantity: 3 })).rejects.toThrow(
         'Variant #99 not found',
       );
       expect(fixtures.db.withTransaction).not.toHaveBeenCalled();
@@ -134,7 +134,7 @@ describe('AdminInventoryService', () => {
     it('adjusts the active warehouse by the difference and audits old and new quantities', async () => {
       fixtures.db.warehouseRows.push([{ id: 4 }]);
       fixtures.db.balanceRows.push([{ onHand: 2 }]);
-      await service.updateStock({ variantId: 7, quantity: 5 } as never);
+      await service.updateStock({ variantId: 7, quantity: 5 });
       expect(fixtures.db.adjustStock).toHaveBeenCalledWith(
         7,
         4,
@@ -158,7 +158,7 @@ describe('AdminInventoryService', () => {
         warehouseId: 9,
         quantity: 5,
         notes: 'count',
-      } as never);
+      });
       expect(fixtures.db.adjustStock).not.toHaveBeenCalled();
       expect(fixtures.db.inserts).toEqual([
         { variantId: 7, warehouseId: 9, onHand: 0, reserved: 0 },
@@ -171,14 +171,14 @@ describe('AdminInventoryService', () => {
     it('fails when the requested warehouse does not exist', async () => {
       fixtures.db.warehouseRows.push([]);
       await expect(
-        service.updateStock({ variantId: 7, warehouseId: 9, quantity: 1 } as never),
+        service.updateStock({ variantId: 7, warehouseId: 9, quantity: 1 }),
       ).rejects.toThrow('Warehouse #9 not found');
       expect(fixtures.db.adjustStock).not.toHaveBeenCalled();
     });
 
     it('fails when no active warehouse exists', async () => {
       fixtures.db.warehouseRows.push([]);
-      await expect(service.updateStock({ variantId: 7, quantity: 1 } as never)).rejects.toThrow(
+      await expect(service.updateStock({ variantId: 7, quantity: 1 })).rejects.toThrow(
         'No active warehouse found',
       );
     });
@@ -203,8 +203,8 @@ describe('AdminInventoryService', () => {
         { variant: { productId: 1 } },
         { variant: { productId: 4 } },
       ]);
-      fixtures.productService.getById.mockImplementation(async (id: number) =>
-        id === 4 ? null : { id },
+      fixtures.productService.getById.mockImplementation((id: number) =>
+        Promise.resolve().then(() => (id === 4 ? null : { id })),
       );
       expect(await service.getLowStockAlerts(3)).toEqual([{ id: 1 }]);
       expect(fixtures.db.getLowStock).toHaveBeenCalledWith(3);

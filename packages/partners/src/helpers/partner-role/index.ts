@@ -19,6 +19,10 @@ export function requirePartnerRole(
     requireDomainPartnerRole(context.partner, context.membership, roles, action);
     return ok(context);
   } catch (error) {
-    return partnerFailure(error);
+    return partnerFailure(
+      error,
+      (code): code is 'role-not-held' | 'partner-status-not-allowed' =>
+        code === 'role-not-held' || code === 'partner-status-not-allowed',
+    );
   }
 }

@@ -63,32 +63,33 @@ export class AdminInventoryService implements IAdminInventoryService {
    * @throws Error if the variant is not found.
    */
   async updateStock(update: InventoryUpdate): Promise<void> {
-    const variant = (await productQueries.getVariantsByIds([update.variantId as number]))[0];
-    if (!variant) throw new Error(`Variant #${update.variantId} not found`);
+    const variant = (await productQueries.getVariantsByIds([update.variantId])).at(0);
+    if (!variant) throw new Error(`Variant #${String(update.variantId)} not found`);
 
     let oldQty = 0;
     await withTransaction(undefined, async (tx) => {
       // 1. Resolve warehouse before reading balance
-      let warehouseId = update.warehouseId ? Number(update.warehouseId) : undefined;
+      let warehouseId = update.warehouseId ? update.warehouseId : undefined;
       if (!warehouseId) {
-        const [activeWarehouse] = await tx
+        const activeWarehouses = await tx
           .select({ id: warehouses.id })
           .from(warehouses)
           .where(eq(warehouses.isActive, true))
           .orderBy(warehouses.id)
           .limit(1);
+        const activeWarehouse = activeWarehouses.at(0);
         if (!activeWarehouse) {
           throw new Error('No active warehouse found');
         }
         warehouseId = activeWarehouse.id;
       } else {
-        const [existing] = await tx
+        const existingWarehouses = await tx
           .select({ id: warehouses.id })
           .from(warehouses)
           .where(eq(warehouses.id, warehouseId))
           .limit(1);
-        if (!existing) {
-          throw new Error(`Warehouse #${warehouseId} not found`);
+        if (!existingWarehouses.at(0)) {
+          throw new Error(`Warehouse #${String(warehouseId)} not found`);
         }
       }
 
@@ -97,7 +98,7 @@ export class AdminInventoryService implements IAdminInventoryService {
       await tx
         .insert(inventoryBalances)
         .values({
-          variantId: update.variantId as number,
+          variantId: update.variantId,
           warehouseId,
           onHand: 0,
           reserved: 0,
@@ -108,7 +109,7 @@ export class AdminInventoryService implements IAdminInventoryService {
         .from(inventoryBalances)
         .where(
           and(
-            eq(inventoryBalances.variantId, update.variantId as number),
+            eq(inventoryBalances.variantId, update.variantId),
             eq(inventoryBalances.warehouseId, warehouseId),
           ),
         )
@@ -120,7 +121,7 @@ export class AdminInventoryService implements IAdminInventoryService {
       // 3. Adjust stock inside the same transaction
       if (diff !== 0) {
         await adjustStock(
-          update.variantId as number,
+          update.variantId,
           warehouseId,
           {
             movementType: 'adjustment',

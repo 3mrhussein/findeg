@@ -3,24 +3,23 @@ import {
   ProductEntity,
   getProductDisplayPrice,
   isNewProduct,
-  ProductSchema,
+  ProductSchema as productSchema,
   type Product,
 } from '../index';
 import type { Variant } from '../../catalog-variant/index';
 
-const variant = (overrides: Partial<Variant> = {}): Variant =>
-  ({
-    id: 1,
-    productId: 1,
-    sku: 'S-1',
-    variantKey: 'a',
-    basePrice: '10.00',
-    isActive: true,
-    isDefault: false,
-    sortOrder: 0,
-    inventory: [{ warehouseActive: true, onHand: 5, reserved: 0 }],
-    ...overrides,
-  }) as Variant;
+const variant = (overrides: Partial<Variant> = {}): Variant => ({
+  id: 1,
+  productId: 1,
+  sku: 'S-1',
+  variantKey: 'a',
+  basePrice: '10.00',
+  isActive: true,
+  isDefault: false,
+  sortOrder: 0,
+  inventory: [{ warehouseActive: true, onHand: 5, reserved: 0 }],
+  ...overrides,
+});
 
 const product = (overrides: Partial<Product> = {}): Product =>
   ({
@@ -44,7 +43,7 @@ const product = (overrides: Partial<Product> = {}): Product =>
 
 describe('ProductSchema', () => {
   it('requires a slug and name', () => {
-    expect(ProductSchema.safeParse({ id: 1 }).success).toBe(false);
+    expect(productSchema.safeParse({ id: 1 }).success).toBe(false);
   });
 });
 

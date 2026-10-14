@@ -1,7 +1,7 @@
 import { DEFAULT_CURRENCY, BUSINESS_TIME_ZONE } from '@findeg/domain';
 import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/types';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import type * as Schema from '@findeg/db/schema';
+import type * as schema from '@findeg/db/schema';
 import type {
   OrderStatusTransitionResult,
   PaymentStatusTransitionResult,
@@ -9,7 +9,7 @@ import type {
 import type { OrderStatusUpdate, ShippingAddress, VariantSnapshot } from './features/input-schemas';
 import type { OrderStaffActor } from './features/write-permission';
 
-export type OrderDatabase = PostgresJsDatabase<typeof Schema>;
+export type OrderDatabase = PostgresJsDatabase<typeof schema>;
 
 export interface OrdersDependencies {
   db?: OrderDatabase;

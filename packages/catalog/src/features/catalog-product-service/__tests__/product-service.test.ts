@@ -31,8 +31,8 @@ const productRow = (id: number, overrides: Record<string, unknown> = {}) => ({
   isActive: true,
   brandId: 2,
   categoryId: 3,
-  slug: `product-${id}`,
-  localizedName: { en: `Pen ${id}`, ar: `قلم ${id}` },
+  slug: `product-${String(id)}`,
+  localizedName: { en: `Pen ${String(id)}`, ar: `قلم ${String(id)}` },
   localizedDescription: { en: 'Desc', ar: 'وصف' },
   localizedLongDescription: { en: 'Long', ar: 'طويل' },
   createdAt: new Date('2026-01-01'),
@@ -43,8 +43,8 @@ const productRow = (id: number, overrides: Record<string, unknown> = {}) => ({
 const variantRow = (id: number, productId: number, overrides: Record<string, unknown> = {}) => ({
   id,
   productId,
-  sku: `SKU-${id}`,
-  variantKey: `key-${id}`,
+  sku: `SKU-${String(id)}`,
+  variantKey: `key-${String(id)}`,
   localizedLabel: { en: 'Blue', ar: 'أزرق' },
   basePrice: 10,
   strikePrice: null,
@@ -60,8 +60,8 @@ const variantRow = (id: number, productId: number, overrides: Record<string, unk
 
 const tagRow = (id: number) => ({
   id,
-  key: `tag-${id}`,
-  slug: `tag-${id}`,
+  key: `tag-${String(id)}`,
+  slug: `tag-${String(id)}`,
   group: 'audience',
   icon: null,
   color: '',
@@ -172,8 +172,10 @@ describe('ProductService', () => {
     productQueries.getFeatured.mockResolvedValue([{ id: 1 }, { id: 2 }]);
     productQueries.search.mockResolvedValue([{ id: 1 }]);
     productQueries.getByCategory.mockResolvedValue([]);
-    productQueries.getByIdWithBrandAndCategory.mockImplementation(async (id: number) =>
-      id === 1 ? { product: productRow(1), brand: null, category: null } : undefined,
+    productQueries.getByIdWithBrandAndCategory.mockImplementation((id: number) =>
+      Promise.resolve().then(() =>
+        id === 1 ? { product: productRow(1), brand: null, category: null } : undefined,
+      ),
     );
     productQueries.getVariantsByProductIds.mockResolvedValue({});
     productQueries.getProductTags.mockResolvedValue([]);
@@ -229,7 +231,7 @@ describe('ProductService', () => {
     } as never;
     expect((await service.create(input)).id).toBe(8);
     expect(productQueries.create).toHaveBeenCalledWith(
-      expect.objectContaining({ localizedName: expect.objectContaining({ en: 'Pen' }) }),
+      expect.objectContaining({ localizedName: expect.objectContaining({ en: 'Pen' }) as unknown }),
     );
     expect((await service.update(8, input)).id).toBe(8);
     expect(productQueries.update).toHaveBeenCalledWith(

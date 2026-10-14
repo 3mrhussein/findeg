@@ -95,9 +95,9 @@ describe('Attributed Order reads', () => {
     expect(Object.keys(data.orders[0])).not.toEqual(
       expect.arrayContaining(['guestEmail', 'userId', 'shippingAddressSnapshot']),
     );
-    expect(JSON.stringify(data, (_, v) => (typeof v === 'bigint' ? `${v}` : v))).not.toMatch(
-      /customer@example\.com/,
-    );
+    expect(
+      JSON.stringify(data, (_, v: unknown) => (typeof v === 'bigint' ? String(v) : v)),
+    ).not.toMatch(/customer@example\.com/);
   });
 
   describe('Cairo-time date boundaries', () => {

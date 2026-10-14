@@ -76,7 +76,7 @@ describe('ReviewService', () => {
       userId: 2,
       rating: 4,
       comment: '  nice  ',
-    } as never);
+    });
     expect(created.rating).toBe(4);
     expect(reviewQueries.create).toHaveBeenCalledWith(
       expect.objectContaining({ comment: 'nice', isVerifiedPurchase: true }),
@@ -85,23 +85,23 @@ describe('ReviewService', () => {
   });
 
   it('rejects invalid ratings, non-buyers and repeat reviews', async () => {
-    await expect(
-      service.createReview({ productId: 1, userId: 2, rating: 9 } as never),
-    ).rejects.toThrow('REVIEW_INVALID_RATING');
+    await expect(service.createReview({ productId: 1, userId: 2, rating: 9 })).rejects.toThrow(
+      'REVIEW_INVALID_RATING',
+    );
     await expect(
       service.createReview({ productId: 1, userId: 2, rating: 'x' } as never),
     ).rejects.toThrow('REVIEW_INVALID_RATING');
 
     hasPurchasedProduct.mockResolvedValueOnce(false);
-    await expect(
-      service.createReview({ productId: 1, userId: 2, rating: 3 } as never),
-    ).rejects.toThrow('REVIEW_PURCHASE_REQUIRED');
+    await expect(service.createReview({ productId: 1, userId: 2, rating: 3 })).rejects.toThrow(
+      'REVIEW_PURCHASE_REQUIRED',
+    );
 
     hasPurchasedProduct.mockResolvedValueOnce(true);
     reviewQueries.hasUserReviewed.mockResolvedValueOnce(true);
-    await expect(
-      service.createReview({ productId: 1, userId: 2, rating: 3 } as never),
-    ).rejects.toThrow('REVIEW_ALREADY_SUBMITTED');
+    await expect(service.createReview({ productId: 1, userId: 2, rating: 3 })).rejects.toThrow(
+      'REVIEW_ALREADY_SUBMITTED',
+    );
   });
 
   it('records a helpful vote and rejects blank voters', async () => {

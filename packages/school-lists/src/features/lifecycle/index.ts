@@ -2,11 +2,11 @@ import { randomBytes } from 'node:crypto';
 import { z } from 'zod';
 import { canReadSupplyLists, canWriteSupplyLists } from '../permissions/index';
 import {
-  CreateSupplyListDraftSchema,
-  UpdateSupplyListDraftSchema,
-  SupplyListItemSchema,
-  SupplyListIdSchema,
-  ListOfferSchema,
+  CreateSupplyListDraftSchema as createSupplyListDraftSchema,
+  UpdateSupplyListDraftSchema as updateSupplyListDraftSchema,
+  SupplyListItemSchema as supplyListItemSchema,
+  SupplyListIdSchema as supplyListIdSchema,
+  ListOfferSchema as listOfferSchema,
 } from '@findeg/db';
 import {
   archiveSupplyList,
@@ -91,7 +91,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async createDraft(actor: SupplyListStaffActor, input: CreateSupplyListDraftInput) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = CreateSupplyListDraftSchema.safeParse(input);
+    const parsed = createSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     const db = await this.getDb();
     return db
@@ -110,7 +110,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: UpdateSupplyListDraftInput = {},
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = UpdateSupplyListDraftSchema.safeParse(input);
+    const parsed = updateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withList(sourceListId, 'draft', async (tx, source, partnerStatus) => {
       const sourceItems = await getSupplyListItems(tx, source.id);
@@ -121,13 +121,13 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
       );
       const draft = await insertSupplyListDraft(
         tx,
-        CreateSupplyListDraftSchema.strip().parse({ ...source, ...parsed.data }),
+        createSupplyListDraftSchema.strip().parse({ ...source, ...parsed.data }),
         clone.list.sourceListId,
       );
       for (const [index, item] of sourceItems.entries()) {
         // Project only authoring fields; never copy identities, snapshots or timestamps.
         await insertSupplyListItem(tx, draft.id, {
-          ...SupplyListItemSchema.strip().parse(item),
+          ...supplyListItemSchema.strip().parse(item),
           variantId: clone.items[index].defaultVariantId,
           specification: clone.items[index].specification,
           required: clone.items[index].required,
@@ -144,7 +144,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: UpdateSupplyListDraftInput,
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = UpdateSupplyListDraftSchema.safeParse(input);
+    const parsed = updateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withDraft(listId, 'draft', async (tx) =>
       ok(await aggregate(tx, await updateSupplyListDraft(tx, listId, parsed.data))),
@@ -153,7 +153,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async addItem(actor: SupplyListStaffActor, listId: number, input: SupplyListItemInput) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = SupplyListItemSchema.safeParse(input);
+    const parsed = supplyListItemSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withDraft(listId, 'draft', async (tx) =>
       ok(
@@ -173,8 +173,8 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: Partial<SupplyListItemInput>,
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = SupplyListItemSchema.partial().safeParse(input);
-    if (!parsed.success || !SupplyListIdSchema.safeParse(itemId).success)
+    const parsed = supplyListItemSchema.partial().safeParse(input);
+    if (!parsed.success || !supplyListIdSchema.safeParse(itemId).success)
       return fail('invalid-input');
     return this.withDraft(listId, 'draft', async (tx) => {
       const current = (await getSupplyListItems(tx, listId)).find((item) => item.id === itemId);
@@ -189,7 +189,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async removeItem(actor: SupplyListStaffActor, listId: number, itemId: number) {
     if (!canWrite(actor)) return fail('forbidden');
-    if (!SupplyListIdSchema.safeParse(itemId).success) return fail('invalid-input');
+    if (!supplyListIdSchema.safeParse(itemId).success) return fail('invalid-input');
     return this.withDraft(listId, 'draft', async (tx) => {
       const item = await deleteSupplyListItem(tx, listId, itemId);
       return item ? ok(undefined) : fail('item-not-found');
@@ -198,7 +198,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async reorderItems(actor: SupplyListStaffActor, listId: number, itemIds: number[]) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = z.array(SupplyListIdSchema).safeParse(itemIds);
+    const parsed = z.array(supplyListIdSchema).safeParse(itemIds);
     if (!parsed.success || new Set(parsed.data).size !== parsed.data.length)
       return fail('invalid-input');
     return this.withDraft(listId, 'draft', async (tx, list) => {
@@ -255,9 +255,13 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
         // All business rejections happen before writes. Technical failure rolls
         // back snapshots, archival and publication together.
         for (const item of items) {
-          const variant = defaults.find((variant) => variant.variantId === item.variantId)!;
+          const variant =
+            defaults.find((variant) => variant.variantId === item.variantId) ??
+            (() => {
+              throw new Error('Expected a value');
+            })();
           await snapshotSupplyListItem(tx, item.id, {
-            productNameEnSnapshot: variant.localizedName.en ?? null,
+            productNameEnSnapshot: variant.localizedName.en,
             productNameArSnapshot: variant.localizedName.ar ?? null,
             skuSnapshot: variant.sku,
           });
@@ -268,7 +272,10 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
         const published = await publishSupplyList(
           tx,
           list.id,
-          decision.list.publicCode!,
+          decision.list.publicCode ??
+            (() => {
+              throw new Error('Expected a value');
+            })(),
           now,
           decision.list.replacesListId,
         );
@@ -306,7 +313,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async listForPartner(actor: SupplyListStaffActor, businessPartnerId: number) {
     if (!canRead(actor)) return fail('forbidden');
-    if (!SupplyListIdSchema.safeParse(businessPartnerId).success) return fail('invalid-input');
+    if (!supplyListIdSchema.safeParse(businessPartnerId).success) return fail('invalid-input');
     const db = await this.getDb();
     return ok(await listSupplyListsForPartner(db, businessPartnerId));
   }
@@ -320,7 +327,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async setOffer(actor: SupplyListStaffActor, listId: number, input: ListOfferInput) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = ListOfferSchema.safeParse(input);
+    const parsed = listOfferSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withList(listId, null, async (tx, list) =>
       ok(await upsertListOffer(tx, list.id, parsed.data, this.clock())),
@@ -360,7 +367,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
       partnerStatus: Parameters<typeof assertStaffListAuthoring>[0],
     ) => Promise<SupplyListResult<T>>,
   ): Promise<SupplyListResult<T>> {
-    if (!SupplyListIdSchema.safeParse(listId).success) return fail('invalid-input');
+    if (!supplyListIdSchema.safeParse(listId).success) return fail('invalid-input');
     const db = await this.getDb();
     return db
       .transaction(async (tx) => {

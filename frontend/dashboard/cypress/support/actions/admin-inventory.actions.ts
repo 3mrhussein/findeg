@@ -38,7 +38,7 @@ export function updateInventoryFromUiByProductId(productId: number, quantity: nu
     .then(($input) => {
       const input = $input.get(0) as HTMLInputElement;
       const win = input.ownerDocument.defaultView;
-      expect(win, 'input window').to.exist;
+      expect(win, 'input window').not.to.be.oneOf([null, undefined]);
 
       const valueSetter = Object.getOwnPropertyDescriptor(
         win!.HTMLInputElement.prototype,

@@ -310,7 +310,7 @@ export async function checkSlugAvailable(slug: string, excludeId?: number): Prom
  */
 export async function getVariantsByProductIds(
   productIds: number[],
-): Promise<Record<number, VariantRow[]>> {
+): Promise<Partial<Record<number, VariantRow[]>>> {
   if (productIds.length === 0) return {};
 
   const rows = await db
@@ -323,7 +323,7 @@ export async function getVariantsByProductIds(
       asc(productVariants.id),
     );
 
-  const map: Record<number, VariantRow[]> = {};
+  const map: Partial<Record<number, VariantRow[]>> = {};
   for (const row of rows) {
     const pid = row.productId;
     if (!map[pid]) map[pid] = [];
@@ -366,7 +366,7 @@ export async function getProductTags(productId: number): Promise<TagRow[]> {
  */
 export async function getProductTagsByProductIds(
   productIds: number[],
-): Promise<Record<number, TagRow[]>> {
+): Promise<Partial<Record<number, TagRow[]>>> {
   if (productIds.length === 0) return {};
 
   const results = await db
@@ -375,7 +375,7 @@ export async function getProductTagsByProductIds(
     .innerJoin(tags, eq(tags.id, productTags.tagId))
     .where(inArray(productTags.productId, productIds));
 
-  const map: Record<number, TagRow[]> = {};
+  const map: Partial<Record<number, TagRow[]>> = {};
   for (const r of results) (map[r.productId] ??= []).push(r.tag);
   return map;
 }
@@ -422,7 +422,7 @@ export async function getProductAttributes(productId: number): Promise<ProductAt
  */
 export async function getProductAttributesByProductIds(
   productIds: number[],
-): Promise<Record<number, ProductAttributeValueRow[]>> {
+): Promise<Partial<Record<number, ProductAttributeValueRow[]>>> {
   if (productIds.length === 0) return {};
 
   const results = await db
@@ -437,7 +437,7 @@ export async function getProductAttributesByProductIds(
     .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))
     .where(inArray(productVariants.productId, productIds));
 
-  const map: Record<number, ProductAttributeValueRow[]> = {};
+  const map: Partial<Record<number, ProductAttributeValueRow[]>> = {};
   for (const r of results) {
     (map[r.productId] ??= []).push({
       attributeId: r.attributeId,

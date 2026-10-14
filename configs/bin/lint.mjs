@@ -46,8 +46,8 @@ if (!fs.existsSync(output)) process.exit(run.status ?? 2);
 const results = JSON.parse(fs.readFileSync(output, 'utf8'));
 fs.rmSync(output, { force: true });
 
-const { ESLint } = require('eslint');
-const text = (await new ESLint({ cwd }).loadFormatter('stylish')).format(results);
+const { ESLint: eslintClass } = require('eslint');
+const text = (await new eslintClass({ cwd }).loadFormatter('stylish')).format(results);
 if (text) console.log(text);
 
 const errors = results.reduce((sum, file) => sum + file.errorCount, 0);

@@ -32,12 +32,12 @@ export function computeOrderFingerprint(input: OrderFingerprintInput): string {
       : normalizeCartLines(input.lines);
 
   const normalizedAddress = {
-    fullName: input.address.fullName?.trim() ?? '',
+    fullName: input.address.fullName.trim(),
     ...(input.address.governorate ? { governorate: input.address.governorate } : {}),
-    phone: input.address.phone?.trim() ?? '',
-    city: input.address.city?.trim() ?? '',
-    area: input.address.area?.trim() ?? '',
-    street: input.address.street?.trim() ?? '',
+    phone: input.address.phone.trim(),
+    city: input.address.city.trim(),
+    area: input.address.area.trim(),
+    street: input.address.street.trim(),
     building: input.address.building?.trim() || null,
     floor: input.address.floor?.trim() || null,
     apartment: input.address.apartment?.trim() || null,
@@ -78,6 +78,6 @@ export function buildIdempotencyScope(identity: {
   guestId?: string;
   guestEmail?: string;
 }): string {
-  if (identity.userId) return `user:${identity.userId}`;
-  return `guest:${identity.guestId || identity.guestEmail}`;
+  if (identity.userId) return `user:${String(identity.userId)}`;
+  return `guest:${String(identity.guestId || identity.guestEmail)}`;
 }

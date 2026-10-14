@@ -55,7 +55,7 @@ export class ProductImportService implements IProductImportService {
   /**
    *
    */
-  async validateRows(rows: Record<string, string>[]): Promise<ImportResult> {
+  validateRows(rows: Record<string, string>[]): Promise<ImportResult> {
     const previews: ImportRowPreview[] = [];
     let validCount = 0;
     let warningCount = 0;
@@ -88,12 +88,12 @@ export class ProductImportService implements IProductImportService {
       });
     }
 
-    return {
+    return Promise.resolve({
       validCount,
       warningCount,
       errorCount,
       rows: previews,
-    };
+    });
   }
 
   /**

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { EmailSchema } from '@findeg/db';
+import { EmailSchema as emailSchema } from '@findeg/db';
 import { userQueries } from '@findeg/db/queries';
 import type { SessionPayload } from '@findeg/db/types';
 import { AUTH_ERROR_CATALOG } from '../../constants';
@@ -8,16 +8,16 @@ import { adminSession, type AuthResult } from '../contracts';
 import { buildCurrentSessionPayload } from '../current-session';
 import type { IAuthService } from './types';
 
-export const AuthCredentialsSchema = z.object({
-  email: EmailSchema,
+const authCredentialsSchema = z.object({
+  email: emailSchema,
   password: z.string().min(1, 'Password is required'),
 });
 
-export type AuthCredentials = z.infer<typeof AuthCredentialsSchema>;
+export type AuthCredentials = z.infer<typeof authCredentialsSchema>;
 
-export const RegisterInputSchema = z
+const registerInputSchema = z
   .object({
-    email: EmailSchema,
+    email: emailSchema,
     password: z.string().min(8, 'Password must be at least 8 characters'),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
@@ -25,10 +25,10 @@ export const RegisterInputSchema = z
   })
   .strict();
 
-export type RegisterInput = z.infer<typeof RegisterInputSchema>;
+export type RegisterInput = z.infer<typeof registerInputSchema>;
 
 function resolveRegisterMessage(error: unknown): string {
-  if (error instanceof Error && error.message?.trim()) return error.message;
+  if (error instanceof Error && error.message.trim()) return error.message;
   return AUTH_ERROR_CATALOG.AUTH_REGISTER_FAILED.message;
 }
 
@@ -102,25 +102,31 @@ export class AuthService implements IAuthService {
         { isInitialCredential: true },
       );
 
-      return this.login(input.email, input.password);
+      return await this.login(input.email, input.password);
     } catch (error) {
       return { success: false, error: resolveRegisterMessage(error) };
     }
   }
 
   /** Logout is an app-layer concern. */
-  async logout(): Promise<void> {
-    throw new Error('logout() should not be called in backend - handle in app-layer');
+  logout(): Promise<void> {
+    return Promise.reject(
+      new Error('logout() should not be called in backend - handle in app-layer'),
+    );
   }
 
   /** Session retrieval is an app-layer concern. */
-  async getSession(): Promise<SessionPayload | null> {
-    throw new Error('getSession() should not be called in backend - handle in app-layer');
+  getSession(): Promise<SessionPayload | null> {
+    return Promise.reject(
+      new Error('getSession() should not be called in backend - handle in app-layer'),
+    );
   }
 
   /** Session validation is an app-layer concern. */
-  async validateAdmin(): Promise<SessionPayload> {
-    throw new Error('validateAdmin() should not be called in backend - handle in app-layer');
+  validateAdmin(): Promise<SessionPayload> {
+    return Promise.reject(
+      new Error('validateAdmin() should not be called in backend - handle in app-layer'),
+    );
   }
 
   /** Whether a verified session carries administrative privileges. */
@@ -128,3 +134,8 @@ export class AuthService implements IAuthService {
     return adminSession(session);
   }
 }
+
+export {
+  authCredentialsSchema as AuthCredentialsSchema,
+  registerInputSchema as RegisterInputSchema,
+};

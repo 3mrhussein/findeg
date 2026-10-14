@@ -1,9 +1,12 @@
 import { z } from 'zod';
-import { IdSchema, TranslationMapSchema } from '@findeg/db/types';
-import { LocaleSchema } from '../../helpers/index';
+import {
+  IdSchema as idSchema,
+  TranslationMapSchema as translationMapSchema,
+} from '@findeg/db/types';
+import { LocaleSchema as localeSchema } from '../../helpers/index';
 
-const ProductTranslationSchema = z.object({
-  language: LocaleSchema,
+const productTranslationSchema = z.object({
+  language: localeSchema,
   name: z.string().min(2),
   description: z.string(),
   longDescription: z.string(),
@@ -12,28 +15,28 @@ const ProductTranslationSchema = z.object({
   seoKeywords: z.string().optional(),
 });
 
-const VariantImageInputSchema = z.object({
-  url: z.string().url(),
+const variantImageInputSchema = z.object({
+  url: z.url(),
   alt: z.string().optional(),
   displayOrder: z.number().int().optional().default(0),
 });
 
-const VariantAttributeInputSchema = z.object({
-  attributeId: IdSchema,
+const variantAttributeInputSchema = z.object({
+  attributeId: idSchema,
   valueText: z.string().optional(),
 });
 
-export const VariantInputSchema = z.object({
-  id: IdSchema.optional(),
+const variantInputSchema = z.object({
+  id: idSchema.optional(),
   sku: z.string().min(1),
   variantKey: z.string().min(1),
-  localizedLabel: TranslationMapSchema.optional(),
+  localizedLabel: translationMapSchema.optional(),
   sortOrder: z.number().int().optional().default(0),
   isDefault: z.boolean().optional().default(false),
   isActive: z.boolean().optional().default(true),
-  basePrice: z.number().finite().nonnegative(),
-  strikePrice: z.number().finite().nonnegative().optional(),
-  costPrice: z.number().finite().nonnegative().optional(),
+  basePrice: z.number().nonnegative(),
+  strikePrice: z.number().nonnegative().optional(),
+  costPrice: z.number().nonnegative().optional(),
   weight: z.number().optional(),
   weightGrams: z.number().int().optional(),
   dimensions: z
@@ -45,53 +48,57 @@ export const VariantInputSchema = z.object({
     .optional(),
   barcode: z.string().optional(),
   mediaSet: z.any().optional(),
-  images: z.array(VariantImageInputSchema).optional(),
-  attributes: z.array(VariantAttributeInputSchema).optional(),
+  images: z.array(variantImageInputSchema).optional(),
+  attributes: z.array(variantAttributeInputSchema).optional(),
 });
 
-export type VariantInput = z.infer<typeof VariantInputSchema>;
+export type VariantInput = z.infer<typeof variantInputSchema>;
 
-export const ProductInputSchema = z
+const productInputSchema = z
   .object({
-    categoryId: IdSchema.optional(),
+    categoryId: idSchema.optional(),
     category: z.string().optional(),
-    brandId: IdSchema.optional(),
+    brandId: idSchema.optional(),
     isActive: z.boolean().optional().default(true),
-    translations: z.array(ProductTranslationSchema).min(1, 'At least one translation is required'),
-    variants: z.array(VariantInputSchema).min(1, 'Product must have at least one variant'),
+    translations: z.array(productTranslationSchema).min(1, 'At least one translation is required'),
+    variants: z.array(variantInputSchema).min(1, 'Product must have at least one variant'),
   })
   .superRefine((data, ctx) => {
-    if (!data.variants || data.variants.length === 0) return;
+    if (data.variants.length === 0) return;
 
     const defaultVariants = data.variants.filter((variant) => variant.isDefault);
 
     if (defaultVariants.length === 0) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'Product must have exactly one default variant',
         path: ['variants'],
       });
     } else if (defaultVariants.length > 1) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'Product can only have one default variant',
         path: ['variants'],
       });
     }
 
     const sortedByOrder = [...data.variants].sort(
-      (left, right) => (left.sortOrder ?? 0) - (right.sortOrder ?? 0),
+      (left, right) => left.sortOrder - right.sortOrder,
     );
 
     for (let index = 0; index < sortedByOrder.length; index++) {
-      if ((sortedByOrder[index].sortOrder ?? 0) !== index) {
+      if (sortedByOrder[index].sortOrder !== index) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Variants must have sequential sort orders starting from 0. Expected ${index} at index ${index}, but found ${sortedByOrder[index].sortOrder}.`,
+          code: 'custom',
+          message: `Variants must have sequential sort orders starting from 0. Expected ${String(index)} at index ${String(index)}, but found ${String(sortedByOrder[index].sortOrder)}.`,
           path: ['variants', index, 'sortOrder'],
         });
       }
     }
   });
 
-export type ProductInput = z.infer<typeof ProductInputSchema>;
+export type ProductInput = Omit<z.infer<typeof productInputSchema>, 'isActive'> & {
+  isActive?: boolean;
+};
+
+export { variantInputSchema as VariantInputSchema, productInputSchema as ProductInputSchema };

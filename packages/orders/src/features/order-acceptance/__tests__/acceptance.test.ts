@@ -1,14 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const storage = vi.hoisted(() => ({
-  catalog: vi.fn(),
-  transaction: vi.fn(),
+  catalog: vi.fn<() => unknown[]>(),
+  transaction: vi.fn<(action: (tx: unknown) => Promise<unknown>) => Promise<unknown>>(),
   find: vi.fn(),
-  claim: vi.fn(),
-  create: vi.fn(),
+  claim:
+    vi.fn<
+      (
+        ...args: Parameters<typeof import('@findeg/db/queries').checkoutIdempotencyQueries.claimKey>
+      ) => Promise<unknown>
+    >(),
+  create:
+    vi.fn<
+      (
+        ...args: Parameters<typeof import('@findeg/db/queries').orderQueries.create>
+      ) => Promise<unknown>
+    >(),
   lock: vi.fn(),
   persist: vi.fn(),
-  record: vi.fn(),
+  record:
+    vi.fn<
+      (
+        ...args: Parameters<
+          typeof import('@findeg/db/queries').checkoutIdempotencyQueries.recordSuccess
+        >
+      ) => Promise<unknown>
+    >(),
   enqueue: vi.fn(),
 }));
 

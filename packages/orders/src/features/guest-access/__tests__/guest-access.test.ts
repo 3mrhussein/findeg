@@ -25,9 +25,9 @@ import { createGuestAccessService } from '../index';
 const SECRET = 'test-guest-access-secret-1234567890123456';
 // A stand-in for the backend token port: the token names its Order, so verification is observable.
 const tokens = {
-  sign: async (orderReference: string) => `token:${orderReference}`,
-  verify: async (token: string | undefined) =>
-    token?.startsWith('token:') ? token.slice('token:'.length) : null,
+  sign: (orderReference: string) => Promise.resolve(`token:${orderReference}`),
+  verify: (token: string | undefined) =>
+    Promise.resolve(token?.startsWith('token:') ? token.slice('token:'.length) : null),
 };
 const service = () =>
   createGuestAccessService({ enqueue: storage.enqueue, secret: () => SECRET, tokens });

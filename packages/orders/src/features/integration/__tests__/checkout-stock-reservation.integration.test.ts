@@ -39,12 +39,12 @@ describe('Stock Reservation primitives on real Postgres', () => {
     sequence += 1;
     const [category] = await testDb.db
       .insert(categories)
-      .values({ slug: `sr-category-${sequence}` })
+      .values({ slug: `sr-category-${String(sequence)}` })
       .returning();
     const [product] = await testDb.db
       .insert(products)
       .values({
-        slug: `sr-product-${sequence}`,
+        slug: `sr-product-${String(sequence)}`,
         localizedName: { en: 'Pen', ar: 'قلم' },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
@@ -56,7 +56,7 @@ describe('Stock Reservation primitives on real Postgres', () => {
       .values({
         productId: product.id,
         variantKey: 'default',
-        sku: `SR-${sequence}`,
+        sku: `SR-${String(sequence)}`,
         basePrice: '10.00',
       })
       .returning();
@@ -67,7 +67,7 @@ describe('Stock Reservation primitives on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(warehouses)
-      .values({ code: `sr-warehouse-${sequence}`, name: 'W', isActive })
+      .values({ code: `sr-warehouse-${String(sequence)}`, name: 'W', isActive })
       .returning();
     return row.id;
   }

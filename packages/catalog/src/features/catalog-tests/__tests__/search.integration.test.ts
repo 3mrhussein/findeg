@@ -41,9 +41,9 @@ describe('Catalog search on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(categories)
-      .values({ slug: `search-cat-${sequence}`, localizedName: name, parentId: parent?.id })
+      .values({ slug: `search-cat-${String(sequence)}`, localizedName: name, parentId: parent?.id })
       .returning();
-    const path = `${parent?.path ?? '/'}${row.id}/`;
+    const path = `${parent?.path ?? '/'}${String(row.id)}/`;
     const [withPath] = await testDb.db
       .update(categories)
       .set({ path })
@@ -66,7 +66,7 @@ describe('Catalog search on real Postgres', () => {
     const [row] = await testDb.db
       .insert(products)
       .values({
-        slug: `search-product-${sequence}`,
+        slug: `search-product-${String(sequence)}`,
         localizedName: input.name,
         localizedDescription: input.description ?? { en: '' },
         localizedLongDescription: { en: '' },
@@ -80,7 +80,7 @@ describe('Catalog search on real Postgres', () => {
       .values({
         productId: row.id,
         variantKey: 'default',
-        sku: input.sku ?? `SEARCH-${sequence}`,
+        sku: input.sku ?? `SEARCH-${String(sequence)}`,
         basePrice: input.price ?? '10.00',
         isDefault: true,
       })
@@ -88,7 +88,10 @@ describe('Catalog search on real Postgres', () => {
     if (input.stock !== undefined) {
       const [warehouse] = await testDb.db
         .insert(warehouses)
-        .values({ code: `SEARCH-W${sequence}`, name: `Search warehouse ${sequence}` })
+        .values({
+          code: `SEARCH-W${String(sequence)}`,
+          name: `Search warehouse ${String(sequence)}`,
+        })
         .returning();
       await testDb.db
         .insert(inventoryBalances)

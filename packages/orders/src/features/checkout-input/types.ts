@@ -2,18 +2,18 @@ import type { z } from 'zod';
 import type { CurrencyCode } from '@findeg/domain';
 import type { CheckoutReceipt } from '@findeg/db/types';
 import type {
-  CheckoutLineSchema,
-  CheckoutOrderSchema,
-  CheckoutShippingAddressSchema,
-  CheckoutValidateSchema,
-  ListCheckoutLineSchema,
+  CheckoutLineSchema as checkoutLineSchema,
+  CheckoutOrderSchema as checkoutOrderSchema,
+  CheckoutShippingAddressSchema as checkoutShippingAddressSchema,
+  CheckoutValidateSchema as checkoutValidateSchema,
+  ListCheckoutLineSchema as listCheckoutLineSchema,
 } from './helpers';
 
-export type CheckoutLine = z.infer<typeof CheckoutLineSchema>;
-export type ListCheckoutLine = z.infer<typeof ListCheckoutLineSchema>;
-export type CheckoutShippingAddress = z.infer<typeof CheckoutShippingAddressSchema>;
-export type CheckoutValidateInput = z.infer<typeof CheckoutValidateSchema>;
-export type CheckoutOrderInput = z.infer<typeof CheckoutOrderSchema>;
+export type CheckoutLine = z.infer<typeof checkoutLineSchema>;
+export type ListCheckoutLine = z.infer<typeof listCheckoutLineSchema>;
+export type CheckoutShippingAddress = z.infer<typeof checkoutShippingAddressSchema>;
+export type CheckoutValidateInput = z.infer<typeof checkoutValidateSchema>;
+export type CheckoutOrderInput = z.infer<typeof checkoutOrderSchema>;
 
 export interface CheckoutOrderContext {
   userId?: number;

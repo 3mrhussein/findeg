@@ -1,8 +1,9 @@
-import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import { loadEnvFile } from 'node:process';
 import type postgres from 'postgres';
 
-const repoRoot = resolve(import.meta.dirname, '../../..');
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 
 export const migrationsFolder = resolve(repoRoot, 'db/migrations');
 

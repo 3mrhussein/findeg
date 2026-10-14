@@ -39,7 +39,7 @@ describe('Partner Invitations by a Partner Administrator', () => {
   async function newPartner() {
     sequence += 1;
     const created = await services.partners.createPartner(staff, {
-      code: `partner-invitations-${sequence}`,
+      code: `partner-invitations-${String(sequence)}`,
       nameEn: 'Invitation School',
       nameAr: 'مدرسة الدعوات',
     });
@@ -49,7 +49,7 @@ describe('Partner Invitations by a Partner Administrator', () => {
 
   async function addMember(partnerId: number, roles: PartnerRole[]) {
     sequence += 1;
-    const email = `invitation-member-${sequence}@findeg.test`;
+    const email = `invitation-member-${String(sequence)}@findeg.test`;
     const [user] = await testDb.db.insert(users).values({ email }).returning();
     const invited = await services.invitations.invite(staff, partnerId, { email, roles });
     if (!invited.success) throw new Error(invited.error);

@@ -44,7 +44,7 @@ function variant(overrides: Partial<Variant>): Variant {
     basePrice: '45.00',
     strikePrice: undefined,
     ...overrides,
-  } as unknown as Variant;
+  };
 }
 
 describe('New arrival', () => {
@@ -98,7 +98,7 @@ describe('Stock availability', () => {
         { warehouseCode: 'MAIN', warehouseActive: true, onHand: 5, reserved: 9 },
         { warehouseCode: 'EAST', warehouseActive: true, onHand: 8, reserved: 3 },
       ],
-    } as Partial<Variant>);
+    });
     expect(getVariantAvailableStock(stocked)).toBe(5);
   });
 
@@ -108,7 +108,7 @@ describe('Stock availability', () => {
       new VariantEntity(
         variant({
           inventory: [{ warehouseCode: 'MAIN', warehouseActive: true, onHand: units, reserved: 0 }],
-        } as Partial<Variant>),
+        }),
       );
     expect(withUnits(1).isLowStock()).toBe(true);
     expect(withUnits(5).isLowStock()).toBe(true);

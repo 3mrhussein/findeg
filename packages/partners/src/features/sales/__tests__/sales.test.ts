@@ -14,17 +14,19 @@ vi.mock('@findeg/db/connection', () => ({
   db: { transaction: (run: (tx: unknown) => unknown) => run({}) },
 }));
 vi.mock('@findeg/db/queries/partners', () => ({
-  getBusinessPartnerById: vi.fn(async () => ({ id: 1 })),
+  getBusinessPartnerById: vi.fn(() => Promise.resolve().then(() => ({ id: 1 }))),
 }));
 vi.mock('@findeg/db/queries/partner-sales', () => ({
-  listAttributedOrders: vi.fn(async () => []),
-  getAttributedOrderTotals: vi.fn(async () => ({
-    orderCount: 0,
-    chargedPiasters: 0n,
-    quantity: 0,
-  })),
-  getFirstAttributedOrderMonth: vi.fn(async () => null),
-  listAttributedSalesRows: vi.fn(async () => []),
+  listAttributedOrders: vi.fn(() => Promise.resolve().then(() => [])),
+  getAttributedOrderTotals: vi.fn(() =>
+    Promise.resolve().then(() => ({
+      orderCount: 0,
+      chargedPiasters: 0n,
+      quantity: 0,
+    })),
+  ),
+  getFirstAttributedOrderMonth: vi.fn(() => Promise.resolve().then(() => null)),
+  listAttributedSalesRows: vi.fn(() => Promise.resolve().then(() => [])),
 }));
 
 const reader = { userId: 1, permissionCodes: [PERMISSION_CODES.PARTNER_REPORTS_VIEW] };

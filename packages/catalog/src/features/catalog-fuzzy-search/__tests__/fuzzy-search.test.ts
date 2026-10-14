@@ -8,7 +8,7 @@ const product = (id: number, overrides: Partial<Product> = {}) =>
     name: 'Blue Pen',
     description: 'Smooth ink',
     longDescription: '',
-    variants: [{ sku: `PEN-${id}` }],
+    variants: [{ sku: `PEN-${String(id)}` }],
     brandName: 'Acme',
     categoryName: 'Pens',
     ...overrides,

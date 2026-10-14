@@ -172,7 +172,7 @@ export interface CreateAuditLogInput {
   entityType: string;
   entityId: string;
   action: string;
-  oldValues?: Record<string, unknown>;
+  oldValues?: (typeof auditLog.$inferInsert)['oldValues'];
   newValues?: Record<string, unknown>;
 }
 

@@ -79,5 +79,7 @@ export async function waitUntilBlocked(observer: Sql, pid: number): Promise<void
     if (blocked) return;
     await new Promise((resolve) => setTimeout(resolve, 10));
   }
-  throw new Error(`Backend ${pid} was not blocked on a lock within ${blockedTimeoutMs}ms`);
+  throw new Error(
+    `Backend ${String(pid)} was not blocked on a lock within ${String(blockedTimeoutMs)}ms`,
+  );
 }

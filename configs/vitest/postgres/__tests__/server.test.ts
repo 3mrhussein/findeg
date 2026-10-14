@@ -23,13 +23,13 @@ describe('resolveServerUrl', () => {
   beforeEach(() => {
     for (const key of keys) {
       saved[key] = process.env[key];
-      delete process.env[key];
+      Reflect.deleteProperty(process.env, key);
     }
   });
 
   afterEach(() => {
     for (const key of keys) {
-      if (saved[key] === undefined) delete process.env[key];
+      if (saved[key] === undefined) Reflect.deleteProperty(process.env, key);
       else process.env[key] = saved[key];
     }
   });

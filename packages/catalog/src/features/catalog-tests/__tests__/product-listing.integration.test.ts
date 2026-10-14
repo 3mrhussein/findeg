@@ -29,7 +29,10 @@ describe('Product listing (PLP) on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(categories)
-      .values({ slug: `listing-cat-${sequence}`, localizedName: { en: `Cat ${sequence}` } })
+      .values({
+        slug: `listing-cat-${String(sequence)}`,
+        localizedName: { en: `Cat ${String(sequence)}` },
+      })
       .returning();
     return row;
   }
@@ -38,7 +41,10 @@ describe('Product listing (PLP) on real Postgres', () => {
     sequence += 1;
     const [row] = await testDb.db
       .insert(brands)
-      .values({ slug: `listing-brand-${sequence}`, localizedName: { en: `Brand ${sequence}` } })
+      .values({
+        slug: `listing-brand-${String(sequence)}`,
+        localizedName: { en: `Brand ${String(sequence)}` },
+      })
       .returning();
     return row;
   }
@@ -56,8 +62,8 @@ describe('Product listing (PLP) on real Postgres', () => {
     const [row] = await testDb.db
       .insert(products)
       .values({
-        slug: `listing-product-${sequence}`,
-        localizedName: { en: `Listing ${sequence}` },
+        slug: `listing-product-${String(sequence)}`,
+        localizedName: { en: `Listing ${String(sequence)}` },
         localizedDescription: { en: '' },
         localizedLongDescription: { en: '' },
         categoryId: input.categoryId,
@@ -72,14 +78,14 @@ describe('Product listing (PLP) on real Postgres', () => {
       await testDb.db.insert(productVariants).values({
         productId: row.id,
         variantKey: 'extra',
-        sku: `LISTING-${sequence}-X`,
+        sku: `LISTING-${String(sequence)}-X`,
         basePrice: input.extraVariantPrice,
       });
     }
     await testDb.db.insert(productVariants).values({
       productId: row.id,
       variantKey: 'default',
-      sku: `LISTING-${sequence}`,
+      sku: `LISTING-${String(sequence)}`,
       basePrice: input.price,
       isDefault: true,
     });

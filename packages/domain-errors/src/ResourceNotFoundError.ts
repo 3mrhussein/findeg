@@ -19,7 +19,7 @@ export class ResourceNotFoundError extends DomainError {
   public readonly identifier: string | number;
 
   constructor(resourceType: string, identifier: string | number) {
-    const message = `${resourceType} with identifier "${identifier}" not found`;
+    const message = `${resourceType} with identifier "${String(identifier)}" not found`;
     super('RESOURCE_NOT_FOUND', message, {
       statusCode: 404,
       resourceType,

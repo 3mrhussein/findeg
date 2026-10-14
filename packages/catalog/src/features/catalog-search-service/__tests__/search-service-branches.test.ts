@@ -68,7 +68,7 @@ describe('SearchService logging and edge cases', () => {
     expect(getByIds).toHaveBeenCalledWith([2], 'ar');
     expect(result.total).toBe(2);
     expect(executeCatalogScoredSearchRaw).toHaveBeenCalledWith(
-      expect.objectContaining({ normalizedTerm: expect.any(String) }),
+      expect.objectContaining({ normalizedTerm: expect.any(String) as unknown }),
     );
   });
 

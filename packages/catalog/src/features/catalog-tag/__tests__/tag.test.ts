@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { CreateTagSchema, TagSchema, tagIdentifier } from '../index';
+import {
+  CreateTagSchema as createTagSchema,
+  TagSchema as tagSchema,
+  tagIdentifier,
+} from '../index';
 
 const tag = {
   id: 1,
@@ -13,7 +17,7 @@ const tag = {
 
 describe('tag entity', () => {
   it('defaults the scope to catalog', () => {
-    expect(TagSchema.parse(tag).scope).toBe('catalog');
+    expect(tagSchema.parse(tag).scope).toBe('catalog');
   });
 
   it('builds the stable identifier from group and key', () => {
@@ -22,7 +26,7 @@ describe('tag entity', () => {
 
   it('omits identity and timestamps from the create shape', () => {
     expect(
-      CreateTagSchema.parse({ group: 'g', key: 'k', slug: 's', isActive: true }),
+      createTagSchema.parse({ group: 'g', key: 'k', slug: 's', isActive: true }),
     ).not.toHaveProperty('id');
   });
 });

@@ -88,7 +88,7 @@ describe('UserService', () => {
     expect(getAdminUsersSnapshotRaw).not.toHaveBeenCalled();
 
     vi.mocked(listAdminUserIdsRaw).mockResolvedValueOnce([5]);
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot);
     const admins = await service.listAdmins();
     expect(admins[0]).toMatchObject({
       id: 5,
@@ -98,7 +98,7 @@ describe('UserService', () => {
   });
 
   it('returns null for an unknown admin', async () => {
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue(emptySnapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValue(emptySnapshot);
 
     expect(await service.getAdmin(404)).toBeNull();
   });
@@ -106,7 +106,7 @@ describe('UserService', () => {
   it('creates an admin with a bcrypt hash and throws if it cannot be read back', async () => {
     vi.mocked(bcrypt.hash).mockResolvedValue('hash' as never);
     vi.mocked(createAdminUserRaw).mockResolvedValue(5);
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot);
 
     const admin = await service.createAdmin({
       email: 'staff@example.com',
@@ -121,7 +121,7 @@ describe('UserService', () => {
     );
     expect(admin.id).toBe(5);
 
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(emptySnapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(emptySnapshot);
     await expect(
       service.createAdmin({
         email: 'x@example.com',
@@ -134,12 +134,12 @@ describe('UserService', () => {
   });
 
   it('updates an admin and throws if the record disappears', async () => {
-    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined as never);
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot as never);
+    vi.mocked(updateAdminUserRaw).mockResolvedValue(undefined);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(adminSnapshot);
     expect((await service.updateAdmin(5, { firstName: 'Sana' })).id).toBe(5);
     expect(updateAdminUserRaw).toHaveBeenCalledWith(5, { firstName: 'Sana' });
 
-    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(emptySnapshot as never);
+    vi.mocked(getAdminUsersSnapshotRaw).mockResolvedValueOnce(emptySnapshot);
     await expect(service.updateAdmin(5, { isActive: false })).rejects.toThrow(
       'Admin user not found after update',
     );
@@ -147,7 +147,7 @@ describe('UserService', () => {
 
   it('deactivates a user and replaces permission overrides', async () => {
     vi.mocked(userQueries.update).mockResolvedValue(undefined as never);
-    vi.mocked(setAdminPermissionOverridesRaw).mockResolvedValue(undefined as never);
+    vi.mocked(setAdminPermissionOverridesRaw).mockResolvedValue(undefined);
 
     await service.deactivateAdmin(2);
     await service.setPermissionOverrides(2, [{ permissionId: 3, action: 'grant' }], 1);
