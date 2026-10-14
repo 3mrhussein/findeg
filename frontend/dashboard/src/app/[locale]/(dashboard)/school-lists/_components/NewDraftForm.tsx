@@ -1,7 +1,7 @@
 'use client';
 import { useActionError } from '@hooks/use-action-error';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from '@i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { Button, Input, Label, Textarea } from '@findeg/ui';
@@ -26,6 +26,7 @@ export function NewDraftForm({ partners, locale }: NewDraftFormProps) {
   const t = useTranslations('SchoolLists');
   const actionError = useActionError('SchoolLists.Errors');
   const [state, formAction, isPending] = useActionState(createDraftAction, initialState);
+  const [clientError, setClientError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.status === 'success' && state.data?.id) {
@@ -33,14 +34,31 @@ export function NewDraftForm({ partners, locale }: NewDraftFormProps) {
     }
   }, [state, router]);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const titleEn = String(formData.get('titleEn') ?? '').trim();
+    const titleAr = String(formData.get('titleAr') ?? '').trim();
+    if (!titleEn && !titleAr) {
+      e.preventDefault();
+      setClientError('invalid-input');
+      return;
+    }
+    setClientError(null);
+  };
+
   return (
-    <form action={formAction} className="space-y-6 max-w-2xl" data-testid="new-draft-form">
-      {state.status === 'error' && (
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-2xl"
+      data-testid="new-draft-form"
+    >
+      {(clientError || state.status === 'error') && (
         <div
           className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"
           data-testid="draft-error-alert"
         >
-          {actionError(state.message)}
+          {actionError(clientError || state.message)}
         </div>
       )}
 
@@ -87,12 +105,12 @@ export function NewDraftForm({ partners, locale }: NewDraftFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="titleEn">{t('TitleEn')}</Label>
-          <Input id="titleEn" name="titleEn" required dir="ltr" data-testid="title-en-input" />
+          <Input id="titleEn" name="titleEn" dir="ltr" data-testid="title-en-input" />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="titleAr">{t('TitleAr')}</Label>
-          <Input id="titleAr" name="titleAr" required dir="rtl" data-testid="title-ar-input" />
+          <Input id="titleAr" name="titleAr" dir="rtl" data-testid="title-ar-input" />
         </div>
       </div>
 

@@ -44,7 +44,7 @@ export async function createDraftAction(
     if (!businessPartnerId || !grade || !academicYear || (!titleEn && !titleAr)) {
       return {
         status: 'error',
-        message: 'Partner, Grade, Academic Year, and at least one Title are required.',
+        message: 'invalid-input',
       };
     }
 
