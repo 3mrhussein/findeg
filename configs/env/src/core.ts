@@ -1,4 +1,5 @@
-import { z, ZodError, ZodObject, ZodRawShape } from 'zod';
+import { z, ZodError, ZodObject } from 'zod';
+import type { ZodRawShape } from 'zod';
 import { loadEnvFile } from 'node:process';
 import { join } from 'node:path';
 

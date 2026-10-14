@@ -76,7 +76,7 @@ for (const source of [
   '/project/packages/orders/src/orders.ts',
   '/project/packages/orders/src/mapper.ts',
   '/project/packages/orders/src/orderWritePermission.ts',
-  '/project/packages/env/src/index.ts',
+  '/project/configs/env/src/index.ts',
   '/project/db/src/connection.ts',
   'C:\\project\\backend\\src\\features\\notifications\\infrastructure\\email.ts',
   '/project/node_modules/drizzle-orm/index.js',

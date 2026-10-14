@@ -7,7 +7,7 @@ const serverPackage =
 const serverSource = /\/(?:db\/src\/(?!types\/)|backend\/src\/features\/[^/]+\/infrastructure\/)/;
 const ordersServer =
   /\/packages\/orders\/src\/(?:index|orders|mapper|validation|errors|OrderStaffActor|orderWritePermission)(?:\.|\/)/;
-const environmentSource = /\/packages\/env\/src\//;
+const environmentSource = /\/configs\/env\/src\//;
 const nodeModule = /(?:^|\/)node:[a-z_]+(?:\/|$)/;
 
 function sources(map) {

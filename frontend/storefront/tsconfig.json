@@ -33,7 +33,7 @@
       "@findeg/backend/features/review": ["../../backend/src/features/review/index.ts"],
       "@findeg/backend/features/school": ["../../backend/src/features/school/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
-      "@findeg/env": ["../../packages/env/src"]
+      "@findeg/env": ["../../configs/env/src"]
     }
   },
   "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],

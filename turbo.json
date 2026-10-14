@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [
     "configs/**",
-    "!configs/node_modules/**",
+    "!configs/**/node_modules/**",
     "packages/config/**",
     "!packages/config/node_modules/**",
     // The shared domain-copy guard reads these files outside the dependency graph.

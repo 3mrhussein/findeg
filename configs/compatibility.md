@@ -39,7 +39,11 @@ workspace links. No dependency was added. For this preinstalled worktree, valida
 uses `pnpm_config_verify_deps_before_run=false` to avoid pnpm's automatic reinstall;
 installed legacy links exercise the compatibility delegates.
 
-Remaining work: #436 activates presets/naming; #437 activates shared coverage and
-local test placement; #438 relocates consumer-specific environment config; #445
-measures full command/CI activation and removes temporary delegates. No business
-or export migration occurs here.
+Environment configuration (#438) is canonical in `configs/env` (workspace package
+`@findeg/env`, with the same `@findeg/env` and `@findeg/env/database`/`backend`/`web`
+entries). It has no compatibility delegate: the old `packages/env` location was removed and
+consumers resolve the new path through workspace links, TypeScript and Vitest aliases, and
+the policy files. Each entry validates only its own settings.
+
+Remaining work: #437 activation for other workspaces and #445 measured completion, which
+removes the remaining temporary delegates. No business or export migration occurs here.

@@ -7,7 +7,7 @@
       "@findeg/backend/*": ["./src/*"],
       "@findeg/db": ["../db/src"],
       "@findeg/db/*": ["../db/src/*"],
-      "@findeg/env": ["../packages/env/src"]
+      "@findeg/env": ["../configs/env/src"]
     }
   },
   "include": ["src/**/*"],

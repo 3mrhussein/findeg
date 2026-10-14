@@ -30,17 +30,12 @@
     "role": "isomorphic",
     "blocked": "No files matching '.' were found."
   },
-  "packages/env": {
+  "configs/env": {
     "role": "node",
-    "files": 7,
-    "errors": 7,
+    "files": 14,
+    "errors": 0,
     "warnings": 0,
-    "byRule": {
-      "@typescript-eslint/no-deprecated": 4,
-      "findeg/naming": 1,
-      "n/no-unpublished-import": 1,
-      "n/no-unsupported-features/node-builtins": 1
-    }
+    "byRule": {}
   },
   "packages/orders": {
     "role": "node",
