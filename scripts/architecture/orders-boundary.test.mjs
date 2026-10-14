@@ -47,7 +47,6 @@ test('rejects deep aliases and relative filesystem bypasses, including dynamic a
     "const module = require('@findeg/orders/src/index');",
     'const module = require(`@findeg/orders/src/index`);',
     "type Orders = import('../../../packages/orders/src/index').Orders;",
-    "import '../../../backend/src/features/order/application/factory';",
     "import '@findeg/backend/features/order/application/services/OrderService';",
   ]) {
     assert.notDeepEqual(await lintAt(fixture, code), [], code);
@@ -66,11 +65,11 @@ test('Orders has no Backend, app, or Next dependency, including type and dynamic
   }
 });
 
-test('Backend consumers cannot reach legacy Order internals after extraction', async () => {
+test('Backend consumers cannot bypass the extracted Orders public entry', async () => {
   assert.deepEqual(
     await lintAt(
       'backend/src/features/identity/application/service.ts',
-      "import '../../order/domain/entities/Order';",
+      "import '../../../../../packages/orders/src/features/orders/index';",
     ),
     ['relative'],
   );

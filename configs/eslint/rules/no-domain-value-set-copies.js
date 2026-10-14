@@ -286,7 +286,7 @@ export const noDomainValueSetCopiesRule = {
       /(?:^|\/)cypress\/(?:e2e|integration|specs)\//i.test(filename)
     )
       return {};
-    const extended = context.options[0]?.deriveNeverRedefine === true;
+    const extended = context.options[0]?.deriveNeverRedefine !== false;
     const { types: domainTypes, constants: domainConstants } = extended
       ? metadata()
       : { types: new Map(), constants: [] };

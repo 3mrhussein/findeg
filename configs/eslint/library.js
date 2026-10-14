@@ -18,3 +18,12 @@ export function libraryLayout(scopes, { root = process.cwd() } = {}) {
     },
   ];
 }
+
+// Resolve manifest ownership from each linted file, independent of the caller's cwd.
+export const scopedLibraryLayout = [
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'findeg-library': { rules: { layout: libraryLayoutRule } } },
+    rules: { 'findeg-library/layout': ['error', { scoped: true }] },
+  },
+];

@@ -173,3 +173,18 @@ test('the Domain and Orders library scopes conform to the recursive library layo
     );
   }
 });
+
+for (const workspace of Object.keys(libraryScopes)) {
+  test(`${workspace} real lint config rejects directories outside the vocabulary`, async () => {
+    const cwd = path.join(root, workspace);
+    const results = await new ESLint({ cwd }).lintText(body, {
+      filePath: path.join(cwd, 'src/review-invalid/index.ts'),
+    });
+    assert.ok(
+      results.some((result) =>
+        result.messages.some(({ ruleId }) => ruleId === 'findeg-library/layout'),
+      ),
+      JSON.stringify(results.flatMap((result) => result.messages)),
+    );
+  });
+}

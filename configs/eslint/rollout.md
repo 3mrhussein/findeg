@@ -71,11 +71,11 @@ index, types, constants and helpers (`.ts`, or `.tsx` for index/helpers) inside 
 free-named directories directly under a module are rejected; `__tests__/` and test
 files exempt. A module holds either `helpers.ts` (which needs an `index.ts`) or a
 `helpers/` container, never both. It applies only to the subtrees listed in
-`configs/library-scopes.mjs`, through `libraryLayout(scopes)` in each package's
-flat configuration, so applications and the UI library keep their own layouts. Shared
+`configs/library-scopes.mjs`, resolved from each linted file by the shared profile, so applications and the UI library keep their own layouts. Shared
 Vitest uses the same list: library scopes measure 80% per file and require local
 executable `__tests__` only inside those scopes. `scripts/architecture/library-layout.test.mjs`
-exercises positive and negative fixtures and the real Domain and Orders trees.
+exercises positive and negative fixtures, the real Domain and Orders trees, and
+each scoped package's composed lint configuration.
 
 ## Inventory and Orders (#440)
 
@@ -172,7 +172,7 @@ type-aware, React/Hooks/a11y, Next, Node, naming, Prettier) executes; none skip.
 ## Domain derivation (#466; activated by #467)
 
 The `local/no-domain-value-set-copies` guard is active in every default lint run
-(`configs/eslint/layers/boundaries.js` passes `deriveNeverRedefine: true`). Besides
+(enabled by default; fixtures may opt out with `deriveNeverRedefine: false`). Besides
 its #416 array, union and SQL checks, it rejects literal-key objects/maps, non-exhaustive
 or asserted per-value maps and hard-coded business constants as **errors**. The
 `FINDEG_DOMAIN_DERIVATION` staging switch is removed, so there is no measurement mode

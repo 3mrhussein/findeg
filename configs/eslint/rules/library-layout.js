@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+import { libraryScopes } from '../../library-scopes.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -41,12 +43,26 @@ export const libraryLayoutRule = {
   meta: {
     type: 'problem',
     schema: [
-      { type: 'object', properties: { src: { type: 'string' } }, additionalProperties: false },
+      {
+        type: 'object',
+        properties: { src: { type: 'string' }, scoped: { type: 'boolean' } },
+        additionalProperties: false,
+      },
     ],
     messages: { invalid: '{{message}}' },
   },
   create(context) {
-    const src = path.resolve(context.options[0]?.src ?? path.join(process.cwd(), 'src'));
+    let src = path.resolve(context.options[0]?.src ?? path.join(process.cwd(), 'src'));
+    if (context.options[0]?.scoped) {
+      const repoRoot = fileURLToPath(new URL('../../../', import.meta.url));
+      const filename = path.resolve(context.filename);
+      const roots = Object.entries(libraryScopes).flatMap(([workspace, scopes]) =>
+        scopes.map((scope) => path.join(repoRoot, workspace, scope)),
+      );
+      const owner = roots.find((root) => filename.startsWith(`${root}${path.sep}`));
+      if (!owner) return {};
+      src = owner;
+    }
     return {
       Program(node) {
         const relative = path.relative(src, path.resolve(context.filename));

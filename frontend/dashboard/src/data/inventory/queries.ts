@@ -1,5 +1,6 @@
 'use cache';
 
+import 'server-only';
 import { createAuditLogService } from '@findeg/backend/features/audit';
 /**
  * Inventory Queries (Dashboard Data Layer)
@@ -8,7 +9,6 @@ import { createAuditLogService } from '@findeg/backend/features/audit';
  * Uses "use cache" directive to wrap backend service calls.
  */
 
-import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createAdminInventoryService } from '@findeg/inventory';
 

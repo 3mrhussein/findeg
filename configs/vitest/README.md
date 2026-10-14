@@ -47,7 +47,12 @@ helpers and ordinary constant declarations remain measured.
 Coverage includes JS/TS implementation across the workspace, including root files
 and DB seeds, even when never imported. Exclusions cover named types/constants,
 declarations, test infrastructure, generated code, configuration entries, Cypress
-and build/dependency artifacts. React setup, aliases and server-only stubs remain
+and build/dependency artifacts. Tests (`__tests__`, `*.test.*`, `*.spec.*`, `test/`)
+and testing harnesses (`testing/`) exercise implementation rather than implement it.
+`*.config.*` files configure tools, and `generated/` contains tool-produced code;
+these are excluded so coverage measures maintained implementation. The generated-code
+coverage exclusion does not exempt library source from layout checks.
+React setup, aliases and server-only stubs remain
 in the consumer configs. Backend unit tests still exclude PostgreSQL integration
 tests; `pnpm test:integration` retains its separate database setup and serial run.
 

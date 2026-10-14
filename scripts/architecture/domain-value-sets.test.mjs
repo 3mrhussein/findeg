@@ -15,7 +15,11 @@ async function copies(code, file = 'backend/src/domain-values-fixture.ts', exten
   const eslint = new ESLint({
     cwd: root,
     overrideConfigFile: path.join(root, 'backend/eslint.config.js'),
-    overrideConfig: { rules: { [ruleId]: ['error', { deriveNeverRedefine: extended }] } },
+    overrideConfig: {
+      rules: {
+        [ruleId]: extended === null ? 'error' : ['error', { deriveNeverRedefine: extended }],
+      },
+    },
   });
   const [result] = await eslint.lintText(code, { filePath: path.join(root, file) });
   assert.equal(result.fatalErrorCount, 0, JSON.stringify(result.messages));
@@ -546,4 +550,12 @@ test('tuple-derived Domain types require exhaustive maps and permit complete per
     "import * as Domain from '@findeg/domain'; const labels = { en: 'English', ar: 'Arabic' } satisfies Record<(typeof Domain.LOCALES)[number], string>;",
   ])
     assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('derive-never-redefine requires exhaustive Domain maps with no rule options', async () => {
+  const code =
+    "import type { Locale } from '@findeg/domain'; export const labels = { en: 'English' } satisfies Record<Locale, string>;";
+  const file = 'backend/src/review-domain-fixture.ts';
+  assert.deepEqual(await copies(code, file, false), []);
+  assert.notDeepEqual(await copies(code, file, null), []);
 });
