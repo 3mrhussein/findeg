@@ -6,10 +6,7 @@
  */
 
 import { DashboardStats } from '../dtos';
-import {
-  CatalogHealthStats,
-  CategoryProductDistribution,
-} from '@findeg/backend/features/catalog/application/dtos';
+import { CatalogHealthStats, CategoryProductDistribution } from '@findeg/catalog';
 import type { Order } from '@findeg/orders';
 
 export interface IAdminDashboardService {

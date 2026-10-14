@@ -7,27 +7,27 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with actions
  */
 
-import type { IAdminProductService } from '../interfaces/IAdminProductService';
-import type { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
-import type { IAdminBrandService } from '../interfaces/IAdminBrandService';
-import type { IAdminTagService } from '../interfaces/IAdminTagService';
-import type { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
+import type { IAdminProductService } from '@findeg/catalog';
+import type { IAdminCategoryService } from '@findeg/catalog';
+import type { IAdminBrandService } from '@findeg/catalog';
+import type { IAdminTagService } from '@findeg/catalog';
+import type { IAdminCollectionService } from '@findeg/catalog';
 import type { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
-import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { IProductImportService } from '../interfaces/IProductImportService';
+import type { IAuditLogService } from '@findeg/catalog';
+import type { IProductImportService } from '@findeg/catalog';
 import type { IAdminSchoolSupplyListService } from '../interfaces/IAdminSchoolSupplyListService';
 
 // Admin services
-import { AdminProductService } from './AdminProductService';
-import { AdminCategoryService } from './AdminCategoryService';
-import { AdminBrandService } from './AdminBrandService';
-import { AdminTagService } from './AdminTagService';
-import { AdminCollectionService } from './AdminCollectionService';
+import { AdminProductService } from '@findeg/catalog';
+import { AdminCategoryService } from '@findeg/catalog';
+import { AdminBrandService } from '@findeg/catalog';
+import { AdminTagService } from '@findeg/catalog';
+import { AdminCollectionService } from '@findeg/catalog';
 import { AdminInventoryService } from './AdminInventoryService';
 import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
-import { ProductImportService } from './ProductImportService';
+import { ProductImportService } from '@findeg/catalog';
 import { AdminSchoolSupplyListService } from './AdminSchoolSupplyListService';
 import { createSchoolSupplyListService } from '../../../school';
 import {

@@ -14,7 +14,7 @@ import {
   type ProductListFilters,
   type ProductListResult,
 } from '@findeg/backend/features/administration';
-import { createProductService } from '@findeg/backend/features/catalog';
+import { createProductService } from '@findeg/catalog';
 import { type Locale } from '@findeg/domain';
 
 /**

@@ -8,7 +8,7 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createCategoryService, createTagService } from '@findeg/backend/features/catalog';
+import { createCategoryService, createTagService } from '@findeg/catalog';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { Locale } from '@findeg/domain';
 
@@ -64,7 +64,7 @@ export async function getAllTags(_locale: Locale = 'en') {
  */
 export async function getAllTagsGrouped(
   _locale: Locale = 'en',
-): Promise<Record<string, import('@findeg/backend/features/catalog').Tag[]>> {
+): Promise<Record<string, import('@findeg/catalog').Tag[]>> {
   cacheTag('tags');
   cacheLife('hours');
 

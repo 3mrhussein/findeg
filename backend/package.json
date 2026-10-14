@@ -10,10 +10,6 @@
     "./features/checkout/contracts": "./src/features/checkout/contracts.ts",
     "./features/checkout/schemas": "./src/features/checkout/schemas.ts",
     "./features/checkout/*": null,
-    "./features/catalog": "./src/features/catalog/index.ts",
-    "./features/catalog/contracts": "./src/features/catalog/contracts.ts",
-    "./features/catalog/schemas": "./src/features/catalog/schemas.ts",
-    "./features/catalog/*": null,
     "./features/core": "./src/features/core/index.ts",
     "./features/core/logger": "./src/features/core/logger.ts",
     "./features/core/schemas": "./src/features/core/schemas.ts",
@@ -36,8 +32,6 @@
     "./features/partner-sales/*": null,
     "./features/order": null,
     "./features/order/*": null,
-    "./features/review": "./src/features/review/index.ts",
-    "./features/review/*": null,
     "./features/school": "./src/features/school/index.ts",
     "./features/school/*": null,
     "./features/*": "./src/features/*"
@@ -67,7 +61,7 @@
     "tailwind-merge": "^3.7.0",
     "uuid": "^11.0.6",
     "zod": "^4.6.5",
-    "@findeg/orders": "workspace:*"
+    "@findeg/catalog": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

@@ -1,6 +1,6 @@
 import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
 import { ProductForm } from '@/app/[locale]/(dashboard)/products/_components/ProductForm';
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { PERMISSION_CODES } from '@findeg/backend/features/core/schemas';
 import { requirePermission } from '@lib/auth-guard';
 import type { Locale } from '@findeg/domain';

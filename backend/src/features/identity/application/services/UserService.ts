@@ -16,8 +16,7 @@ import {
 import { userQueries } from '@findeg/db/queries';
 
 import { ResourceNotFoundError } from '../../../core/domain/errors';
-import { parse } from '../../../core/domain/value-objects';
-import { createProductService } from '../../../catalog';
+import { createProductService, parse } from '@findeg/catalog';
 import { createOrders } from '@findeg/orders';
 import {
   AdminUser,

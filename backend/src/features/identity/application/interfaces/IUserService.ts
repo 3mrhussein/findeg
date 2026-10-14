@@ -7,7 +7,7 @@
 
 import type { User } from '../../domain/entities/User';
 import type { Order } from '@findeg/orders';
-import type { Product } from '../../../catalog/domain/entities/Product';
+import type { Product } from '@findeg/catalog';
 
 export interface AdminUser {
   id: number;

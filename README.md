@@ -215,7 +215,7 @@ FindEg uses a strict **3-tier documentation hierarchy** to capture deep technica
 - **System Schema**: [Drizzle Constraints, Migrations, & JSONB ER Diagram](./db/docs/SCHEMA.md) · [Database Setup](./db/docs/SETUP.md) · [Taxonomy](./db/docs/TAXONOMY.md)
 - **Orders**: [`@findeg/orders`](./packages/orders/README.md) — Order reads, Staff lifecycle commands.
 - **Tier 3 Feature Domains (Node/Services)**:
-  - [Catalog](./backend/src/features/catalog/README.md) — Products, Arrays, Search execution.
+  - Catalog (`@findeg/catalog`, `packages/catalog`) — Products, Arrays, Search execution.
   - [Identity](./backend/src/features/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
   - [Cart](./backend/src/features/cart/README.md) — Transient user selection and unit verification.
   - [School](./backend/src/features/school/README.md) — B2B token access layers.
@@ -226,7 +226,7 @@ FindEg uses a strict **3-tier documentation hierarchy** to capture deep technica
   - [Administration](./backend/src/features/administration/README.md) — Auditing streams, Config state.
   - [Notifications](./backend/src/features/notifications/README.md) — SES/SMTP interface boundaries.
   - [Media](./backend/src/features/media/README.md) — Storage interfaces, upload protections.
-  - [Review](./backend/src/features/review/README.md) — UGC limits, Moderation bounds.
+  - Review (`@findeg/catalog`, `packages/catalog/src/features/review-*`) — UGC limits, Moderation bounds.
   - [Core](./backend/src/features/core/README.md) — Zero-dependency Value Objects, `ServiceResult`.
 
 ### 2. The Customer Interaction Layer (Storefront)

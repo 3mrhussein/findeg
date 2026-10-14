@@ -5,7 +5,7 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createTagService } from '@findeg/backend/features/catalog';
+import { createTagService } from '@findeg/catalog';
 
 /**
  * Get all tags

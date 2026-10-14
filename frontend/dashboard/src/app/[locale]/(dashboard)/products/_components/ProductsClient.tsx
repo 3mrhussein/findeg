@@ -16,8 +16,8 @@ import type {
 
 interface ProductsClientProps {
   initialData: ProductListResult;
-  categories: import('@findeg/backend/features/catalog').Category[];
-  brands: import('@findeg/backend/features/catalog').Brand[];
+  categories: import('@findeg/catalog').Category[];
+  brands: import('@findeg/catalog').Brand[];
   initialFilters: ProductListFilters;
 }
 

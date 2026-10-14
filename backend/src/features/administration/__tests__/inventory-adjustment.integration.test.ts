@@ -11,7 +11,7 @@ import {
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { adjustStock } from '@findeg/db/queries';
 import { AdminInventoryService } from '../application/services/AdminInventoryService';
-import type { IAuditLogService } from '../application/interfaces/IAuditLogService';
+import type { IAuditLogService } from '@findeg/catalog';
 
 describe('Admin inventory adjustment integration on real PostgreSQL', () => {
   let testDb: TestDatabase;

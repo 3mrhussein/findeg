@@ -1,1 +1,1 @@
-export * from './AuditLogEntry';
+export * from '@findeg/catalog';

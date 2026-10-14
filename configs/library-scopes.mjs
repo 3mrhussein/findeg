@@ -3,4 +3,5 @@
 export const libraryScopes = {
   'packages/domain': ['src'],
   'packages/orders': ['src'],
+  'packages/catalog': ['src'],
 };

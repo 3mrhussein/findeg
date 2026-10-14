@@ -1,11 +1,11 @@
 import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
-import { IAuditLogService } from '../interfaces/IAuditLogService';
-import { Product } from '../../../catalog/domain/entities/Product';
-import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos/InventoryUpdate';
+import { IAuditLogService } from '@findeg/catalog';
+import { Product } from '@findeg/catalog';
+import { InventoryUpdate } from '@findeg/catalog';
 import { adjustStock, getLowStock, productQueries, withTransaction } from '@findeg/db/queries';
 import { inventoryBalances, warehouses } from '@findeg/db/schema';
 import { and, eq } from 'drizzle-orm';
-import { createProductService } from '../../../catalog';
+import { createProductService } from '@findeg/catalog';
 
 /**
  * Admin Inventory Service

@@ -28,7 +28,7 @@ import { BilingualInput } from '@components/shared/BilingualInput';
 import { BilingualTextarea } from '@components/shared/BilingualTextarea';
 import { Separator } from '@findeg/ui';
 import { Save, Trash2, Check, AlertCircle, Loader2 } from 'lucide-react';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { useTranslations } from 'next-intl';
 import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 

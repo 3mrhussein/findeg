@@ -5,7 +5,7 @@
  * Used within Suspense boundaries in products page for progressive rendering.
  */
 
-import { parse } from '@findeg/backend/features/core';
+import { parse } from '@findeg/catalog';
 import { getTranslations } from 'next-intl/server';
 import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
 import { Button } from '@findeg/ui';

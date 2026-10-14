@@ -1,5 +1,5 @@
-import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { AuditLogFilters, AuditLogCreateInput } from '../interfaces/IAuditLogRepository';
+import type { IAuditLogService } from '@findeg/catalog';
+import type { AuditLogFilters, AuditLogCreateInput } from '@findeg/catalog';
 import { auditLogQueries } from '@findeg/db/queries';
 
 /**

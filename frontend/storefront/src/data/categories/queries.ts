@@ -9,12 +9,8 @@ import 'server-only';
  */
 
 import { cacheTag, cacheLife } from 'next/cache';
-import {
-  createCategoryService,
-  createProductService,
-  createBrandService,
-} from '@findeg/backend/features/catalog';
-import { parse } from '@findeg/backend/features/core';
+import { createCategoryService, createProductService, createBrandService } from '@findeg/catalog';
+import { parse } from '@findeg/catalog';
 import { mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
 import { ShopPlpViewModel } from '../catalog/types';
 import { mapProductsWithInventory } from '../catalog/inventory';
@@ -104,7 +100,7 @@ export async function getCategoryPageViewModel(
  */
 export async function getCategoriesPageData(
   language: string,
-): Promise<(import('@findeg/backend/features/catalog').Category & { productsCount?: number })[]> {
+): Promise<(import('@findeg/catalog').Category & { productsCount?: number })[]> {
   const resolvedLocale = parse(language);
   cacheTag('categories', `categories-${resolvedLocale}`);
   cacheLife('days');

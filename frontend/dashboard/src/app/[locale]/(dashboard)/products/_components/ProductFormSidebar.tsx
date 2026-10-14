@@ -12,7 +12,7 @@ import {
   formatEgpDecimal,
 } from '@findeg/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { type Category, type Brand, type Tag } from '@findeg/backend/features/catalog';
+import { type Category, type Brand, type Tag } from '@findeg/catalog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
 import { TagInput } from '@/app/[locale]/_components/shared/TagInput';
 import {

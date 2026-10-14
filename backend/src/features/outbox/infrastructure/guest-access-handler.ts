@@ -1,6 +1,6 @@
 import React from 'react';
 import { guestAccessQueries } from '@findeg/db/queries';
-import { DEFAULT_LOCALE } from '../../core';
+import { DEFAULT_LOCALE } from '@findeg/catalog';
 import { GuestAccessCodeEmail } from '../../notifications';
 import { hashCode, mintCode } from '../../guest-access';
 import type { OutboxHandler } from '../domain/types';

@@ -1,17 +1,4 @@
 export {
-  LocaleSchema,
-  DEFAULT_LOCALE,
-  SUPPORTED_LOCALES,
-  valid,
-  type Locale,
-  TranslationMapSchema,
-  asTranslationMap,
-  pick,
-  parse,
-  type TranslationMap,
-} from './Locale';
-
-export {
   ActorTypeSchema,
   RoleIdSchema,
   PermissionIdSchema,

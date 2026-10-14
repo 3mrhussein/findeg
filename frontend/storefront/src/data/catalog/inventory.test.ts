@@ -11,7 +11,7 @@ vi.mock('@i18n/navigation', () => ({
 }));
 vi.mock('next/cache', () => ({ cacheTag: vi.fn(), cacheLife: vi.fn() }));
 vi.mock('@findeg/backend/features/core', () => ({ parse: (locale: string) => locale }));
-vi.mock('@findeg/backend/features/catalog', () => ({
+vi.mock('@findeg/catalog', () => ({
   createInventoryService: () => ({ getWarehouseBalances: services.balances }),
   createProductService: () => ({
     getFilteredProducts: services.listing,

@@ -3,6 +3,7 @@ packages:
   - 'configs/env'
   - 'packages/money'
   - 'packages/orders'
+  - 'packages/catalog'
   - 'packages/domain-errors'
   - 'packages/domain'
   - 'db'
