@@ -1,5 +1,5 @@
 import { nodeTest } from '../configs/vitest/defaults';
-import { configDefaults, defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
@@ -16,20 +16,8 @@ export default defineConfig({
       NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
     },
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/index.ts', // index files are just re-exports
-      ],
-    },
-    include: ['src/**/*.{test,spec}.{js,ts}'],
     // Integration tests need Postgres; they run via vitest.integration.config.ts.
-    exclude: [...configDefaults.exclude, 'src/**/*.integration.test.ts'],
+    exclude: [...nodeTest.exclude, 'src/**/*.integration.test.ts'],
   },
   resolve: {
     alias: {
