@@ -1,4 +1,4 @@
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 import type { SupplyListStaffActor } from '@findeg/school-lists';
 
 export function toListActor(session: SessionPayload): SupplyListStaffActor {

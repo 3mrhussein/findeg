@@ -1,4 +1,4 @@
-import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
+import type { SessionPayload } from '@findeg/identity';
 import type { ICurrentSessionCodec } from '../interfaces/ICurrentSessionCodec';
 
 const AUTHORIZATION_VERSION_ONE = 1;

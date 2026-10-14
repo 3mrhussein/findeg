@@ -26,7 +26,7 @@ export default function setup(project) {
         .some(
           (pattern) =>
             !runnerExclusions.has(pattern) &&
-            !/(?:^|\/)(?:vite|vitest)\.config\.[cm]?[jt]s$/.test(pattern),
+            !/(?:^|\/)(?:vite|vitest)(?:\.integration)?\.config\.[cm]?[jt]s$/.test(pattern),
         ) ||
       Object.entries(thresholds).some(([key, value]) => coverage.thresholds[key] !== value)
     )

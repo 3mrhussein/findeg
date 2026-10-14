@@ -1,9 +1,11 @@
+'use server';
+
+import { createAuditLogService } from '@findeg/backend/features/audit';
 /**
  * Inventory Actions (Dashboard Data Layer)
  *
  * Stock updates and inventory management.
  */
-'use server';
 
 import { updateTag } from 'next/cache';
 import { createAdminInventoryService } from '@findeg/inventory';
@@ -17,7 +19,7 @@ import { getErrorMessage } from '@lib/type-guards';
 export async function updateStock(input: { variantId: number; quantity: number }) {
   try {
     await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'update stock');
-    const inventory = createAdminInventoryService();
+    const inventory = createAdminInventoryService(createAuditLogService());
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
     // Invalidate inventory caches; the product list shows stock levels too.
@@ -39,7 +41,7 @@ export async function bulkUpdateStock(
 ) {
   try {
     await requireStaffAction(PERMISSION_CODES.ADMIN_INVENTORY_WRITE, 'bulk update stock');
-    const inventory = createAdminInventoryService();
+    const inventory = createAdminInventoryService(createAuditLogService());
     await inventory.bulkUpdateStock(updates);
 
     // Invalidate inventory caches

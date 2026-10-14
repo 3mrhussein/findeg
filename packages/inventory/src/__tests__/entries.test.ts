@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 vi.mock('@findeg/db/queries', () => ({ inventoryQueries: { getAllBalances: vi.fn() } }));
 vi.mock('@findeg/catalog', () => ({
   createProductService: () => ({}),
-  createAuditLogService: () => ({ logAction: vi.fn() }),
 }));
 
 import {
@@ -17,9 +16,9 @@ describe('@findeg/inventory entries', () => {
     expect(createInventoryService()).not.toBe(createInventoryService());
   });
 
-  it('creates admin services that use the catalog audit log when none is injected', () => {
-    const first = createAdminInventoryService();
-    expect(first).not.toBe(createAdminInventoryService());
+  it('creates fresh admin services with the supplied audit port', () => {
+    const first = createAdminInventoryService({ logAction: async () => {} });
+    expect(first).not.toBe(createAdminInventoryService({ logAction: async () => {} }));
     expect(typeof first.updateStock).toBe('function');
   });
 

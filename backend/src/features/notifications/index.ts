@@ -1,8 +1,4 @@
-// Public barrel for the notifications feature. Only the factory, its return
-// type, and the IEmailService interface (consumed by other backend features,
-// e.g. administration) are exported here — NotificationService and
-// NotificationEventService are concrete implementation classes and stay
-// internal to the backend package. See docs/adr/0001-backend-feature-barrels.md.
+/** Notification delivery and event-to-delivery composition. Account inbox operations are owned by Identity. */
 export { createNotificationServices } from './application/services/factory';
 export type { NotificationServices } from './application/services/factory';
 export { default as OrderConfirmationEmail } from './infrastructure/templates/OrderConfirmationEmail';

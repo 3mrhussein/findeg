@@ -4,7 +4,7 @@ import unitConfig from './vitest.config';
 /**
  * Integration tests run against a real Postgres 16. The global setup creates a
  * fresh, fully migrated database for the run and drops it afterwards; tests
- * reach it through `connectToTestDatabase()` from `src/testing/postgres`.
+ * reach it through `connectToTestDatabase()` from `configs/vitest/postgres`.
  */
 export default defineConfig({
   test: {
@@ -17,8 +17,8 @@ export default defineConfig({
       GUEST_ACCESS_SECRET: 'test-guest-access-secret-1234567890123456',
     },
     include: ['src/**/*.integration.test.ts'],
-    globalSetup: ['./src/testing/postgres/global-setup.ts'],
-    setupFiles: ['./src/testing/postgres/setup.ts'],
+    globalSetup: ['../configs/vitest/postgres/global-setup.ts'],
+    setupFiles: ['../configs/vitest/postgres/setup.ts'],
     // Every file shares the run's database; running files one at a time keeps
     // one file's rows and locks from interfering with another's assertions.
     fileParallelism: false,

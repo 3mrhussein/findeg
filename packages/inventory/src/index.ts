@@ -9,3 +9,5 @@ export { createAdminInventoryService } from './features/admin-inventory-service/
 export * from './features/inventory-update/index';
 export type * from './features/inventory-ports/types';
 export type * from './features/admin-inventory-service/types';
+
+export * from './features/metrics';

@@ -2,7 +2,7 @@
  * Backend Library Utilities
  *
  * Re-export all utility functions for easy import.
- * Usage: import { formatCurrency } from '@findeg/backend/lib'
+ * Usage: import { formatCurrency } from '.'
  *
  * Note: ValidationError and ConflictError domain errors should be imported from core:
  *       import { ValidationError, ConflictError } from '@findeg/backend'

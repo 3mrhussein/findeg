@@ -14,7 +14,7 @@ import {
   connectToTestDatabase,
   runConcurrently,
   type TestDatabase,
-} from '../../../../../../backend/src/testing/postgres';
+} from '../../../../../../configs/vitest/postgres';
 import {
   createPartnerMembershipServices,
   type PartnerServices,

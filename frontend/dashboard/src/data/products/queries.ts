@@ -8,12 +8,8 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import {
-  createAdministrationServices,
-  type ProductEditData,
-  type ProductListFilters,
-  type ProductListResult,
-} from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
+import type { ProductEditData, ProductListFilters, ProductListResult } from '@findeg/catalog';
 import { createProductService } from '@findeg/catalog';
 import { type Locale } from '@findeg/domain';
 

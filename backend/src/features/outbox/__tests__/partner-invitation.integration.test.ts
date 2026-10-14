@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { eq, like } from 'drizzle-orm';
 import { outbox, partnerInvitationTokens, businessPartners, users } from '@findeg/db/schema';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { connectToTestDatabase, type TestDatabase } from '../../../../../configs/vitest/postgres';
 import {
   createPartnerMembershipServices,
   type PartnerServices,

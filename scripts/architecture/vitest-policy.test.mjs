@@ -9,7 +9,13 @@ import os from 'node:os';
 const root = path.resolve(import.meta.dirname, '../..');
 const require = createRequire(path.join(root, 'backend/package.json'));
 const binary = path.join(path.dirname(require.resolve('vitest/package.json')), 'vitest.mjs');
-function run(files, library = true, extra = [], scope = undefined) {
+function run(
+  files,
+  library = true,
+  extra = [],
+  scope = undefined,
+  configName = 'vitest.config.ts',
+) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-policy-'));
   try {
     fs.symlinkSync(path.join(root, 'backend/node_modules'), path.join(directory, 'node_modules'));
@@ -18,11 +24,11 @@ function run(files, library = true, extra = [], scope = undefined) {
       fs.writeFileSync(path.join(directory, file), content);
     }
     fs.writeFileSync(
-      path.join(directory, 'vitest.config.ts'),
+      path.join(directory, configName),
       `import { sharedTest } from ${JSON.stringify(path.join(root, 'configs/vitest/policy.mjs'))};
 export default { test: { ...sharedTest({ root: ${JSON.stringify(directory)}, enabled: true, library: ${library}, scope: ${JSON.stringify(scope)} }), maxWorkers: 1 } };`,
     );
-    const result = spawnSync(process.execPath, [binary, 'run', ...extra], {
+    const result = spawnSync(process.execPath, [binary, 'run', '--config', configName, ...extra], {
       cwd: directory,
       encoding: 'utf8',
       timeout: 60000,
@@ -208,4 +214,15 @@ test('a pilot scope measures and places only its own subtree', () => {
   );
   assert.notEqual(rejected.status, 0);
   assert.match(rejected.output, /src\/common\/unused\.ts|unused\.ts/);
+});
+
+test('enforcing coverage supports the named integration config', () => {
+  const result = run(
+    { 'src/index.ts': implementation, 'src/__tests__/behavior.ts': executableTest },
+    true,
+    [],
+    undefined,
+    'vitest.integration.config.ts',
+  );
+  assert.equal(result.status, 0, result.output);
 });

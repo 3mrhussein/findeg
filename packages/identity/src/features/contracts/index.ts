@@ -37,3 +37,5 @@ export type {
   UserVO,
   SessionPayload,
 } from '@findeg/db/types';
+
+export { PortalRoleSchema, type PortalRole } from '@findeg/db/types';

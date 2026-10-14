@@ -12,7 +12,7 @@ import {
 import { outboxQueries } from '@findeg/db/queries';
 import { createCheckoutService as createOrderCheckoutService } from '@findeg/orders';
 import type { CheckoutServiceOptions } from '@findeg/orders/types';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { connectToTestDatabase, type TestDatabase } from '../../../../../configs/vitest/postgres';
 import {
   createOutbox,
   enqueue,

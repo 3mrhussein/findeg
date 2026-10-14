@@ -26,3 +26,30 @@ Keep one application package per bounded context under `packages/`: catalog, inv
 This decision supersedes ADR-0001's application-feature topology and client-safe schema barrel/lint policy, and ADR-0016's three-entry Orders contract and custom client-bundle boundary policy. Next.js owns server/client boundaries; server-side app query modules use `server-only`. Do not add framework markers or bundler-specific entry splitting in Domain, db, application packages or Backend.
 
 ADR-0019 is accepted as the standards target. Acceptance of these decisions records the architecture, not completed enforcement. Existing feature entries and Orders `schemas`/`events` entries remain transitional until consumers and contract checks migrate together; #443 owns the root/types contraction. Follow-on tickets implement the bounded-context extraction and derivation gaps. #445 owns measured full standards activation. This ticket changes documentation only and does not claim those migrations are complete.
+
+## Infrastructure entries after #475
+
+Apps obtain business operations from context package root entries. Dashboard composes
+these services in its server-side `src/lib/administration.ts`; it aggregates context metrics
+for its own presentation. Backend no longer publishes Administration or business facades.
+Backend's explicit export map supports these infrastructure/composition entries:
+
+- Root: JWT token adapter and MediaService.
+- `features/core`: cookie session adapter, Guest Order token adapter, service-result metadata and infrastructure ports.
+- `features/core/logger`: logging delivery.
+- `features/media` and `features/media/contracts`: storage delivery and transport metadata.
+- `features/notifications` and `features/notifications/contracts`: notification delivery contracts.
+- `features/outbox`: durable delivery worker, enqueue, retries and sweep composition.
+- `features/audit`: PostgreSQL audit adapter and audit queries.
+- `lib/sanitize-html`: rich-text transport sanitization.
+
+Catalog owns its audit contract; Inventory owns a minimal write port. Dashboard injects
+one Backend audit adapter into both. Orders keeps its transactional audit writes alongside
+its command transaction; routing those through a best-effort adapter would weaken atomicity.
+Account notification inbox operations are owned by Identity; Backend composes notification delivery.
+No context depends on Backend.
+
+Shared PostgreSQL test tooling lives under `configs/vitest/postgres`. Context-local business
+integration suites live in each package's `__tests__`; delivery/composition suites remain
+with Backend Outbox. `vitest.integration.config.ts` is supported by the shared coverage
+policy and runs unit plus integration suites against one isolated database.

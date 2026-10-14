@@ -6,7 +6,7 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,

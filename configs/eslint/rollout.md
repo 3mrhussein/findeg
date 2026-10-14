@@ -102,7 +102,7 @@ modules. Each feature has its own `__tests__/` with executable tests:
 `order-statistics` and `order-status-changes`. Database-bound features are exercised through
 the injected database seam with a scripted, test-only client (`src/__tests__/fixture.ts`),
 so Vitest measures them without PostgreSQL; the PostgreSQL integration suite in
-`backend/src/testing/orders` still covers the same commands on a real database.
+`packages/orders/src/features/integration/__tests__` still covers the same commands on a real database.
 
 Public entries during phase 1: `@findeg/orders` (the root runtime, `src/index.ts`),
 `@findeg/orders/types` (the type-only root entry, `src/types.ts`, a type-only re-export of the

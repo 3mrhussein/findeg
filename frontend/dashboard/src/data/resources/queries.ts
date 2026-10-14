@@ -9,7 +9,7 @@
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { createCategoryService, createTagService } from '@findeg/catalog';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import type { Locale } from '@findeg/domain';
 
 /**

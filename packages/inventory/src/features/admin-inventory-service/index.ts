@@ -1,5 +1,6 @@
-import type { IAuditLogService, Product } from '@findeg/catalog';
-import { createAuditLogService, createProductService } from '@findeg/catalog';
+import type { InventoryAuditPort } from './types';
+import type { Product } from '@findeg/catalog';
+import { createProductService } from '@findeg/catalog';
 import type { InventoryUpdate } from '../inventory-update';
 import type { IAdminInventoryService } from './types';
 import { adjustStock, getLowStock, productQueries, withTransaction } from '@findeg/db/queries';
@@ -19,7 +20,7 @@ export class AdminInventoryService implements IAdminInventoryService {
   /**
    * Creates an instance of AdminInventoryService.
    */
-  constructor(private auditLogService: IAuditLogService) {}
+  constructor(private auditLogService: InventoryAuditPort) {}
 
   /**
    * Retrieves a paginated list of products and their current inventory status.
@@ -174,7 +175,7 @@ export class AdminInventoryService implements IAdminInventoryService {
 
 /** Admin inventory service factory. Audit entries use the catalog audit log unless one is injected. */
 export function createAdminInventoryService(
-  auditLogService: IAuditLogService = createAuditLogService(),
+  auditLogService: InventoryAuditPort,
 ): IAdminInventoryService {
   return new AdminInventoryService(auditLogService);
 }

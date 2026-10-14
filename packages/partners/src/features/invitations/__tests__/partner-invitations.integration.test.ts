@@ -9,7 +9,7 @@ import {
 import {
   connectToTestDatabase,
   type TestDatabase,
-} from '../../../../../../backend/src/testing/postgres';
+} from '../../../../../../configs/vitest/postgres';
 import {
   createPartnerMembershipServices,
   type PartnerActor,

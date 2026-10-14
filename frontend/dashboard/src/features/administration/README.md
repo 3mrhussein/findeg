@@ -5,7 +5,7 @@ The **Dashboard Administration Feature** surfaces the operational UI primitives 
 ## 🎯 Technical Responsibilities
 
 - **Staff Hydration Rendering**: Listing the complex RBAC associations for staff via the UI.
-- **Server Action Passthrough**: Exporting localized form actions (`createStaff`, `updateSettings`) bridging directly to `@findeg/backend/features/administration`.
+- **Server Action Passthrough**: Exporting localized form actions (`createStaff`, `updateSettings`) bridging directly to context package root entries through Dashboard composition.
 - **Zod UI Mapping**: Constructing React Hook Form schemas inheriting natively from the backend's zod definitions.
 
 ---

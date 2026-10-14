@@ -1,1 +1,0 @@
-export * from '@findeg/catalog';

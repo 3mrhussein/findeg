@@ -12,7 +12,7 @@ import {
   users,
 } from '@findeg/db/schema';
 import { type PartnerRole } from '@findeg/domain';
-import type { TestDatabase } from '../../../../../../backend/src/testing/postgres';
+import type { TestDatabase } from '../../../../../../configs/vitest/postgres';
 
 type OrderStatus = (typeof orders.$inferInsert)['status'];
 type PaymentStatus = (typeof orders.$inferInsert)['paymentStatus'];

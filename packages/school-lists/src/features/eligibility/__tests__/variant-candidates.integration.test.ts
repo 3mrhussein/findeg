@@ -2,7 +2,10 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { attributes, categories, productVariants, products, variantAttributes } from '@findeg/db';
 import { findVariantCandidates, listAttributeValuesForCategory } from '@findeg/db';
-import { connectToTestDatabase, type TestDatabase } from '../../../../testing/postgres';
+import {
+  connectToTestDatabase,
+  type TestDatabase,
+} from '../../../../../../configs/vitest/postgres';
 import { eligibleVariants } from '../../../index';
 
 describe('School Supply List catalog queries', () => {

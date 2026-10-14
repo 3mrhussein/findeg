@@ -4,5 +4,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["src/**/*", "testing/**/*", "vitest.config.ts", "vitest.integration.config.ts"]
+  "include": ["src/**/*", "vitest*.config.ts", "../../configs/vitest/postgres/global-setup.ts"]
 }

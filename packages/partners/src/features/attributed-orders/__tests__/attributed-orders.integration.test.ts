@@ -3,7 +3,7 @@ import { PERMISSION_CODES } from '@findeg/db';
 import {
   connectToTestDatabase,
   type TestDatabase,
-} from '../../../../../../backend/src/testing/postgres';
+} from '../../../../../../configs/vitest/postgres';
 import {
   createPartnerSalesServices,
   type PartnerSalesServices,

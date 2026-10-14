@@ -10,6 +10,6 @@
       "@findeg/env": ["../configs/env/src"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "vitest*.config.ts", "../configs/vitest/postgres/global-setup.ts"],
   "exclude": ["node_modules", "dist"]
 }
