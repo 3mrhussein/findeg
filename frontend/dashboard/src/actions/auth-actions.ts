@@ -5,8 +5,9 @@
 'use server';
 
 import { redirect } from '@i18n/navigation';
-import { createIdentityServices } from '@findeg/backend/features/identity';
-import { adminSession, createUserVO, type SessionPayload } from '@findeg/backend/features/core';
+import { createIdentityServices } from '@findeg/identity';
+import { type SessionPayload } from '@findeg/identity';
+import { adminSession, createUserVO } from '@findeg/identity/types';
 import { createSession, deleteSession } from '@lib/session';
 
 export type LoginActionState = {

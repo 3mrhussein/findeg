@@ -1,4 +1,4 @@
-import type { ProductFilters } from '@findeg/backend/features/catalog';
+import type { ProductFilters } from '@findeg/catalog';
 import type { ShopPlpSort } from './types';
 
 type SearchParams = Record<string, string | string[] | undefined>;

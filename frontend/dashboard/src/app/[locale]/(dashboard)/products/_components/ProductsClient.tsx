@@ -9,15 +9,12 @@ import { ProductsTable } from './ProductsTable';
 import { ProductsPagination } from './ProductsPagination';
 import { BulkActionsBar } from './BulkActionsBar';
 import { bulkActivateAction, bulkDeactivateAction, bulkDeleteAction } from '../actions';
-import type {
-  ProductListFilters,
-  ProductListResult,
-} from '@findeg/backend/features/administration';
+import type { ProductListFilters, ProductListResult } from '@findeg/catalog';
 
 interface ProductsClientProps {
   initialData: ProductListResult;
-  categories: import('@findeg/backend/features/catalog').Category[];
-  brands: import('@findeg/backend/features/catalog').Brand[];
+  categories: import('@findeg/catalog').Category[];
+  brands: import('@findeg/catalog').Brand[];
   initialFilters: ProductListFilters;
 }
 

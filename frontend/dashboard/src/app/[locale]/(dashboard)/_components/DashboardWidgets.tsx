@@ -1,3 +1,4 @@
+import type { OrderStatus } from '@findeg/domain';
 import { getOrderStats, getRecentOrders } from '@data/orders/queries';
 import { DashboardOrdersWidget } from './DashboardOrdersWidget';
 /**
@@ -204,7 +205,7 @@ export async function OrdersDashboardSection({ locale }: DashboardWidgetProps) {
           delivered: t('Administration.Shared.StatusBadge.Delivered'),
           cancelled: t('Administration.Shared.StatusBadge.Cancelled'),
           refunded: t('Administration.Shared.StatusBadge.Refunded'),
-        },
+        } satisfies Record<OrderStatus, string>,
       }}
     />
   );

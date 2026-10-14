@@ -1,3 +1,4 @@
+import { LOCALES } from '@findeg/domain';
 import { setRequestLocale } from 'next-intl/server';
 import { LoginForm } from './_components/LoginForm';
 
@@ -5,7 +6,7 @@ import { LoginForm } from './_components/LoginForm';
  * Generate static params for supported locales
  */
 export async function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'ar' }];
+  return LOCALES.map((locale) => ({ locale }));
 }
 
 /**

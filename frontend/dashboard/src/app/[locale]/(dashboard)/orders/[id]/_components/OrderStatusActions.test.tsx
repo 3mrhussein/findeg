@@ -3,7 +3,7 @@ import { render as rtlRender, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { NextIntlClientProvider } from 'next-intl';
 import type { Order } from '@findeg/orders';
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 
 vi.mock('@data/orders/actions', () => ({ updateOrderStatusAction: vi.fn() }));
 vi.mock('@i18n/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));

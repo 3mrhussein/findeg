@@ -10,7 +10,7 @@ import { TableCell, TableRow } from '@findeg/ui';
 import { Avatar, AvatarFallback, AvatarImage } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@findeg/ui';
 import { Link } from '@i18n/navigation';
-import type { ProductListItem } from '@findeg/backend/features/administration';
+import type { ProductListItem } from '@findeg/catalog';
 
 import { formatEgpDecimal } from '@findeg/ui';
 

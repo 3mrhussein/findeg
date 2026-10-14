@@ -1,10 +1,6 @@
 'use client';
 
-import type {
-  CheckoutAcceptFailure,
-  CheckoutQuote,
-  CheckoutQuoteLine,
-} from '@findeg/backend/features/checkout';
+import type { CheckoutAcceptFailure, CheckoutQuote, CheckoutQuoteLine } from '@findeg/orders/types';
 import { Button } from '@findeg/ui';
 
 export type AcceptanceFailure =

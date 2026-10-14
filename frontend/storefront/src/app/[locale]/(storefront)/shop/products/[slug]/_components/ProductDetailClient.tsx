@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
@@ -116,7 +117,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const [priceState, setPriceState] = useState<PriceState>({
     unitPrice: Number(selectedVariant?.basePrice || 0),
-    currency: 'EGP',
+    currency: DEFAULT_CURRENCY,
   });
 
   useEffect(() => {
@@ -124,7 +125,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
     setPriceState({
       unitPrice: Number(selectedVariant.basePrice || 0),
-      currency: 'EGP',
+      currency: DEFAULT_CURRENCY,
     });
   }, [selectedVariant]);
 

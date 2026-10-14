@@ -1,8 +1,5 @@
 import { formatEgp } from '@findeg/ui';
-import {
-  sumSalesFigures,
-  type StaffPartnerReportView,
-} from '@findeg/backend/features/partner-sales';
+import { sumSalesFigures, type StaffPartnerReportView } from '@findeg/partners';
 
 export interface SalesReportProps {
   readonly asOf: string;

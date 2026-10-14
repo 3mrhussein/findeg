@@ -1,0 +1,155 @@
+import type { getAdminProductForEditRaw, getAdminProductsListRaw } from '@findeg/db/queries';
+import type {
+  ProductEditData,
+  ProductListItem,
+  ProductListResult,
+} from '../administration-i-admin-product-service/types';
+import type { CreateVariantInput } from '../catalog-variant-input/index';
+import type { VariantDimension } from '../catalog-variant-dimension/index';
+import { VariantKey } from '../catalog-variant-key/index';
+import { Sku as sku } from '../catalog-sku/index';
+import { generateVariantMatrix } from '../catalog-variant-dimension/index';
+import { translationMapBy } from '../catalog-locale/index';
+
+type ProductListQueryResult = Awaited<ReturnType<typeof getAdminProductsListRaw>>;
+type ProductListRow = ProductListQueryResult['rows'][number];
+type ProductEditRaw = NonNullable<Awaited<ReturnType<typeof getAdminProductForEditRaw>>>;
+
+export interface GeneratedProductVariantPayload {
+  sku: string;
+  variantKey: string;
+  localizedLabel: { en: string; ar: string };
+  sortOrder: number;
+  isDefault: boolean;
+  isActive: boolean;
+  basePrice: number;
+  strikePrice?: number | null;
+  costPrice?: number | null;
+  weightGrams?: number | null;
+  barcode?: string | null;
+  attributes: Array<{ attributeKey: string; value: string }>;
+}
+
+export interface VariantKeyUpdatePayload {
+  variantId: number;
+  variantKey: string;
+}
+
+export function mapAdminProductListResult(result: ProductListQueryResult): ProductListResult {
+  return {
+    products: result.rows.map(mapAdminProductListItem),
+    total: result.total,
+    page: result.page,
+    pageSize: result.pageSize,
+  };
+}
+
+type ProductEditAttribute = ProductEditRaw['variants'][number]['attributes'][number];
+type ProductEditVariant = Omit<ProductEditRaw['variants'][number], 'attributes'> & {
+  attributes: Array<
+    Omit<ProductEditAttribute, 'definition'> & { definition?: ProductEditAttribute['definition'] }
+  >;
+};
+type ProductEditInput = Omit<ProductEditRaw, 'variants'> & { variants: ProductEditVariant[] };
+
+export function mapAdminProductEditData(data: ProductEditInput): ProductEditData {
+  return {
+    ...data,
+    rating: Number(data.rating),
+    // The product form reads its bilingual fields from `localizedContent`.
+    localizedContent: {
+      name: data.localizedName,
+      description: data.localizedDescription,
+      longDescription: data.localizedLongDescription,
+    },
+    variants: data.variants.map((variant) => ({
+      ...variant,
+      basePrice: Number(variant.basePrice),
+      strikePrice: variant.strikePrice ? Number(variant.strikePrice) : null,
+      costPrice: variant.costPrice ? Number(variant.costPrice) : null,
+      images: variant.images,
+      attributes: variant.attributes.map((attribute) => ({
+        ...attribute,
+        key: attribute.definition?.key || '',
+      })),
+    })),
+    tags: data.tags.map((productTag) => productTag.tag),
+  } as unknown as ProductEditData;
+}
+
+export function buildGeneratedProductVariants(
+  dimensions: VariantDimension[],
+  defaults: Partial<CreateVariantInput>,
+): GeneratedProductVariantPayload[] {
+  const combinations = generateVariantMatrix(dimensions);
+
+  return combinations.map((combination, index) => {
+    const attributes = Object.entries(combination).map(([attributeKey, value]) => ({
+      attributeKey,
+      value,
+    }));
+
+    const variantKey = VariantKey.build(
+      attributes.map(({ attributeKey, value }) => ({ key: attributeKey, value })),
+    ).toString();
+
+    const suggestedSku = sku.suggestVariantSku(
+      defaults.sku ?? 'SKU',
+      attributes.map(({ value }) => value),
+    );
+
+    return {
+      sku: defaults.sku ?? suggestedSku,
+      variantKey,
+      localizedLabel: defaults.localizedLabel ?? translationMapBy(() => ''),
+      sortOrder: index,
+      isDefault:
+        index === 0 && defaults.isDefault === undefined ? true : (defaults.isDefault ?? false),
+      isActive: defaults.isActive ?? true,
+      basePrice: defaults.basePrice ?? 0,
+      strikePrice: defaults.strikePrice ?? null,
+      costPrice: defaults.costPrice ?? null,
+      weightGrams: defaults.weightGrams ?? null,
+      barcode: defaults.barcode ?? null,
+      attributes,
+    };
+  });
+}
+
+export function buildVariantKeyUpdates(
+  rows: Array<{ variantId: number; key: string; valueText: string | null }>,
+): VariantKeyUpdatePayload[] {
+  const attributesByVariant = new Map<number, Array<{ key: string; valueText: string | null }>>();
+
+  for (const row of rows) {
+    const existing = attributesByVariant.get(row.variantId) ?? [];
+    existing.push({ key: row.key, valueText: row.valueText });
+    attributesByVariant.set(row.variantId, existing);
+  }
+
+  return Array.from(attributesByVariant.entries()).map(([variantId, attributes]) => ({
+    variantId,
+    variantKey: VariantKey.build(
+      attributes.map((attribute) => ({ key: attribute.key, value: attribute.valueText ?? '' })),
+    ).toString(),
+  }));
+}
+
+/**
+ * Maps a raw product list row into the public ProductListItem presentation shape.
+ */
+function mapAdminProductListItem({ defaultVariantSku, ...row }: ProductListRow): ProductListItem {
+  let completeness: ProductListItem['completeness'] = 'complete';
+
+  if (!row.categoryId) completeness = 'no-category';
+  else if (!row.isActive) completeness = 'draft';
+  else if (!row.hasImages) completeness = 'no-images';
+  else if (!row.defaultVariantPrice || row.defaultVariantPrice === 0) completeness = 'no-price';
+
+  return {
+    ...row,
+    sku: defaultVariantSku ?? '',
+    localizedName: translationMapBy((locale) => row.localizedName[locale]),
+    completeness,
+  };
+}

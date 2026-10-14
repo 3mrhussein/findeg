@@ -1,6 +1,6 @@
 # Business-domain map
 
-The map of FindEg's business areas and how they relate. The implemented relations are data in `packages/domain/src/relations` (`@findeg/domain/relations`). Existing tests check declared fields against the domain types, but do not yet prove that every model link is represented or targets the correct branded identity. The diagrams below describe the complete required business contract, including the missing links listed under Relation completeness. Tickets #408 and #442 own implementation and preservation of that contract; this documentation update does not implement those checks.
+The map of FindEg's business areas and how they relate. The implemented relations are data in `packages/domain/src/features/relations` (`@findeg/domain`). Existing tests check declared fields against the domain types, but do not yet prove that every model link is represented or targets the correct branded identity. The diagrams below describe the complete required business contract, including the missing links listed under Relation completeness. Tickets #408 and #442 own implementation and preservation of that contract; this documentation update does not implement those checks.
 
 The map holds domain entities only; application plumbing (Outbox, Guest Order Access, idempotency) and the Partner Report query/read projection stay out. Pure Partner Report rule inputs and results remain in Domain. The diagrams are maintained by hand; no automatic check currently compares them with `RELATIONS`.
 

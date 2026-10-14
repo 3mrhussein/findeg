@@ -1,4 +1,2 @@
-import { compose, cypressGlobals } from './compose.js';
-
-// Next.js applications (dashboard, storefront).
-export const next = compose('next', { client: true, extra: [cypressGlobals] });
+// Temporary compatibility delegate; removal is owned by #445.
+export * from '../../../../configs/eslint/profiles/next.js';

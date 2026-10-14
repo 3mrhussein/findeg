@@ -1,8 +1,9 @@
-import { createCheckoutService } from '@findeg/backend/features/checkout';
+import { createCheckoutService } from '@findeg/orders';
+import { enqueue } from '@findeg/backend/features/outbox';
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
-  const checkoutService = createCheckoutService();
+  const checkoutService = createCheckoutService({ enqueue });
   const result = await checkoutService.validate(body);
 
   if (!result.success) {

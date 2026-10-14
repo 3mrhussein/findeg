@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import '../globals.css';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import type { Locale } from '@findeg/domain';
+import { DEFAULT_LOCALE } from '@findeg/domain';
+import type { Locale } from '@findeg/domain/types';
 import { routing } from '@i18n/routing';
 import { notFound } from 'next/navigation';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -9,6 +10,8 @@ import Providers from '@providers/Providers';
 import { Suspense } from 'react';
 import { BoundaryProvider } from '@lib/internal/BoundaryProvider';
 import { LocaleSync } from '@components/shared/LocaleSync';
+
+const OPEN_GRAPH_LOCALE = { en: 'en_US', ar: 'ar_EG' } as const satisfies Record<Locale, string>;
 
 export const metadata: Metadata = {
   title: {
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'FindEg Team' }],
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: OPEN_GRAPH_LOCALE[DEFAULT_LOCALE],
     url: 'https://findeg.com',
     siteName: 'FindEg',
     title: 'FindEg - School & Stationery Marketplace',

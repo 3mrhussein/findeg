@@ -1,0 +1,140 @@
+// Ecosystem baseline; complete scopes are activated independently of library layout.
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
+import globals from 'globals';
+import { naming } from './rules/naming.js';
+import { completeScopes } from './activation.mjs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { CODE, TYPESCRIPT } from './globs.js';
+
+const findegPlugin = { rules: { naming } };
+
+/**
+ * @param {'isomorphic' | 'node' | 'browser' | 'next'} role
+ * @param {{root?: string, complete?: boolean}} [options]
+ */
+export async function standards(role, { root = process.cwd(), complete = true } = {}) {
+  if (!['isomorphic', 'node', 'browser', 'next'].includes(role)) {
+    throw new Error(`Unknown standards role: ${role}`);
+  }
+  const ecosystem = [];
+  if (complete && role === 'browser') {
+    const [{ default: react }, { default: hooks }, { default: a11y }] = await Promise.all([
+      import('eslint-plugin-react'),
+      import('eslint-plugin-react-hooks'),
+      import('eslint-plugin-jsx-a11y'),
+    ]);
+    ecosystem.push(
+      react.configs.flat.recommended,
+      react.configs.flat['jsx-runtime'],
+      hooks.configs.flat.recommended,
+      a11y.flatConfigs.recommended,
+    );
+  }
+  if (complete && role === 'next') {
+    const { default: next } = await import('eslint-config-next/core-web-vitals');
+    ecosystem.push(...next);
+    // Next's accessibility rules are a subset; extend the maintained full baseline
+    // with the SAME plugin instance (Next registers the namespace object).
+    const a11y = next.find((config) => config.plugins?.['jsx-a11y']).plugins['jsx-a11y'];
+    ecosystem.push({ ...a11y.flatConfigs.recommended, plugins: { 'jsx-a11y': a11y } });
+  }
+  if (complete && (role === 'node' || role === 'next')) {
+    const { default: node } = await import('eslint-plugin-n');
+    ecosystem.push({
+      ...node.configs['flat/recommended-module'],
+      files:
+        role === 'node' ? CODE : ['*.{js,mjs,cjs,ts}', 'src/data/**/*.ts', 'src/app/**/route.ts'],
+    });
+  }
+  return [
+    {
+      ignores: [
+        '**/node_modules/**',
+        '**/.next/**',
+        '**/dist/**',
+        '**/.turbo/**',
+        '**/next-env.d.ts',
+      ],
+    },
+    { ...js.configs.recommended, files: CODE },
+    ...ecosystem.map((config) =>
+      config.ignores && !config.rules ? config : { ...config, files: config.files ?? CODE },
+    ),
+    ...(complete ? tseslint.configs.strictTypeChecked : tseslint.configs.recommended).map(
+      (config) => ({ ...config, files: TYPESCRIPT }),
+    ),
+    {
+      files: TYPESCRIPT,
+      languageOptions: {
+        parserOptions: complete ? { projectService: true, tsconfigRootDir: root } : {},
+      },
+    },
+    {
+      files: CODE,
+      plugins: { findeg: findegPlugin },
+      rules: complete ? { 'findeg/naming': 'error' } : {},
+      languageOptions: {
+        globals: {
+          ...globals.es2022,
+          ...(role === 'node' || role === 'next' ? globals.node : {}),
+          ...(role === 'browser' || role === 'next' ? globals.browser : {}),
+        },
+      },
+    },
+    ...(role === 'browser' || role === 'next'
+      ? [
+          {
+            files: CODE,
+            settings: { react: { version: 'detect' } },
+          },
+          {
+            files: ['**/*.tsx'],
+            // tsc checks TypeScript props; keep runtime prop validation on JavaScript JSX.
+            rules: { 'react/prop-types': 'off' },
+          },
+        ]
+      : []),
+    ...(role === 'node' || role === 'next'
+      ? [
+          {
+            files: TYPESCRIPT,
+            // tsc resolves TS paths/extensions and validates emitted syntax; Node's
+            // source resolver and syntax-version checks cannot model TS compilation.
+            rules: {
+              'n/no-missing-import': 'off',
+              'n/no-missing-require': 'off',
+              'n/no-unsupported-features/es-syntax': 'off',
+            },
+          },
+        ]
+      : []),
+    {
+      files: TYPESCRIPT,
+      // Unused underscore parameters document required callback/port signatures.
+      rules: { '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
+    },
+    {
+      files: ['cypress/**/*.ts'],
+      // Ambient namespace merging is how Cypress extends its global command interface.
+      rules: { '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }] },
+    },
+    ...(role === 'node'
+      ? [
+          {
+            files: ['bin/*.mjs'],
+            // CLI exit statuses are the public contract of these executable entry points.
+            rules: { 'n/no-process-exit': 'off' },
+          },
+        ]
+      : []),
+    prettier,
+  ];
+}
+
+export function isCompleteScope(root = process.cwd()) {
+  const repository = fileURLToPath(new URL('../../', import.meta.url));
+  return completeScopes.includes(path.relative(repository, root).split(path.sep).join('/'));
+}

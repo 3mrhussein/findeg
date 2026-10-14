@@ -4,8 +4,8 @@ import type {
   Brand as BaseBrand,
   Category as BaseCategory,
   Collection as BaseCollection,
-} from '@findeg/backend/features/catalog';
-import type { Review as BaseReview } from '@findeg/backend/features/review';
+} from '@findeg/catalog';
+import type { Review as BaseReview } from '@findeg/catalog';
 
 export interface Product extends Omit<BaseProduct, 'variants'> {
   slug: string;

@@ -2,8 +2,9 @@
 
 import { useActionState, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import type { PartnerInvitation } from '@findeg/backend/features/partner-membership';
+import type { PartnerInvitation } from '@findeg/partners';
 import { Button, Input, Label } from '@findeg/ui';
+import { BUSINESS_TIME_ZONE } from '@findeg/domain';
 import type { ActionState } from '../_lib/action-state';
 import { PARTNER_ROLES } from '../_lib/roles';
 import { inviteAction, resendInvitationAction, revokeInvitationAction } from './actions';
@@ -120,7 +121,7 @@ export function InvitationsPanel({
                     {t('Expires', {
                       date: new Date(invitation.expiresAt).toLocaleDateString(
                         locale === 'ar' ? 'ar-EG' : 'en-GB',
-                        { timeZone: 'UTC' },
+                        { timeZone: BUSINESS_TIME_ZONE },
                       ),
                     })}
                   </div>

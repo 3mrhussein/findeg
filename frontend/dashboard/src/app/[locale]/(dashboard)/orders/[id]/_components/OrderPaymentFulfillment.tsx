@@ -1,4 +1,5 @@
 'use client';
+import { ORDER_STATUSES } from '@findeg/domain';
 
 import { useTransition, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -22,20 +23,25 @@ import {
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 
 interface OrderPaymentFulfillmentProps {
   order: import('@findeg/orders').Order;
 }
 
-const STATUS_FLOW: { label: string; value: OrderStatus }[] = [
-  { label: 'Pending', value: 'pending' },
-  { label: 'Confirmed', value: 'confirmed' },
-  { label: 'Processing', value: 'processing' },
-  { label: 'Shipped', value: 'shipped' },
-  { label: 'Delivered', value: 'delivered' },
-  { label: 'Cancelled', value: 'cancelled' },
-];
+const statusLabels = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
+} satisfies Record<OrderStatus, string>;
+const STATUS_FLOW = ORDER_STATUSES.filter((status) => status !== 'refunded').map((value) => ({
+  value,
+  label: statusLabels[value],
+}));
 
 /**
  *

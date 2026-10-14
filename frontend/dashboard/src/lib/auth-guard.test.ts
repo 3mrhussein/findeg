@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SessionPayload } from '@findeg/backend/features/core';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { NotAuthorizedError } from '@findeg/domain-errors';
 
 const { getSession, redirect } = vi.hoisted(() => ({

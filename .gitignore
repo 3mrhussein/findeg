@@ -57,3 +57,6 @@ next-env.d.ts
 # Deprecated / old structures
 fullstack-commerce
 /internal
+
+# Vitest coverage artifacts
+**/coverage/

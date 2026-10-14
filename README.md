@@ -107,11 +107,11 @@ graph TD
 | [**@findeg/storefront**](frontend/storefront/README.md) | `frontend/storefront`     | Customer-facing Next.js app (port 3000).                                                      | `pnpm --filter @findeg/storefront dev` |
 | [**@findeg/dashboard**](frontend/dashboard/README.md)   | `frontend/dashboard`      | Staff admin Next.js app (port 3001).                                                          | `pnpm --filter @findeg/dashboard dev`  |
 | [**@findeg/ui**](frontend/ui/README.md)                 | `frontend/ui`             | Shared design system & shadcn primitives.                                                     | N/A                                    |
-| [**@findeg/backend**](backend/README.md)                | `backend`                 | Pure TypeScript business kernel: feature modules, services, entities.                         | N/A                                    |
+| [**@findeg/backend**](backend/README.md)                | `backend`                 | Infrastructure adapters, delivery workers and composition.                         | N/A                                    |
 | **@findeg/db**                                           | `db`                      | Drizzle tables, migrations and seeds ([docs](db/docs/SETUP.md)).                              | `pnpm db:setup`, `pnpm db:studio`      |
 | [**@findeg/orders**](packages/orders/README.md)         | `packages/orders`         | Order reads and Staff lifecycle commands.                                                     | N/A                                    |
 | **@findeg/domain-errors**                                | `packages/domain-errors`  | Shared domain error classes.                                                                  | N/A                                    |
-| **@findeg/env**                                          | `packages/env`            | Validated environment variables.                                                              | N/A                                    |
+| **@findeg/env**                                          | `configs/env`             | Validated environment variables.                                                              | N/A                                    |
 | **@findeg/domain**                                       | `packages/domain`         | Business domain: pure values, value objects and rules, depending only on zod ([ADR-0018](docs/adr/0018-domain-package-is-the-pure-rich-business-domain.md)). | N/A                                    |
 | [**@findeg/config**](packages/config/README.md)         | `packages/config`         | Shared lint profiles.                                                                         | N/A                                    |
 
@@ -181,7 +181,7 @@ Ensure you have Node.js 24 (see `.nvmrc`), `pnpm 11`, and `Docker` installed.
 
 ### Coding Rules
 
-- **No Direct Imports**: Frontend code MUST import from `@findeg/backend` and NEVER `../../backend/src`.
+- **No Direct Imports**: Apps import business operations from context package root entries and infrastructure only from the published `@findeg/backend` entries.
 - **RTL-First CSS**: Use Tailwind's logical properties (`ps-4`, `me-2`) instead of physical ones (`pl-4`, `mr-2`) so the system elegantly maps English/Arabic alignments.
 - **ServiceResult Protocol**: All backend services do NOT throw standard JS errors; they return an `Err` or `Ok` standard `ServiceResult<T, FindEgError>`.
 
@@ -200,7 +200,7 @@ pnpm test:integration  # backend integration tests only; `pnpm test` still runs 
 
 Each run creates a fresh `findeg_it_<timestamp>_<id>` database on that server, applies `db/init-db.sql` and every migration in `db/migrations`, and drops it when the run ends, so runs never share state and your dev data is untouched. Databases left behind by killed runs are dropped by the next run once they're over 6 hours old. Test files within a run share the database and run one at a time, so use unique data per test. To target another server, set `INTEGRATION_DATABASE_URL` (a URL to any database on it whose user can `CREATE DATABASE`); CI does this with a Postgres 16 service container.
 
-Write tests as `*.integration.test.ts` under `backend/src` and use the helpers in `backend/src/testing/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections (each is given its peer's backend pid), and `waitUntilBlocked(sql, peer.pid)` to hold a lock until the peer is provably blocked on it.
+Write tests as `*.integration.test.ts` in the owning context package's local `__tests__` (or Backend for delivery composition) and use the helpers in `configs/vitest/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections (each is given its peer's backend pid), and `waitUntilBlocked(sql, peer.pid)` to hold a lock until the peer is provably blocked on it.
 
 ---
 
@@ -215,18 +215,17 @@ FindEg uses a strict **3-tier documentation hierarchy** to capture deep technica
 - **System Schema**: [Drizzle Constraints, Migrations, & JSONB ER Diagram](./db/docs/SCHEMA.md) · [Database Setup](./db/docs/SETUP.md) · [Taxonomy](./db/docs/TAXONOMY.md)
 - **Orders**: [`@findeg/orders`](./packages/orders/README.md) — Order reads, Staff lifecycle commands.
 - **Tier 3 Feature Domains (Node/Services)**:
-  - [Catalog](./backend/src/features/catalog/README.md) — Products, Arrays, Search execution.
-  - [Identity](./backend/src/features/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
+  - Catalog (`@findeg/catalog`, `packages/catalog`) — Products, Arrays, Search execution.
+  - [Identity](./packages/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
   - [Cart](./backend/src/features/cart/README.md) — Transient user selection and unit verification.
   - [School](./backend/src/features/school/README.md) — B2B token access layers.
-  - [Guest Access](./backend/src/features/guest-access/README.md) — Guest order access.
-  - [Partner Membership](./backend/src/features/partner-membership/README.md) — Business partner memberships.
-  - [Partner Sales](./backend/src/features/partner-sales/README.md) — Attributed order reads.
+  - [Guest Access](./packages/orders/README.md) — Guest order access (in `@findeg/orders`).
+  - Partners (`@findeg/partners`, `packages/partners`) — Business partner memberships, invitations and attributed-order reads (Partner Reports).
   - [Outbox](./backend/src/features/outbox/README.md) — Transactional outbox events.
   - [Administration](./backend/src/features/administration/README.md) — Auditing streams, Config state.
   - [Notifications](./backend/src/features/notifications/README.md) — SES/SMTP interface boundaries.
   - [Media](./backend/src/features/media/README.md) — Storage interfaces, upload protections.
-  - [Review](./backend/src/features/review/README.md) — UGC limits, Moderation bounds.
+  - Review (`@findeg/catalog`, `packages/catalog/src/features/review-*`) — UGC limits, Moderation bounds.
   - [Core](./backend/src/features/core/README.md) — Zero-dependency Value Objects, `ServiceResult`.
 
 ### 2. The Customer Interaction Layer (Storefront)

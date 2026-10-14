@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 import type { Locale } from '@findeg/domain';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
@@ -62,7 +63,7 @@ export default async function OrdersPage({ params }: Props) {
                     <div className="flex justify-between">
                       <span>{t('Pages.MyAccount.OrderTotal')}:</span>
                       <span className="text-foreground font-medium">
-                        {order.currency || 'EGP'} {formatEgp(order.totalAmount)}
+                        {order.currency || DEFAULT_CURRENCY} {formatEgp(order.totalAmount)}
                       </span>
                     </div>
                   </div>

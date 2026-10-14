@@ -1,7 +1,7 @@
 import React from 'react';
 import { orderQueries } from '@findeg/db/queries';
 import { moneyFromDecimal, moneyToDecimal } from '@findeg/domain';
-import { DEFAULT_LOCALE } from '../../core';
+import { DEFAULT_LOCALE } from '@findeg/catalog';
 import { OrderConfirmationEmail } from '../../notifications';
 import type { OutboxHandler } from '../domain/types';
 import type { EmailProvider } from './EmailProvider';

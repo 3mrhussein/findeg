@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 import { createSession } from '@lib/session';
 
 const loginSchema = z.object({

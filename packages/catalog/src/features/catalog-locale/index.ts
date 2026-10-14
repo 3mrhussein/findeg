@@ -1,0 +1,99 @@
+import { z } from 'zod';
+import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale } from '@findeg/domain';
+
+const localeSchema = z.enum(SUPPORTED_LOCALES);
+
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE, localeSchema as LocaleSchema, type Locale };
+
+/**
+ * Checks if a value is a supported domain locale.
+ *
+ * @param value - The value to validate.
+ * @returns True if the value is one of the supported locales ("en", "ar").
+ *
+ * @example
+ * if (valid("en")) { ... }
+ */
+export function valid(value: unknown): value is Locale {
+  return typeof value === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(value);
+}
+
+/**
+ * Safely parses any input string to a supported domain locale.
+ * If the input is null, undefined, or invalid, it returns the DEFAULT_LOCALE.
+ *
+ * @param value - The input string to parse (e.g., from request params, headers, or state).
+ * @returns A valid supported locale, falling back to "en" by default.
+ *
+ * @example
+ * const locale = parse(params.lang); // "en" or "ar"
+ */
+export function parse(value?: string | null): Locale {
+  if (!value) return DEFAULT_LOCALE;
+  return valid(value) ? value : DEFAULT_LOCALE;
+}
+
+// ─── Translation Structures ──────────────────────────────────────────
+
+import {
+  TranslationMapSchema as translationMapSchema,
+  type TranslationMap,
+} from '@findeg/db/types';
+
+export { translationMapSchema as TranslationMapSchema, type TranslationMap };
+
+/**
+ * Normalizes partial translation data into a strict TranslationMap.
+ * Every supported locale will have a value, falling back to the provided string if missing.
+ *
+ * @param value - The partial or incomplete translation data.
+ * @param fallback - The string to fill for missing locales (defaults to "").
+ * @returns A complete TranslationMap where all supported locales are guaranteed keys.
+ *
+ * @example
+ * const name = asTranslationMap({ en: "Product" }); // { en: "Product", ar: "" }
+ */
+export function asTranslationMap(
+  value: Partial<TranslationMap> | null | undefined,
+  fallback: string = '',
+): TranslationMap {
+  const result = {} as TranslationMap;
+  for (const locale of SUPPORTED_LOCALES) {
+    result[locale] = value?.[locale] ?? fallback;
+  }
+  return result;
+}
+
+/**
+ * Selects the translated string for a specific locale from a map.
+ * If the requested locale is missing, it falls back to a primary locale.
+ *
+ * @param value - The TranslationMap containing localized strings.
+ * @param locale - The requested locale to retrieve.
+ * @param fallbackLocale - The locale to use if the requested one is empty/missing (defaults to "en").
+ * @returns The best available translated string, or an empty string if none found.
+ *
+ * @example
+ * const label = pick(product.names, "ar");
+ */
+export function pick(
+  value: TranslationMap | undefined,
+  locale: Locale,
+  fallbackLocale: Locale = DEFAULT_LOCALE,
+): string {
+  if (!value) return '';
+  return value[locale] ?? value[fallbackLocale] ?? '';
+}
+
+/**
+ * Builds a complete translation map by asking for the text of each supported locale.
+ * Locales without text fall back to `fallback`.
+ */
+export function translationMapBy(
+  textFor: (locale: Locale) => string | undefined,
+  fallback: string = '',
+): Record<Locale, string> {
+  const result = {} as Record<Locale, string>;
+  for (const locale of SUPPORTED_LOCALES) result[locale] = textFor(locale) ?? fallback;
+  return result;
+}

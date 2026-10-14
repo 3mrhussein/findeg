@@ -5,7 +5,7 @@ import {
   createPartnerMembershipServices,
   type UpdateMembershipError,
   type UpdateMembershipInput,
-} from '@findeg/backend/features/partner-membership';
+} from '@findeg/partners';
 import { actionError, type ActionState } from '../_lib/action-state';
 import { resolvePartnerAccess } from '../_lib/access';
 

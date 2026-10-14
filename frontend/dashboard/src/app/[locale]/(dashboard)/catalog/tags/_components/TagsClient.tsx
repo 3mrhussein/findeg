@@ -3,7 +3,7 @@ import { type Locale } from '@findeg/domain';
 
 import React, { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import type { Tag } from '@findeg/backend/features/catalog';
+import type { Tag } from '@findeg/catalog';
 import { Plus, Search, Filter, AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';

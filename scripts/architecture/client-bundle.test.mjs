@@ -58,10 +58,11 @@ async function fixture(t, moduleSources) {
 
 test('allows client schemas and UI while ignoring server output and package names in content', async (t) => {
   const build = await fixture(t, [
-    'turbopack:///[project]/packages/orders/src/schemas.ts',
-    'turbopack:///[project]/packages/orders/src/events.ts',
-    'turbopack:///[project]/packages/orders/src/order-status-transitions.ts',
-    'turbopack:///[project]/packages/money/src/piasters.ts',
+    'turbopack:///[project]/packages/orders/src/index.ts',
+    'turbopack:///[project]/packages/orders/src/features/input-schemas/helpers.ts',
+    'turbopack:///[project]/packages/orders/src/features/order-events/index.ts',
+    'turbopack:///[project]/packages/domain/src/features/orders/features/order-status/helpers.ts',
+    'turbopack:///[project]/packages/domain/src/features/common/features/money/helpers.ts',
     'turbopack:///[project]/frontend/storefront/src/components/cart.tsx',
     'turbopack:///[project]/node_modules/zod/index.js',
     'turbopack:///[project]/db/src/types/sales.ts',
@@ -72,11 +73,7 @@ test('allows client schemas and UI while ignoring server output and package name
 });
 
 for (const source of [
-  '/project/packages/orders/src/index.ts',
-  '/project/packages/orders/src/orders.ts',
-  '/project/packages/orders/src/mapper.ts',
-  '/project/packages/orders/src/orderWritePermission.ts',
-  '/project/packages/env/src/index.ts',
+  '/project/configs/env/src/index.ts',
   '/project/db/src/connection.ts',
   'C:\\project\\backend\\src\\features\\notifications\\infrastructure\\email.ts',
   '/project/node_modules/drizzle-orm/index.js',

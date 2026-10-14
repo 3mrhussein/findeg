@@ -8,8 +8,8 @@
 
 import { updateTag } from 'next/cache';
 import { createOrders } from '@findeg/orders';
-import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders/schemas';
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import { OrderStatusUpdateSchema, type OrderStatusUpdate } from '@findeg/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 import { getErrorMessage } from '@lib/type-guards';
 import { requireOrderWriteActor } from '@lib/order-write-access';
 

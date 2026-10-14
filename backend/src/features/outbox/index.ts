@@ -1,4 +1,5 @@
 export { enqueue } from './application/enqueue';
+export { requireGuestAccessSecret } from './infrastructure/guest-access-secret';
 export {
   createOutbox,
   drainOutbox,

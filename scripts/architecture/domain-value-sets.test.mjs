@@ -11,15 +11,50 @@ import { pathToFileURL } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const { ESLint } = createRequire(new URL('../../backend/package.json', import.meta.url))('eslint');
 const ruleId = 'local/no-domain-value-set-copies';
-async function copies(code, file = 'backend/src/domain-values-fixture.ts') {
+async function copies(code, file = 'backend/src/domain-values-fixture.ts', extended = false) {
   const eslint = new ESLint({
     cwd: root,
     overrideConfigFile: path.join(root, 'backend/eslint.config.js'),
+    overrideConfig: {
+      rules: {
+        [ruleId]: extended === null ? 'error' : ['error', { deriveNeverRedefine: extended }],
+      },
+    },
   });
   const [result] = await eslint.lintText(code, { filePath: path.join(root, file) });
   assert.equal(result.fatalErrorCount, 0, JSON.stringify(result.messages));
   return result.messages.filter((message) => message.ruleId === ruleId);
 }
+
+test('canonical and compatibility profiles preserve Domain ownership enforcement', async () => {
+  for (const [profile, name] of [
+    ['isomorphic', 'isomorphic'],
+    ['node', 'node'],
+    ['react-ui', 'reactUi'],
+    ['next', 'next'],
+  ]) {
+    for (const directory of ['configs', 'packages/config']) {
+      const shared = await import(
+        new URL(`../../${directory}/eslint/profiles/${profile}.js`, import.meta.url)
+      );
+      const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: shared[name] });
+      const [violation] = await eslint.lintText(
+        "export const statuses = ['inactive', 'active'] as const;\n",
+        { filePath: 'domain-values-fixture.ts' },
+      );
+      assert.equal(violation.fatalErrorCount, 0, JSON.stringify(violation.messages));
+      const messages = violation.messages.filter((message) => message.ruleId === ruleId);
+      assert.equal(messages.length, 1, `${directory}/${profile}`);
+      assert.equal(messages[0].severity, 2);
+      assert.match(messages[0].message, /ACTIVE_STATUSES/);
+      const [compliant] = await eslint.lintText(
+        "export { ACTIVE_STATUSES } from '@findeg/domain';\n",
+        { filePath: 'domain-values-fixture.ts' },
+      );
+      assert.equal(compliant.errorCount, 0, JSON.stringify(compliant.messages));
+    }
+  }
+});
 
 test('domain ownership rejects a reversed complete value set as an error', async () => {
   const messages = await copies("export const statuses = ['inactive', 'active'] as const;");
@@ -67,20 +102,17 @@ test('domain ownership permits intentional fixture and owner copies', async () =
   assert.equal(result.messages.filter((message) => message.ruleId === ruleId).length, 0);
 });
 
-test('new live exports are protected through aliases and satisfies; private and type-only sets are excluded', async () => {
+test('live public arrays and type-only unions are protected; private and type-only runtime arrays are excluded', async () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-exports-'));
   try {
-    const config = path.join(fixture, 'packages/config');
+    const config = path.join(fixture, 'configs');
     const domain = path.join(fixture, 'packages/domain');
     fs.mkdirSync(path.join(config, 'eslint/rules'), { recursive: true });
     fs.mkdirSync(path.join(domain, 'src'), { recursive: true });
     fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}');
-    fs.symlinkSync(
-      path.join(root, 'packages/config/node_modules'),
-      path.join(config, 'node_modules'),
-    );
+    fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(config, 'node_modules'));
     fs.copyFileSync(
-      path.join(root, 'packages/config/eslint/rules/no-domain-value-set-copies.js'),
+      path.join(root, 'configs/eslint/rules/no-domain-value-set-copies.js'),
       path.join(config, 'eslint/rules/no-domain-value-set-copies.js'),
     );
     fs.writeFileSync(
@@ -97,7 +129,7 @@ test('new live exports are protected through aliases and satisfies; private and 
     );
     fs.writeFileSync(
       path.join(domain, 'src/types.ts'),
-      "export const TYPE_ONLY = ['type-a', 'type-b'] as const;",
+      "export const TYPE_ONLY = ['type-a', 'type-b'] as const; export type FutureType = 'future-type-a' | 'future-type-b';",
     );
     fs.writeFileSync(
       path.join(config, 'eslint.config.js'),
@@ -113,6 +145,16 @@ test('new live exports are protected through aliases and satisfies; private and 
     );
     assert.equal(result.messages.length, 1, JSON.stringify(result.messages));
     assert.match(result.messages[0].message, /FUTURE_PUBLIC/);
+    const expanded = new ESLint({
+      cwd: fixture,
+      overrideConfigFile: path.join(config, 'eslint.config.js'),
+      overrideConfig: { rules: { [ruleId]: ['error', { deriveNeverRedefine: true }] } },
+    });
+    const [typeCopy] = await expanded.lintText("type Copy = 'future-type-a' | 'future-type-b';", {
+      filePath: path.join(fixture, 'backend/src/types.ts'),
+    });
+    assert.equal(typeCopy.messages.length, 1, 'Public type-only value sets must also be protected');
+    assert.match(typeCopy.messages[0].message, /FutureType/);
     const configuration = fs.readFileSync(path.join(config, 'eslint.config.js'), 'utf8');
     fs.writeFileSync(path.join(domain, 'src/values.ts'), 'export const BROKEN = ;');
     fs.writeFileSync(
@@ -157,7 +199,7 @@ test('new live exports are protected through aliases and satisfies; private and 
 
 test('non-matches and compliant imports remain legal', async () => {
   for (const code of [
-    "import { ORDER_STATUSES } from '@findeg/domain/orders'; export { ORDER_STATUSES };",
+    "import { ORDER_STATUSES } from '@findeg/domain'; export { ORDER_STATUSES };",
     "const partial = ['pending', 'processing'];",
     "type Partial = 'pending' | 'processing';",
     "const mixed = ['pending', 'processing', 'not-a-status'];",
@@ -189,17 +231,12 @@ test('Cypress support and configuration remain subject to ownership checks', asy
 test('findeg-lint rejects a copied set rather than ratcheting it as a warning', () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-cli-'));
   try {
-    fs.symlinkSync(
-      path.join(root, 'packages/config/node_modules'),
-      path.join(fixture, 'node_modules'),
-    );
+    fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(fixture, 'node_modules'));
     fs.writeFileSync(
       path.join(fixture, 'package.json'),
       '{"name":"@fixture/domain-copy","type":"module"}',
     );
-    const profile = pathToFileURL(
-      path.join(root, 'packages/config/eslint/profiles/isomorphic.js'),
-    ).href;
+    const profile = pathToFileURL(path.join(root, 'configs/eslint/profiles/isomorphic.js')).href;
     fs.writeFileSync(
       path.join(fixture, 'eslint.config.js'),
       `export { isomorphic as default } from '${profile}';`,
@@ -208,13 +245,27 @@ test('findeg-lint rejects a copied set rather than ratcheting it as a warning', 
       path.join(fixture, 'index.ts'),
       "export const statuses = ['inactive', 'active'] as const;",
     );
-    const result = spawnSync(
-      process.execPath,
-      [path.join(root, 'packages/config/bin/lint.mjs'), 'index.ts'],
-      { cwd: fixture, encoding: 'utf8' },
+    for (const directory of ['configs', 'packages/config']) {
+      const result = spawnSync(
+        process.execPath,
+        [path.join(root, directory, 'bin/lint.mjs'), 'index.ts'],
+        { cwd: fixture, encoding: 'utf8' },
+      );
+      assert.equal(result.status, 1, result.stderr);
+      assert.match(result.stdout, /error\s+Use ACTIVE_STATUSES.*local\/no-domain-value-set-copies/);
+    }
+    fs.writeFileSync(
+      path.join(fixture, 'index.ts'),
+      'export { ACTIVE_STATUSES } from "@findeg/domain";\n',
     );
-    assert.equal(result.status, 1, result.stderr);
-    assert.match(result.stdout, /error\s+Use ACTIVE_STATUSES.*local\/no-domain-value-set-copies/);
+    for (const directory of ['configs', 'packages/config']) {
+      const result = spawnSync(
+        process.execPath,
+        [path.join(root, directory, 'bin/lint.mjs'), 'index.ts'],
+        { cwd: fixture, encoding: 'utf8' },
+      );
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+    }
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
@@ -288,17 +339,14 @@ test('default-exported domain arrays are protected through public defaults and a
   for (const scenario of cases) {
     const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-domain-default-'));
     try {
-      const config = path.join(fixture, 'packages/config');
+      const config = path.join(fixture, 'configs');
       const domain = path.join(fixture, 'packages/domain');
       fs.mkdirSync(path.join(config, 'eslint/rules'), { recursive: true });
       fs.mkdirSync(path.join(domain, 'src'), { recursive: true });
       fs.writeFileSync(path.join(fixture, 'package.json'), '{"type":"module"}');
-      fs.symlinkSync(
-        path.join(root, 'packages/config/node_modules'),
-        path.join(config, 'node_modules'),
-      );
+      fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(config, 'node_modules'));
       fs.copyFileSync(
-        path.join(root, 'packages/config/eslint/rules/no-domain-value-set-copies.js'),
+        path.join(root, 'configs/eslint/rules/no-domain-value-set-copies.js'),
         path.join(config, 'eslint/rules/no-domain-value-set-copies.js'),
       );
       fs.writeFileSync(
@@ -338,4 +386,176 @@ test('default-exported domain arrays are protected through public defaults and a
       fs.rmSync(fixture, { recursive: true, force: true });
     }
   }
+});
+
+test('literal-key Domain objects require exhaustive satisfies maps', async () => {
+  for (const code of [
+    "export const labels = { active: 'Active', inactive: 'Inactive' };",
+    "import type { ActiveStatus } from '@findeg/domain'; const labels = { active: 'Active' } satisfies Partial<Record<ActiveStatus, string>>;",
+    "import type { ActiveStatus } from '@findeg/domain'; const labels = { active: 'Active' } satisfies Record<ActiveStatus, string>;",
+    "import type { ActiveStatus } from '@findeg/domain'; const labels: Record<ActiveStatus, string> = { active: 'Active', inactive: 'Inactive' };",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 1, code);
+  for (const code of [
+    "import type { ActiveStatus as Status } from '@findeg/domain'; const labels = { active: 'Active', inactive: 'Inactive' } satisfies Record<Status, string>;",
+    "import type { ActiveStatus } from '@findeg/domain'; const labels = { active: 'Active', inactive: 'Inactive' } as const satisfies Record<ActiveStatus, string>;",
+    "const settings = { host: 'localhost', port: 3000 };",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('hard-coded business constants fail while unrelated technical literals and imports pass', async () => {
+  for (const code of [
+    "const zone = 'Africa/Cairo';",
+    'const zone = `Africa/Cairo`;',
+    'const LOW_STOCK_MAX_UNITS = 5;',
+    'const lowStockMaxUnits = 6;',
+    'const options = { shippingFee: 50 };',
+    "const fee = moneyFromDecimal('50.00');",
+    'const pattern = /^(?:\\+20|0)1[0125]\\d{8}$/;',
+  ]) {
+    const messages = await copies(code, undefined, true);
+    assert.equal(messages.length, 1, code);
+    assert.match(messages[0].message, /hard-coding a business constant/);
+  }
+  for (const code of [
+    "import { FLAT_SHIPPING_FEE, BUSINESS_TIME_ZONE, LOW_STOCK_MAX_UNITS } from '@findeg/domain'; const options = { shippingFee: FLAT_SHIPPING_FEE, timeZone: BUSINESS_TIME_ZONE, lowStockMaxUnits: LOW_STOCK_MAX_UNITS };",
+    'const retryCount = 5; const pageSize = 50;',
+    'const histogram = { 1: 0, 2: 0, 3: 0 };',
+    "const city = 'Cairo'; const label = 'en';",
+    "const price = moneyFromDecimal('50.00');",
+    'const zone = `${continent}/Cairo`;',
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('per-value maps stay exhaustive through namespaces, local aliases and nesting', async () => {
+  for (const code of [
+    "import type * as Domain from '@findeg/domain'; const labels = { en: 'English' } satisfies Partial<Record<Domain.Locale, string>>;",
+    "import type { Locale } from '@findeg/domain'; type Labels = Partial<Record<Locale, string>>; const labels = {} satisfies Labels;",
+    "import type { Locale } from '@findeg/domain'; const labels = { en: 'English', ar: 'Arabic' } as Record<Locale, string> satisfies Record<Locale, string>;",
+    "import type { Locale } from '@findeg/domain'; const labels = { en: 'English' };",
+    "import type { Locale } from '@findeg/domain'; const labels = new Map<Locale, string>([['en', 'English']]);",
+    "import type { Locale } from '@findeg/domain'; const labels = { en: 'English' } satisfies { [K in Locale]?: string };",
+  ])
+    assert.ok((await copies(code, undefined, true)).length > 0, code);
+  for (const code of [
+    "import type * as Domain from '@findeg/domain'; const labels = { en: 'English', ar: 'Arabic' } satisfies Record<Domain.Locale, string>;",
+    "import type { Locale, ActiveStatus } from '@findeg/domain'; const labels = { en: { active: 'Active', inactive: 'Inactive' }, ar: { active: 'نشط', inactive: 'غير نشط' } } satisfies Record<Locale, Record<ActiveStatus, string>>;",
+    "import type { Locale } from '@findeg/domain'; type Language = Locale; const labels = { en: 'English', ar: 'Arabic' } satisfies Record<Language, string>;",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('expanded ownership also rejects zod lists and literal object copies', async () => {
+  for (const code of [
+    "const localeSchema = z.enum(['en', 'ar']);",
+    "type Language = 'en' | 'ar';",
+    "const labels = { en: 'English', ar: 'Arabic' };",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 1, code);
+  for (const code of [
+    "import { LOCALES } from '@findeg/domain'; const localeSchema = z.enum(LOCALES);",
+    "import { STOCK_LEVELS } from '@findeg/domain'; const levels = [...STOCK_LEVELS];",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('stock comparisons and aliased Domain money factories cannot hard-code business policies', async () => {
+  for (const code of [
+    'const low = availableStock <= 5;',
+    'const low = balance.availableStock <= 5;',
+    "import { moneyFromDecimal as decimal } from '@findeg/domain'; const fee = decimal('50.00');",
+    'const shippingFee = money(5000n);',
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 1, code);
+  for (const code of [
+    "import { LOW_STOCK_MAX_UNITS } from '@findeg/domain'; const low = availableStock <= LOW_STOCK_MAX_UNITS;",
+    'const canRetry = retryCount <= 5;',
+    'const size = money(5000n);',
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('default lint rejects redefinitions and accepts exhaustive Domain maps', () => {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-derive-cli-'));
+  try {
+    fs.copyFileSync(path.join(root, '.prettierrc'), path.join(fixture, '.prettierrc'));
+    fs.symlinkSync(path.join(root, 'configs/node_modules'), path.join(fixture, 'node_modules'));
+    fs.writeFileSync(
+      path.join(fixture, 'package.json'),
+      JSON.stringify({
+        name: '@fixture/derive',
+        type: 'module',
+        dependencies: { '@findeg/domain': 'workspace:*' },
+      }),
+    );
+    const profile = pathToFileURL(path.join(root, 'configs/eslint/profiles/isomorphic.js')).href;
+    fs.writeFileSync(
+      path.join(fixture, 'eslint.config.js'),
+      `export { isomorphic as default } from '${profile}';`,
+    );
+    const run = () =>
+      spawnSync(process.execPath, [path.join(root, 'configs/bin/lint.mjs'), 'index.ts'], {
+        cwd: fixture,
+        encoding: 'utf8',
+      });
+    fs.writeFileSync(
+      path.join(fixture, 'index.ts'),
+      "export const labels = { en: 'English', ar: 'Arabic' };\n",
+    );
+    const invalid = run();
+    assert.equal(invalid.status, 1, invalid.stdout + invalid.stderr);
+    assert.match(invalid.stdout, /local\/no-domain-value-set-copies/);
+    fs.writeFileSync(
+      path.join(fixture, 'index.ts'),
+      "import type { Locale } from '@findeg/domain';\nexport const labels = { en: 'English', ar: 'Arabic' } satisfies Record<Locale, string>;\n",
+    );
+    const valid = run();
+    assert.equal(valid.status, 0, valid.stdout + valid.stderr);
+    fs.writeFileSync(path.join(fixture, 'index.ts'), "export const locales = ['en', 'ar'];\n");
+    assert.equal(run().status, 1, 'Redefinitions of Domain values must stay rejected');
+  } finally {
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+});
+
+test('assertions cannot hide incomplete Domain maps and inferred Map keys are copies', async () => {
+  for (const code of [
+    "import type { Locale } from '@findeg/domain'; const labels = loadLabels() as Partial<Record<Locale, string>>;",
+    "import type { Locale } from '@findeg/domain'; const labels = loadLabels() as Record<Locale, string>;",
+    "const labels = new Map([['en', 'English'], ['ar', 'Arabic']]);",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 1, code);
+  assert.equal(
+    (
+      await copies(
+        "const labels = new Map([['host', 'localhost'], ['port', '3000']]);",
+        undefined,
+        true,
+      )
+    ).length,
+    0,
+  );
+});
+
+test('tuple-derived Domain types require exhaustive maps and permit complete per-value data', async () => {
+  for (const code of [
+    "import { LOCALES } from '@findeg/domain'; type Language = (typeof LOCALES)[number]; const labels = {} satisfies Partial<Record<Language, string>>;",
+    "import * as Domain from '@findeg/domain'; const labels = { en: 'English' } satisfies Record<(typeof Domain.LOCALES)[number], string>;",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 1, code);
+  for (const code of [
+    "import { LOCALES as languages } from '@findeg/domain'; type Language = (typeof languages)[number]; const labels = { en: 'English', ar: 'Arabic' } satisfies Record<Language, string>;",
+    "import * as Domain from '@findeg/domain'; const labels = { en: 'English', ar: 'Arabic' } satisfies Record<(typeof Domain.LOCALES)[number], string>;",
+  ])
+    assert.equal((await copies(code, undefined, true)).length, 0, code);
+});
+
+test('derive-never-redefine requires exhaustive Domain maps with no rule options', async () => {
+  const code =
+    "import type { Locale } from '@findeg/domain'; export const labels = { en: 'English' } satisfies Record<Locale, string>;";
+  const file = 'backend/src/review-domain-fixture.ts';
+  assert.deepEqual(await copies(code, file, false), []);
+  assert.notDeepEqual(await copies(code, file, null), []);
 });

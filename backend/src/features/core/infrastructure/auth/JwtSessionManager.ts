@@ -1,9 +1,9 @@
 import { SignJWT, jwtVerify } from 'jose';
-import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
-import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
-import type { ISessionManager } from '@findeg/backend/features/core/application/interfaces/ISessionManager';
-import type { ICurrentSessionCodec } from '@findeg/backend/features/core/application/interfaces/ICurrentSessionCodec';
-import { PortalRoleSchema } from '@findeg/backend/features/core/domain/types/common';
+import type { SessionPayload } from '@findeg/identity';
+import { adminSession } from '@findeg/identity';
+import type { ISessionManager } from '../../application/interfaces/ISessionManager';
+import type { ICurrentSessionCodec } from '../../application/interfaces/ICurrentSessionCodec';
+import { PortalRoleSchema } from '@findeg/db/types';
 import env from '@findeg/env';
 
 /**

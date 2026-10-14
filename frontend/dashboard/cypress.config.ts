@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { defineConfig } from 'cypress';
+import { DEFAULT_LOCALE } from '@findeg/domain';
 import { orderFixtureTasks } from './cypress/support/tasks/order-fixtures';
 import { partnerFixtureTasks } from './cypress/support/tasks/partner-fixtures';
 
@@ -29,7 +30,7 @@ export default defineConfig({
     },
   },
   env: {
-    LOCALE: 'en',
+    LOCALE: DEFAULT_LOCALE,
     ADMIN_EMAIL: 'admin@findeg.com',
     ADMIN_PASSWORD: 'password123',
   },

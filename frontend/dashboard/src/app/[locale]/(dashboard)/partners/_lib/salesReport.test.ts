@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { StaffPartnerReportView } from '@findeg/backend/features/partner-sales';
+import type { StaffPartnerReportView } from '@findeg/partners';
 import { formatEgp } from '@findeg/ui';
 import { toSalesReportProps } from './salesReport';
 

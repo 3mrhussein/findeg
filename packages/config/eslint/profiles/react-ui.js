@@ -1,4 +1,2 @@
-import { compose } from './compose.js';
-
-// Browser component libraries (ui).
-export const reactUi = compose('browser');
+// Temporary compatibility delegate; removal is owned by #445.
+export * from '../../../../configs/eslint/profiles/react-ui.js';

@@ -2,10 +2,7 @@
 
 import { getLocale } from 'next-intl/server';
 import { revalidatePath } from 'next/cache';
-import {
-  createPartnerMembershipServices,
-  type LeaveError,
-} from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices, type LeaveError } from '@findeg/partners';
 import { redirect } from '@i18n/navigation';
 import { actionError, type ActionState } from './_lib/action-state';
 import { resolvePartnerAccess } from './_lib/access';

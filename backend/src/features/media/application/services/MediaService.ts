@@ -1,5 +1,5 @@
-import type { IStorageProvider } from '@findeg/backend/features/core/application/interfaces/IStorageProvider';
-import type { MediaAsset } from '@findeg/backend/features/media/domain/entities/MediaAsset';
+import type { IStorageProvider } from '../../../core/application/interfaces/IStorageProvider';
+import type { MediaAsset } from '../../domain/entities/MediaAsset';
 
 export const MANAGED_MEDIA_FOLDERS = ['', 'products', 'brands'] as const;
 

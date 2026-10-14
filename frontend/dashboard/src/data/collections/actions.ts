@@ -1,9 +1,9 @@
 'use server';
 
-import { CollectionInput } from '@findeg/backend/features/catalog';
+import { CollectionInput } from '@findeg/catalog';
 import { updateTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { createAdministrationServices } from '@/lib/administration';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { requireStaffAction } from '@lib/auth-guard';
 import { getErrorMessage } from '@lib/type-guards';
 

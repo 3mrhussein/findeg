@@ -3,7 +3,7 @@ import { Badge, Button, Input, Label } from '@findeg/ui';
 import { SUPPLY_LIST_STATUSES, type Locale, type SupplyListStatus } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { getSchoolSupplyLists } from '@data/school-lists/queries';
 import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 

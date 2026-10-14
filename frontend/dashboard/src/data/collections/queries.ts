@@ -7,7 +7,7 @@
 
 import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 
 /**
  * Get all collections

@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_CURRENCY } from '@findeg/domain';
 
 import { addMoney, money } from '@findeg/domain';
 import { Separator } from '@findeg/ui';
@@ -12,7 +13,7 @@ interface OrderTotalsProps {
  *
  */
 export function OrderTotals({ order }: OrderTotalsProps) {
-  const currency = order.currency || 'EGP';
+  const currency = order.currency || DEFAULT_CURRENCY;
   const subtotal = addMoney(money(order.subtotal), money(order.discountTotal));
   const shippingTotal = order.shippingCost;
   const discountTotal = order.discountTotal;

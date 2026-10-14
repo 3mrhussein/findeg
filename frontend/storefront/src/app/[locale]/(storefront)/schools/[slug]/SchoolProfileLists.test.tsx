@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { SchoolProfileList } from '@findeg/backend/features/school';
+import type { SchoolProfileList } from '@findeg/school-lists';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => ({ noListYet: 'No list published yet' })[key] ?? key,

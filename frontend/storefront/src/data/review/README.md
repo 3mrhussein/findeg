@@ -14,7 +14,7 @@ The **Storefront Review Feature** orchestrates User-Generated Content natively v
 ### Presentation Strictness
 
 - **`ReviewList`**: Highly cacheable RSC block utilizing `Suspense` thresholds so massive review sets don't block main product rendering.
-- **`SubmitReviewForm`**: Uses `useActionState` connecting directly to `@findeg/backend/features/review` to append UGC data.
+- **`SubmitReviewForm`**: Uses `useActionState` connecting directly to `@findeg/catalog` to append UGC data.
 
 ---
 

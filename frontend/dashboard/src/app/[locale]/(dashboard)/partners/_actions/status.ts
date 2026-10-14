@@ -2,13 +2,13 @@
 
 import { revalidatePath, updateTag } from 'next/cache';
 import { requireStaffAction } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import type { Locale } from '@findeg/domain';
 import {
   createPartnerMembershipServices,
   type BusinessPartner,
   type ChangePartnerStatusError,
-} from '@findeg/backend/features/partner-membership';
+} from '@findeg/partners';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export type StatusActionState = { status: 'idle' } | { status: 'error'; message: string };

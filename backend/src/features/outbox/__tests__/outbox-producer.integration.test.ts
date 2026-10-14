@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { asc, sql } from 'drizzle-orm';
 import { outbox } from '@findeg/db/schema';
 import { enqueue } from '@findeg/db/queries/outbox';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { connectToTestDatabase, type TestDatabase } from '../../../../../configs/vitest/postgres';
 
 // The connection-free producer entry that Orders and other producers use: it writes only
 // on the transaction the caller passes in.

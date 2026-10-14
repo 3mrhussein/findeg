@@ -6,14 +6,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./common": "./src/common/index.ts",
-    "./customers": "./src/customers/index.ts",
-    "./catalog": "./src/catalog/index.ts",
-    "./partners": "./src/partners/index.ts",
-    "./school-lists": "./src/school-lists/index.ts",
-    "./orders": "./src/orders/index.ts",
-    "./inventory": "./src/inventory/index.ts",
-    "./relations": "./src/relations/index.ts"
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -29,6 +22,7 @@
     "@types/node": "^25.6.0",
     "eslint": "^9.39.5",
     "typescript": "^5.7.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11"
   }
 }

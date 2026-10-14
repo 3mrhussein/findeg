@@ -1,10 +1,11 @@
+import { CROCKFORD_BASE32_ALPHABET } from '@findeg/domain';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import postgres from 'postgres';
-import type { OrderStatus, PaymentStatus } from '@findeg/orders/schemas';
+import type { OrderStatus, PaymentStatus } from '@findeg/orders/types';
 
-const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+const CROCKFORD = CROCKFORD_BASE32_ALPHABET;
 
 /**
  * DATABASE_URL from the environment, falling back to the repo-root .env that db:migrate uses

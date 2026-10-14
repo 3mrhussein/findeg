@@ -1,18 +1,25 @@
 'use client';
+import { ORDER_STATUSES, type OrderStatus } from '@findeg/domain';
 
 import { Check } from 'lucide-react';
 
 interface OrderTimelineProps {
-  status: string;
+  status: OrderStatus;
 }
 
-const steps = [
-  { id: 'pending', label: 'Pending' },
-  { id: 'confirmed', label: 'Confirmed' },
-  { id: 'processing', label: 'Processing' },
-  { id: 'shipped', label: 'Shipped' },
-  { id: 'delivered', label: 'Delivered' },
-];
+const timelineLabels = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: null,
+  refunded: null,
+} satisfies Record<OrderStatus, string | null>;
+const steps = ORDER_STATUSES.flatMap((id) => {
+  const label = timelineLabels[id];
+  return label === null ? [] : [{ id, label }];
+});
 
 /**
  *

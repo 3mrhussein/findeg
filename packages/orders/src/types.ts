@@ -1,15 +1,27 @@
-import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/orders';
+import { DEFAULT_CURRENCY, BUSINESS_TIME_ZONE } from '@findeg/domain';
+import type { OrderStatus, PaymentStatus, PaymentMethod } from '@findeg/domain/types';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as schema from '@findeg/db/schema';
-import type { StoredShippingAddress as ShippingAddress, VariantSnapshot } from '@findeg/db/types';
-import type { OrderStatusUpdate } from './schemas';
-import type { OrderStaffActor } from './OrderStaffActor';
-import type { OrderStatusTransitionResult, PaymentStatusTransitionResult } from './errors';
+import type {
+  OrderStatusTransitionResult,
+  PaymentStatusTransitionResult,
+} from './features/order-errors';
+import type { OrderStatusUpdate, ShippingAddress, VariantSnapshot } from './features/input-schemas';
+import type { OrderStaffActor } from './features/write-permission';
+
 export type OrderDatabase = PostgresJsDatabase<typeof schema>;
+
 export interface OrdersDependencies {
   db?: OrderDatabase;
   now?: () => Date;
 }
+
+/** The injected collaborators every Order feature receives from the factory. */
+export interface OrderContext {
+  database: () => Promise<OrderDatabase>;
+  now: () => Date;
+}
+
 export interface OrderFilters {
   status?: OrderStatus;
   paymentStatus?: PaymentStatus;
@@ -20,6 +32,7 @@ export interface OrderFilters {
   limit?: number;
   offset?: number;
 }
+
 export interface OrderItem {
   id: number;
   orderId: number;
@@ -36,6 +49,7 @@ export interface OrderItem {
   variantSnapshot: VariantSnapshot | null;
   isSubstitute: boolean | null;
 }
+
 export interface Order {
   id: number;
   orderReference: string;
@@ -58,6 +72,7 @@ export interface Order {
   customerEmail: string | null;
   items: OrderItem[];
 }
+
 export interface OrderActivityEntry {
   id: number;
   action: string;
@@ -69,6 +84,7 @@ export interface OrderActivityEntry {
   newValues: Record<string, unknown>;
   createdAt: Date;
 }
+
 export interface OrderNote {
   id: number;
   orderId: number;
@@ -77,11 +93,13 @@ export interface OrderNote {
   note: string;
   createdAt: Date;
 }
+
 export interface OrderDetail {
   order: Order;
   activity: OrderActivityEntry[];
   notes: OrderNote[];
 }
+
 export interface OrderStatsOptions {
   from?: string;
   to?: string;
@@ -89,9 +107,10 @@ export interface OrderStatsOptions {
   topProductsLimit?: number;
   liveOnly?: boolean;
 }
+
 export interface OrderStats {
-  currency: 'EGP';
-  timezone: 'Africa/Cairo';
+  currency: typeof DEFAULT_CURRENCY;
+  timezone: typeof BUSINESS_TIME_ZONE;
   totalOrders: number;
   totalRevenue: bigint;
   todayOrders: number;
@@ -100,6 +119,7 @@ export interface OrderStats {
   revenueByPeriod: { date: string; revenue: bigint }[];
   topProducts: { id: number; name: string; sold: number; revenue: bigint }[];
 }
+
 export interface Orders {
   get(id: number | string): Promise<Order | null>;
   list(filters?: OrderFilters): Promise<{ orders: Order[]; total: number }>;
@@ -122,3 +142,39 @@ export interface Orders {
   addNote(actor: OrderStaffActor, id: number | string, note: string): Promise<OrderNote>;
   listNotes(id: number | string): Promise<OrderNote[]>;
 }
+
+export type {
+  CheckoutAcceptedOrder,
+  CheckoutLine,
+  CheckoutOrderContext,
+  CheckoutOrderInput,
+  CheckoutQuote,
+  CheckoutQuoteLine,
+  CheckoutReceipt,
+  CheckoutShippingAddress,
+  CheckoutValidateInput,
+  ListCheckoutLine,
+} from './features/checkout-input';
+export type {
+  CheckoutAcceptFailure,
+  CheckoutAcceptResult,
+  CheckoutAcceptSuccess,
+  CheckoutServiceOptions,
+  CheckoutValidateFailure,
+  CheckoutValidateResult,
+  CheckoutValidateSuccess,
+  ICheckoutService,
+  OutboxEnqueue,
+} from './features/order-acceptance';
+export type { GuestAccessTokens } from './features/guest-access-token';
+export type {
+  GuestAccessServiceOptions,
+  GuestOrderView,
+  RequestAccessResult,
+  VerifyResult,
+} from './features/guest-access';
+export type {
+  GuestAccessRequestInput,
+  GuestAccessVerifyInput,
+} from './features/guest-access-input';
+export type * from './index';

@@ -3,9 +3,9 @@
 import { revalidatePath, updateTag } from 'next/cache';
 import { NotAuthorizedError } from '@findeg/domain-errors';
 import { requireStaffAction } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import type { Locale } from '@findeg/domain';
-import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { createAdministrationServices } from '@/lib/administration';
 import { toListActor } from '../_lib/toListActor';
 import { parseOfferForm } from '../_lib/offerForm';
 

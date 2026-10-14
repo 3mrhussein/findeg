@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 
-import type { Product } from '@findeg/backend/features/catalog';
+import type { Product } from '@findeg/catalog';
 import type { InventoryTableProps, SortKey } from './InventoryTable.interface';
 import { InventoryFilters } from './InventoryFilters';
 import { InventoryBatchControls } from './InventoryBatchControls';

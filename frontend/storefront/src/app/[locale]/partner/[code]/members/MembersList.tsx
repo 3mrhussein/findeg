@@ -4,11 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@findeg/ui';
-import type {
-  PartnerMember,
-  PartnerRole,
-  UpdateMembershipInput,
-} from '@findeg/backend/features/partner-membership';
+import type { PartnerMember, PartnerRole, UpdateMembershipInput } from '@findeg/partners';
 import type { ActionState } from '../_lib/action-state';
 import { PARTNER_ROLES } from '../_lib/roles';
 import { updateMemberAction } from './actions';

@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 
 import { useTranslations } from 'next-intl';
 

@@ -1,4 +1,4 @@
-import { ValidationError, ConflictError } from '../features/core/domain/errors';
+import { ValidationError, ConflictError } from '../features/core/errors';
 import { AppError } from './errors';
 
 /**

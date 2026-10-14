@@ -2,7 +2,7 @@
  * Notification Services Factory (Pure TypeScript - Framework Agnostic)
  */
 
-import { NotificationService } from './NotificationService';
+import { createNotificationInbox } from '@findeg/identity';
 import { NotificationEventService } from './NotificationEventService';
 
 /**
@@ -11,7 +11,7 @@ import { NotificationEventService } from './NotificationEventService';
  * @returns Object containing all notification service instances
  */
 export function createNotificationServices() {
-  const notifications = new NotificationService();
+  const notifications = createNotificationInbox();
 
   return {
     notifications,

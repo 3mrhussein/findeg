@@ -1,12 +1,10 @@
 import 'server-only';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 import { getSession } from '@/lib/session';
-import { createOrders } from '@findeg/orders';
-import { createIdentityServices } from '@findeg/backend/features/identity';
-import {
-  GUEST_ORDER_COOKIE,
-  createGuestAccessService,
-} from '@findeg/backend/features/guest-access';
+import { createOrders, GUEST_ORDER_COOKIE, createGuestAccessService } from '@findeg/orders';
+import { createIdentityServices } from '@findeg/identity';
+import { enqueue, requireGuestAccessSecret } from '@findeg/backend/features/outbox';
+import { createGuestOrderTokens } from '@findeg/backend/features/core';
 
 export { GUEST_ORDER_COOKIE };
 
@@ -73,5 +71,9 @@ export async function getCustomerOrder(session: SessionPayload, orderId: number)
 
 /** Read a guest order via signed guest order cookie. */
 export async function getGuestOrder(token: string | undefined, reference: string) {
-  return createGuestAccessService().getOrder(token, reference);
+  return createGuestAccessService({
+    enqueue,
+    secret: requireGuestAccessSecret,
+    tokens: createGuestOrderTokens(requireGuestAccessSecret),
+  }).getOrder(token, reference);
 }

@@ -119,7 +119,7 @@ describe('payment options', () => {
 
 describe('common values', () => {
   it('lists the 27 governorates of Egypt in the common area', async () => {
-    const common = await import('@findeg/domain/common');
+    const common = await import('@findeg/domain');
     expect(common.GOVERNORATES).toHaveLength(27);
     expect(new Set(common.GOVERNORATES).size).toBe(27);
     expect(common.GOVERNORATES).toContain('Cairo');

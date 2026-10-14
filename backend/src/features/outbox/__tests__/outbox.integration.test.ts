@@ -10,8 +10,9 @@ import {
   warehouses,
 } from '@findeg/db/schema';
 import { outboxQueries } from '@findeg/db/queries';
-import { createCheckoutService } from '../../checkout';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { createCheckoutService as createOrderCheckoutService } from '@findeg/orders';
+import type { CheckoutServiceOptions } from '@findeg/orders/types';
+import { connectToTestDatabase, type TestDatabase } from '../../../../../configs/vitest/postgres';
 import {
   createOutbox,
   enqueue,
@@ -19,6 +20,10 @@ import {
   type EmailProvider,
   type OutgoingEmail,
 } from '../index';
+
+/** Acceptance with the backend outbox port; tests pass only what they vary. */
+const createCheckoutService = (options: Partial<CheckoutServiceOptions> = {}) =>
+  createOrderCheckoutService({ enqueue, ...options });
 
 class FakeEmailProvider implements EmailProvider {
   sent: OutgoingEmail[] = [];

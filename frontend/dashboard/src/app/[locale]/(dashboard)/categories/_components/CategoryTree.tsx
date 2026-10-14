@@ -42,7 +42,7 @@ import {
   moveCategoryUpAction as moveCategoryUp,
   moveCategoryDownAction as moveCategoryDown,
 } from '@data/categories/actions';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 
@@ -196,7 +196,8 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   const toggleExpand = (id: number) => {
     setExpandedIds((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };

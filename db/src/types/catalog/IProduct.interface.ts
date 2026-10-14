@@ -35,10 +35,10 @@ export interface IProduct {
             | undefined;
         }
       | undefined;
-    card?: {} | undefined;
-    pdp?: {} | undefined;
-    zoom?: {} | undefined;
-    original?: {} | undefined;
+    card?: object | undefined;
+    pdp?: object | undefined;
+    zoom?: object | undefined;
+    original?: object | undefined;
   } | null;
   rating: string | null;
   reviewsCount: number | null;

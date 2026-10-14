@@ -7,7 +7,7 @@
  * ServiceContainer with @ imports that break Turbopack bundling.
  *
  * Implementation approach:
- * 1. Import createIdentityServices from @backend/features/identity
+ * 1. Import createIdentityServices from @findeg/identity
  * 2. Call appropriate service method
  * 3. Handle session and error management
  */
@@ -15,10 +15,10 @@
 'use server';
 
 import { getSession, createSession } from '@lib/session';
-import { createIdentityServices } from '@findeg/backend/features/identity';
+import { createIdentityServices } from '@findeg/identity';
 import { revalidatePath } from 'next/cache';
 import { getErrorMessage } from '@lib/type-guards';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/identity';
 
 /**
  * Server Action: Update current user's profile

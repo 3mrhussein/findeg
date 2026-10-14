@@ -15,6 +15,8 @@
 
 'use client';
 
+import type { Locale } from '@findeg/domain';
+
 import * as React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
@@ -28,7 +30,7 @@ import { BilingualInput } from '@components/shared/BilingualInput';
 import { BilingualTextarea } from '@components/shared/BilingualTextarea';
 import { Separator } from '@findeg/ui';
 import { Save, Trash2, Check, AlertCircle, Loader2 } from 'lucide-react';
-import type { Category } from '@findeg/backend/features/catalog';
+import type { Category } from '@findeg/catalog';
 import { useTranslations } from 'next-intl';
 import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 
@@ -92,11 +94,11 @@ export function CategoryDrawer({
       localizedName: {
         en: category?.localizedContent?.name?.en || '',
         ar: category?.localizedContent?.name?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       localizedDescription: {
         en: category?.localizedContent?.description?.en || '',
         ar: category?.localizedContent?.description?.ar || '',
-      },
+      } satisfies Record<Locale, string | undefined>,
       slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
       icon: category?.icon || '',
@@ -121,11 +123,11 @@ export function CategoryDrawer({
         localizedName: {
           en: category?.localizedContent?.name?.en || '',
           ar: category?.localizedContent?.name?.ar || '',
-        },
+        } satisfies Record<Locale, string | undefined>,
         localizedDescription: {
           en: category?.localizedContent?.description?.en || '',
           ar: category?.localizedContent?.description?.ar || '',
-        },
+        } satisfies Record<Locale, string | undefined>,
         slug: category?.slug || '',
         parentId: category?.parentId || initialParentId || null,
         icon: category?.icon || '',

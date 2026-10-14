@@ -16,10 +16,14 @@
   },
   "dependencies": {
     "@findeg/backend": "workspace:*",
+    "@findeg/catalog": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/env": "workspace:*",
+    "@findeg/identity": "workspace:*",
+    "@findeg/inventory": "workspace:*",
     "@findeg/orders": "workspace:*",
+    "@findeg/school-lists": "workspace:*",
     "@findeg/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "clsx": "^2.1.1",
@@ -36,7 +40,9 @@
     "react-hook-form": "^7.89.0",
     "swr": "^2.4.1",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@findeg/catalog": "workspace:*",
+    "@findeg/partners": "workspace:*"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",
@@ -62,6 +68,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.3",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11"
   }
 }

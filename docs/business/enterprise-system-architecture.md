@@ -93,9 +93,9 @@ flowchart TB
         App_Reporting["PartnerReportingService<br/>(Monthly Aggregation, k-Anonymity)"]
     end
 
-    subgraph LayerDomain["4. Domain Model & Invariants Layer (@findeg/schema & Entities)"]
+    subgraph LayerDomain["4. Domain Model & Invariants Layer (@findeg/domain & Entities)"]
         direction TB
-        Domain_Schema["@findeg/schema Package<br/>(Canonical Enums, Invariants, Transition Tables)"]
+        Domain_Schema["@findeg/domain Package<br/>(Canonical Enums, Invariants, Transition Tables)"]
         Domain_Rules["Business Invariants<br/>(Exact Piasters, SL-*, CO-*, PA-*, ID-*, CA-*)"]
         Domain_Contracts["Ports & Repository Interfaces<br/>(IProductRepo, IOrderRepo, IPartnerRepo)"]
     end

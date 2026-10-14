@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
-import type { SupplyListStatus } from '@findeg/domain/school-lists';
+import type { SupplyListStatus } from '@findeg/domain/types';
 import {
   businessPartners,
   partnerSchoolProfiles,
@@ -138,17 +138,17 @@ export async function listSchoolSupplyLists(
 }
 
 export async function getSupplyList(executor: SchoolSupplyListExecutor, id: number) {
-  const [row] = await executor.select().from(schoolSupplyLists).where(eq(schoolSupplyLists.id, id));
-  return row;
+  const rows = await executor.select().from(schoolSupplyLists).where(eq(schoolSupplyLists.id, id));
+  return rows.at(0);
 }
 
 export async function lockSupplyList(tx: SchoolSupplyListTransaction, id: number) {
-  const [row] = await tx
+  const rows = await tx
     .select()
     .from(schoolSupplyLists)
     .where(eq(schoolSupplyLists.id, id))
     .for('update');
-  return row;
+  return rows.at(0);
 }
 
 export async function getSupplyListItems(executor: SchoolSupplyListExecutor, listId: number) {
@@ -163,7 +163,7 @@ export async function getPublishedSupplyListInSlot(
   tx: SchoolSupplyListTransaction,
   list: Pick<SchoolSupplyListRow, 'businessPartnerId' | 'academicYear' | 'grade'>,
 ) {
-  const [row] = await tx
+  const rows = await tx
     .select()
     .from(schoolSupplyLists)
     .where(
@@ -174,7 +174,7 @@ export async function getPublishedSupplyListInSlot(
         eq(schoolSupplyLists.status, 'published'),
       ),
     );
-  return row;
+  return rows.at(0);
 }
 
 export async function insertSupplyListDraft(
@@ -233,11 +233,11 @@ export async function deleteSupplyListItem(
   listId: number,
   id: number,
 ) {
-  const [row] = await tx
+  const rows = await tx
     .delete(schoolSupplyListItems)
     .where(and(eq(schoolSupplyListItems.id, id), eq(schoolSupplyListItems.listId, listId)))
     .returning();
-  return row;
+  return rows.at(0);
 }
 
 /** Lock catalog display/active facts until publication has committed. */

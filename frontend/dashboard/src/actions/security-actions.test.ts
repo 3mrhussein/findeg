@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SessionPayload } from '@findeg/backend/features/core';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES, type SessionPayload } from '@findeg/identity/types';
 
 const {
   getSession,
@@ -94,7 +93,7 @@ vi.mock('@i18n/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
   Link: () => null,
 }));
-vi.mock('@findeg/backend/features/administration', () => ({
+vi.mock('@/lib/administration', () => ({
   createAdministrationServices: () => ({
     products: productsService,
     categories: categoriesService,
@@ -105,15 +104,17 @@ vi.mock('@findeg/backend/features/administration', () => ({
     schoolSupplyLists: schoolSupplyListService,
   }),
 }));
-vi.mock('@findeg/backend/features/identity', () => ({
+vi.mock('@findeg/inventory', () => ({
+  createAdminInventoryService: () => inventoryService,
+}));
+vi.mock('@findeg/identity', () => ({
   createIdentityServices: () => ({
     adminRoles: identityRolesService,
     adminUsers: identityUsersService,
   }),
 }));
-vi.mock('@findeg/backend/features/partner-membership', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@findeg/backend/features/partner-membership')>();
+vi.mock('@findeg/partners', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@findeg/partners')>();
   return {
     ...actual,
     createPartnerMembershipServices: () => ({

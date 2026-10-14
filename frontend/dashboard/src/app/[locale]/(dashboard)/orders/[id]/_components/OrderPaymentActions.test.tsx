@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { fireEvent, render as rtlRender, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Order } from '@findeg/orders';
-import type { OrderStatus, PaymentStatus } from '@findeg/domain/orders';
+import type { OrderStatus, PaymentStatus } from '@findeg/domain/types';
 
 const { updateOrderStatusAction, updateOrderPaymentStatusAction, toast } = vi.hoisted(() => ({
   updateOrderStatusAction: vi.fn(),

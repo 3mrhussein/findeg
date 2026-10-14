@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from '@findeg/domain';
 import { redirect } from '@i18n/navigation';
 import type { DomainError } from '@findeg/domain-errors';
 
@@ -49,7 +50,7 @@ export function handleDomainError(error: unknown, context?: string): Response | 
   // Route by error type
   switch (domainError.code) {
     case 'NOT_AUTHENTICATED':
-      return redirect({ href: '/login', locale: 'en' });
+      return redirect({ href: '/login', locale: DEFAULT_LOCALE });
 
     case 'NOT_AUTHORIZED':
       return new Response(JSON.stringify({ error: 'Not authorized' }), {

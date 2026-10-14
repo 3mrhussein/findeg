@@ -1,5 +1,5 @@
 import { outboxQueries } from '@findeg/db/queries';
-import { createPartnerMembershipServices, type IInvitationService } from '../../partner-membership';
+import { createPartnerMembershipServices, type IInvitationService } from '@findeg/partners';
 import { OutboxService } from './OutboxService';
 import {
   GUEST_ACCESS_KIND,

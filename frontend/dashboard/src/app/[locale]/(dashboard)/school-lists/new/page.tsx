@@ -2,7 +2,7 @@ import { Link } from '@i18n/navigation';
 import type { Locale } from '@findeg/domain';
 import { getTranslations } from 'next-intl/server';
 import { requirePermission } from '@lib/auth-guard';
-import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { PERMISSION_CODES } from '@findeg/identity/types';
 import { getSchoolListPartnerOptions } from '@data/school-lists/queries';
 import { NewDraftForm } from '../_components/NewDraftForm';
 

@@ -1,14 +1,14 @@
 /**
  * @findeg/domain: FindEg's business domain, pure and dependent only on zod.
  *
- * One folder per domain. Consumers import from the root or from a domain subpath, and never
- * redeclare a value set. `relations` holds the business-domain map that tests validate.
+ * One bounded-context module per directory under features/. Consumers use the root runtime
+ * or types entry and never redeclare a value set. `relations` holds the business-domain map that tests validate.
  */
-export * from './common';
-export * from './customers';
-export * from './catalog';
-export * from './partners';
-export * from './school-lists';
-export * from './orders';
-export * from './inventory';
-export * from './relations';
+export * from './features/common';
+export * from './features/customers';
+export * from './features/catalog';
+export * from './features/partners';
+export * from './features/school-lists';
+export * from './features/orders';
+export * from './features/inventory';
+export * from './features/relations';

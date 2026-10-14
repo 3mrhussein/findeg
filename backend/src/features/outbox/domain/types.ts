@@ -29,20 +29,17 @@ export interface DrainResult {
   leaseLost: number;
 }
 
-export const ORDER_ACCEPTED_KIND = 'order-accepted';
+/** Row ids and kinds for Order Acceptance and Guest Order Access belong to Orders (ADR-0020). */
+export {
+  GUEST_ACCESS_KIND,
+  guestAccessId,
+  ORDER_ACCEPTED_KIND,
+  orderAcceptedId,
+} from '@findeg/orders';
 
-/** Row id for an order's confirmation email: one per Order Reference. */
-export const orderAcceptedId = (orderReference: string) =>
-  `${ORDER_ACCEPTED_KIND}:${orderReference}`;
-
-export const GUEST_ACCESS_KIND = 'guest-access';
-
-/** Row id for a guest access code email: one per access request. */
-export const guestAccessId = (requestId: string) => `${GUEST_ACCESS_KIND}:${requestId}`;
-
-export { ORDER_STATUS_KIND, orderStatusId } from '@findeg/orders/events';
-export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from '@findeg/domain/orders';
-export type { NotifiedOrderStatus } from '@findeg/domain/orders';
+export { ORDER_STATUS_KIND, orderStatusId } from '@findeg/orders';
+export { NOTIFIED_ORDER_STATUSES, isNotifiedOrderStatus } from '@findeg/domain';
+export type { NotifiedOrderStatus } from '@findeg/domain';
 
 export const PARTNER_INVITATION_KIND = 'partner-invitation';
 

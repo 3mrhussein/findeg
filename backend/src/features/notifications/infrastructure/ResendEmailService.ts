@@ -6,7 +6,7 @@ import { IEmailService } from '../application/services/IEmailService';
 import PasswordResetEmail from './templates/PasswordResetEmail';
 import AdminInvitationEmail from './templates/AdminInvitationEmail';
 import env from '@findeg/env';
-import { parse } from '../../core/domain/value-objects';
+import { parse } from '@findeg/catalog';
 
 /**
  *

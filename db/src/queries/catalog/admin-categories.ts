@@ -17,7 +17,7 @@ export async function getCategoryById(id: ID) {
     .from(categories)
     .where(eq(categories.id, id as number))
     .limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 /**
@@ -33,7 +33,7 @@ export async function getAllCategories() {
  */
 export async function getCategoryBySlug(slug: string) {
   const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 /**
@@ -82,7 +82,7 @@ export async function getCategoryDescendants(categoryId: ID) {
  */
 export async function getCategoryByPath(path: string) {
   const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
-  return result[0] || null;
+  return result.at(0) ?? null;
 }
 
 /**

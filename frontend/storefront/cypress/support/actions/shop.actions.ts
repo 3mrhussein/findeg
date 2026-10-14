@@ -93,7 +93,7 @@ export function readResultsSummary(): Cypress.Chainable<ResultsSummary> {
     .then(($p) => {
       const text = $p.text();
       const match = text.match(RESULTS_REGEX);
-      expect(match, `results summary text: ${text}`).to.not.be.null;
+      expect(match, `results summary text: ${text}`).not.to.equal(null);
 
       return {
         shown: Number(match![1]),

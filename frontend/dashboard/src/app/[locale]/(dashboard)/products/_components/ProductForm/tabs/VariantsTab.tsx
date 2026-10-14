@@ -1,5 +1,6 @@
 'use client';
 
+import type { Locale } from '@findeg/domain';
 import React, { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
@@ -227,7 +228,10 @@ export function VariantsTab() {
     if (fields.length === 0) {
       append({
         sku: '',
-        localizedLabel: { en: 'Standard', ar: 'قياسي' },
+        localizedLabel: { en: 'Standard', ar: 'قياسي' } satisfies Record<
+          Locale,
+          string | undefined
+        >,
         basePrice: 0,
         costPrice: 0,
         strikePrice: null,
@@ -245,7 +249,7 @@ export function VariantsTab() {
   const addVariant = () => {
     append({
       sku: '',
-      localizedLabel: { en: '', ar: '' },
+      localizedLabel: { en: '', ar: '' } satisfies Record<Locale, string | undefined>,
       basePrice: 0,
       costPrice: null,
       strikePrice: null,

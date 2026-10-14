@@ -1,4 +1,5 @@
 'use client';
+import { sumMoney, multiplyMoney, moneyFromDecimal, type Money } from '@findeg/domain';
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import {
@@ -40,7 +41,7 @@ export interface CartContextType {
   clearCart: () => void;
   toggleCart: () => void;
   cartCount: number;
-  cartTotal: number;
+  cartTotal: Money;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -123,7 +124,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const cartItems = useMemo(() => toClientCartItems(cart, metadata), [cart, metadata]);
   const cartCount = useMemo(() => cart.lines.reduce((total, l) => total + l.quantity, 0), [cart]);
   const cartTotal = useMemo(
-    () => cartItems.reduce((total, item) => total + (item.unitPrice || 0) * item.quantity, 0),
+    () =>
+      sumMoney(
+        cartItems.map((item) =>
+          multiplyMoney(moneyFromDecimal(String(item.unitPrice ?? 0)), item.quantity),
+        ),
+      ),
     [cartItems],
   );
 
