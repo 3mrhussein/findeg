@@ -45,10 +45,10 @@ async function fixture(role, filename, code) {
   try {
     const results = await new ESLint({ cwd: directory }).lintFiles([filename]);
     assert.equal(results[0].fatalErrorCount, 0, JSON.stringify(results[0].messages));
-    const cli = spawnSync(process.execPath, [path.join(root, 'configs/bin/lint.mjs'), filename], {
+    const eslintBin = path.join(root, 'frontend/dashboard/node_modules/eslint/bin/eslint.js');
+    const cli = spawnSync(process.execPath, [eslintBin, filename], {
       cwd: directory,
       encoding: 'utf8',
-      env: { ...process.env, FINDEG_RATCHET_FILE: path.join(directory, 'ratchet.json') },
     });
     return { messages: results[0].messages, status: cli.status, output: cli.stdout + cli.stderr };
   } finally {

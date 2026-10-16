@@ -10,7 +10,8 @@ import { createRequire } from 'node:module';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const require = createRequire(new URL('../../configs/package.json', import.meta.url));
 const { ESLint } = require('eslint');
-const libraryConfig = new URL('../../configs/eslint/library.js', import.meta.url).href;
+import { libraryLayoutRule } from './rules/library-layout.js';
+const libraryConfig = new URL('./rules/library.js', import.meta.url).href;
 
 // Lints a fixture library with the recursive layout rule and returns its layout diagnostics.
 async function layout(files, scopes = ['src']) {
@@ -162,7 +163,17 @@ test('applies only to the configured scopes, so applications and UI keep their o
 test('the Domain and Orders library scopes conform to the recursive library layout', async () => {
   for (const workspace of ['packages/domain', 'packages/orders']) {
     const scopes = libraryScopes[workspace];
-    const eslint = new ESLint({ cwd: path.join(root, workspace) });
+    const eslint = new ESLint({
+      cwd: path.join(root, workspace),
+      overrideConfigFile: true,
+      overrideConfig: [
+        {
+          files: ['**/*.ts', '**/*.tsx'],
+          plugins: { 'findeg-library': { rules: { layout: libraryLayoutRule } } },
+          rules: { 'findeg-library/layout': ['error', { scoped: true }] },
+        },
+      ],
+    });
     const results = await eslint.lintFiles(scopes.map((scope) => `${scope}/**/*.ts`));
     const diagnostics = results.flatMap((result) =>
       result.messages.filter(({ ruleId }) => ruleId === 'findeg-library/layout'),
@@ -175,9 +186,20 @@ test('the Domain and Orders library scopes conform to the recursive library layo
 });
 
 for (const workspace of Object.keys(libraryScopes)) {
-  test(`${workspace} real lint config rejects directories outside the vocabulary`, async () => {
+  test(`${workspace} layout invariant rejects directories outside the vocabulary`, async () => {
     const cwd = path.join(root, workspace);
-    const results = await new ESLint({ cwd }).lintText(body, {
+    const eslint = new ESLint({
+      cwd,
+      overrideConfigFile: true,
+      overrideConfig: [
+        {
+          files: ['**/*.ts', '**/*.tsx'],
+          plugins: { 'findeg-library': { rules: { layout: libraryLayoutRule } } },
+          rules: { 'findeg-library/layout': ['error', { scoped: true }] },
+        },
+      ],
+    });
+    const results = await eslint.lintText(body, {
       filePath: path.join(cwd, 'src/review-invalid/index.ts'),
     });
     assert.ok(

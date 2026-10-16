@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { libraryScopes } from '../../library-scopes.mjs';
+import { libraryScopes } from '../../../configs/library-scopes.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 

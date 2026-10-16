@@ -1,8 +1,13 @@
 // L1 runtime: what a package may assume about where it runs. A package picks exactly one
 // runtime; the globals it gets and the modules it may not import follow from that choice.
-import globals from 'globals';
-import { CODE, TESTS } from '../globs.js';
-import { severity } from '../standard.js';
+import { createRequire } from 'node:module';
+
+const configsRequire = createRequire(new URL('../../../configs/package.json', import.meta.url));
+const globals = configsRequire('globals');
+
+const CODE = ['**/*.{js,mjs,cjs,ts,tsx}'];
+const TESTS = ['**/*.test.{js,mjs,cjs,ts,tsx}', '**/__tests__/**'];
+const severity = () => 'error';
 
 export const RUNTIMES = {
   // Runs in browsers and Node alike: no host globals, no Node or framework modules.

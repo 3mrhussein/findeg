@@ -1,30 +1,13 @@
-import { scopedLibraryLayout } from '../library.js';
-import globals from 'globals';
 import { standards, isCompleteScope } from '../standards.js';
-import { hygiene } from '../layers/hygiene.js';
-import { runtimeLayer } from '../layers/runtime.js';
-import { boundaries } from '../layers/boundaries.js';
-import { surface } from '../layers/surface.js';
-import { integrity } from '../layers/integrity.js';
+import globals from 'globals';
 
 /**
- * A profile is the standard applied to one kind of package: every layer, with the runtime
- * chosen by the package's role. A new stack adds a runtime entry and a profile file; it never
- * copies rules.
- * @param {keyof typeof import('../layers/runtime.js').RUNTIMES} runtime
+ * A profile applies ecosystem standards to one kind of package role.
+ * @param {'isomorphic' | 'node' | 'browser' | 'next'} runtime
  * @param {{ extra?: object[] }} [options]
  */
 export async function compose(runtime, { extra = [] } = {}) {
-  return [
-    ...(await standards(runtime, { complete: isCompleteScope() })),
-    ...hygiene,
-    ...runtimeLayer(runtime),
-    ...boundaries,
-    ...surface,
-    ...integrity,
-    ...scopedLibraryLayout,
-    ...extra,
-  ];
+  return [...(await standards(runtime, { complete: isCompleteScope() })), ...extra];
 }
 
 // Cypress isn't one of the `globals` package's presets; `cy`/`Cypress` come from the runner

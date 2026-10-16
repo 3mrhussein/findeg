@@ -8,6 +8,8 @@ const root = new URL('../../', import.meta.url);
 const storefrontRequire = createRequire(new URL('frontend/storefront/package.json', root));
 const backendRequire = createRequire(new URL('backend/package.json', root));
 
+import { ordersBoundaryRule as ordersBoundary } from './rules/orders-boundary.js';
+
 async function lintAt(relativeFile, code) {
   const absolute = fileURLToPath(new URL(relativeFile, root));
   const backendFile = relativeFile.startsWith('backend/');
@@ -18,7 +20,14 @@ async function lintAt(relativeFile, code) {
       root,
     ),
   );
-  const eslint = new ESLint({ cwd: fileURLToPath(root), overrideConfigFile: config });
+  const eslint = new ESLint({
+    cwd: fileURLToPath(root),
+    overrideConfigFile: config,
+    overrideConfig: {
+      plugins: { local: { rules: { 'orders-boundary': ordersBoundary } } },
+      rules: { 'local/orders-boundary': 'error' },
+    },
+  });
   const [result] = await eslint.lintText(code, { filePath: absolute });
   assert.equal(result.fatalErrorCount, 0, JSON.stringify(result.messages));
   return result.messages

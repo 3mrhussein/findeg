@@ -1,15 +1,31 @@
-// Ecosystem baseline; complete scopes are activated independently of library layout.
+// Ecosystem baseline: imports maintained standard best-practice presets.
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
-import { naming } from './rules/naming.js';
-import { completeScopes } from './activation.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CODE, TYPESCRIPT } from './globs.js';
+import { naming } from './naming.js';
 
-const findegPlugin = { rules: { naming } };
+export const completeScopes = [
+  'configs',
+  'configs/env',
+  'packages/catalog',
+  'packages/domain',
+  'packages/domain-errors',
+  'packages/identity',
+  'packages/inventory',
+  'packages/orders',
+  'packages/partners',
+  'packages/school-lists',
+];
+
+export function isCompleteScope(root = process.cwd()) {
+  const repository = fileURLToPath(new URL('../../', import.meta.url));
+  const rel = path.relative(repository, root).split(path.sep).join('/');
+  return completeScopes.includes(rel);
+}
 
 /**
  * @param {'isomorphic' | 'node' | 'browser' | 'next'} role
@@ -60,6 +76,15 @@ export async function standards(role, { root = process.cwd(), complete = true } 
       ],
     },
     { ...js.configs.recommended, files: CODE },
+    ...(complete
+      ? [
+          {
+            files: CODE,
+            plugins: { findeg: { rules: { naming } } },
+            rules: { 'findeg/naming': 'error' },
+          },
+        ]
+      : []),
     ...ecosystem.map((config) =>
       config.ignores && !config.rules ? config : { ...config, files: config.files ?? CODE },
     ),
@@ -74,8 +99,6 @@ export async function standards(role, { root = process.cwd(), complete = true } 
     },
     {
       files: CODE,
-      plugins: { findeg: findegPlugin },
-      rules: complete ? { 'findeg/naming': 'error' } : {},
       languageOptions: {
         globals: {
           ...globals.es2022,
@@ -132,9 +155,4 @@ export async function standards(role, { root = process.cwd(), complete = true } 
       : []),
     prettier,
   ];
-}
-
-export function isCompleteScope(root = process.cwd()) {
-  const repository = fileURLToPath(new URL('../../', import.meta.url));
-  return completeScopes.includes(path.relative(repository, root).split(path.sep).join('/'));
 }
