@@ -3,14 +3,11 @@
   "globalDependencies": [
     "configs/**",
     "!configs/**/node_modules/**",
-    "packages/config/**",
-    "!packages/config/node_modules/**",
     // The shared domain-copy guard reads these files outside the dependency graph.
     "packages/domain/package.json",
     "packages/domain/src/**",
     ".env",
     ".env.*",
-    "tsconfig.base.json",
     "package.json"
   ],
   "globalEnv": ["NODE_ENV", "CI"],

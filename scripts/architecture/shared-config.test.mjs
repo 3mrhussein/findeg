@@ -16,34 +16,30 @@ function run(args) {
   return result.stdout;
 }
 
-test('root and compatibility ESLint profiles report real source violations', async () => {
+test('root ESLint profiles report real source violations', async () => {
   for (const [profile, name] of [
     ['isomorphic', 'isomorphic'],
     ['node', 'node'],
     ['react-ui', 'reactUi'],
     ['next', 'next'],
   ]) {
-    for (const directory of ['configs', 'packages/config']) {
-      const shared = await import(
-        new URL(`../../${directory}/eslint/profiles/${profile}.js`, import.meta.url)
-      );
-      const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: shared[name] });
-      const [result] = await eslint.lintText('debugger;\n', { filePath: 'fixture.ts' });
-      assert.equal(result.fatalErrorCount, 0);
-      assert.ok(
-        result.messages.some(
-          (message) => message.ruleId === 'no-debugger' && message.severity === 2,
-        ),
-      );
-      const [valid] = await eslint.lintText('export const value = 1;\n', {
-        filePath: 'fixture.ts',
-      });
-      assert.equal(valid.errorCount, 0, JSON.stringify(valid.messages));
-    }
+    const shared = await import(
+      new URL(`../../configs/eslint/profiles/${profile}.js`, import.meta.url)
+    );
+    const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: shared[name] });
+    const [result] = await eslint.lintText('debugger;\n', { filePath: 'fixture.ts' });
+    assert.equal(result.fatalErrorCount, 0);
+    assert.ok(
+      result.messages.some((message) => message.ruleId === 'no-debugger' && message.severity === 2),
+    );
+    const [valid] = await eslint.lintText('export const value = 1;\n', {
+      filePath: 'fixture.ts',
+    });
+    assert.equal(valid.errorCount, 0, JSON.stringify(valid.messages));
   }
 });
 
-test('legacy TypeScript entry resolves environment paths from the relocated base', () => {
+test('canonical TypeScript base resolves environment paths', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'findeg-config-ts-'));
   try {
     fs.writeFileSync(
@@ -53,7 +49,7 @@ test('legacy TypeScript entry resolves environment paths from the relocated base
     fs.writeFileSync(
       path.join(directory, 'tsconfig.json'),
       JSON.stringify({
-        extends: path.join(root, 'tsconfig.base.json'),
+        extends: path.join(root, 'configs/tsconfig/base.json'),
         compilerOptions: {
           types: ['node'],
           typeRoots: [path.join(root, 'configs/env/node_modules/@types')],

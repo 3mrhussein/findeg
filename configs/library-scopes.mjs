@@ -8,4 +8,5 @@ export const libraryScopes = {
   'packages/catalog': ['src'],
   'packages/partners': ['src'],
   'packages/inventory': ['src'],
+  'packages/domain-errors': ['src'],
 };

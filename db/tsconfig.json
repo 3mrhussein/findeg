@@ -1,27 +1,14 @@
 {
   "schema": "https://json.schemastore.org/tsconfig",
-  "extends": "../tsconfig.base.json",
+  "extends": "../configs/tsconfig/base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "paths": {
-      "@findeg/db": [
-        "./src"
-      ],
-      "@findeg/db/*": [
-        "./src/*"
-      ]
+      "@findeg/db": ["./src"],
+      "@findeg/db/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "migrations",
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "migrations", "**/*.test.ts"]
 }
