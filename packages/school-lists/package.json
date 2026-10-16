@@ -23,12 +23,12 @@
     "vitest": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
     "postgres": "^3.4.5",
-    "drizzle-orm": "^0.45.3"
+    "drizzle-orm": "^0.45.4"
   },
   "dependencies": {
     "@findeg/db": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   }
 }

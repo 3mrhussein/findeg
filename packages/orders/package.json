@@ -28,7 +28,7 @@
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "@findeg/school-lists": "workspace:*",
-    "drizzle-orm": "^0.45.3",
-    "zod": "^4.6.5"
+    "drizzle-orm": "^0.45.4",
+    "zod": "^4.6.6"
   }
 }
