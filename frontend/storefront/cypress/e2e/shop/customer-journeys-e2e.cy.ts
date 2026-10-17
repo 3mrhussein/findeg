@@ -220,14 +220,14 @@ describe('Customer storefront journeys', () => {
         cy.visit('/en/order-lookup');
         cy.get('#order-reference').clear().type(reference);
         cy.get('#order-email').clear().type(GUEST_CHECKOUT_DATA.email);
-        cy.get('button[type="submit"]').click();
+        cy.get('[data-testid="order-lookup-form"] button[type="submit"]').click();
 
         // Step 2: enter code
         cy.location('pathname', { timeout: 15000 }).should('eq', '/en/order-lookup/code');
         cy.task<string>('getGuestAccessCode', reference).then((code) => {
           expect(code).to.have.length(6);
           cy.get('#order-code').type(code);
-          cy.get('button[type="submit"]').click();
+          cy.get('[data-testid="order-code-form"] button[type="submit"]').click();
 
           // Step 3: guest order page
           cy.location('pathname', { timeout: 15000 }).should('eq', `/en/guest-orders/${reference}`);
