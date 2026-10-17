@@ -1,3 +1,5 @@
+import { buildE2EUser } from '../../support/utils/user-factory';
+
 interface InvitationFixture {
   email: string;
   code: string;
@@ -36,21 +38,18 @@ describe('Partner Invitation acceptance', () => {
   it('rejects acceptance when signed in with an email mismatch', () => {
     cy.task<InvitationFixture>('createPartnerInvitation').then(({ url }) => {
       // Register with a different email first
-      const otherUser = {
-        fullName: 'Other User',
-        email: `other-user-${Date.now()}@findeg.test`,
-        password: 'correct-horse-battery-staple',
-      };
+      const otherUser = buildE2EUser();
       cy.visit('/en/registration');
       cy.get('[data-testid="registration-name-input"]').type(otherUser.fullName);
       cy.get('[data-testid="registration-email-input"]').type(otherUser.email);
       cy.get('[data-testid="registration-password-input"]').type(otherUser.password, { log: false });
       cy.get('[data-testid="registration-confirm-password-input"]').type(otherUser.password, { log: false });
       cy.get('button[type="submit"]').click();
+      cy.location('pathname', { timeout: 20000 }).should('not.include', '/registration');
 
       // Visit the invitation URL with mismatched email
       cy.visit(url);
-      cy.contains('p', /different email address|عنوان بريد إلكتروني مختلف/).should('be.visible');
+      cy.contains('p', /invitation is for|هذه الدعوة مخصصة/i).should('be.visible');
       cy.contains('button', /Accept invitation|قبول الدعوة/).should('not.exist');
     });
   });

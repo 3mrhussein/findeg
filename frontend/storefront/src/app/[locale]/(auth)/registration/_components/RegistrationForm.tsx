@@ -126,7 +126,14 @@ export function RegistrationForm({
         return;
       }
 
-      await refresh();
+      try {
+        await refresh();
+      } catch (err) {
+        console.error('Failed to refresh user session after registration:', err);
+        setServerError(tValidation('RegistrationFailed'));
+        return;
+      }
+
       router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {

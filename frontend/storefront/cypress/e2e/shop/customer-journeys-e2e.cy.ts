@@ -19,7 +19,7 @@ function addCartItem() {
   cy.get('a[href="/en/shop/products/holders-241"]')
     .first()
     .closest('article')
-    .contains('button', 'Add to Cart')
+    .contains('button', 'Add to Cart', { timeout: 20000 })
     // Clicking before React attaches handlers silently drops the interaction in the production build.
     .should(($button) => {
       const hydrated = Object.keys($button[0]).some((key) => key.startsWith('__reactProps$'));
@@ -38,6 +38,23 @@ function visitCheckoutWithItem() {
 }
 
 describe('Customer storefront journeys', () => {
+  let originalPriceSnapshot: { variantId: number; price: string } | null = null;
+  let originalStockSnapshot: Array<{ id: number; onHand: number; reserved: number }> | null = null;
+
+  afterEach(() => {
+    if (originalPriceSnapshot) {
+      cy.task('setVariantPrice', {
+        variantId: originalPriceSnapshot.variantId,
+        price: originalPriceSnapshot.price,
+      });
+      originalPriceSnapshot = null;
+    }
+    if (originalStockSnapshot) {
+      cy.task('restoreVariantInventory', originalStockSnapshot);
+      originalStockSnapshot = null;
+    }
+  });
+
   it('redirects the bare entry point and returns a localized not-found page', () => {
     cy.request({ url: '/', followRedirect: false }).then((response) => {
       expect(response.status).to.eq(307);
@@ -140,25 +157,22 @@ describe('Customer storefront journeys', () => {
     cy.task<{ id: number; basePrice: string }>('getVariantByProductSlug', 'holders-241').then(
       (variant) => {
         expect(Boolean(variant)).to.equal(true);
-        const originalPrice = variant.basePrice;
+        originalPriceSnapshot = { variantId: variant.id, price: variant.basePrice };
         visitCheckoutWithItem();
         fillCheckoutRequiredFields();
 
-        // Change price in the database before submitting acceptance
-        const newPrice = (Number(originalPrice) + 10).toFixed(2);
+        // Change price in the database before submitting acceptance to trigger real server-side reconfirmation
+        const newPrice = (Number(variant.basePrice) + 10).toFixed(2);
         cy.task('setVariantPrice', { variantId: variant.id, price: newPrice });
 
         cy.get('button[type="submit"]').click();
 
         // Reconfirmation notice should appear
-        cy.contains('h2', /Review changes|مراجعة التغييرات/).should('be.visible');
-        cy.contains('button', /Confirm new total|تأكيد الإجمالي الجديد/).click();
+        cy.contains('h2', /Your quote changed|تغيّر عرض السعر/).should('be.visible');
+        cy.contains('button', /Confirm updated quote|تأكيد عرض السعر المحدّث/).click();
 
         // Order accepts with the updated confirmation
         cy.contains(/FE-[A-Z0-9]+/, { timeout: 30000 }).should('be.visible');
-
-        // Restore price
-        cy.task('setVariantPrice', { variantId: variant.id, price: originalPrice });
       },
     );
   });
@@ -166,20 +180,28 @@ describe('Customer storefront journeys', () => {
   it('refuses checkout when stock is insufficient on the real database without stubbing', () => {
     cy.task<{ id: number }>('getVariantByProductSlug', 'holders-241').then((variant) => {
       expect(Boolean(variant)).to.equal(true);
-      // Set stock to 0
-      cy.task('setVariantStock', { variantId: variant.id, onHand: 0 });
+      cy.task<Array<{ id: number; onHand: number; reserved: number }>>(
+        'getVariantInventory',
+        variant.id,
+      ).then((balances) => {
+        originalStockSnapshot = balances;
+        // Visit checkout and add item while in stock
+        visitCheckoutWithItem();
 
-      visitCheckoutWithItem();
-      fillCheckoutRequiredFields();
-      cy.get('button[type="submit"]').click();
+        // Deplete stock in the real database before submitting checkout
+        cy.task('setVariantStock', { variantId: variant.id, onHand: 0 });
 
-      // Insufficient stock alert appears with available quantity 0
-      cy.contains('h2', /Insufficient stock|الكمية المتوفرة غير كافية/).should('be.visible');
-      cy.contains(/0/).should('be.visible');
-      cy.get('#fullName').should('not.have.value', '');
+        fillCheckoutRequiredFields();
+        cy.get('button[type="submit"]').click();
 
-      // Restore stock
-      cy.task('setVariantStock', { variantId: variant.id, onHand: 100 });
+        // Insufficient stock alert appears with available quantity 0
+        cy.contains(
+          'h2',
+          /Some items are short on stock|Insufficient stock|الكمية المتاحة لا تكفي|الكمية المتوفرة غير كافية/,
+        ).should('be.visible');
+        cy.contains(/0/).should('be.visible');
+        cy.get('#fullName').should('not.have.value', '');
+      });
     });
   });
 

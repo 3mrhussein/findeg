@@ -215,7 +215,7 @@ export default defineConfig({
                 >,
               }),
             ) as { id: number };
-            must(
+            const item = must(
               await service.addItem(staff, list.id, {
                 variantId: defaultVariant.id,
                 exactItem: false,
@@ -243,7 +243,7 @@ export default defineConfig({
             const published = must(await service.publish(staff, list.id)) as {
               list: { id: number; publicCode: string };
             };
-            return published.list;
+            return { ...published.list, firstItemId: item.id };
           };
 
           const open = await publishedList('Grade 1');
@@ -251,6 +251,8 @@ export default defineConfig({
           must(await service.archive(staff, retired.id));
           return {
             publishedUrl: `/en/lists/${open.publicCode}`,
+            publishedItemId: open.firstItemId,
+            firstItemId: open.firstItemId,
             archivedUrl: `/en/lists/${retired.publicCode}`,
             substitutePrice: substitute.basePrice,
           };
@@ -299,7 +301,7 @@ export default defineConfig({
             await db
               .update(schema.partnerInvitations)
               .set({ expiresAt: new Date(Date.now() - 3600000) })
-              .where(eq(schema.partnerInvitations.id, invitation.data.id));
+              .where(eq(schema.partnerInvitations.id, invitation.data.invitation.id));
           }
           return {
             email,
@@ -348,6 +350,38 @@ export default defineConfig({
             .where(eq(schema.inventoryBalances.variantId, variantId));
           return null;
         },
+        async getVariantInventory(variantId: number) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          const balances = await db
+            .select({
+              id: schema.inventoryBalances.id,
+              onHand: schema.inventoryBalances.onHand,
+              reserved: schema.inventoryBalances.reserved,
+            })
+            .from(schema.inventoryBalances)
+            .where(eq(schema.inventoryBalances.variantId, variantId));
+          return balances;
+        },
+        async restoreVariantInventory(
+          balances: Array<{ id: number; onHand: number; reserved: number }>,
+        ) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          for (const b of balances) {
+            await db
+              .update(schema.inventoryBalances)
+              .set({ onHand: b.onHand, reserved: b.reserved })
+              .where(eq(schema.inventoryBalances.id, b.id));
+          }
+          return null;
+        },
         async getGuestAccessCode(orderReference: string) {
           const [{ db }, schema, { hashCode, mintCode }] = await Promise.all([
             import('../../db/src/connection'),
@@ -355,22 +389,26 @@ export default defineConfig({
             import('@findeg/orders'),
           ]);
           const { eq, desc } = await import('drizzle-orm');
+          const [order] = await db
+            .select({ id: schema.orders.id })
+            .from(schema.orders)
+            .where(eq(schema.orders.orderReference, orderReference))
+            .limit(1);
+          if (!order) return null;
           const [request] = await db
             .select()
-            .from(schema.guestOrderAccessRequests)
-            .where(eq(schema.guestOrderAccessRequests.orderReference, orderReference))
-            .orderBy(desc(schema.guestOrderAccessRequests.createdAt))
+            .from(schema.guestAccessRequests)
+            .where(eq(schema.guestAccessRequests.orderId, order.id))
+            .orderBy(desc(schema.guestAccessRequests.createdAt))
             .limit(1);
           if (!request) return null;
           const code = mintCode();
-          const secret =
-            process.env.GUEST_ACCESS_SECRET || 'test-guest-access-secret-1234567890123456';
+          const secret = process.env.GUEST_ACCESS_SECRET || '01234567890123456789012345678901';
           const hash = hashCode(request.id, code, secret);
-          const currentHashes = Array.isArray(request.codeHashes) ? request.codeHashes : [];
           await db
-            .update(schema.guestOrderAccessRequests)
-            .set({ codeHashes: [...currentHashes, hash] })
-            .where(eq(schema.guestOrderAccessRequests.id, request.id));
+            .insert(schema.guestAccessCodes)
+            .values({ requestId: request.id, codeHash: hash })
+            .onConflictDoNothing();
           return code;
         },
       });

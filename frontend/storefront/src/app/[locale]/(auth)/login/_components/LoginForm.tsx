@@ -88,7 +88,14 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
         return;
       }
 
-      await refresh();
+      try {
+        await refresh();
+      } catch (err) {
+        console.error('Failed to refresh user session after login:', err);
+        setServerError(tValidation('LoginFailed'));
+        return;
+      }
+
       router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {

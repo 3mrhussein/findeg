@@ -1,5 +1,6 @@
 interface SupplyListFixture {
   publishedUrl: string;
+  publishedItemId: number;
   archivedUrl: string;
 }
 
@@ -58,12 +59,12 @@ describe('School Supply List completeness', () => {
           JSON.stringify({
             v: 1,
             supplyListId: 1,
-            lines: [{ listItemId: 1, variantId: 999999, quantity: 2 }],
+            lines: [{ listItemId: fixture.publishedItemId, variantId: 999999, quantity: 2 }],
           }),
         );
       },
     });
-    cy.get('button').contains('Checkout').should('be.disabled');
+    cy.contains('button', 'Checkout').should('be.disabled');
     cy.contains(/unavailable|غير متاح|no longer available/i).should('be.visible');
   });
 });

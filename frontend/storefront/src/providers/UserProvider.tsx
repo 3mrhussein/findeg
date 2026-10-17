@@ -46,14 +46,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.error('Failed to hydrate user session:', error);
-      if (requestId === refreshRequest.current) setCurrentUser(null);
+      throw error;
     } finally {
       if (requestId === refreshRequest.current) setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void refresh();
+    void refresh().catch(() => {
+      // Ignore initial session hydration error to leave user as null
+    });
   }, [refresh]);
 
   /**
