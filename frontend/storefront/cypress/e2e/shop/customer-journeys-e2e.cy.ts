@@ -4,6 +4,7 @@ import {
 } from '../../support/actions/checkout.actions';
 import { registerUserThroughUi } from '../../support/actions/auth.actions';
 import { buildE2EUser } from '../../support/utils/user-factory';
+import { GUEST_CHECKOUT_DATA } from '../../support/constants/test-data';
 
 const card = 'main a[href*="/shop/products/"]';
 const drawer = '[data-testid="cart-drawer-content"]';
@@ -135,23 +136,119 @@ describe('Customer storefront journeys', () => {
     cy.contains(/FE-[A-Z0-9]+/, { timeout: 30000 }).should('be.visible');
   });
 
-  it('shows acceptance failure and preserves checkout input for retry', () => {
-    cy.intercept('POST', '/api/v1/checkout/order', {
-      statusCode: 500,
-      body: { success: false, error: { message: 'E2E order acceptance unavailable' } },
-    }).as('failure');
+  it('triggers reconfirmation after a real price change and accepts updated terms without stubbing', () => {
+    cy.task<{ id: number; basePrice: string }>('getVariantByProductSlug', 'holders-241').then(
+      (variant) => {
+        expect(Boolean(variant)).to.equal(true);
+        const originalPrice = variant.basePrice;
+        visitCheckoutWithItem();
+        fillCheckoutRequiredFields();
+
+        // Change price in the database before submitting acceptance
+        const newPrice = (Number(originalPrice) + 10).toFixed(2);
+        cy.task('setVariantPrice', { variantId: variant.id, price: newPrice });
+
+        cy.get('button[type="submit"]').click();
+
+        // Reconfirmation notice should appear
+        cy.contains('h2', /Review changes|مراجعة التغييرات/).should('be.visible');
+        cy.contains('button', /Confirm new total|تأكيد الإجمالي الجديد/).click();
+
+        // Order accepts with the updated confirmation
+        cy.contains(/FE-[A-Z0-9]+/, { timeout: 30000 }).should('be.visible');
+
+        // Restore price
+        cy.task('setVariantPrice', { variantId: variant.id, price: originalPrice });
+      },
+    );
+  });
+
+  it('refuses checkout when stock is insufficient on the real database without stubbing', () => {
+    cy.task<{ id: number }>('getVariantByProductSlug', 'holders-241').then((variant) => {
+      expect(Boolean(variant)).to.equal(true);
+      // Set stock to 0
+      cy.task('setVariantStock', { variantId: variant.id, onHand: 0 });
+
+      visitCheckoutWithItem();
+      fillCheckoutRequiredFields();
+      cy.get('button[type="submit"]').click();
+
+      // Insufficient stock alert appears with available quantity 0
+      cy.contains('h2', /Insufficient stock|الكمية المتوفرة غير كافية/).should('be.visible');
+      cy.contains(/0/).should('be.visible');
+      cy.get('#fullName').should('not.have.value', '');
+
+      // Restore stock
+      cy.task('setVariantStock', { variantId: variant.id, onHand: 100 });
+    });
+  });
+
+  it('looks up a guest order by reference and verification code through all three steps', () => {
     visitCheckoutWithItem();
     fillCheckoutRequiredFields();
     cy.get('button[type="submit"]').click();
-    cy.wait('@failure');
-    cy.get('[role="alert"]').should('contain.text', 'E2E order acceptance unavailable');
-    cy.get('#fullName').should('not.have.value', '');
-    cy.get('button[type="submit"]').should('be.enabled');
+    cy.contains(/FE-[A-Z0-9]+/, { timeout: 30000 })
+      .invoke('text')
+      .then((headingText) => {
+        const match = headingText.match(/FE-[A-Z0-9]+/);
+        expect(Boolean(match)).to.equal(true);
+        const reference = match![0];
+
+        // Step 1: visit /order-lookup and request code
+        cy.visit('/en/order-lookup');
+        cy.get('#order-reference').clear().type(reference);
+        cy.get('#order-email').clear().type(GUEST_CHECKOUT_DATA.email);
+        cy.get('button[type="submit"]').click();
+
+        // Step 2: enter code
+        cy.location('pathname', { timeout: 15000 }).should('eq', '/en/order-lookup/code');
+        cy.task<string>('getGuestAccessCode', reference).then((code) => {
+          expect(code).to.have.length(6);
+          cy.get('#order-code').type(code);
+          cy.get('button[type="submit"]').click();
+
+          // Step 3: guest order page
+          cy.location('pathname', { timeout: 15000 }).should('eq', `/en/guest-orders/${reference}`);
+          cy.get('[data-testid="guest-order-heading"]').should('contain.text', reference);
+          cy.contains(/Status|الحالة/).should('be.visible');
+        });
+      });
   });
 
   it('registers a Customer and opens their account', () => {
     registerUserThroughUi(buildE2EUser());
     cy.contains('h1', /My Account|حسابي/).should('be.visible');
+  });
+
+  it('shows My Account when signed in, and signing out from Arabic preserves the Arabic locale', () => {
+    const user = buildE2EUser();
+    registerUserThroughUi(user);
+    cy.contains('h1', /My Account|حسابي/).should('be.visible');
+
+    // Switch to Arabic
+    cy.visit('/ar/my-account');
+    cy.get('h1').should('contain.text', 'حسابي');
+
+    // Click logout
+    cy.contains('button', 'تسجيل الخروج').click();
+
+    // Verify redirected to Arabic login page
+    cy.location('pathname', { timeout: 15000 }).should('eq', '/ar/login');
+    cy.get('[data-testid="login-email-input"]').should('be.visible');
+  });
+
+  it('persists updated customer name and phone across reloads', () => {
+    const user = buildE2EUser();
+    registerUserThroughUi(user);
+
+    cy.visit('/en/my-account/settings');
+    cy.get('#name').clear().type('Updated Cypress Name');
+    cy.get('#phone').clear().type('+20 10 9999 8888');
+    cy.contains('button', 'Save').click();
+
+    cy.reload();
+    cy.get('#name').should('have.value', 'Updated Cypress Name');
+    cy.get('#phone').should('have.value', '+20 10 9999 8888');
   });
 
   it("lists a signed-in Customer's order and keeps it private from other Customers", () => {
@@ -185,5 +282,19 @@ describe('Customer storefront journeys', () => {
     cy.visit('/en/my-account');
     cy.location('pathname').should('eq', '/en/login');
     cy.get('[data-testid="login-email-input"]').should('be.visible');
+  });
+
+  it('resolves canonical navigation and footer routes without dead links', () => {
+    const routes = [
+      '/en',
+      '/en/schools',
+      '/en/categories',
+      '/en/collections',
+      '/en/order-lookup',
+      '/en/about',
+    ];
+    for (const route of routes) {
+      cy.request({ url: route, failOnStatusCode: false }).its('status').should('eq', 200);
+    }
   });
 });

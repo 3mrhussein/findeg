@@ -255,16 +255,20 @@ export default defineConfig({
             substitutePrice: substitute.basePrice,
           };
         },
-        async createPartnerInvitation() {
+        async createPartnerInvitation(options?: {
+          expired?: boolean;
+          partnerStatus?: 'onboarding' | 'active' | 'suspended' | 'closed';
+        }) {
           const { randomUUID } = await import('node:crypto');
-          const [{ db }, { users }, { createPartnerMembershipServices }] = await Promise.all([
+          const [{ db }, schema, { createPartnerMembershipServices }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
             import('@findeg/partners'),
           ]);
+          const { eq } = await import('drizzle-orm');
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db
-            .insert(users)
+            .insert(schema.users)
             .values({ email: `cypress-staff-${suffix}@findeg.test`, portalRole: 'staff' })
             .returning();
           const services = createPartnerMembershipServices({ db });
@@ -279,17 +283,95 @@ export default defineConfig({
             nameAr: 'مدرسة سايبريس',
           });
           if (!partner.success) throw new Error(partner.error);
+          if (options?.partnerStatus) {
+            await db
+              .update(schema.businessPartners)
+              .set({ status: options.partnerStatus })
+              .where(eq(schema.businessPartners.id, partner.data.id));
+          }
           const email = `cypress-invitee-${suffix}@findeg.test`;
           const invitation = await services.invitations.invite(actor, partner.data.id, {
             email,
             roles: ['partner-administrator'],
           });
           if (!invitation.success) throw new Error(invitation.error);
+          if (options?.expired) {
+            await db
+              .update(schema.partnerInvitations)
+              .set({ expiresAt: new Date(Date.now() - 3600000) })
+              .where(eq(schema.partnerInvitations.id, invitation.data.id));
+          }
           return {
             email,
             code: partner.data.code,
             url: `/en/partner/invitations/${invitation.data.token}`,
           };
+        },
+        async getVariantByProductSlug(slug: string) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          const [product] = await db
+            .select()
+            .from(schema.products)
+            .where(eq(schema.products.slug, slug));
+          if (!product) return null;
+          const [variant] = await db
+            .select()
+            .from(schema.productVariants)
+            .where(eq(schema.productVariants.productId, product.id));
+          return variant ?? null;
+        },
+        async setVariantPrice({ variantId, price }: { variantId: number; price: string }) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          await db
+            .update(schema.productVariants)
+            .set({ basePrice: price })
+            .where(eq(schema.productVariants.id, variantId));
+          return null;
+        },
+        async setVariantStock({ variantId, onHand }: { variantId: number; onHand: number }) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          await db
+            .update(schema.inventoryBalances)
+            .set({ onHand, reserved: 0 })
+            .where(eq(schema.inventoryBalances.variantId, variantId));
+          return null;
+        },
+        async getGuestAccessCode(orderReference: string) {
+          const [{ db }, schema, { hashCode, mintCode }] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+            import('@findeg/orders'),
+          ]);
+          const { eq, desc } = await import('drizzle-orm');
+          const [request] = await db
+            .select()
+            .from(schema.guestOrderAccessRequests)
+            .where(eq(schema.guestOrderAccessRequests.orderReference, orderReference))
+            .orderBy(desc(schema.guestOrderAccessRequests.createdAt))
+            .limit(1);
+          if (!request) return null;
+          const code = mintCode();
+          const secret =
+            process.env.GUEST_ACCESS_SECRET || 'test-guest-access-secret-1234567890123456';
+          const hash = hashCode(request.id, code, secret);
+          const currentHashes = Array.isArray(request.codeHashes) ? request.codeHashes : [];
+          await db
+            .update(schema.guestOrderAccessRequests)
+            .set({ codeHashes: [...currentHashes, hash] })
+            .where(eq(schema.guestOrderAccessRequests.id, request.id));
+          return code;
         },
       });
       return config;
