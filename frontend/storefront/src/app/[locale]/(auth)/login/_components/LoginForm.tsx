@@ -33,6 +33,7 @@ interface LoginFormProps {
 export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const t = useTranslations();
   const tValidation = useTranslations('Validation');
   const router = useRouter();
   const { refresh } = useUser();
