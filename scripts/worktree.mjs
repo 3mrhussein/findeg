@@ -117,11 +117,12 @@ function createWorktree(branchName, customPath) {
   }
 
   const root = getRepoRoot();
+  const slug = branchName.replace(/\//g, '-');
   const targetPath = customPath
     ? isAbsolute(customPath)
       ? customPath
       : resolve(process.cwd(), customPath)
-    : resolve(root, 'worktree', branchName);
+    : resolve(root, '.worktrees', slug);
 
   if (existsSync(targetPath)) {
     console.error(`Error: Target directory already exists: ${targetPath}`);
@@ -164,13 +165,17 @@ function removeWorktree(identifier, ...flags) {
   const realInput = toReal(resolvedInput);
   const rootRelativeInput = resolve(root, identifier);
   const realRootRelative = toReal(rootRelativeInput);
+  const slug = identifier.replace(/\//g, '-');
+  const worktreeSlugRelative = resolve(root, '.worktrees', slug);
+  const realWorktreeSlug = toReal(worktreeSlugRelative);
 
-  // Match exact path or branch name without loose suffix matches to prevent accidental deletions
+  // Match exact path, branch name, or slug name without loose suffix matches to prevent accidental deletions
   const matches = worktrees.filter((wt) => {
     const wtReal = toReal(wt.path);
     return (
       wtReal === realInput ||
       wtReal === realRootRelative ||
+      wtReal === realWorktreeSlug ||
       wt.path === resolvedInput ||
       wt.branch === identifier
     );
@@ -219,9 +224,11 @@ function removeWorktree(identifier, ...flags) {
   }
 
   // Fallback for unregistered leftover directories, strictly confined to worktree containment directories
-  const allowedParents = [resolve(root, 'worktree'), resolve(root, '.claude', 'worktrees')].map(
-    toReal,
-  );
+  const allowedParents = [
+    resolve(root, '.worktrees'),
+    resolve(root, 'worktree'),
+    resolve(root, '.claude', 'worktrees'),
+  ].map(toReal);
   const targetDir = existsSync(resolvedInput)
     ? realInput
     : existsSync(rootRelativeInput)
@@ -265,7 +272,8 @@ function removeWorktree(identifier, ...flags) {
   process.exit(1);
 }
 
-function pruneWorktrees() {
+function pruneWorktrees(...flags) {
+  const isForce = flags.includes('--force') || flags.includes('-f');
   const root = getRepoRoot();
   console.log('Fetching latest origin/develop...');
   tryGit(['fetch', 'origin', 'develop']);
@@ -280,23 +288,25 @@ function pruneWorktrees() {
     const isMerged = isBranchMerged(wt.branch);
     const isDirty = isWorktreeDirty(wt.path);
 
-    if (isMerged && !isDirty) {
+    if (isMerged && (!isDirty || isForce)) {
       console.log(`Pruning merged worktree: ${wt.path} (${wt.branch})...`);
       tryGit(['worktree', 'remove', '--force', wt.path]);
       if (existsSync(wt.path)) {
         rmSync(wt.path, { recursive: true, force: true });
       }
       removedCount++;
-    } else if (isMerged && isDirty) {
+    } else if (isMerged && isDirty && !isForce) {
       console.log(
-        `⚠ Skipping ${wt.path} (${wt.branch}): branch is merged but worktree has uncommitted changes.`,
+        `⚠ Skipping ${wt.path} (${wt.branch}): branch is merged but worktree has uncommitted changes. Use --force to prune anyway.`,
       );
     }
   }
 
-  const candidateParents = [resolve(root, 'worktree'), resolve(root, '.claude', 'worktrees')].map(
-    toReal,
-  );
+  const candidateParents = [
+    resolve(root, '.worktrees'),
+    resolve(root, 'worktree'),
+    resolve(root, '.claude', 'worktrees'),
+  ].map(toReal);
 
   for (const parent of candidateParents) {
     if (!existsSync(parent)) continue;
@@ -356,7 +366,7 @@ switch (command) {
     break;
   case 'prune':
   case 'clean':
-    pruneWorktrees();
+    pruneWorktrees(...args);
     break;
   case 'list':
   case 'ls':
@@ -368,7 +378,7 @@ switch (command) {
 Usage:
   node scripts/worktree.mjs create <type>/<slug> [custom-path]  Create new worktree synced with origin/develop
   node scripts/worktree.mjs remove <path-or-branch> [--force]   Cleanly remove worktree and delete folder
-  node scripts/worktree.mjs prune                               Remove merged worktrees and ghost directories
+  node scripts/worktree.mjs prune [--force]                     Remove merged worktrees and ghost directories
   node scripts/worktree.mjs list                                List all worktrees with sync/dirty status
 `);
     break;
