@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const parsed = loginSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return Response.json(
-      { success: false, error: { message: 'Invalid login details.' } },
+      { success: false, error: { code: 'INVALID_INPUT' } },
       { status: 400 },
     );
   }
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   );
   if (!result.success || !result.session) {
     return Response.json(
-      { success: false, error: { message: result.error ?? 'Unable to sign in.' } },
+      { success: false, error: { code: 'LOGIN_FAILED' } },
       { status: 401 },
     );
   }

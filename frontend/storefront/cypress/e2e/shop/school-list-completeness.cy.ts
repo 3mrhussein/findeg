@@ -1,5 +1,6 @@
 interface SupplyListFixture {
   publishedUrl: string;
+  publishedItemId: number;
   archivedUrl: string;
 }
 
@@ -47,5 +48,23 @@ describe('School Supply List completeness', () => {
     cy.get('[role="status"]').should('contain.text', 'no longer current');
     cy.contains('button', 'Checkout').should('be.disabled');
     cy.contains('Checkout is unavailable for an archived list.').should('be.visible');
+  });
+
+  it('flags a stale choice from storage and blocks checkout', () => {
+    const publicCode = fixture.publishedUrl.split('/').at(-1)!;
+    cy.visit(fixture.publishedUrl, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          `findeg:list-selection:${publicCode}`,
+          JSON.stringify({
+            v: 1,
+            supplyListId: 1,
+            lines: [{ listItemId: fixture.publishedItemId, variantId: 999999, quantity: 2 }],
+          }),
+        );
+      },
+    });
+    cy.contains('button', 'Checkout').should('be.disabled');
+    cy.contains(/unavailable|غير متاح|no longer available/i).should('be.visible');
   });
 });

@@ -215,7 +215,7 @@ export default defineConfig({
                 >,
               }),
             ) as { id: number };
-            must(
+            const item = must(
               await service.addItem(staff, list.id, {
                 variantId: defaultVariant.id,
                 exactItem: false,
@@ -243,7 +243,7 @@ export default defineConfig({
             const published = must(await service.publish(staff, list.id)) as {
               list: { id: number; publicCode: string };
             };
-            return published.list;
+            return { ...published.list, firstItemId: item.id };
           };
 
           const open = await publishedList('Grade 1');
@@ -251,20 +251,26 @@ export default defineConfig({
           must(await service.archive(staff, retired.id));
           return {
             publishedUrl: `/en/lists/${open.publicCode}`,
+            publishedItemId: open.firstItemId,
+            firstItemId: open.firstItemId,
             archivedUrl: `/en/lists/${retired.publicCode}`,
             substitutePrice: substitute.basePrice,
           };
         },
-        async createPartnerInvitation() {
+        async createPartnerInvitation(options?: {
+          expired?: boolean;
+          partnerStatus?: 'onboarding' | 'active' | 'suspended' | 'closed';
+        }) {
           const { randomUUID } = await import('node:crypto');
-          const [{ db }, { users }, { createPartnerMembershipServices }] = await Promise.all([
+          const [{ db }, schema, { createPartnerMembershipServices }] = await Promise.all([
             import('../../db/src/connection'),
             import('../../db/src/schema/index'),
             import('@findeg/partners'),
           ]);
+          const { eq } = await import('drizzle-orm');
           const suffix = randomUUID().slice(0, 8);
           const [staffUser] = await db
-            .insert(users)
+            .insert(schema.users)
             .values({ email: `cypress-staff-${suffix}@findeg.test`, portalRole: 'staff' })
             .returning();
           const services = createPartnerMembershipServices({ db });
@@ -279,17 +285,131 @@ export default defineConfig({
             nameAr: 'مدرسة سايبريس',
           });
           if (!partner.success) throw new Error(partner.error);
+          if (options?.partnerStatus) {
+            await db
+              .update(schema.businessPartners)
+              .set({ status: options.partnerStatus })
+              .where(eq(schema.businessPartners.id, partner.data.id));
+          }
           const email = `cypress-invitee-${suffix}@findeg.test`;
           const invitation = await services.invitations.invite(actor, partner.data.id, {
             email,
             roles: ['partner-administrator'],
           });
           if (!invitation.success) throw new Error(invitation.error);
+          if (options?.expired) {
+            await db
+              .update(schema.partnerInvitations)
+              .set({ expiresAt: new Date(Date.now() - 3600000) })
+              .where(eq(schema.partnerInvitations.id, invitation.data.invitation.id));
+          }
           return {
             email,
             code: partner.data.code,
             url: `/en/partner/invitations/${invitation.data.token}`,
           };
+        },
+        async getVariantByProductSlug(slug: string) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          const [product] = await db
+            .select()
+            .from(schema.products)
+            .where(eq(schema.products.slug, slug));
+          if (!product) return null;
+          const [variant] = await db
+            .select()
+            .from(schema.productVariants)
+            .where(eq(schema.productVariants.productId, product.id));
+          return variant ?? null;
+        },
+        async setVariantPrice({ variantId, price }: { variantId: number; price: string }) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          await db
+            .update(schema.productVariants)
+            .set({ basePrice: price })
+            .where(eq(schema.productVariants.id, variantId));
+          return null;
+        },
+        async setVariantStock({ variantId, onHand }: { variantId: number; onHand: number }) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          await db
+            .update(schema.inventoryBalances)
+            .set({ onHand, reserved: 0 })
+            .where(eq(schema.inventoryBalances.variantId, variantId));
+          return null;
+        },
+        async getVariantInventory(variantId: number) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          const balances = await db
+            .select({
+              id: schema.inventoryBalances.id,
+              onHand: schema.inventoryBalances.onHand,
+              reserved: schema.inventoryBalances.reserved,
+            })
+            .from(schema.inventoryBalances)
+            .where(eq(schema.inventoryBalances.variantId, variantId));
+          return balances;
+        },
+        async restoreVariantInventory(
+          balances: Array<{ id: number; onHand: number; reserved: number }>,
+        ) {
+          const [{ db }, schema] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+          ]);
+          const { eq } = await import('drizzle-orm');
+          for (const b of balances) {
+            await db
+              .update(schema.inventoryBalances)
+              .set({ onHand: b.onHand, reserved: b.reserved })
+              .where(eq(schema.inventoryBalances.id, b.id));
+          }
+          return null;
+        },
+        async getGuestAccessCode(orderReference: string) {
+          const [{ db }, schema, { hashCode, mintCode }] = await Promise.all([
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
+            import('@findeg/orders'),
+          ]);
+          const { eq, desc } = await import('drizzle-orm');
+          const [order] = await db
+            .select({ id: schema.orders.id })
+            .from(schema.orders)
+            .where(eq(schema.orders.orderReference, orderReference))
+            .limit(1);
+          if (!order) return null;
+          const [request] = await db
+            .select()
+            .from(schema.guestAccessRequests)
+            .where(eq(schema.guestAccessRequests.orderId, order.id))
+            .orderBy(desc(schema.guestAccessRequests.createdAt))
+            .limit(1);
+          if (!request) return null;
+          const code = mintCode();
+          const secret = process.env.GUEST_ACCESS_SECRET || '01234567890123456789012345678901';
+          const hash = hashCode(request.id, code, secret);
+          await db
+            .insert(schema.guestAccessCodes)
+            .values({ requestId: request.id, codeHash: hash })
+            .onConflictDoNothing();
+          return code;
         },
       });
       return config;

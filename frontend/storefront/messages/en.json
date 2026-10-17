@@ -61,6 +61,11 @@
     },
     "Schools": "Schools",
     "TrackOrder": "Track Order",
+    "OpenMenu": "Open menu",
+    "MenuTitle": "Navigation menu",
+    "Departments": "Departments",
+    "LoadingCategories": "Loading categories...",
+    "ViewAllInCategory": "View all in {category}",
     "PartnerWorkspace": "Partner Workspace",
     "Language": "Language",
     "Theme": "Theme"
@@ -807,6 +812,9 @@
     "EmailInvalid": "Please enter a valid email address.",
     "PasswordRequired": "Password is required.",
     "PasswordMin": "Password must be at least 8 characters.",
-    "PasswordsDoNotMatch": "Passwords do not match."
+    "PasswordsDoNotMatch": "Passwords do not match.",
+    "RequestInvalid": "Check the information and try again.",
+    "LoginFailed": "We couldn't sign you in. Check your email and password and try again.",
+    "RegistrationFailed": "We couldn't create your account. Check your details and try again."
   }
 }

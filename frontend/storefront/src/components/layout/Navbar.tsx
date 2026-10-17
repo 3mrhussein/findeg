@@ -19,6 +19,8 @@ import { MobileNavSheet } from './MobileNavSheet';
 import { MegaMenuOverlay } from './MegaMenuOverlay';
 import { useCategories } from '@hooks/useCategories';
 import { useLocale } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import { usePathname } from '@i18n/navigation';
 
 /**
  * Storefront Navbar with Mega Menu
@@ -33,6 +35,9 @@ export function Navbar() {
   const locale = useLocale();
   const { categories, isLoading } = useCategories(locale, 'tree');
   const { isLoggedIn } = useUser();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTo = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -107,7 +112,13 @@ export function Navbar() {
         </div>
         {/* Right: Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
-          <Link href={isLoggedIn ? '/my-account' : '/login'}>
+          <Link
+            href={
+              isLoggedIn
+                ? '/my-account'
+                : { pathname: '/login', query: { returnTo } }
+            }
+          >
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
               <IconTooltip
                 icon={User}

@@ -12,17 +12,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-const persistSessionToken = (_token: string) => {
-  /* internal handler mapped later */
-};
+import { useUser } from '@hooks/useUser';
 
 interface RegisterResponseBody {
   success?: boolean;
-  data?: {
-    token?: string;
-  };
   error?: {
-    message?: string;
+    code?: 'INVALID_INPUT' | 'REGISTRATION_FAILED';
   };
 }
 
@@ -63,6 +58,7 @@ export function RegistrationForm({
   const t = useTranslations();
   const tValidation = useTranslations('Validation');
   const router = useRouter();
+  const { refresh } = useUser();
 
   const formSchema = useMemo(
     () =>
@@ -122,14 +118,22 @@ export function RegistrationForm({
 
       const json = (await response.json().catch(() => null)) as RegisterResponseBody | null;
       if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t('Common.ErrorOccurred');
+        const message =
+          json?.error?.code === 'INVALID_INPUT'
+            ? tValidation('RequestInvalid')
+            : tValidation('RegistrationFailed');
         setServerError(message);
         return;
       }
 
-      if (json?.data?.token) {
-        persistSessionToken(json.data.token);
+      try {
+        await refresh();
+      } catch (err) {
+        console.error('Failed to refresh user session after registration:', err);
+        setServerError(tValidation('RegistrationFailed'));
+        return;
       }
+
       router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {
@@ -147,7 +151,7 @@ export function RegistrationForm({
             <FormItem>
               <FormLabel>{t('Pages.Auth.Name')}</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" data-testid="registration-name-input" {...field} />
+                <Input data-testid="registration-name-input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -161,7 +165,6 @@ export function RegistrationForm({
               <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="m@example.com"
                   data-testid="registration-email-input"
                   readOnly={emailLocked}
                   aria-readonly={emailLocked}
