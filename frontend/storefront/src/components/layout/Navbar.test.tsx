@@ -30,15 +30,37 @@ vi.mock('next-intl', () => ({
 }));
 
 vi.mock('@i18n/navigation', () => ({
-  Link: ({ href, children, ...props }: { href: string; children: React.ReactNode }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
+  Link: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string | { pathname: string; query?: Record<string, string> };
+    children: React.ReactNode;
+  }) => {
+    const hrefStr =
+      typeof href === 'string'
+        ? href
+        : `${href.pathname}${
+            href.query && Object.keys(href.query).length > 0
+              ? `?${new URLSearchParams(href.query).toString()}`
+              : ''
+          }`;
+    return (
+      <a href={hrefStr} {...props}>
+        {children}
+      </a>
+    );
+  },
   useRouter: () => ({
     push: vi.fn(),
     replace: vi.fn(),
   }),
+  usePathname: () => '/',
+}));
+
+vi.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('@components/shared/ToggleLanguage', () => ({
@@ -100,7 +122,7 @@ describe('Navbar', () => {
 
     const loginLinks = screen.getAllByRole('link', { name: /sign in/i });
     expect(loginLinks.length).toBeGreaterThan(0);
-    expect(loginLinks[0]).toHaveAttribute('href', '/login');
+    expect(loginLinks[0]?.getAttribute('href')).toMatch(/^\/login/);
   });
 
   it('renders Track Order, Schools, and Collections links without "#"', () => {

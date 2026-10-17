@@ -12,17 +12,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-const persistSessionToken = (_token: string) => {
-  /* internal handler mapped later */
-};
+import { useUser } from '@hooks/useUser';
 
 interface LoginResponseBody {
   success?: boolean;
-  data?: {
-    token?: string;
-  };
   error?: {
-    message?: string;
+    code?: 'INVALID_INPUT' | 'LOGIN_FAILED';
   };
 }
 
@@ -41,6 +36,7 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
   const t = useTranslations();
   const tValidation = useTranslations('Validation');
   const router = useRouter();
+  const { refresh } = useUser();
 
   const formSchema = useMemo(
     () =>
@@ -84,14 +80,15 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
 
       const json = (await response.json().catch(() => null)) as LoginResponseBody | null;
       if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t('Common.ErrorOccurred');
+        const message =
+          json?.error?.code === 'INVALID_INPUT'
+            ? tValidation('RequestInvalid')
+            : tValidation('LoginFailed');
         setServerError(message);
         return;
       }
 
-      if (json?.data?.token) {
-        persistSessionToken(json.data.token);
-      }
+      await refresh();
       router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {
@@ -110,7 +107,6 @@ export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: 
               <FormLabel>{t('Pages.Auth.Email')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="m@example.com"
                   data-testid="login-email-input"
                   readOnly={emailLocked}
                   aria-readonly={emailLocked}

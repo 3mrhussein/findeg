@@ -12,7 +12,7 @@ async function AuthGuard({ locale }: { locale: string }) {
  *
  * Redirects already-authenticated users to their appropriate homepage:
  * - Admins → /admin
- * - Regular users → /dashboard
+ * - Regular users → /my-account
  */
 export default async function AuthLayout({
   children,
