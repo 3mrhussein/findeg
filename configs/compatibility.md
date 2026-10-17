@@ -6,18 +6,19 @@ base lives in `tsconfig/base.json`. Vitest's Node/browser defaults live in
 `vitest/defaults.ts`; local configs retain discovery, aliases, setup, environment
 variables, integration separation, and coverage settings.
 
-| Entry / consumer | Owner | Removal prerequisite |
+| Entry / consumer | Owner | Status / Removal prerequisite |
 | --- | --- | --- |
-| `packages/config/eslint/**/*.js` re-export delegates | #445 | All path-based consumers and installed package links resolve `configs`; no legacy file imports remain. |
-| `packages/config/bin/lint.mjs` CLI delegate | #445 | Reinstall workspace links and verify every `findeg-lint` invocation resolves the canonical bin. |
-| `packages/config/package.json` legacy metadata | #445 | No checkout/tool depends on the old package location; it is already excluded from workspace discovery. |
-| Root `tsconfig.base.json` delegate | #445 | All workspace `extends` entries migrate to the canonical base, with relative paths verified. |
-| Workspace `eslint.config.js` entries | Workspace owners / #445 audit | Required ESLint discovery entries remain; package-name imports already resolve canonical profiles after install. |
-| Workspace `vitest.config.ts` entries | #437, workspace owners / #445 audit | Required discovery entries remain; migrate further shared runner policy after behavior fixtures pass. |
+| `packages/config/eslint/**/*.js` re-export delegates | #445 | Removed in #445; all consumers resolve canonical `configs`. |
+| `packages/config/bin/lint.mjs` CLI delegate | #445 | Removed in #445; workspace packages invoke `eslint` directly. |
+| `packages/config/package.json` legacy metadata | #445 | Removed in #445; `@findeg/config` is canonical in `configs/`. |
+| Root `tsconfig.base.json` delegate | #445 | Removed in #445; all workspaces extend `configs/tsconfig/base.json` directly. |
+| Workspace `eslint.config.js` entries | Workspace owners / #445 audit | Required ESLint discovery entries remain; package-name imports resolve canonical profiles. |
+| Workspace `vitest.config.ts` entries | Workspace owners / #445 audit | Required discovery entries remain; runner policy shared via `configs/vitest/policy.mjs`. |
 
-`packages/config/README.md` is a documentation pointer. The old ratchet JSON is
-removed: both CLI entries read `configs/ratchet.json`, so there is one writable baseline.
-No baseline counts were changed. CODEOWNERS covers both locations.
+`packages/config/README.md` is a documentation pointer. The old ratchet JSON and
+findeg-lint wrapper were removed in #445; workspace packages invoke direct ESLint
+commands, and repository-level architecture standards are enforced via
+`scripts/architecture` test suites. CODEOWNERS covers both locations.
 
 Root `configs/**` and legacy delegates are Turbo global dependencies. Shared edits
 invalidate all task hashes and affect all consumers, including consumers of the

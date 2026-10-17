@@ -28,7 +28,7 @@
     "db:studio": "drizzle-kit studio --config ./drizzle.config.ts",
     "db:setup": "npm run db:generate && npm run db:push && npm run db:seed",
     "type-check": "tsc --noEmit",
-    "lint": "findeg-lint .",
+    "lint": "eslint .",
     "clean": " rm -rf node_modules dist .turbo",
     "test": "vitest --run --passWithNoTests"
   },

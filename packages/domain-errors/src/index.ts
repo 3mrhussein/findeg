@@ -5,7 +5,10 @@
  * throws or catches it. This package imports no environment, session, database or Backend
  * code; Backend's other error classes extend `DomainError` from here.
  */
-export { DomainError } from './DomainError';
-export { NotAuthorizedError } from './NotAuthorizedError';
-export { ResourceNotFoundError } from './ResourceNotFoundError';
-export { ValidationError, ValidationErrors } from './ValidationError';
+export {
+  DomainError,
+  NotAuthorizedError,
+  ResourceNotFoundError,
+  ValidationError,
+  ValidationErrors,
+} from './helpers';

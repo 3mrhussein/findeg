@@ -113,7 +113,7 @@ graph TD
 | **@findeg/domain-errors**                                | `packages/domain-errors`  | Shared domain error classes.                                                                  | N/A                                    |
 | **@findeg/env**                                          | `configs/env`             | Validated environment variables.                                                              | N/A                                    |
 | **@findeg/domain**                                       | `packages/domain`         | Business domain: pure values, value objects and rules, depending only on zod ([ADR-0018](docs/adr/0018-domain-package-is-the-pure-rich-business-domain.md)). | N/A                                    |
-| [**@findeg/config**](packages/config/README.md)         | `packages/config`         | Shared lint profiles.                                                                         | N/A                                    |
+| [**@findeg/config**](configs/README.md)                 | `configs`                 | Shared lint, TypeScript and Vitest presets.                                                   | N/A                                    |
 
 ---
 

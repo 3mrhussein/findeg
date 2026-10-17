@@ -1,8 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tseslint from 'typescript-eslint';
+import { createRequire } from 'node:module';
 import ts from 'typescript';
+
+const require = createRequire(new URL('../../../configs/package.json', import.meta.url));
+const tseslint = require('typescript-eslint');
 
 const domainDirectory = fileURLToPath(new URL('../../../packages/domain/', import.meta.url));
 

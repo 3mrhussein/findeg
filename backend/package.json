@@ -16,7 +16,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "findeg-lint .",
+    "lint": "eslint .",
     "test": "vitest --run",
     "test:integration": "vitest --run --config vitest.integration.config.ts",
     "clean": " rm -rf node_modules dist .turbo"

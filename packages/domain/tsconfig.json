@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../configs/tsconfig/base.json",
   "compilerOptions": {
     // Runs in browsers and Node alike: no Node or test-runner ambient types.
     "types": []

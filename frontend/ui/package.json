@@ -14,7 +14,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "findeg-lint .",
+    "lint": "eslint .",
     "clean": " rm -rf node_modules dist .turbo .next",
     "test": "vitest --run --passWithNoTests"
   },
