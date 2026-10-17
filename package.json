@@ -9,7 +9,7 @@
     "dev": "pnpm db:run && turbo run dev",
     "build": "turbo run build",
     "start": "turbo run start",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint -- --fix",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",

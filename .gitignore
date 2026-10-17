@@ -46,6 +46,8 @@ next-env.d.ts
 *.sln
 *.sw?
 
+.worktrees/
+worktree/
 # Turborepo cache
 .turbo/
 **/.turbo

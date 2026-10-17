@@ -28,4 +28,10 @@ yarn.lock
 # ESLint bulk-suppressions file: keep ESLint's own format so regenerating it is diff-stable
 **/eslint-suppressions.json
 
+# Worktrees & agent directories
+.worktrees/
+worktree/
+.claude/
+.agents/
+
 *.md

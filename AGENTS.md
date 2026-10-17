@@ -3,6 +3,7 @@
 Before any other action in the codebase:
 1. **Branch naming**: Check `git branch --show-current`. Unless it is `develop` or `main`, the branch must be `<type>/<kebab-case-slug>` with type one of `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`; if it is not, rename it now with `git branch -m <type>/<slug>`.
 2. **Sync with develop**: Before starting implementation on any task branch, ensure your branch is up to date with latest `develop`. Run `git fetch origin develop && git merge origin/develop` (or create new branches directly from fresh `origin/develop`) so work builds on current code and avoids preventable conflicts.
+3. **Root repository immutability**: NEVER modify, stage, or commit files directly in the root repository directory when working on tasks, bug fixes, or framework adjustments. The root repository tracks `develop` and must remain 100% clean at all times. Always use `pnpm wt:new <type>/<slug>` to create an isolated worktree before modifying any code or configuration. Sub-agents must execute within their assigned worktree directories.
 
 ## Agent skills
 
