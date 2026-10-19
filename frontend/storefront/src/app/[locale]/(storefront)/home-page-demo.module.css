@@ -64,7 +64,7 @@
 
 .hero :global(section h1) {
   max-width: 12ch;
-  font-size: var(--text-display);
+  font-size: var(--home-text-display);
   font-weight: 800;
   line-height: 1.06;
   letter-spacing: -0.055em;
@@ -80,7 +80,7 @@
 
 .hero :global(section p) {
   max-width: 50ch;
-  font-size: var(--text-md);
+  font-size: var(--home-text-md);
   line-height: 1.65;
 }
 
@@ -160,7 +160,7 @@
 .collections :global(section h2),
 .arrivals :global(section h2),
 .howItWorks :global(section h2) {
-  font-size: clamp(var(--text-2xl), 2.4vw, 3rem);
+  font-size: clamp(var(--home-text-2xl), 2.4vw, 3rem);
   font-weight: 800;
   letter-spacing: -0.04em;
 }
@@ -186,8 +186,13 @@
 }
 
 .collections :global(section h3) {
-  font-size: var(--text-xl);
+  color: #fff;
+  font-size: var(--home-text-xl);
   font-weight: 800;
+}
+
+.collections :global(section a p) {
+  color: #e2e8f0;
 }
 
 .collections :global(section a:focus-visible),
@@ -221,7 +226,7 @@
 }
 
 .arrivals :global(section h3) {
-  font-size: var(--text-md);
+  font-size: var(--home-text-md);
   font-weight: 700;
 }
 
@@ -287,7 +292,7 @@
   content: '0' counter(steps);
   color: var(--color-accent);
   font-family: var(--font-body);
-  font-size: var(--text-sm);
+  font-size: var(--home-text-sm);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
@@ -304,7 +309,7 @@
 }
 
 .howItWorks :global(section h3) {
-  font-size: var(--text-lg);
+  font-size: var(--home-text-lg);
   font-weight: 800;
 }
 
@@ -357,7 +362,7 @@
 
 .school :global(section a:focus-visible),
 .school :global(section button:focus-visible) {
-  outline: 2px solid var(--color-focus);
+  outline: 2px solid var(--color-paper);
   outline-offset: 3px;
 }
 
@@ -425,7 +430,7 @@
   }
 
   .hero :global(section h1) {
-    font-size: var(--text-display-s);
+    font-size: var(--home-text-display-s);
   }
 
   .hero :global(section > div > div > div:first-child > div:last-child) {

@@ -121,16 +121,25 @@ export async function standards(role, { root = process.cwd(), complete = true } 
           },
         ]
       : []),
-    ...(role === 'node' || role === 'next'
+    ...(complete && (role === 'node' || role === 'next')
       ? [
           {
-            files: TYPESCRIPT,
+            files:
+              role === 'node'
+                ? TYPESCRIPT
+                : ['*.{ts,mts,cts}', 'src/data/**/*.ts', 'src/app/**/route.ts'],
             // tsc resolves TS paths/extensions and validates emitted syntax; Node's
             // source resolver and syntax-version checks cannot model TS compilation.
             rules: {
               'n/no-missing-import': 'off',
               'n/no-missing-require': 'off',
               'n/no-unsupported-features/es-syntax': 'off',
+              'n/no-unsupported-features/node-builtins': [
+                'error',
+                {
+                  ignores: ['process.loadEnvFile'],
+                },
+              ],
             },
           },
         ]
@@ -145,7 +154,7 @@ export async function standards(role, { root = process.cwd(), complete = true } 
       // Ambient namespace merging is how Cypress extends its global command interface.
       rules: { '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }] },
     },
-    ...(role === 'node'
+    ...(complete && role === 'node'
       ? [
           {
             files: ['bin/*.mjs'],
