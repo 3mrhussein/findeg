@@ -1,5 +1,6 @@
 // Ecosystem baseline: imports maintained standard best-practice presets.
 import js from '@eslint/js';
+import { fixupConfigRules } from '@eslint/compat';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
@@ -43,8 +44,8 @@ export async function standards(role, { root = process.cwd(), complete = true } 
       import('eslint-plugin-jsx-a11y'),
     ]);
     ecosystem.push(
-      react.configs.flat.recommended,
-      react.configs.flat['jsx-runtime'],
+      // React 7 still uses context APIs removed in ESLint 10.
+      ...fixupConfigRules([react.configs.flat.recommended, react.configs.flat['jsx-runtime']]),
       hooks.configs.flat.recommended,
       a11y.flatConfigs.recommended,
     );
