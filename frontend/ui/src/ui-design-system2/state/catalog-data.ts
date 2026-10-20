@@ -98,3 +98,5 @@ export const TRACK_LABELS: Record<TrackKey, string> = {
   all: 'FULL MASTER KIT',
   custom: 'CUSTOM STUDENT LIST',
 };
+
+export const DEFAULT_CATALOG_ITEMS = PRODUCTS;

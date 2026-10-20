@@ -95,7 +95,7 @@ export const HeroDesk3DCanvas: React.FC<HeroDesk3DCanvasProps> = ({
 
     // Animation & Mouse Interaction
     let animId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
     let targetRotX = 0;
     let targetRotY = 0;
 

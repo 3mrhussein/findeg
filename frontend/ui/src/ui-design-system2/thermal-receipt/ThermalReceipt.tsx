@@ -12,11 +12,11 @@ import { SawtoothEdge } from '../sawtooth-edge/SawtoothEdge';
 export interface ThermalReceiptProps {
   items: Record<string, SupplyListEntry>;
   totals: SupplyTotals;
-  activeTrackLabel: string;
+  activeTrackLabel?: string;
   eduDiscountActive: boolean;
   onToggleEduDiscount?: () => void;
-  onQuantityChange: (itemId: string, delta: number) => void;
-  onToggleOwned: (itemId: string) => void;
+  onQuantityChange?: (itemId: string, delta: number) => void;
+  onToggleOwned?: (itemId: string) => void;
   onOrderNow?: () => void;
   onCopyList?: () => void;
   onResetList?: () => void;
@@ -90,8 +90,10 @@ export const ThermalReceipt: React.FC<ThermalReceiptProps> = ({
                 key={item.id}
                 item={item}
                 currencySymbol={currencySymbol}
-                onQuantityChange={(delta) => onQuantityChange(item.id, delta)}
-                onToggleOwned={() => onToggleOwned(item.id)}
+                onQuantityChange={
+                  onQuantityChange ? (delta) => onQuantityChange(item.id, delta) : undefined
+                }
+                onToggleOwned={onToggleOwned ? () => onToggleOwned(item.id) : undefined}
               />
             ))
           )}
@@ -144,7 +146,9 @@ export const ThermalReceipt: React.FC<ThermalReceiptProps> = ({
         />
 
         {/* Authentic SVG Barcode */}
-        <ReceiptBarcode trackingCode={`*NOTD-2026-${activeTrackLabel.replace(/\s+/g, '-')}-HUB*`} />
+        <ReceiptBarcode
+          trackingCode={`*NOTD-2026-${(activeTrackLabel ?? 'SUPPLY-LIST').replace(/\s+/g, '-')}-HUB*`}
+        />
 
         {/* Footer Notice */}
         <div className="text-center text-[9px] uppercase text-[#141413]/50 pt-2 border-t border-dashed border-[#141413]/20">

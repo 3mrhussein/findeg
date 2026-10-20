@@ -6,7 +6,7 @@ export interface CampusHubOption {
   label: string;
 }
 
-export const DEFAULT_CAMPUS_HUBS: CampusHubOption[] = [
+export const DEFAULT_CHECKOUT_HUBS: CampusHubOption[] = [
   {
     value: 'Palo Alto — 420 University Ave (Locker #04)',
     label: 'PALO ALTO — 420 UNIVERSITY AVE (LOCKER #04)',
@@ -52,7 +52,7 @@ export const CheckoutReservationModal: React.FC<CheckoutReservationModalProps> =
   onOpenChange,
   summary,
   defaultEmail = 'alex.rivera@stanford.edu',
-  hubOptions = DEFAULT_CAMPUS_HUBS,
+  hubOptions = DEFAULT_CHECKOUT_HUBS,
   currencySymbol = '$',
   onConfirmReservation,
   className = '',

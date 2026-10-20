@@ -25,3 +25,5 @@ export function calculateTotals(
     finalTotal,
   };
 }
+
+export const calculateSupplyTotals = calculateTotals;

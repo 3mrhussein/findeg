@@ -165,7 +165,7 @@ export const ZeroGravity3DCanvas: React.FC<ZeroGravity3DCanvasProps> = ({
     }
 
     let animId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);

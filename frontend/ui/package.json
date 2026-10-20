@@ -10,7 +10,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts",
     "./components/*": "./src/components/*.tsx",
-    "./ui/*": "./src/ui/*.tsx"
+    "./ui/*": "./src/ui/*.tsx",
+    "./ui-design-system2": "./src/ui-design-system2/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
