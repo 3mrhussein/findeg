@@ -17,13 +17,15 @@ A checked box means **closed for this queue**, not necessarily implemented. Keep
 
 ## P1 — Correctness and trustworthy completion
 
-### R01 — [ ] Open: make production builds independent of a development shell
+### R01 — [ ] Implemented; merge pending: make production builds independent of a development shell
 
 **Owner:** app build maintainer. **Source:** C3.
 
-**Current evidence:** [`.env.example`](../.env.example) still sets `NODE_ENV=development`; [the build wrapper](../scripts/architecture/build-next-app.mjs) forwards the environment without forcing production. C3 reported a prerender failure after sourcing that environment. The failure was not reproduced for this report.
+**Current evidence:** [#489](https://github.com/3mrhussein/findeg/issues/489), branch `fix/retro-r01-production-build-env` (FindEg retro automation). [`.env.example`](../.env.example) leaves mode selection to Next.js; [the build wrapper](../scripts/architecture/build-next-app.mjs) forces production only for its child. [Child-process regression tests](../scripts/architecture/build-next-app.test.mjs) cover inherited development/test/production/unset modes, environment forwarding, failure propagation, and map cleanup after success, build failure and verification failure. The mode tests failed before the fix and pass afterward. A real Next.js development startup observed `NODE_ENV=development` with no verification flag. C3's historical prerender failure remains historical evidence, not a reproduced incident. This implementation awaits PR review and merge; the checkbox remains open.
 
 **Recommendation:** remove `NODE_ENV` from the example and explicitly set production for the child build. Keep verification-map cleanup.
+
+**Validation (2026-10-20):** all 105 architecture tests pass, including the child-environment and cleanup regressions. Dashboard and Storefront production builds both pass when launched with `NODE_ENV=development` against a disposable migrated/seeded PostgreSQL database; each verifies 40 client chunks and leaves no verification maps. Real Next.js development startup, focused Node lint and formatting checks pass. Local SWC native-cache access required a temporary writable cache directory; no dependency or configuration changes were committed for that environment setup.
 
 **Done when:** a build launched from a shell with `NODE_ENV=development` uses production mode, and normal development commands retain their expected mode.
 
