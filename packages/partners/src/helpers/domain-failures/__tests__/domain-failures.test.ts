@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { requirePartnerRole as requireDomainPartnerRole } from '@findeg/domain';
+import { DomainError, requirePartnerRole as requireDomainPartnerRole } from '@findeg/domain';
 import { partnerFailure } from '../index';
 
 function domainError(): unknown {
@@ -30,4 +30,41 @@ it('maps known partner codes even outside the caller expected type', () => {
     success: false,
     error: 'role-not-held',
   });
+});
+
+class FixtureDomainError extends DomainError {}
+
+it.each([
+  ['INVALID_PARTNER_STATUS_CHANGE', 'invalid-transition'],
+  ['LAST_PARTNER_ADMINISTRATOR', 'last-administrator'],
+  ['INVITATION_EXPIRED', 'invitation-expired'],
+])('maps %s without changing its application meaning', (code, expected) => {
+  expect(partnerFailure(new FixtureDomainError(code, 'fixture'))).toEqual({
+    success: false,
+    error: expected,
+  });
+});
+
+it.each(['UNKNOWN_PARTNER_CODE', 'toString', '__proto__'])(
+  'rethrows unmapped domain code %s by identity',
+  (code) => {
+    const error = new FixtureDomainError(code, 'fixture');
+    expect.assertions(1);
+    try {
+      partnerFailure(error);
+    } catch (caught) {
+      expect(caught).toBe(error);
+    }
+  },
+);
+
+it('does not map a plain object carrying a known domain code', () => {
+  const error = { code: 'PARTNER_ROLE_NOT_HELD' };
+  try {
+    partnerFailure(error);
+  } catch (caught) {
+    expect(caught).toBe(error);
+    return;
+  }
+  throw new Error('expected the original object to be rethrown');
 });

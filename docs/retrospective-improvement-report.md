@@ -29,15 +29,18 @@ A checked box means **closed for this queue**, not necessarily implemented. Keep
 
 **Done when:** a build launched from a shell with `NODE_ENV=development` uses production mode, and normal development commands retain their expected mode.
 
-### R02 — [ ] Partial: preserve behavior when fixing lint
+### R02 — [ ] Implemented in task branch, awaiting PR: preserve behavior when fixing lint
 
 **Owner:** standards and context maintainers. **Sources:** C1, A6.
 
-**Current evidence:** [the workaround audit](../configs/eslint/README.md) records the repaired `partnerFailure` mapping and removal of its dummy rest parameter. [Shared standards](../configs/eslint/standards.js) still exempt all underscore arguments; [implementation guidance](../.agents/skills/implement/SKILL.md) does not require the owning integration suite after service behavior changes.
+**Baseline evidence (before R02):** [the workaround audit](../configs/eslint/README.md) records the repaired `partnerFailure` mapping and removal of its dummy rest parameter. [Shared standards](../configs/eslint/standards.js) still exempt all underscore arguments; [implementation guidance](../.agents/skills/implement/SKILL.md) does not require the owning integration suite after service behavior changes.
 
 **Recommendation:** require regression coverage when lint edits change guards, return/throw behavior, casts or dummy signatures. Narrow unused-argument exceptions using supported ESLint options or fixtures without rejecting required callback positions. Run owning PostgreSQL tests for affected service behavior, and stop mutation workflows on failed required checks.
 
 **Done when:** a guard/mapping regression fails the owning tests, a dummy parameter is rejected, and a required positional callback remains valid. Do not reopen the already repaired runtime defects.
+
+**Implementation evidence (R02 / [#490](https://github.com/3mrhussein/findeg/issues/490)):** `fix/retro-r02-lint-behavior` replaces the blanket underscore exemption with supported `args: 'after-used'` and an explicit workspace/file/name list for pre-existing ignored compatibility inputs. Fixtures verify that the exception files still reject dummy rest parameters and that legacy names are rejected outside their listed files; unrelated CSV-import/filter placeholders remain unchanged and explicitly documented. Complete-preset CLI fixtures reject trailing/dummy-rest parameters and accept required callback positions and port signatures; the recommended tier has its own fixture. Both negative fixtures fail against the prior standards. Partners guard/mapping tests cover known mappings, non-Domain lookalikes and unmapped/inherited property names; replacing the own-property guard with `in` produces two test failures. The repaired service implementation is unchanged. Implementation guidance now requires owning runtime regressions and PostgreSQL suites for service behavior changes, with failed/blocked required checks stopping publication. Validation passed: all 109 architecture tests, all 15 workspace lint commands, 111 Partners unit tests, 100 database unit tests, and Config/Partners/database type checks. PostgreSQL integration, application builds and E2E were not run locally: service and query behavior are unchanged; the database edit removes an uncalled, ignored parameter and its owning unit test preserves the existing query. PR status will be linked before handoff; the checkbox remains open until merge.
+
 
 ### R03 — [ ] Partial: reject accidental merge-conflict markers
 

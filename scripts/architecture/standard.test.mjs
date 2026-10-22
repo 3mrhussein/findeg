@@ -117,3 +117,58 @@ test('runtime restrictions cover dynamic, require and erased type imports', asyn
     assert.equal(only(messages, 'no-restricted-syntax').length, 1, code);
   }
 });
+
+test('recommended standards reject dummy parameters and allow positional callbacks', async () => {
+  const { standards } = await import('../../configs/eslint/standards.js');
+  const config = await standards('isomorphic', { root: rootPath, complete: false });
+  const rejected = await lintWithConfig(
+    config,
+    'backend/src/fixture.ts',
+    'export function readValue(value: number, ..._dummy: unknown[]) { return value; }',
+  );
+  assert.equal(only(rejected, '@typescript-eslint/no-unused-vars').length, 1);
+  const accepted = await lintWithConfig(
+    config,
+    'backend/src/fixture.ts',
+    'export const positions = [1, 2].map((_value, index) => index);',
+  );
+  assert.deepEqual(only(accepted, '@typescript-eslint/no-unused-vars'), []);
+});
+
+test('legacy argument exceptions are restricted to listed workspace files and names', async () => {
+  const { standards } = await import('../../configs/eslint/standards.js');
+  const { unusedArgumentCompatibility } =
+    await import('../../configs/eslint/unused-argument-compatibility.js');
+  for (const [scope, entries] of Object.entries(unusedArgumentCompatibility)) {
+    const workspace = path.join(rootPath, scope);
+    const eslint = new ESLint({
+      cwd: workspace,
+      overrideConfigFile: true,
+      overrideConfig: await standards('isomorphic', { root: workspace, complete: false }),
+    });
+    async function unused(relativeFile, parameters) {
+      const [result] = await eslint.lintText(
+        `export function readValue(${parameters}) { return 1; }`,
+        { filePath: path.join(workspace, relativeFile) },
+      );
+      assert.equal(result.fatalErrorCount, 0, JSON.stringify(result.messages));
+      return result.messages.filter(({ ruleId }) => ruleId === '@typescript-eslint/no-unused-vars');
+    }
+    for (const { files, names } of entries) {
+      for (const file of files) {
+        const filename = file.replaceAll('\\[', '[').replaceAll('\\]', ']');
+        assert.deepEqual(
+          await unused(filename, names.map((name) => `${name}: unknown`).join(', ')),
+          [],
+          `${scope}/${file}`,
+        );
+        assert.equal(
+          (await unused(filename, '..._dummy: unknown[]')).length,
+          1,
+          `${scope}/${file}`,
+        );
+      }
+      assert.equal((await unused('src/unlisted.ts', `${names[0]}: unknown`)).length, 1, scope);
+    }
+  }
+});

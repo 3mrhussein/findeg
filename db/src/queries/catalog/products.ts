@@ -282,7 +282,7 @@ export async function getProductsByTagIds(tagIds: number[]): Promise<ProductRow[
 /**
  * Get low stock products (returns first 5 as placeholder)
  */
-export async function getLowStockProducts(_threshold?: number): Promise<ProductRow[]> {
+export async function getLowStockProducts(): Promise<ProductRow[]> {
   return db.select().from(products).limit(5);
 }
 
