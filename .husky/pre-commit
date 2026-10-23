@@ -1,1 +1,5 @@
+set -e
+
+git diff --cached --check
+node .github/scripts/check-conflict-markers.mjs
 pnpm exec lint-staged

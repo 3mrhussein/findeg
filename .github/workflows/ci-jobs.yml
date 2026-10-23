@@ -131,6 +131,25 @@ jobs:
           --head "$HEAD" --changed-files "$CHANGED_FILES"
           --no-cache "$NO_CACHE" --full-tests "$FULL_TESTS" --merged-head "$MERGED_HEAD"
 
+  # Always inspect every tracked text blob, even for docs-only plans. No pnpm,
+  # history, build cache or database is needed. A failure feeds CI / Gate.
+  integrity:
+    name: Repository integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Reject tracked conflict markers
+        run: node .github/scripts/check-conflict-markers.mjs
+
   # The code checks share one shape: a full-history checkout on the fast tier
   # (Turbo's --affected diffs against the PR base or the previous push), the
   # shared setup, one Turbo task, then a cache save on producer runs. Lint,
@@ -455,7 +474,7 @@ jobs:
   # can't leave it pending; the policy decides whether the results pass.
   gate:
     name: Gate
-    needs: [plan, checks, architecture, build, integration, e2e]
+    needs: [plan, integrity, checks, architecture, build, integration, e2e]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
