@@ -29,6 +29,6 @@
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
     "drizzle-orm": "^0.45.4",
-    "zod": "^4.6.6"
+    "zod": "^4.6.7"
   }
 }
