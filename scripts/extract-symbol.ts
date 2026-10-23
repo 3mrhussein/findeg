@@ -46,12 +46,20 @@ function extractLineRange(filePath: string, start: number, end: number): SymbolS
   }
 }
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+const DECLARATION_PATTERN =
+  /\b(?:export\s+)?(?:default\s+)?(?:declare\s+)?(?:abstract\s+)?(?:async\s+)?(?:function\*?|class|interface|type|const|let|var|enum)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g;
 
-function buildSafeUserRegex(pattern: string): RegExp {
-  return new RegExp(escapeRegExp(pattern));
+function matchesSymbol(line: string, symbolPattern: string, isExact: boolean): boolean {
+  if (!symbolPattern) return false;
+  if (!isExact) {
+    return line.includes(symbolPattern);
+  }
+  for (const match of line.matchAll(DECLARATION_PATTERN)) {
+    if (match[1] === symbolPattern) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function findSymbolInFile(
@@ -65,16 +73,9 @@ function findSymbolInFile(
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
 
-    const safeSymbol = isExact ? escapeRegExp(symbolPattern) : symbolPattern;
-    const pattern = isExact
-      ? new RegExp(
-          `\\b(?:export\\s+)?(?:default\\s+)?(?:async\\s+)?(?:function|class|interface|type|const|let|var|enum)\\s+${safeSymbol}\\b`,
-        )
-      : buildSafeUserRegex(symbolPattern);
-
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (pattern.test(line)) {
+      if (matchesSymbol(line, symbolPattern, isExact)) {
         const startLine = i + 1;
         let endLine = startLine;
 
