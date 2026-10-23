@@ -34,7 +34,7 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.11",
     "vitest": "^4.1.11",
-    "typescript": "^5.7.3",
+    "typescript": "^7.0.2",
     "drizzle-orm": "^0.45.4",
     "postgres": "^3.4.5",
     "@types/node": "^26.6.5"
