@@ -5,12 +5,12 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { verifyClientBundle } from './client-bundle.mjs';
 
-// Run from either consuming Next app package, just like `next build`. The flag is scoped
-// to this child process; normal next dev/build invocations do not emit maps.
+// Run from either consuming Next app package, just like `next build`. Production mode
+// and verification maps are scoped to this child process; normal next dev is unchanged.
 const require = createRequire(resolve('package.json'));
 const build = spawnSync(process.execPath, [require.resolve('next/dist/bin/next'), 'build'], {
   stdio: 'inherit',
-  env: { ...process.env, VERIFY_CLIENT_BUNDLE: '1' },
+  env: { ...process.env, NODE_ENV: 'production', VERIFY_CLIENT_BUNDLE: '1' },
 });
 
 try {
