@@ -51,11 +51,7 @@ function escapeRegExp(value: string): string {
 }
 
 function buildSafeUserRegex(pattern: string): RegExp {
-  try {
-    return new RegExp(pattern);
-  } catch {
-    return new RegExp(escapeRegExp(pattern));
-  }
+  return new RegExp(escapeRegExp(pattern));
 }
 
 function findSymbolInFile(
