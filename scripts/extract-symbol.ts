@@ -50,6 +50,14 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function buildSafeUserRegex(pattern: string): RegExp {
+  try {
+    return new RegExp(pattern);
+  } catch {
+    return new RegExp(escapeRegExp(pattern));
+  }
+}
+
 function findSymbolInFile(
   filePath: string,
   symbolPattern: string,
@@ -66,7 +74,7 @@ function findSymbolInFile(
       ? new RegExp(
           `\\b(?:export\\s+)?(?:default\\s+)?(?:async\\s+)?(?:function|class|interface|type|const|let|var|enum)\\s+${safeSymbol}\\b`,
         )
-      : new RegExp(symbolPattern);
+      : buildSafeUserRegex(symbolPattern);
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
