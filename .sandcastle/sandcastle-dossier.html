@@ -57,6 +57,7 @@
         display: flex;
         flex-direction: column;
         flex-shrink: 0;
+        transition: transform 0.25s ease-in-out;
       }
 
       .sidebar-header {
@@ -65,6 +66,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.5rem;
       }
 
       .sidebar-title {
@@ -74,6 +76,25 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .sidebar-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .close-sidebar-btn {
+        display: none;
+      }
+
+      .mobile-topbar {
+        display: none;
+      }
+
+      .sidebar-backdrop {
+        display: none;
       }
 
       .theme-toggle {
@@ -217,13 +238,144 @@
         font-size: 0.85rem;
         line-height: 1.5;
       }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .mobile-topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.75rem 1rem;
+          background: var(--bg-secondary);
+          border-bottom: 1px solid var(--border-color);
+          position: sticky;
+          top: 0;
+          z-index: 50;
+        }
+
+        .mobile-menu-btn {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          width: 36px;
+          height: 36px;
+          border-radius: 6px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover {
+          background: var(--border-color);
+        }
+
+        .mobile-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 0.5rem;
+          flex: 1;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 290px;
+          max-width: 85vw;
+          height: 100vh;
+          z-index: 100;
+          transform: translateX(-100%);
+          box-shadow: 2px 0 16px rgba(0, 0, 0, 0.45);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .close-sidebar-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 1rem;
+          font-weight: bold;
+        }
+        .close-sidebar-btn:hover {
+          background: var(--border-color);
+        }
+
+        .sidebar-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(2px);
+          z-index: 90;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.25s ease-in-out;
+          display: block;
+        }
+
+        .sidebar-backdrop.active {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .content {
+          padding: 1.5rem 1.25rem;
+          max-width: 100%;
+        }
+
+        .section-title {
+          font-size: 1.35rem;
+        }
+      }
     </style>
   </head>
   <body>
-    <aside class="sidebar">
+    <header class="mobile-topbar">
+      <button
+        class="mobile-menu-btn"
+        id="mobile-menu-toggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        onclick="toggleSidebar()"
+      >
+        ☰
+      </button>
+      <div class="mobile-title">Sandcastle: mattpocock/sandcastle Dossier</div>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">Theme</button>
+    </header>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-title">Sandcastle: mattpocock/sandcastle Dossier</div>
-        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">Theme</button>
+        <div class="sidebar-actions">
+          <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">Theme</button>
+          <button
+            class="close-sidebar-btn"
+            id="close-sidebar-btn"
+            onclick="closeSidebar()"
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
+        </div>
       </div>
       <div class="search-box">
         <input
@@ -293,87 +445,53 @@
           >Sandbox Factory Functions</a
         >
         <a
-          href="#sec-12-quick-start-guide"
+          href="#sec-12-multi-agent-pipeline-patterns"
           class="nav-link level-2"
-          data-section="sec-12-quick-start-guide"
-          >Quick Start Guide</a
-        >
-        <a
-          href="#sec-13-step-1-install"
-          class="nav-link level-3"
-          data-section="sec-13-step-1-install"
-          >Step 1: Install</a
-        >
-        <a
-          href="#sec-14-step-2-initialize-configuration"
-          class="nav-link level-3"
-          data-section="sec-14-step-2-initialize-configuration"
-          >Step 2: Initialize Configuration</a
-        >
-        <a
-          href="#sec-15-step-3-configure-credentials"
-          class="nav-link level-3"
-          data-section="sec-15-step-3-configure-credentials"
-          >Step 3: Configure Credentials</a
-        >
-        <a
-          href="#sec-16-step-4-write-your-orchestration-script"
-          class="nav-link level-3"
-          data-section="sec-16-step-4-write-your-orchestration-script"
-          >Step 4: Write Your Orchestration Script</a
-        >
-        <a href="#sec-17-step-5-run" class="nav-link level-3" data-section="sec-17-step-5-run"
-          >Step 5: Run</a
-        >
-        <a
-          href="#sec-18-multi-agent-pipeline-patterns"
-          class="nav-link level-2"
-          data-section="sec-18-multi-agent-pipeline-patterns"
+          data-section="sec-12-multi-agent-pipeline-patterns"
           >Multi-Agent Pipeline Patterns</a
         >
         <a
-          href="#sec-19-afk-software-factory"
+          href="#sec-13-1-afk-software-factory"
           class="nav-link level-3"
-          data-section="sec-19-afk-software-factory"
-          >AFK Software Factory</a
+          data-section="sec-13-1-afk-software-factory"
+          >1. AFK Software Factory</a
         >
         <a
-          href="#sec-20-automated-review-loop"
+          href="#sec-14-2-automated-review-loop"
           class="nav-link level-3"
-          data-section="sec-20-automated-review-loop"
-          >Automated Review Loop</a
+          data-section="sec-14-2-automated-review-loop"
+          >2. Automated Review Loop</a
         >
         <a
-          href="#sec-21-planner-implementer-reviewer-triad"
+          href="#sec-15-3-planner-implementer-reviewer-triad"
           class="nav-link level-3"
-          data-section="sec-21-planner-implementer-reviewer-triad"
-          >Planner + Implementer + Reviewer Triad</a
+          data-section="sec-15-3-planner-implementer-reviewer-triad"
+          >3. Planner + Implementer + Reviewer Triad</a
         >
         <a
-          href="#sec-22-ci-integration"
+          href="#sec-16-4-ci-integration"
           class="nav-link level-3"
-          data-section="sec-22-ci-integration"
-          >CI Integration</a
+          data-section="sec-16-4-ci-integration"
+          >4. CI Integration</a
         >
         <a
-          href="#sec-23-security-model"
+          href="#sec-17-security-model"
           class="nav-link level-2"
-          data-section="sec-23-security-model"
+          data-section="sec-17-security-model"
           >Security Model</a
         >
         <a
-          href="#sec-24-relationship-to-ai-hero-platform"
+          href="#sec-18-relationship-to-ai-hero-platform"
           class="nav-link level-2"
-          data-section="sec-24-relationship-to-ai-hero-platform"
+          data-section="sec-18-relationship-to-ai-hero-platform"
           >Relationship to AI Hero Platform</a
         >
         <a
-          href="#sec-25-technical-internals"
+          href="#sec-19-technical-internals"
           class="nav-link level-2"
-          data-section="sec-25-technical-internals"
+          data-section="sec-19-technical-internals"
           >Technical Internals</a
         >
-        <a href="#sec-26-summary" class="nav-link level-2" data-section="sec-26-summary">Summary</a>
       </nav>
     </aside>
 
@@ -416,30 +534,25 @@
         <h2 class="section-title">The Problem Sandcastle Solves</h2>
         <div class="section-body">
           <br />
-          <p>Running autonomous coding agents locally creates three fundamental friction points.</p>
-          <br />
-          <p><strong>1. Safety and Blast Radius</strong></p>
+          <p>Running autonomous coding agents locally creates three fundamental friction points:</p>
           <br />
           <p>
-            Giving an AI agent write access to your primary codebase or host machine means a single
-            hallucinated command can delete files, leak credentials, or corrupt your local state.
-            Without sandboxing, there is no boundary between the agent and your entire filesystem.
+            1. <strong>Safety and Blast Radius</strong>: Giving an AI agent write access to your
+            primary codebase or host machine means a single hallucinated command can delete files,
+            leak credentials, or corrupt your local state. Without sandboxing, there is no boundary
+            between the agent and your entire filesystem.
           </p>
-          <br />
-          <p><strong>2. The Interruption Problem</strong></p>
-          <br />
           <p>
-            Agents constantly ask for human approval: &quot;Can I run this terminal command?&quot;,
-            &quot;Can I edit this file?&quot;. This defeats the purpose of autonomous AFK execution
-            and forces the developer to babysit every session.
+            2. <strong>The Interruption Problem</strong>: Agents constantly ask for human approval:
+            &quot;Can I run this terminal command?&quot;, &quot;Can I edit this file?&quot;. This
+            defeats the purpose of autonomous AFK execution and forces the developer to babysit
+            every session.
           </p>
-          <br />
-          <p><strong>3. The Parallelization Problem</strong></p>
-          <br />
           <p>
-            Running two AI agents on the same local repository simultaneously causes Git conflicts,
-            race conditions, and corrupted <code>node_modules</code>. There is no native mechanism
-            for concurrent safe isolation without extra infrastructure.
+            3. <strong>The Parallelization Problem</strong>: Running two AI agents on the same local
+            repository simultaneously causes Git conflicts, race conditions, and corrupted
+            <code>node_modules</code>. There is no native mechanism for concurrent safe isolation
+            without extra infrastructure.
           </p>
           <br />
           <p>
@@ -455,7 +568,7 @@
         <h2 class="section-title">Core Architecture</h2>
         <div class="section-body">
           <br />
-          <p>Sandcastle&#039;s architecture is composed of three interlocking layers.</p>
+          <p>Sandcastle&#039;s architecture is composed of three interlocking layers:</p>
           <br />
         </div>
       </article>
@@ -472,115 +585,32 @@
           </p>
           <br />
           <p>
-            Sandcastle ships with three built-in providers and an extension seam for custom ones.
+            Sandcastle ships with three built-in providers and an extension seam for custom ones:
           </p>
-          <br />
-          <p><strong>Docker Provider</strong></p>
-          <br />
-          <p>
-            Uses Docker Desktop or Docker Engine. Mounts the active Git worktree directory as a
-            bind-mount volume inside a container. Most common choice for local development.
-          </p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>import { docker } from &quot;@ai-hero/sandcastle/sandboxes/docker&quot;;
-
-await run({
-  sandbox: docker(),
-  agent: claudeCode(),
-  promptFile: &quot;.sandcastle/prompt.md&quot;,
-});</code></pre>
-          </div>
-          <br />
-          <p><strong>Podman Provider</strong></p>
-          <br />
-          <p>
-            A rootless alternative to Docker using Podman with <code>--userns=keep-id</code>.
-            Identical API surface to the Docker provider. Preferred on systems where Docker Desktop
-            is unavailable or rootless operation is required.
-          </p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>import { podman } from &quot;@ai-hero/sandcastle/sandboxes/podman&quot;;
-
-await run({
-  sandbox: podman(),
-  agent: claudeCode(),
-  promptFile: &quot;.sandcastle/prompt.md&quot;,
-});</code></pre>
-          </div>
-          <br />
-          <p><strong>Vercel Sandbox Provider</strong></p>
-          <br />
-          <p>
-            Cloud-based execution using Firecracker microVMs via <code>@vercel/sandbox</code>.
-            Unlike Docker and Podman, this is an isolated provider: the repository is bundled and
-            synced into the remote VM, and changes are extracted back via format-patch. Zero local
-            infrastructure required.
-          </p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>import { vercel } from &quot;@ai-hero/sandcastle/sandboxes/vercel&quot;;
-
-await run({
-  sandbox: vercel(),
-  agent: claudeCode(),
-  promptFile: &quot;.sandcastle/prompt.md&quot;,
-});</code></pre>
-          </div>
-          <br />
-          <p><strong>Custom Providers via Factory Functions</strong></p>
-          <br />
-          <p>Sandcastle exposes two factory helpers for building custom providers:</p>
           <br />
           <li>
-            <code>createBindMountSandboxProvider</code>: For environments that mount a shared host
+            <strong>Docker Provider</strong>: Uses Docker Desktop or Docker Engine. Mounts the
+            active Git worktree directory as a bind-mount volume inside a container. Most common
+            choice for local development.
+          </li>
+          <li>
+            <strong>Podman Provider</strong>: A rootless alternative to Docker using Podman with
+            <code>--userns=keep-id</code>. Identical API surface to the Docker provider. Preferred
+            on systems where Docker Desktop is unavailable or rootless operation is required.
+          </li>
+          <li>
+            <strong>Vercel Sandbox Provider</strong>: Cloud-based execution using Firecracker
+            microVMs via <code>@vercel/sandbox</code>. Unlike Docker and Podman, this is an isolated
+            provider: the repository is bundled and synced into the remote VM, and changes are
+            extracted back via format-patch. Zero local infrastructure required.
+          </li>
+          <li><strong>Custom Providers via Factory Functions</strong>:</li>
+          <li>
+            - <code>createBindMountSandboxProvider</code>: For environments that mount a shared host
             directory (e.g., custom container managers, WSL distros, remote shells with shared FS).
           </li>
           <li>
-            <code>createIsolatedSandboxProvider</code>: For environments with fully isolated
+            - <code>createIsolatedSandboxProvider</code>: For environments with fully isolated
             filesystems that require bundle sync-in and format-patch sync-out.
           </li>
           <br />
@@ -607,18 +637,20 @@ await run({
           </p>
           <br />
           <p>Three branch strategies are available:</p>
-          <br />
           <li>
-            <strong><code>head</code>:</strong> Agent works directly off <code>main</code> HEAD.
-            Fast, no branching overhead. Risky if tasks overlap.
+            <strong><code>head</code></strong
+            >: Agent works directly off <code>main</code> HEAD. Fast, no branching overhead. Risky
+            if tasks overlap.
           </li>
           <li>
-            <strong><code>merge-to-head</code>:</strong> Agent branches off, executes, then
-            auto-merges back when tests and checks pass. Default for parallel workflows.
+            <strong><code>merge-to-head</code></strong
+            >: Agent branches off, executes, then auto-merges back when tests and checks pass.
+            Default for parallel workflows.
           </li>
           <li>
-            <strong><code>branch</code>:</strong> Produces an isolated branch for explicit human
-            review before integration. Best for high-stakes tasks.
+            <strong><code>branch</code></strong
+            >: Produces an isolated branch for explicit human review before integration. Best for
+            high-stakes tasks.
           </li>
           <br />
         </div>
@@ -703,7 +735,6 @@ await run({
           </div>
           <br />
           <p><strong>Options:</strong></p>
-          <br />
           <li>
             <code>sandbox</code>: A sandbox provider instance (docker, podman, vercel, or custom).
           </li>
@@ -732,24 +763,6 @@ await run({
             Creates a Claude Code agent configuration. Optionally accepts a model string to override
             the default.
           </p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>const agent = claudeCode(&quot;claude-opus-4-8&quot;);</code></pre>
-          </div>
           <br />
         </div>
       </article>
@@ -786,269 +799,66 @@ import { vercel } from &quot;@ai-hero/sandcastle/sandboxes/vercel&quot;;</code><
         </div>
       </article>
 
-      <article id="sec-12-quick-start-guide" class="dossier-section">
-        <h2 class="section-title">Quick Start Guide</h2>
-        <div class="section-body">
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-13-step-1-install" class="dossier-section">
-        <h3 class="section-title">Step 1: Install</h3>
-        <div class="section-body">
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">bash</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>npm install --save-dev @ai-hero/sandcastle</code></pre>
-          </div>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-14-step-2-initialize-configuration" class="dossier-section">
-        <h3 class="section-title">Step 2: Initialize Configuration</h3>
-        <div class="section-body">
-          <br />
-          <p>Scaffold the <code>.sandcastle</code> configuration directory in your project:</p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">bash</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>npx @ai-hero/sandcastle init</code></pre>
-          </div>
-          <br />
-          <p>
-            This generates <code>.sandcastle/main.ts</code>, <code>.sandcastle/prompt.md</code>, and
-            <code>.sandcastle/.env.example</code>.
-          </p>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-15-step-3-configure-credentials" class="dossier-section">
-        <h3 class="section-title">Step 3: Configure Credentials</h3>
-        <div class="section-body">
-          <br />
-          <p>Copy the example env file and populate it:</p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">bash</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>cp .sandcastle/.env.example .sandcastle/.env</code></pre>
-          </div>
-          <br />
-          <p>Required credentials:</p>
-          <br />
-          <li>
-            <code>CLAUDE_CODE_OAUTH_TOKEN</code>: Run <code>claude setup-token</code> on your host
-            to authorize Claude Code to use your existing Anthropic subscription. This avoids
-            consuming raw API credits.
-          </li>
-          <li><code>ANTHROPIC_API_KEY</code>: Alternative if you prefer direct API key access.</li>
-          <li>
-            <code>GH_TOKEN</code>: A GitHub fine-grained Personal Access Token with repo read/write
-            permissions for issue tracking and PR automation.
-          </li>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-16-step-4-write-your-orchestration-script" class="dossier-section">
-        <h3 class="section-title">Step 4: Write Your Orchestration Script</h3>
-        <div class="section-body">
-          <br />
-          <p>Edit <code>.sandcastle/main.ts</code>:</p>
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>import { run, claudeCode } from &quot;@ai-hero/sandcastle&quot;;
-import { docker } from &quot;@ai-hero/sandcastle/sandboxes/docker&quot;;
-
-await run({
-  sandbox: docker(),
-  agent: claudeCode(),
-  strategy: &quot;merge-to-head&quot;,
-  tasks: [
-    { name: &quot;Implement login retry feature&quot;, issue: 42 },
-    { name: &quot;Fix token expiry bug in src/auth.ts&quot;, issue: 43 },
-  ],
-});</code></pre>
-          </div>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-17-step-5-run" class="dossier-section">
-        <h3 class="section-title">Step 5: Run</h3>
-        <div class="section-body">
-          <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">bash</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>npx tsx .sandcastle/main.ts</code></pre>
-          </div>
-          <br />
-          <p>
-            Sandcastle will provision worktrees, spin up containers, inject credentials, run Claude
-            Code on each task, and attempt to merge results back when ready.
-          </p>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-18-multi-agent-pipeline-patterns" class="dossier-section">
+      <article id="sec-12-multi-agent-pipeline-patterns" class="dossier-section">
         <h2 class="section-title">Multi-Agent Pipeline Patterns</h2>
         <div class="section-body">
           <br />
-          <p>Sandcastle&#039;s architecture enables several high-leverage pipeline patterns.</p>
+          <p>Sandcastle&#039;s architecture enables several high-leverage pipeline patterns:</p>
           <br />
         </div>
       </article>
 
-      <article id="sec-19-afk-software-factory" class="dossier-section">
-        <h3 class="section-title">AFK Software Factory</h3>
+      <article id="sec-13-1-afk-software-factory" class="dossier-section">
+        <h3 class="section-title">1. AFK Software Factory</h3>
         <div class="section-body">
-          <br />
           <p>
             Queue multiple independent bug fixes or features before logging off. Sandcastle runs
             them in parallel containers overnight and produces branches or merged commits ready for
             review the next morning.
           </p>
           <br />
-
-          <div class="code-container">
-            <div class="code-header">
-              <span class="code-lang">ts</span>
-              <button
-                class="copy-btn"
-                onclick="
-                  navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText);
-                  this.innerText = 'Copied!';
-                  setTimeout(() => (this.innerText = 'Copy'), 2000);
-                "
-              >
-                Copy
-              </button>
-            </div>
-            <pre><code>await run({
-  sandbox: docker(),
-  agent: claudeCode(),
-  strategy: &quot;branch&quot;,
-  tasks: openIssues.map((issue) =&gt; ({
-    name: issue.title,
-    issue: issue.number,
-  })),
-});</code></pre>
-          </div>
-          <br />
         </div>
       </article>
 
-      <article id="sec-20-automated-review-loop" class="dossier-section">
-        <h3 class="section-title">Automated Review Loop</h3>
+      <article id="sec-14-2-automated-review-loop" class="dossier-section">
+        <h3 class="section-title">2. Automated Review Loop</h3>
         <div class="section-body">
-          <br />
           <p>
             Spin up a reviewer agent that checks code changes against project coding standards
-            before human review. Reviewer operates in an isolated read-only-ish context on the PR
+            before human review. Reviewer operates in an isolated read-only context on the PR
             branch.
           </p>
           <br />
         </div>
       </article>
 
-      <article id="sec-21-planner-implementer-reviewer-triad" class="dossier-section">
-        <h3 class="section-title">Planner + Implementer + Reviewer Triad</h3>
+      <article id="sec-15-3-planner-implementer-reviewer-triad" class="dossier-section">
+        <h3 class="section-title">3. Planner + Implementer + Reviewer Triad</h3>
         <div class="section-body">
-          <br />
           <p>Three-stage pipeline:</p>
-          <br />
           <p>
-            1. <strong>Planner Agent:</strong> Reads issues, maps dependencies via a DAG, and
+            1. <strong>Planner Agent</strong>: Reads issues, maps dependencies via a DAG, and
             batches non-conflicting tasks.
           </p>
           <p>
-            2. <strong>Implementation Agent (Claude Code):</strong> Executes each task inside its
+            2. <strong>Implementation Agent (Claude Code)</strong>: Executes each task inside its
             own sandbox and worktree.
           </p>
           <p>
-            3. <strong>Reviewer Agent:</strong> Reviews the resulting changes automatically against
+            3. <strong>Reviewer Agent</strong>: Reviews the resulting changes automatically against
             project standards.
           </p>
           <p>
-            4. <strong>Merger Agent:</strong> Handles merging passing branches and closing tracked
+            4. <strong>Merger Agent</strong>: Handles merging passing branches and closing tracked
             issues.
           </p>
           <br />
         </div>
       </article>
 
-      <article id="sec-22-ci-integration" class="dossier-section">
-        <h3 class="section-title">CI Integration</h3>
+      <article id="sec-16-4-ci-integration" class="dossier-section">
+        <h3 class="section-title">4. CI Integration</h3>
         <div class="section-body">
-          <br />
           <p>
             Because <code>run()</code> is just a TypeScript function, it can be wired into any CI/CD
             system (GitHub Actions, etc.) to trigger agent runs on schedule or on specific events
@@ -1058,49 +868,38 @@ await run({
         </div>
       </article>
 
-      <article id="sec-23-security-model" class="dossier-section">
+      <article id="sec-17-security-model" class="dossier-section">
         <h2 class="section-title">Security Model</h2>
         <div class="section-body">
           <br />
-          <p>Sandcastle&#039;s security model rests on four principles.</p>
-          <br />
-          <p><strong>Blast Radius Containment</strong></p>
+          <p>Sandcastle&#039;s security model rests on four principles:</p>
           <br />
           <p>
-            Even if an agent executes a destructive command (<code>rm -rf</code>, secret
-            exfiltration, malicious package), the blast radius is strictly limited to the disposable
-            container or microVM instance. The host machine and primary codebase are never directly
-            exposed.
+            1. <strong>Blast Radius Containment</strong>: Even if an agent executes a destructive
+            command (<code>rm -rf</code>, secret exfiltration, malicious package), the blast radius
+            is strictly limited to the disposable container or microVM instance. The host machine
+            and primary codebase are never directly exposed.
           </p>
-          <br />
-          <p><strong>Credential Scoping</strong></p>
-          <br />
           <p>
-            Credentials are injected into the sandbox at runtime via environment variables. The
-            sandbox has no access to the host&#039;s broader credential store (AWS profiles, SSH
-            keys, GCP ADC, etc.) unless explicitly mounted.
+            2. <strong>Credential Scoping</strong>: Credentials are injected into the sandbox at
+            runtime via environment variables. The sandbox has no access to the host&#039;s broader
+            credential store (AWS profiles, SSH keys, GCP ADC, etc.) unless explicitly mounted.
           </p>
-          <br />
-          <p><strong>Ephemeral Execution</strong></p>
-          <br />
           <p>
-            Each run gets a fresh container or VM. State does not persist between runs unless
-            explicitly committed to Git. Abandoned runs leave no orphaned processes or filesystem
-            debris on the host.
+            3. <strong>Ephemeral Execution</strong>: Each run gets a fresh container or VM. State
+            does not persist between runs unless explicitly committed to Git. Abandoned runs leave
+            no orphaned processes or filesystem debris on the host.
           </p>
-          <br />
-          <p><strong>Git as the Trust Boundary</strong></p>
-          <br />
           <p>
-            Code only exits the sandbox via Git commits. All changes are inspectable before merge.
-            The <code>branch</code> strategy requires explicit human approval before any code
-            reaches <code>main</code>.
+            4. <strong>Git as the Trust Boundary</strong>: Code only exits the sandbox via Git
+            commits. All changes are inspectable before merge. The <code>branch</code> strategy
+            requires explicit human approval before any code reaches <code>main</code>.
           </p>
           <br />
         </div>
       </article>
 
-      <article id="sec-24-relationship-to-ai-hero-platform" class="dossier-section">
+      <article id="sec-18-relationship-to-ai-hero-platform" class="dossier-section">
         <h2 class="section-title">Relationship to AI Hero Platform</h2>
         <div class="section-body">
           <br />
@@ -1114,7 +913,6 @@ await run({
           </p>
           <br />
           <p>As Matt Pocock describes it:</p>
-          <br />
           <p>
             <em
               >&quot;For work that is truly AFK, a deterministic loop (Sandcastle, a shell script, a
@@ -1123,23 +921,14 @@ await run({
             >
           </p>
           <br />
-          <p>
-            The distinction: AI Hero interactive mode keeps the human in the loop; Sandcastle
-            removes the human from the loop entirely.
-          </p>
-          <br />
         </div>
       </article>
 
-      <article id="sec-25-technical-internals" class="dossier-section">
+      <article id="sec-19-technical-internals" class="dossier-section">
         <h2 class="section-title">Technical Internals</h2>
         <div class="section-body">
           <br />
-          <p>
-            The repository is structured around the following key source files (based on available
-            evidence):
-          </p>
-          <br />
+          <p>The repository is structured around the following key source components:</p>
           <li>
             <code>src/SandboxProvider.ts</code>: Defines the core
             <code>SandboxProvider</code> interface and the
@@ -1163,34 +952,7 @@ await run({
           <p>
             The <code>exec(command, options)</code> primitive inside each provider supports
             streaming output via <code>onLine</code> callbacks, custom <code>cwd</code>, and
-            environment variable injection. This allows the agent&#039;s terminal output to be
-            streamed in real-time to the orchestration process.
-          </p>
-          <br />
-        </div>
-      </article>
-
-      <article id="sec-26-summary" class="dossier-section">
-        <h2 class="section-title">Summary</h2>
-        <div class="section-body">
-          <br />
-          <p>
-            Sandcastle solves the three canonical problems of autonomous AI coding agents: safety,
-            interruption, and parallelization. It does so by combining provider-agnostic sandbox
-            isolation, Git worktree concurrency management, and a clean TypeScript API into a
-            unified orchestration layer.
-          </p>
-          <br />
-          <p>
-            The result is a &quot;software factory&quot; primitive: queue tasks, configure your
-            sandbox, run <code>tsx .sandcastle/main.ts</code>, and come back to results. No manual
-            permission prompts. No host machine contamination. No branch collisions.
-          </p>
-          <br />
-          <p>
-            It represents Matt Pocock&#039;s philosophy that the orchestration layer for AI agents
-            should be a <strong>deterministic program</strong>, not another AI agent making ad-hoc
-            decisions.
+            environment variable injection.
           </p>
           <br />
         </div>
@@ -1198,6 +960,35 @@ await run({
     </main>
 
     <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        if (!sidebar) return;
+        const isOpen = sidebar.classList.contains('open');
+
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          sidebar.classList.add('open');
+          if (backdrop) backdrop.classList.add('active');
+          if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        if (!sidebar) return;
+
+        sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('active');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
       function toggleTheme() {
         const html = document.documentElement;
         const current = html.getAttribute('data-theme') || 'dark';
@@ -1236,6 +1027,20 @@ await run({
 
       document.querySelectorAll('.dossier-section').forEach((section) => {
         observer.observe(section);
+      });
+
+      document.querySelectorAll('.nav-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 768) {
+            closeSidebar();
+          }
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeSidebar();
+        }
       });
     </script>
   </body>
