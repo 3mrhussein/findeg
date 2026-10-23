@@ -18,12 +18,13 @@
   "devDependencies": {
     "@findeg/config": "workspace:*",
     "@types/node": "^26.6.5",
-    "eslint": "^9.39.5",
-    "typescript": "^7.0.2",
+    "eslint": "^10.12.0",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vitest": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
     "postgres": "^3.4.5",
-    "drizzle-orm": "^0.45.4"
+    "drizzle-orm": "^0.45.4",
+    "@typescript/native": "npm:typescript@^7.0.2"
   },
   "dependencies": {
     "@findeg/db": "workspace:*",
