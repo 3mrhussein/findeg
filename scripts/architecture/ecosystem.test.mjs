@@ -31,6 +31,7 @@ async function fixture(role, filename, code) {
         module: 'ESNext',
         moduleResolution: 'Bundler',
         skipLibCheck: true,
+        types: ['node'],
       },
       include: ['**/*.ts', '**/*.tsx', '**/*.js'],
     }),
