@@ -46,6 +46,10 @@ function extractLineRange(filePath: string, start: number, end: number): SymbolS
   }
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function findSymbolInFile(
   filePath: string,
   symbolPattern: string,
@@ -57,9 +61,10 @@ function findSymbolInFile(
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
 
+    const safeSymbol = isExact ? escapeRegExp(symbolPattern) : symbolPattern;
     const pattern = isExact
       ? new RegExp(
-          `\\b(?:export\\s+)?(?:default\\s+)?(?:async\\s+)?(?:function|class|interface|type|const|let|var|enum)\\s+${symbolPattern}\\b`,
+          `\\b(?:export\\s+)?(?:default\\s+)?(?:async\\s+)?(?:function|class|interface|type|const|let|var|enum)\\s+${safeSymbol}\\b`,
         )
       : new RegExp(symbolPattern);
 
