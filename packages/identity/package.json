@@ -20,7 +20,7 @@
     "@findeg/domain-errors": "workspace:*",
     "@findeg/orders": "workspace:*",
     "bcryptjs": "^2.4.3",
-    "zod": "^4.6.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",

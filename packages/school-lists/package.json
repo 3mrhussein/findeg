@@ -29,6 +29,6 @@
     "@findeg/db": "workspace:*",
     "@findeg/domain": "workspace:*",
     "@findeg/domain-errors": "workspace:*",
-    "zod": "^4.6.6"
+    "zod": "^4.6.7"
   }
 }

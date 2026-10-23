@@ -37,7 +37,7 @@
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.45.4",
     "postgres": "^3.4.5",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "@findeg/domain": "workspace:*"
   },
   "devDependencies": {
