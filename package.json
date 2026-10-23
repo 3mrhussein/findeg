@@ -26,14 +26,17 @@
     "wt:new": "node scripts/worktree.mjs create",
     "wt:rm": "node scripts/worktree.mjs remove",
     "wt:prune": "node scripts/worktree.mjs prune",
-    "wt:list": "node scripts/worktree.mjs list"
+    "wt:list": "node scripts/worktree.mjs list",
+    "sandcastle": "tsx .sandcastle/main.ts"
   },
   "devDependencies": {
+    "@ai-hero/sandcastle": "^0.12.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
     "turbo": "^2.11.9",
     "typescript": "^5.7.3"
   }
