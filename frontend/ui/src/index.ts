@@ -47,3 +47,6 @@ export * from './shared/Pagination';
 export * from './shared/Price';
 export * from './shared/ToggleTheme';
 export * from './types/ui';
+
+// UI Design System 2 - Cinematic 3D Stationery Studio
+export * as uiDesignSystem2 from './ui-design-system2';

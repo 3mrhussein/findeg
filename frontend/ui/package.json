@@ -10,7 +10,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts",
     "./components/*": "./src/components/*.tsx",
-    "./ui/*": "./src/ui/*.tsx"
+    "./ui/*": "./src/ui/*.tsx",
+    "./ui-design-system2": "./src/ui-design-system2/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -57,7 +58,8 @@
     "react-hook-form": "^7.90.0",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7",
-    "@findeg/domain": "workspace:*"
+    "@findeg/domain": "workspace:*",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
@@ -71,6 +73,9 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.71.2",
     "vitest": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11"
+    "@vitest/coverage-v8": "^4.1.11",
+    "@testing-library/react": "^16.3.3",
+    "@types/three": "^0.186.0",
+    "jsdom": "^29.1.1"
   }
 }
