@@ -59,7 +59,7 @@ test('canonical TypeScript base resolves environment paths', () => {
     );
     const result = spawnSync(
       process.execPath,
-      [path.join(root, 'node_modules/typescript/bin/tsc'), '--project', directory],
+      [path.join(root, 'node_modules/@typescript/native/bin/tsc'), '--project', directory],
       { encoding: 'utf8', env },
     );
     assert.equal(result.status, 0, result.stdout + result.stderr);
