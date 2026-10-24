@@ -1,0 +1,70 @@
+# Lightweight persistence for full local development
+
+Research date: 2026-10-24. Repository baseline: `a4574376f34ad362487f89d2789b0504dbb9b9f4`.
+Context: [Investigate embedded databases and mocks for full local workflow support](https://github.com/3mrhussein/findeg/issues/519), within [Map: Fast local development without Docker](https://github.com/3mrhussein/findeg/issues/518).
+
+## Finding
+
+PGlite with a single, automatically launched socket host is the strongest candidate **to prototype**. Its documented persistence, PostgreSQL client support, and upstream function/trigger tests fit this repository more closely than pg-mem or newly written persistence fakes. This is a research assessment, not a storage decision or proof that FindEg works on PGlite. The complete migration chain, seeds, driver results, simultaneous app traffic and application journeys remain unverified.
+
+The target retains existing business services and all current database-backed workflows, with durable editable sample data shared between Storefront and Dashboard. A simple per-app memory store does not meet that target. Production PostgreSQL and its integration/concurrency checks remain the verification authority for production semantics.
+
+## Repository requirements
+
+| Observed requirement | Evidence at the baseline |
+| --- | --- |
+| Node `24.21.0`; Drizzle `0.45.4` and postgres.js `3.4.9` in the lockfile | [Node pin](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/.nvmrc), [lockfile](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/pnpm-lock.yaml) |
+| A singleton postgres.js connection, Drizzle `postgres-js` database and driver-specific transaction/result types | [connection](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/connection.ts), [transaction type](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/db-transaction.ts) |
+| Six PostgreSQL schemas; schema-qualified tables, native enums, numeric amounts, JSONB, arrays, timestamps and UUIDs | [schema namespaces](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/schema/schemas.ts), [initial migration](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/migrations/0000_little_chimera.sql) |
+| PL/pgSQL integrity triggers, SQLSTATE/constraint-name handling and row locking | [Order snapshot triggers](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/migrations/0010_order_acceptance_and_reference.sql), [conflict handling](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/partners/index.ts), [stock reservations](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/inventory/stock-reservations.ts), [outbox claiming](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/system/outbox.ts) |
+| Init requests `uuid-ossp`; migration runner uses `postgres-js/migrator`; seeding truncates, queries catalogs and repairs sequences | [init](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/init-db.sql), [migration entry](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/migrate.ts), [seed entry](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/seed.ts), [seed helpers](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/seeds/helpers/index.ts) |
+| Two independent Next app processes; Docker is started by the root dev command | [Storefront scripts](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/frontend/storefront/package.json), [Dashboard scripts](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/frontend/dashboard/package.json), [root scripts](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/package.json) |
+
+## Options and evidence
+
+### Embedded PostgreSQL: PGlite
+
+**Confirmed upstream:** PGlite packages PostgreSQL compiled to WebAssembly for JavaScript runtimes, without requiring a Linux VM or PostgreSQL installation. It is a single-user/connection engine. Node filesystem storage is documented; memory-only storage is disposable. Package download size does not establish runtime RAM usage. [Project](https://github.com/electric-sql/pglite), [filesystems](https://pglite.dev/docs/filesystems).
+
+Upstream tests cover JSONB, timestamps and arrays, PL/pgSQL functions, and regular triggers. The extension catalog includes `uuid-ossp`, which must be registered before its SQL extension creation. These are supporting compatibility evidence, not verification of FindEg's schemas or migration history. [Basic/type tests](https://github.com/electric-sql/pglite/blob/main/packages/pglite/tests/basic.test.ts), [PL/pgSQL tests](https://github.com/electric-sql/pglite/blob/main/packages/pglite/tests/plpgsql.test.js), [trigger tests](https://github.com/electric-sql/pglite/blob/main/packages/pglite/tests/triggers.test.js), [extension catalog](https://pglite.dev/extensions/#uuid-ossp).
+
+Two integration routes exist:
+
+- Direct `drizzle-orm/pglite` integration is documented, including migrations. It changes the driver family; FindEg's exported `PostgresJsDatabase`, transaction types and raw execution assumptions would need review. [ORM support](https://pglite.dev/docs/orm-support).
+- `@electric-sql/pglite-socket` exposes one database over TCP or a Unix socket to clients including postgres.js. Its CLI can launch child services and supply `DATABASE_URL`; file-backed storage lets one host own durable data for both apps. Multiple clients multiplex the engine's single connection, and SSL is unsupported. The CLI defaults to one accepted connection, so two apps and their pools need explicit configuration. [Socket guide](https://pglite.dev/docs/pglite-socket), [CLI source](https://github.com/electric-sql/pglite/blob/main/packages/pglite-socket/src/scripts/server.ts).
+
+**Inference:** An automatically supervised local host could remove separate provisioning while retaining FindEg's current client family and shared state. It would still be a database/helper process. Independently opening one data directory from both apps is not the proposed topology. Socket source serializes work and keeps transaction ownership with one handler; it is not evidence of independent PostgreSQL backends, session isolation or production lock contention. [Queue implementation](https://github.com/electric-sql/pglite/blob/main/packages/pglite-socket/src/index.ts).
+
+**Unverified here:** exact SQLSTATE and `constraint_name` propagation; prepared statements and session settings; numeric strings, dates and raw `.execute()` shape; savepoints and transaction recovery; the full init/migration/seed chain; all FindEg journeys; Node/macOS behavior; shutdown/recovery and resource savings. Persistent data also needs an upgrade policy: PGlite documents potentially breaking minor upgrades and dump/import migration. [Upgrade guide](https://pglite.dev/docs/upgrade).
+
+### PostgreSQL emulator: pg-mem
+
+**Confirmed upstream:** pg-mem is an experimental, in-memory PostgreSQL emulator. Its README documents numeric values represented by JavaScript numbers, no timezone support and no native extensions. The adapter guide includes postgres.js support, but warns about concurrent queries, named prepared statements and savepoints. [README](https://github.com/oguimbal/pg-mem), [adapters](https://github.com/oguimbal/pg-mem/wiki/Libraries-adapters).
+
+`bindServer()` can expose one instance to both apps over TCP. The public API offers in-memory backup/restore points; this research found no documented durable backend satisfying edits surviving host restart. [Adapter source](https://github.com/oguimbal/pg-mem/blob/master/src/adapters/adapters.ts), [interfaces](https://github.com/oguimbal/pg-mem/blob/master/src/interfaces.ts).
+
+The FAQ says native PL/pgSQL is absent, although custom language compilers can be registered. Current SELECT execution ignores its locking clause; statement execution has no `CREATE TRIGGER` implementation and rejects `DROP TRIGGER`. [FAQ](https://github.com/oguimbal/pg-mem/wiki/FAQ), [SELECT implementation](https://github.com/oguimbal/pg-mem/blob/master/src/execution/select.ts), [statement implementation](https://github.com/oguimbal/pg-mem/blob/master/src/execution/statement-exec.ts).
+
+**Assessment:** Not a transparent full-workflow replacement for this repository. Shared access alone does not solve durability or the existing trigger/transaction contract. It could serve narrower tests or deliberately reduced behavior, but that would not establish the agreed destination. Custom compatibility additions would be new maintenance work.
+
+### Persistence fake adapters
+
+**Repository evidence:** Some contexts accept an injected Drizzle database; this is not a complete storage-neutral repository interface. Catalog and Identity directly import database query modules, and checkout loads the default connection independently of `createOrders({ db })`. [Orders factory](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/packages/orders/src/helpers.ts), [checkout loader](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/packages/orders/src/features/order-acceptance/helpers.ts), [Catalog service](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/packages/catalog/src/features/catalog-product-service/index.ts), [Identity service](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/packages/identity/src/features/authentication/helpers.ts).
+
+**Inference:** Fakes could preserve canonical Domain functions, but full coverage would require new persistence seams plus shared durable state, transactions, constraints, query behavior and error mapping. Scripted service/API responses would bypass the very services the user wants to retain. The engineering cost is unmeasured; there is no existing runtime fake adapter to switch on. This option warrants reconsideration if the embedded prototype fails, rather than assuming it is the smaller change. [Architecture ownership](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/docs/adr/0020-domain-single-source-and-bounded-context-packages.md).
+
+## Version and platform snapshot
+
+The npm registry `latest` endpoints returned PGlite `0.5.11`, PGlite Socket `0.2.14`, and pg-mem `3.0.14` during this investigation. Those manifests did not declare a Node `engines` range; that absence is not proof of compatibility with FindEg's Node pin. Pin candidate versions in a prototype and test supported developer platforms. PGlite Socket declares PGlite `0.5.11` as a peer; dependency/extension packaging must be checked before adoption. [PGlite registry manifest](https://registry.npmjs.org/@electric-sql/pglite/latest), [socket registry manifest](https://registry.npmjs.org/@electric-sql/pglite-socket/latest), [pg-mem registry manifest](https://registry.npmjs.org/pg-mem/latest).
+
+## Minimum next prototype, evaluated with the human
+
+**Question:** Can one file-backed PGlite socket host run the existing migration/seed pipeline and both apps' agreed journeys with acceptable developer behavior and resource cost?
+
+1. Use an isolated worktree and pinned dependencies. Keep the existing production driver path and business services; enumerate every experimental configuration change. Load required extensions, apply the complete migration chain from an empty state, then run current seeds, sequence repair and explicit reset. Report the first failing statement or incompatible result precisely.
+2. Verify login/permissions, numeric/date/JSONB/array values, named unique-conflict mapping, transaction rollback/savepoints and integrity-trigger failures. Exercise English/Arabic search and dashboard analytics, which use raw SQL expressions and date formatting. Do not treat successful SQL parsing as proof of behavior. [Search queries](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/catalog/search.ts), [revenue queries](https://github.com/3mrhussein/findeg/blob/a4574376f34ad362487f89d2789b0504dbb9b9f4/db/src/queries/sales/revenue.ts).
+3. Run both actual app processes against the same host. Edit a Product in Dashboard and observe it in Storefront after the agreed cache refresh. Restart either app, then the host; verify committed edits persist. Exercise overlapping requests and transaction errors with pools/prepared statements configured explicitly. Disconnect a client inside a transaction and verify host ownership is released so both apps can continue.
+4. Walk the agreed checkout, stock reservation/status transition, School Supply List and Business Partner journeys through existing services. Demonstrate the chosen local email/outbox behavior after the workflow-fidelity decision. Any unsupported journey is a reported gap, not a successful canned response.
+5. Check host ownership, startup failure, orderly shutdown, reset isolation and separate worktree data. Agree provisional usability/resource acceptance criteria with the human before judging results. Capture repeatable cold/warm startup and aggregate steady-state memory/CPU, including the helper and both apps, against the same fixture workload on Docker PostgreSQL. Show the human commands, findings and limitations before selecting storage.
+
+This prototype can establish development usefulness; it cannot certify PostgreSQL concurrency parity. Keep the real database lane for backend-process contention, row locks, migrations and production integration guarantees. No candidate installation, service startup, prototype, application test or benchmark was performed for this research.
