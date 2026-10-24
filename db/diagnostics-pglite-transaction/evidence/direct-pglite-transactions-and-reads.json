@@ -1,0 +1,442 @@
+{
+  "versions": {
+    "pglite": "0.5.11",
+    "socket": "0.2.14",
+    "postgres": "3.4.9",
+    "drizzle": "0.45.4"
+  },
+  "cases": [
+    {
+      "name": "direct-pglite-transactions-and-reads",
+      "peers": 0,
+      "max": 1,
+      "direct": true,
+      "rounds": 20,
+      "exact25001": false,
+      "asynchronousErrors": [],
+      "results": [
+        {
+          "round": 0,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 1,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 4,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 5,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 6,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 7,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 8,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 9,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 10,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 11,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 12,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 13,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 14,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 15,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 16,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 17,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 18,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "round": 19,
+          "outcomes": [
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "status": "fulfilled",
+              "rows": [
+                {
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "trace": []
+    }
+  ]
+}
