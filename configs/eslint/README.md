@@ -56,3 +56,27 @@ is restored. Package export fixtures continue rejecting unpublished subpaths.
 The `--complete` measurement appends presets after workspace overrides, so it
 reports the two documented constructor/output-generic exceptions as diagnostics;
 the normal workspace lint command respects those file-specific exceptions.
+
+## Unused arguments and lint behavior
+
+Shared TypeScript standards use the maintained `no-unused-vars` rule with
+`args: 'after-used'` and no blanket argument-name exemption. An unused argument before the
+last used positional argument is allowed (for example `(_context, run) => run()`);
+by default, an unused trailing argument or dummy rest argument is rejected, including `_` names.
+Type-only port signatures remain valid. Existing ignored API/prop inputs are listed in
+[`unused-argument-compatibility.js`](unused-argument-compatibility.js) by workspace,
+file and exact name, with the retained behavior stated for each entry. These are
+explicit legacy exceptions: CSV import, collection/search filters and ignored locale
+inputs are not implemented by this change. Remove an entry when its owning API is
+migrated; new parameters do not inherit the old blanket underscore exemption.
+Fixtures verify every listed file/name, reject a generic dummy rest parameter in
+those same files, and reject the legacy name in an unrelated file.
+
+This positional rule does not prove a leading argument is semantically required; owning tests and review establish that contract.
+
+`ecosystem.test.mjs` exercises the complete preset through the real lint CLI;
+`standard.test.mjs` covers the recommended tier. The Partners domain-failure tests
+protect known mappings, rethrow identity and the own-property guard. Follow
+[implementation guidance](../../.agents/skills/implement/SKILL.md#behavior-preserving-lint-changes)
+when a lint repair can affect runtime behavior, including the owning PostgreSQL suite
+and the required-check publication gate.

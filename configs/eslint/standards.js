@@ -8,6 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CODE, TYPESCRIPT } from './globs.js';
 import { naming } from './naming.js';
+import { unusedArgumentCompatibility } from './unused-argument-compatibility.js';
 
 export const completeScopes = [
   'configs',
@@ -146,8 +147,8 @@ export async function standards(role, { root = process.cwd(), complete = true } 
       : []),
     {
       files: TYPESCRIPT,
-      // Unused underscore parameters document required callback/port signatures.
-      rules: { '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
+      // Keep positional arguments before the last used argument; reject dummy trailing/rest arguments.
+      rules: { '@typescript-eslint/no-unused-vars': ['error', { args: 'after-used' }] },
     },
     {
       files: ['cypress/**/*.ts'],
@@ -163,6 +164,24 @@ export async function standards(role, { root = process.cwd(), complete = true } 
           },
         ]
       : []),
+    ...(
+      unusedArgumentCompatibility[
+        path
+          .relative(fileURLToPath(new URL('../../', import.meta.url)), root)
+          .split(path.sep)
+          .join('/')
+      ] ?? []
+    ).map(({ files, names }) => ({
+      files,
+      name: `findeg/legacy-unused-argument/${names.join('-')}`,
+      // Reasons live alongside the exact legacy file/name pairs in the compatibility registry.
+      rules: {
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          { args: 'after-used', argsIgnorePattern: `^(${names.join('|')})$` },
+        ],
+      },
+    })),
     prettier,
   ];
 }

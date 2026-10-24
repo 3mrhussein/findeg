@@ -218,3 +218,31 @@ test(
     assert.ok(invalid.messages.some(({ ruleId }) => ruleId === '@next/next/no-sync-scripts'));
   },
 );
+
+test('unused argument policy rejects dummy trailing parameters, including underscore and rest', async () => {
+  for (const parameter of ['_dummy: unknown', 'dummy: unknown', '..._dummy: unknown[]']) {
+    const result = await fixture(
+      'isomorphic',
+      'index.ts',
+      `export function readValue(value: number, ${parameter}) { return value; }\n`,
+    );
+    assert.equal(result.status, 1, result.output);
+    assert.equal(
+      result.messages.filter(({ ruleId }) => ruleId === '@typescript-eslint/no-unused-vars').length,
+      1,
+      result.output,
+    );
+  }
+});
+
+test('unused argument policy preserves required callback positions and declared port signatures', async () => {
+  const result = await fixture(
+    'isomorphic',
+    'index.ts',
+    `export const positions = [1, 2].map((_value, index) => index);
+export function withTransaction(_context: unknown, run: () => number) { return run(); }
+export interface Port { read(context: unknown, id: number): number; }
+`,
+  );
+  assert.equal(result.status, 0, result.output);
+});
