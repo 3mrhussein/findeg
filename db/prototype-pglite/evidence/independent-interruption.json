@@ -1,0 +1,11 @@
+{
+  "cancelRequestedAtMs": 51,
+  "cancelOutcome": "completed",
+  "cancelDurationMs": 503,
+  "cancelRequest": "returned",
+  "peerProgressAtMs": 505,
+  "configuredStatementTimeout": "50ms",
+  "statementTimeoutOutcome": "completed",
+  "statementDurationMs": 508,
+  "recovered": true
+}

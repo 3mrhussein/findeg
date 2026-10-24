@@ -13,7 +13,12 @@ import * as schema from './schema';
 
 export const connection = postgres(env.DATABASE_URL!, {
   // Connection pool configuration
-  max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
+  max:
+    env.DB_MIGRATING || env.DB_SEEDING
+      ? 1
+      : process.env.FINDEG_PGLITE_PROTOTYPE === '1'
+        ? 2
+        : undefined,
   onnotice: (notice) => {
     if (env.DB_SEEDING || env.DB_MIGRATING) {
       console.log(`[DB Notice] ${notice.severity}: ${notice.message}`);

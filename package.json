@@ -7,6 +7,9 @@
   "scripts": {
     "prepare": "husky",
     "dev": "pnpm db:run && turbo run dev",
+    "prototype:pglite": "node db/prototype-pglite/run.mjs",
+    "prototype:pglite:apps": "node db/prototype-pglite/run.mjs apps",
+    "prototype:pglite:protocol": "node db/prototype-pglite/run.mjs protocol",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint -- --fix",

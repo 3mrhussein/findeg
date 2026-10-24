@@ -1,0 +1,8 @@
+{
+  "schemaDate": true,
+  "canonicalMoney": "30n",
+  "uniqueConstraint": true,
+  "frozenSnapshot": true,
+  "savepoints": true,
+  "outerRollback": true
+}

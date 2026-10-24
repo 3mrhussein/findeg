@@ -1,0 +1,29 @@
+{
+  "dateLocal": "2026-10-25",
+  "timezone": "Africa/Cairo",
+  "browser": "Chrome",
+  "storefront": {
+    "homeHttpStatus": 200,
+    "seededCustomerSignIn": "My Account link visibly appeared"
+  },
+  "dashboard": {
+    "loginHttpStatus": 200,
+    "incorrectPassword": "Invalid email or password",
+    "customerDenied": "Forbidden: This portal is for administrators only",
+    "staffSignIn": "redirected to /en, then analytics error boundary",
+    "observedErrors": [
+      {
+        "code": "25001",
+        "query": "set transaction isolation level repeatable read read only",
+        "message": "SET TRANSACTION ISOLATION LEVEL must be called before any query"
+      },
+      {
+        "code": "08P01",
+        "message": "bind message supplies 1 parameters, but prepared statement \"\" requires 2"
+      }
+    ]
+  },
+  "humanAccepted": "Failed compatibility outcome; return to architecture decision",
+  "scope": "Limited app checks only; other journeys and resource comparison unrun",
+  "helpersStopped": true
+}

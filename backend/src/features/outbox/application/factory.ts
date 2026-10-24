@@ -9,6 +9,7 @@ import {
   type OutboxHandlers,
 } from '../domain/types';
 import { ResendEmailProvider, type EmailProvider } from '../infrastructure/EmailProvider';
+import { PrototypeEmailProvider } from '../infrastructure/PrototypeEmailProvider';
 import { createGuestAccessHandler } from '../infrastructure/guest-access-handler';
 import { createPartnerInvitationHandler } from '../infrastructure/partner-invitation-handler';
 import { createOrderStatusHandler } from '../infrastructure/order-status-handler';
@@ -24,7 +25,11 @@ export interface OutboxOptions {
 }
 
 export function createOutbox(options: OutboxOptions = {}): OutboxService {
-  const emailProvider = options.emailProvider ?? new ResendEmailProvider();
+  const emailProvider =
+    options.emailProvider ??
+    (process.env.FINDEG_PGLITE_PROTOTYPE === '1'
+      ? new PrototypeEmailProvider()
+      : new ResendEmailProvider());
   return new OutboxService({
     [ORDER_ACCEPTED_KIND]: createOrderAcceptedHandler(emailProvider),
     [ORDER_STATUS_KIND]: createOrderStatusHandler(emailProvider),

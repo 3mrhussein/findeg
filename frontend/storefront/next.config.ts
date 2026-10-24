@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
   },
   // Cache Components - enabled for Next.js 16
   cacheComponents: true,
+  ...(process.env.FINDEG_PGLITE_PROTOTYPE === '1'
+    ? {
+        cacheHandlers: { default: path.join(__dirname, '../../db/prototype-pglite/no-cache.cjs') },
+      }
+    : {}),
 
   // Turbopack configuration for monorepo support
   turbopack: {

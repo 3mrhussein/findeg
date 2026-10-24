@@ -1,0 +1,127 @@
+{
+  "question": "Can one shared PGlite Socket host preserve the current SQL seam?",
+  "date": "2026-10-24T22:31:37.524Z",
+  "node": "v24.21.0",
+  "platform": "darwin/x64",
+  "prototype": true,
+  "checks": [
+    {
+      "name": "start one filesystem-backed host",
+      "status": "passed",
+      "durationMs": 5577,
+      "detail": {
+        "pglite": "0.5.11",
+        "socket": "0.2.14",
+        "maxConnections": 32
+      }
+    },
+    {
+      "name": "existing init-db.sql through postgres-js",
+      "status": "passed",
+      "durationMs": 29,
+      "detail": {
+        "uuidOssp": true
+      }
+    },
+    {
+      "name": "all historical migrations through existing migrate.ts",
+      "status": "passed",
+      "durationMs": 3313,
+      "detail": {
+        "count": 21
+      }
+    },
+    {
+      "name": "actual seed.ts and repeatable reset",
+      "status": "passed",
+      "durationMs": 13283,
+      "detail": {
+        "users": 8,
+        "products": 229,
+        "variants": 229,
+        "orders": 1
+      }
+    },
+    {
+      "name": "exact values through current postgres-js and Drizzle",
+      "status": "passed",
+      "durationMs": 5,
+      "detail": {
+        "money": "0.30",
+        "maximum_money": "99999999.99",
+        "instant": "2026-10-24 12:34:56.123",
+        "localized": {
+          "ar": "قلم",
+          "en": "Pen",
+          "nested": {
+            "n": 1
+          }
+        },
+        "roles": ["partner-administrator", "report-viewer"]
+      }
+    },
+    {
+      "name": "real schema values, constraints, savepoints and outer rollback",
+      "status": "passed",
+      "durationMs": 1964,
+      "detail": {
+        "exitCode": 0,
+        "log": ".scratch/prototype-pglite-schema-probe.ts.stdout.log"
+      }
+    },
+    {
+      "name": "two independent clients make overlapping parameterized queries",
+      "status": "passed",
+      "durationMs": 19,
+      "detail": {
+        "iterations": 10
+      }
+    },
+    {
+      "name": "transaction-owner disconnect rolls back and releases queued client",
+      "status": "passed",
+      "durationMs": 116,
+      "detail": {
+        "rolledBackOwner": true,
+        "peerProgress": true
+      }
+    },
+    {
+      "name": "finite cancellation and statement-timeout behavior",
+      "status": "passed",
+      "durationMs": 515,
+      "detail": {
+        "cancelRequest": "returned",
+        "cancelOutcome": "completed",
+        "cancellationMs": 259,
+        "statementTimeoutOutcome": "completed",
+        "recovered": true
+      }
+    },
+    {
+      "name": "committed data survives host restart",
+      "status": "passed",
+      "durationMs": 585,
+      "detail": {
+        "products": 229,
+        "peerCommitRetained": true,
+        "ownerRollbackRetained": true
+      }
+    },
+    {
+      "name": "independent-client interruption capability gap accepted for prototype only",
+      "status": "accepted-limitation",
+      "durationMs": 5467,
+      "detail": {
+        "exitCode": 0,
+        "log": ".scratch/prototype-pglite-cancellation-probe.mjs.stdout.log"
+      }
+    }
+  ],
+  "unrun": [
+    "remaining integrity/recovery probes",
+    "both real apps and business journeys",
+    "human usability evaluation",
+    "resource comparison"
+  ]
+}
