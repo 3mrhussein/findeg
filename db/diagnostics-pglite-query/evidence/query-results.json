@@ -1,0 +1,19 @@
+{
+  "serverVersion": "18.6",
+  "results": [
+    {
+      "round": 0,
+      "outcomes": [
+        {
+          "status": "rejected",
+          "code": "08P01",
+          "message": "bind message supplies 1 parameters, but prepared statement \"\" requires 2"
+        },
+        {
+          "status": "fulfilled",
+          "value": 22
+        }
+      ]
+    }
+  ]
+}

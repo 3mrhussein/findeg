@@ -1,0 +1,25 @@
+{
+  "dependencyPlacement": "devDependencies only",
+  "checks": [
+    {
+      "runtime": "production",
+      "exitCode": 2,
+      "rejectedBeforeDependencyLoading": true
+    },
+    {
+      "runtime": "test",
+      "exitCode": 2,
+      "rejectedBeforeDependencyLoading": true
+    },
+    {
+      "runtime": "unset",
+      "exitCode": 2,
+      "rejectedBeforeDependencyLoading": true
+    }
+  ],
+  "packageManager": "11.24.0",
+  "productionOnlyInstall": {
+    "exitCode": 0,
+    "diagnosticPackagesPresent": false
+  }
+}

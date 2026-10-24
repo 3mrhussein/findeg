@@ -1,0 +1,14 @@
+{
+  "baseline": "a4574376f34ad362487f89d2789b0504dbb9b9f4",
+  "pglite": "0.5.11",
+  "socket": "0.2.14",
+  "drizzle": "0.45.4",
+  "postgres": "3.4.9",
+  "node": "v24.21.0",
+  "sourceHashes": {
+    "node_modules/@electric-sql/pglite-socket/src/index.ts": "de23b27f5b021cd8caadd0b0993c9f51160a6dc9f5069ac26d9fa7f1fad2a34f",
+    "node_modules/@electric-sql/pglite-socket/dist/index.js": "2a3a423f1c3400259c516acd883168d3eb44f1495b9a3ebf06c57309b1f3a406"
+  },
+  "transportSemanticsChanged": false,
+  "newPostgresControlRun": false
+}
