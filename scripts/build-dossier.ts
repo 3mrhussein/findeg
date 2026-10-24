@@ -231,6 +231,7 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      transition: transform 0.25s ease-in-out;
     }
 
     .sidebar-header {
@@ -239,6 +240,7 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 0.5rem;
     }
 
     .sidebar-title {
@@ -248,6 +250,25 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .sidebar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .close-sidebar-btn {
+      display: none;
+    }
+
+    .mobile-topbar {
+      display: none;
+    }
+
+    .sidebar-backdrop {
+      display: none;
     }
 
     .theme-toggle {
@@ -373,13 +394,125 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
       font-size: 0.85rem;
       line-height: 1.5;
     }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .mobile-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .mobile-menu-btn {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+      .mobile-menu-btn:hover { background: var(--border-color); }
+
+      .mobile-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 0.5rem;
+        flex: 1;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 290px;
+        max-width: 85vw;
+        height: 100vh;
+        z-index: 100;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.45);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .close-sidebar-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+      .close-sidebar-btn:hover { background: var(--border-color); }
+
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(2px);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease-in-out;
+        display: block;
+      }
+
+      .sidebar-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .content {
+        padding: 1.5rem 1.25rem;
+        max-width: 100%;
+      }
+
+      .section-title {
+        font-size: 1.35rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
+  <header class="mobile-topbar">
+    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleSidebar()">☰</button>
+    <div class="mobile-title">${escapeHtml(docTitle)}</div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">Theme</button>
+  </header>
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">${escapeHtml(docTitle)}</div>
-      <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">Theme</button>
+      <div class="sidebar-actions">
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">Theme</button>
+        <button class="close-sidebar-btn" id="close-sidebar-btn" onclick="closeSidebar()" aria-label="Close sidebar">✕</button>
+      </div>
     </div>
     <div class="search-box">
       <input type="text" id="filter-input" class="search-input" placeholder="Filter sections..." oninput="filterNav(this.value)">
@@ -394,6 +527,35 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
   </main>
 
   <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const toggleBtn = document.getElementById('mobile-menu-toggle');
+      if (!sidebar) return;
+      const isOpen = sidebar.classList.contains('open');
+
+      if (isOpen) {
+        closeSidebar();
+      } else {
+        sidebar.classList.add('open');
+        if (backdrop) backdrop.classList.add('active');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const toggleBtn = document.getElementById('mobile-menu-toggle');
+      if (!sidebar) return;
+
+      sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('active');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
     function toggleTheme() {
       const html = document.documentElement;
       const current = html.getAttribute('data-theme') || 'dark';
@@ -429,6 +591,20 @@ export function generateHtmlSpa(docTitle: string, sections: DossierSection[]): s
 
     document.querySelectorAll('.dossier-section').forEach(section => {
       observer.observe(section);
+    });
+
+    document.querySelectorAll('.nav-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSidebar();
+      }
     });
   </script>
 </body>
