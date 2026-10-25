@@ -1,0 +1,10 @@
+{
+  "target": "postgres",
+  "scenario": "settings",
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 1074,
+  "stdout": "{\"target\":\"postgres\",\"scenario\":\"settings\",\"checks\":[{\"name\":\"independent timezone\",\"actual\":[\"Europe/Paris\",\"UTC\"],\"expected\":[\"Europe/Paris\",\"UTC\"],\"passed\":true}],\"serverVersion\":\"16.14\"}\n",
+  "stderr": ""
+}

@@ -1,0 +1,10 @@
+{
+  "target": "released",
+  "scenario": "settings",
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 3636,
+  "stdout": "{\"target\":\"released\",\"scenario\":\"settings\",\"checks\":[{\"name\":\"independent timezone\",\"actual\":[\"UTC\",\"UTC\"],\"expected\":[\"Europe/Paris\",\"UTC\"],\"passed\":false}],\"serverVersion\":\"18.6\"}\n",
+  "stderr": ""
+}

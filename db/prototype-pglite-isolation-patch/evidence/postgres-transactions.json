@@ -1,0 +1,10 @@
+{
+  "target": "postgres",
+  "scenario": "transactions",
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 1144,
+  "stdout": "{\"target\":\"postgres\",\"scenario\":\"transactions\",\"checks\":[{\"name\":\"snapshot transaction 0\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 1\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 2\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 3\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 4\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 5\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 6\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 7\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 8\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"snapshot transaction 9\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true}],\"serverVersion\":\"16.14\"}\n",
+  "stderr": ""
+}

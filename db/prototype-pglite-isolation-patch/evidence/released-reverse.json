@@ -1,0 +1,10 @@
+{
+  "target": "released",
+  "scenario": "reverse",
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 3544,
+  "stdout": "{\"target\":\"released\",\"scenario\":\"reverse\",\"checks\":[{\"name\":\"concurrent round 0\",\"actual\":[{\"status\":\"rejected\",\"code\":\"08P01\",\"message\":\"bind message supplies 2 parameters, but prepared statement \\\"\\\" requires 1\"},11],\"expected\":[22,11],\"passed\":false}],\"serverVersion\":\"18.6\"}\n",
+  "stderr": ""
+}

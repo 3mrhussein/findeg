@@ -1,0 +1,10 @@
+{
+  "target": "postgres",
+  "scenario": "named",
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 1943,
+  "stdout": "{\"target\":\"postgres\",\"scenario\":\"named\",\"checks\":[{\"name\":\"client A Parse succeeds\",\"actual\":false,\"expected\":false,\"passed\":true},{\"name\":\"foreign statement absent\",\"actual\":\"26000\",\"expected\":\"26000\",\"passed\":true},{\"name\":\"client B same-name Parse succeeds\",\"actual\":\"ok\",\"expected\":\"ok\",\"passed\":true},{\"name\":\"independent named results\",\"actual\":[[\"11\"],[\"22\"]],\"expected\":[[\"11\"],[\"22\"]],\"passed\":true}],\"serverVersion\":\"16.14\",\"frames\":{\"a\":[{\"type\":\"1\"},{\"type\":\"Z\",\"status\":\"I\"}],\"foreign\":[{\"type\":\"E\",\"code\":\"26000\",\"message\":\"prepared statement \\\"wf_same\\\" does not exist\"},{\"type\":\"Z\",\"status\":\"I\"}],\"b\":[{\"type\":\"1\"},{\"type\":\"Z\",\"status\":\"I\"}]}}\n",
+  "stderr": ""
+}

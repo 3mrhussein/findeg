@@ -1,0 +1,10 @@
+{
+  "target": "released",
+  "scenario": "named",
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 3598,
+  "stdout": "{\"target\":\"released\",\"scenario\":\"named\",\"checks\":[{\"name\":\"client A Parse succeeds\",\"actual\":false,\"expected\":false,\"passed\":true},{\"name\":\"foreign statement absent\",\"actual\":[\"11\"],\"expected\":\"26000\",\"passed\":false},{\"name\":\"client B same-name Parse succeeds\",\"actual\":\"42P05\",\"expected\":\"ok\",\"passed\":false}],\"serverVersion\":\"18.6\",\"frames\":{\"a\":[{\"type\":\"1\"},{\"type\":\"Z\",\"status\":\"I\"}],\"foreign\":[{\"type\":\"2\"},{\"type\":\"D\",\"values\":[\"11\"]},{\"type\":\"C\"},{\"type\":\"Z\",\"status\":\"I\"}],\"b\":[{\"type\":\"E\",\"code\":\"42P05\",\"message\":\"prepared statement \\\"wf_same\\\" already exists\"},{\"type\":\"Z\",\"status\":\"I\"}]}}\n",
+  "stderr": ""
+}

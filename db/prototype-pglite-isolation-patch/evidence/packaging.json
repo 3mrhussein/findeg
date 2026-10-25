@@ -1,0 +1,108 @@
+{
+  "scope": "isolated harness only",
+  "checks": [
+    {
+      "name": "@electric-sql/pg-protocol",
+      "absent": true
+    },
+    {
+      "name": "@electric-sql/pglite",
+      "absent": true
+    },
+    {
+      "name": "@electric-sql/pglite-socket",
+      "absent": true
+    },
+    {
+      "name": "@embedded-postgres/darwin-x64",
+      "absent": true
+    },
+    {
+      "name": "drizzle-orm",
+      "absent": true
+    },
+    {
+      "name": "postgres",
+      "absent": true
+    },
+    {
+      "name": "typescript",
+      "absent": true
+    },
+    {
+      "runtime": "production",
+      "script": "prepare.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "production",
+      "script": "worker.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "production",
+      "script": "run.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "production",
+      "script": "control.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "production",
+      "script": "packaging.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "test",
+      "script": "prepare.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "test",
+      "script": "worker.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "test",
+      "script": "run.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "test",
+      "script": "control.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": "test",
+      "script": "packaging.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": null,
+      "script": "prepare.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": null,
+      "script": "worker.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": null,
+      "script": "run.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": null,
+      "script": "control.mjs",
+      "exitCode": 2
+    },
+    {
+      "runtime": null,
+      "script": "packaging.mjs",
+      "exitCode": 2
+    }
+  ]
+}

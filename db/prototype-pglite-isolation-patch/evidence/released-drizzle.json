@@ -1,0 +1,10 @@
+{
+  "target": "released",
+  "scenario": "drizzle",
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 3761,
+  "stdout": "{\"target\":\"released\",\"scenario\":\"drizzle\",\"checks\":[{\"name\":\"concurrent round 0\",\"actual\":[{\"status\":\"rejected\",\"code\":\"08P01\",\"message\":\"bind message supplies 1 parameters, but prepared statement \\\"\\\" requires 2\"},22],\"expected\":[11,22],\"passed\":false}],\"serverVersion\":\"18.6\"}\n",
+  "stderr": ""
+}

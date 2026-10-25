@@ -1,0 +1,15 @@
+{
+  "upstream/pg-protocol/src/buffer-reader.ts": "2d35e93a6d7f9a3b86077c0f20d3f8337f16e23676e42476ad96524d35c3a2e3",
+  "upstream/pg-protocol/src/buffer-writer.ts": "810b9a3d9cfcbc3cc5aee49fd03240f2c04570902efa10318ddf200d2fc9bd2a",
+  "upstream/pg-protocol/src/index.ts": "a6b84a33f5d83dd6c65bbf3aa2d208feb8dc775a872629a63d7fe81902390a57",
+  "upstream/pg-protocol/src/messages.ts": "cff42404a9d3767ae426090c5f5f273c23b64b8f7d02f832728e66131e4b5a9d",
+  "upstream/pg-protocol/src/parser.ts": "7b146d38eb607cb4807cef2f478e77307daab090b6c89c7b33f58a64c5a9feb1",
+  "upstream/pg-protocol/src/serializer.ts": "b660c1660fa9b4d9b99b55b3f79a44c9b2bf3292924571a18793c713ea7fbc34",
+  "upstream/pg-protocol/src/string-utils.ts": "435bc9719e9b7fbebe7b69ff992d4bad9f1fd0ba09b667170d9ce62f284c943f",
+  "upstream/pg-protocol/src/types.ts": "bb57aeb351d1c645d02b99bbb89dac79552d7c86a0995a36573ec4996478b266",
+  "upstream/released-index.ts": "de23b27f5b021cd8caadd0b0993c9f51160a6dc9f5069ac26d9fa7f1fad2a34f",
+  "upstream/isolation.patch": "e816e16b5595d5998972c18b24cc11c449639a32cc0edbdb35067aee0d50b870",
+  "upstream/pinned-index.ts": "12a3d5993ea86fc9a2eb946736c965662524f59a74d53e44338175e73bb7d53a",
+  "upstream/patched-index.ts": "cf60230ae3b0f125879a2ae4e31be8a68ca9837d5bf60954c77ab9d4c37a6d39",
+  "candidate.mjs": "9039b961534c6451f409584698380b4a7bcfc02b6600f9f5bdec43aa66dd2cc8"
+}

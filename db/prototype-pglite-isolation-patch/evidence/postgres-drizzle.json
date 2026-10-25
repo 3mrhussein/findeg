@@ -1,0 +1,10 @@
+{
+  "target": "postgres",
+  "scenario": "drizzle",
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "elapsedMs": 1879,
+  "stdout": "{\"target\":\"postgres\",\"scenario\":\"drizzle\",\"checks\":[{\"name\":\"concurrent round 0\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 1\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 2\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 3\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 4\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 5\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 6\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 7\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 8\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true},{\"name\":\"concurrent round 9\",\"actual\":[11,22],\"expected\":[11,22],\"passed\":true}],\"serverVersion\":\"16.14\"}\n",
+  "stderr": ""
+}
